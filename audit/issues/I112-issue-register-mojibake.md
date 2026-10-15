@@ -26,3 +26,10 @@
 - git log --all 只有 a414f95 一条，HEAD~1 版本亦为 ????，历史不可恢复
 - 0x3F 计数 17400 / 154457 字节，损坏约 11%
 - 恢复路径改为：从 I001~I108 单文件重建，或从 PROJECT_REALITY_AUDIT.md 间接补
+
+## 扫描结论（2026-10-16）
+- 全仓库 audit/ + docs/ 下 .md 扫描，仅 2 个文件有 0x3F 异常
+- issue-register.md：17400 / 154457 = 11.27%（大面积）
+- baseline/preflight.md：409 / 21575 = 1.90%（局部）
+- 结论：非系统性损坏，为重建前（a414f95 之前）的遗留污染
+- 相关：backend/compile_impls.ps1 使用 -Encoding ascii，同类风险（另开 I113）
