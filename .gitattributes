@@ -1,55 +1,7 @@
-# ============================================================
-# QiaoPM - .gitattributes
-# Lock EOL policy + binary handling to prevent accidental
-# line-ending drift on Windows editors (VS Code / Cursor).
-#
-# 适用范围：整个仓库
-# 行为：
-#   1. 所有文本文件默认 LF（Unix 风格，跨平台一致）
-#   2. Windows 原生脚本保持 CRLF（语义需要）
-#   3. 二进制 / 锁文件 / 数据库 / 字体等标 binary，避免 CRLF 污染
-#   4. 不触发历史 normalize——只对未来新增/编辑生效
-# ============================================================
-
-# === 默认所有文本文件 LF（Unix 风格）===
-* text=auto eol=lf
-
-# === Windows 原生脚本保持 CRLF（语义需要）===
-*.bat       text eol=crlf
-*.cmd       text eol=crlf
-*.ps1       text eol=crlf
-
-# === 二进制 / 不归 Git 管的产物 ===
-*.jar       binary
-*.class     binary
-*.png       binary
-*.jpg       binary
-*.jpeg      binary
-*.gif       binary
-*.pdf       binary
-*.zip       binary
-*.tar       binary
-*.gz        binary
-*.7z        binary
-*.ttf       binary
-*.woff      binary
-*.woff2     binary
-
-# === SQL / 配置文件：LF ===
-*.sql       text eol=lf
-*.yml       text eol=lf
-*.yaml      text eol=lf
-*.xml       text eol=lf
-*.properties text eol=lf
-
-# === 源码：强制 LF ===
-*.java      text eol=lf
-*.kt        text eol=lf
-*.js        text eol=lf
-*.ts        text eol=lf
-*.tsx       text eol=lf
-*.vue       text eol=lf
-*.md        text eol=lf
-
-# === Markdown 表格对齐空格不参与 diff 噪声 ===
-*.md        whitespace=-trailing-space,-space-before-tab
+﻿* text=auto eol=lf
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.png binary
+*.jpg binary
+*.zip binary
