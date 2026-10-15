@@ -38,3 +38,8 @@
 - .NET UTF8.GetString 读取正常 → 文件本体未损坏
 - 409 个 0x3F 为文本内正常 ASCII 问号，非损坏特征
 - 结论：preflight.md 移出 I112 范围
+
+## preflight.md 复核（2026-10-16）
+- .NET UTF8.GetString 读取仍乱码 → 文件确认损坏
+- 损坏模式与 issue-register 不同（前者 mojibake 可逆，后者 0x3F 不可逆）
+- 结论：I112 范围扩大为 2 个文件
