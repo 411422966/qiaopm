@@ -22,3 +22,16 @@ D 盘（ST2000DM006-2DM164，2TB 机械盘）NTFS 文件系统损坏
 2. 每周 git fsck 检测早期损坏
 3. 每月 chkdsk D: /SCAN
 4. Git 仓库应放 SSD
+
+## 远程备份
+- 远程仓库：https://github.com/411422966/qiaopm.git
+- 首次推送 commit：16c8fe6
+- 验证：git clone 成功（3276 文件），git fsck --full 干净，2026-10-16
+
+## 状态
+已缓解（2026-10-16，远程备份已建立并验证）
+- [x] 远程仓库已推送并验证克隆
+- [x] git fsck --full 通过
+- [ ] chkdsk D: /scan 无错误
+- [ ] 仓库迁移 SSD 或每日备份
+- [ ] 事件 ID 98 不再出现
