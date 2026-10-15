@@ -10,3 +10,6 @@
 
 ## 状态
 待办
+
+## 执行记录
+- 2026-10-16：git fsck --full，输出为空（仓库干净），无 missing/broken/dangling
