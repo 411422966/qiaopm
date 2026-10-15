@@ -43,3 +43,9 @@
 - .NET UTF8.GetString 读取仍乱码 → 文件确认损坏
 - 损坏模式与 issue-register 不同（前者 mojibake 可逆，后者 0x3F 不可逆）
 - 结论：I112 范围扩大为 2 个文件
+
+## 更正（2026-10-16）
+- 上一节「范围扩大至 preflight.md」为误判，作废
+- 原因：.NET ReadAllBytes 不认 PowerShell 的 cd，相对路径读取失败，$b 保留了旧值
+- 用绝对路径重读 preflight.md：UTF-8 解码正常，非损坏
+- 最终结论：I112 范围仅 issue-register.md 单文件
