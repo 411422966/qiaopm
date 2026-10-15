@@ -33,3 +33,8 @@
 - baseline/preflight.md：409 / 21575 = 1.90%（局部）
 - 结论：非系统性损坏，为重建前（a414f95 之前）的遗留污染
 - 相关：backend/compile_impls.ps1 使用 -Encoding ascii，同类风险（另开 I113）
+
+## preflight.md 复核（2026-10-16）
+- .NET UTF8.GetString 读取正常 → 文件本体未损坏
+- 409 个 0x3F 为文本内正常 ASCII 问号，非损坏特征
+- 结论：preflight.md 移出 I112 范围
