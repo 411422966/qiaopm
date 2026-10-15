@@ -1,0 +1,21 @@
+=== F135 ChannelDispatcher.getSender 单元测试 ===
+senders.size() = 5
+getSender("SMS") = SmsSender:SMS
+getSender("EMAIL") = EmailSender:EMAIL
+getSender("MINI_PROGRAM") = MiniProgramSender:MINI_PROGRAM
+getSender("IN_APP") = InAppSender:IN_APP
+getSender("WECHAT_OFFICIAL_ACCOUNT") = WechatOfficialAccountSender:WECHAT_OFFICIAL_ACCOUNT
+getSender("UNKNOWN") = null ← I061 NPE 风险
+getSender("WECHAT_OA") = null ← I061 NPE 风险
+getSender("wechat_oa") = null ← I061 NPE 风险
+getSender("sms") = null ← I061 NPE 风险
+getSender("") = null ← I061 NPE 风险
+getSender("PUSH") = null ← I061 NPE 风险
+getSender("DINGTALK") = null ← I061 NPE 风险
+
+=== I039 N12 别名一致性验证 ===
+getSender("WECHAT_OA") = null（实际 class = WECHAT_OFFICIAL_ACCOUNT，无别名）
+getSender("WECHAT_OFFICIAL_ACCOUNT") = WECHAT_OFFICIAL_ACCOUNT
+
+=== I061 NPE 风险实证 ===
+NPE 触发: java.lang.NullPointerException — 调用方拿到 null 后第一次方法调用即崩

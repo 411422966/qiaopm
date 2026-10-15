@@ -1,0 +1,11 @@
+﻿
+=== reset id=2 to ACTIVE ===
+mysql.exe : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-a275b3ee-3102-4c17-befb-6ea2b4c920bc.ps1:79 字符: 317
++ ... oding utf8; & mysql -h 127.0.0.1 -P 3307 -uroot -proot123456 --defaul ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+id	status	error_message
+2	ACTIVE	NULL

@@ -1,0 +1,7 @@
+2026-09-14 22:31:30.889 [http-nio-8080-exec-5] INFO  c.m.service.IntlBookingService [traceId=2c85a69043594b16903a483151d2701f] [tenant=] [order=] [pay=] [INSTAGRAM WEBHOOK] payload={object=instagram, entry=[{id=123456789, time=1726300800, changes=[{field=messages, value={from={id=987654321}, message={text=Book facial tomorrow please}, timestamp=1726300800}}]}]}
+[INSERT INTO overseas_booking ...] -> Table 'meiyetec.overseas_booking' doesn't exist
+[I047 EVIDENCE] catch (Exception e) { log.warn("parse failed: {}", e.getMessage()); return Result.success(Map.of("code","NOOP",...)); }
+
+API Response: {"code":200,"message":"操作成功","data":{"message":"no parseable message","code":"NOOP"},"traceId":"2c85a69043594b16903a483151d2701f","timestamp":"2026-09-14 22:31:30"}
+
+CRITICAL: 200 SUCCESS 但 DB INSERT 失败 → Fake Success（I008/I047 同系列）

@@ -1,0 +1,4 @@
+﻿# F138 [6/9 retry] POST /m12/dispatch with valid dispatchType=ACTIVITY
+
+HTTP_CODE: 200
+BODY: {"code":500,"message":"数据库异常","data":null,"traceId":"a2de2e792b544caa9a5c1c8a7ccc4d57","timestamp":"2026-09-16 22:34:55"}

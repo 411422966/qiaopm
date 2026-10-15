@@ -1,0 +1,17 @@
+﻿
+backend\logs\meiyetec.log:1644:2026-09-12 22:49:26.468 [scheduling-1] WARN  com.meiyetec.crm.CrmSyncScheduler [traceId=
+] [tenant=] [order=] [pay=] [CRM-Scheduler] 拉取集成列表失败：
+backend\logs\meiyetec.log:2023:2026-09-12 22:54:26.483 [scheduling-1] WARN  com.meiyetec.crm.CrmSyncScheduler [traceId=
+] [tenant=] [order=] [pay=] [CRM-Scheduler] 拉取集成列表失败：
+backend\logs\meiyetec.log:2176:2026-09-12 22:59:26.507 [scheduling-1] WARN  com.meiyetec.crm.CrmSyncScheduler [traceId=
+] [tenant=] [order=] [pay=] [CRM-Scheduler] 拉取集成列表失败：
+backend\logs\meiyetec.log:2552:2026-09-12 23:04:26.524 [scheduling-1] WARN  com.meiyetec.crm.CrmSyncScheduler [traceId=
+] [tenant=] [order=] [pay=] [CRM-Scheduler] 拉取集成列表失败：
+backend\logs\meiyetec.log:2563:2026-09-12 23:09:26.533 [scheduling-1] WARN  com.meiyetec.crm.CrmSyncScheduler [traceId=
+] [tenant=] [order=] [pay=] [CRM-Scheduler] 拉取集成列表失败：
+backend\logs\meiyetec.log:3161:2026-09-12 23:14:26.551 [scheduling-1] WARN  com.meiyetec.crm.CrmSyncScheduler [traceId=
+] [tenant=] [order=] [pay=] [CRM-Scheduler] 拉取集成列表失败：
+backend\logs\meiyetec.log:4177:2026-09-12 23:19:26.568 [scheduling-1] WARN  com.meiyetec.crm.CrmSyncScheduler [traceId=
+] [tenant=] [order=] [pay=] [CRM-Scheduler] 拉取集成列表失败：
+
+

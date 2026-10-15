@@ -1,0 +1,8 @@
+{
+  "id": 9,
+  "channelType": "IN_APP",
+  "channelName": "5A-F116-Updated",
+  "provider": "test-updated",
+  "rateLimitPerMin": 50,
+  "rateLimitPerDay": 8888
+}

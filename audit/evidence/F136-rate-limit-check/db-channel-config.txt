@@ -1,0 +1,5 @@
+﻿4	NULL	IN_APP	1000	99999	站内信
+10	NULL	PUSH	60	5000	audit-test-F115-push-N7
+13	NULL	SMS	3	5	5B-rate-test-low
+2	1	MINI_PROGRAM	100	5000	小程序订阅消息
+3	1	MP	50	3000	公众号模板消息

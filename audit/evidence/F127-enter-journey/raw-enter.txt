@@ -1,0 +1,12 @@
+﻿{
+    "code":  200,
+    "message":  "已进入旅程",
+    "data":  {
+                 "id":  3,
+                 "journeyId":  4,
+                 "memberId":  1,
+                 "status":  1
+             },
+    "traceId":  "312dd594453949d6a55f5a7b43ca7515",
+    "timestamp":  "2026-09-16 02:17:10"
+}

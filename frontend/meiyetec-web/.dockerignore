@@ -1,0 +1,49 @@
+# Meiyetec Web — Docker 构建忽略
+
+# === VCS ===
+.git/
+.gitignore
+.gitattributes
+
+# === 依赖/构建产物 ===
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# === IDE ===
+.idea/
+.vscode/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# === 测试产物 ===
+e2e/reports/
+e2e/test-results/
+test-results/
+coverage/
+.nyc_output/
+
+# === 日志/临时 ===
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === 环境 ===
+.env
+.env.*
+!.env.example
+
+# === 文档/脚本（不进镜像）===
+*.md
+docs/
+
+# === Docker 自身 ===
+Dockerfile
+.dockerignore

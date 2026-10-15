@@ -1,0 +1,1 @@
+SELECT id, status, read_at FROM marketing_touch_log WHERE id = 2;

@@ -1,0 +1,9 @@
+﻿=== F072 buildWebhookUrl 调用方 grep ===
+
+--- backend 全代码库 (声明 + 实现 + 调用) ---
+
+--- 调用方（排除 YouzanEcommerceAdapter 自身）---
+调用方数: 0
+
+--- frontend 全代码库 ---
+(frontend 命中 0 = 未在前端使用)

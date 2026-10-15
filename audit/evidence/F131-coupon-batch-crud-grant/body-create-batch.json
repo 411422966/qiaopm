@@ -1,0 +1,7 @@
+{
+  "couponName": "audit-test-coupon-batch",
+  "couponType": "DISCOUNT",
+  "discountAmount": 50.00,
+  "minConsume": 200.00,
+  "totalCount": 100
+}

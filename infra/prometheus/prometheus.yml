@@ -1,0 +1,87 @@
+# ====================================================================
+# Prometheus 全局配置
+# Gate 3 批次 1.4b — P0-B 监控采集
+# ====================================================================
+
+global:
+  # 全局抓取间隔（15s 标准频率）
+  scrape_interval: 15s
+  # 全局告警规则评估间隔（1m）
+  evaluation_interval: 1m
+  # 外部标签（所有指标自动打标签）
+  external_labels:
+    cluster: meiyetec
+    env: production
+
+# ====================================================================
+# Alertmanager 配置
+# ====================================================================
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            # AlertManager 地址（docker-compose.monitoring.yml 中定义的服务名）
+            - alertmanager:9093
+
+# ====================================================================
+# 告警规则文件（告警规则在 alerts/ 目录下按模块拆分）
+# ====================================================================
+rule_files:
+  - "alerts/*.yml"
+
+# ====================================================================
+# Scrape 配置
+# ====================================================================
+scrape_configs:
+  # ---------------------------------------------------------------------------
+  # Prometheus 自身指标（必须，验证 Prometheus 可用性）
+  # ---------------------------------------------------------------------------
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    metrics_path: /metrics
+
+  # ---------------------------------------------------------------------------
+  # meiyetec-api — Spring Boot Actuator + Micrometer Prometheus
+  # ---------------------------------------------------------------------------
+  - job_name: 'meiyetec-api'
+    # 抓取间隔覆写（可选，默认继承 global.scrape_interval）
+    # scrape_interval: 15s
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['meiyetec-api:8080']
+        labels:
+          service: meiyetec-api
+          tier: backend
+    # 超时（默认 10s，对 /actuator/prometheus 足够）
+    # scrape_timeout: 10s
+    # 重试次数（默认 3）
+    # scrape_attempts: 3
+
+  # ---------------------------------------------------------------------------
+  # 数据库 / 中间件占位（未来扩展）
+  # ---------------------------------------------------------------------------
+  # - job_name: 'mysql'
+  #   static_configs:
+  #     - targets: ['mysql-exporter:9104']
+  #       labels:
+  #         service: mysql
+  #         tier: database
+  #
+  # - job_name: 'redis'
+  #   static_configs:
+  #     - targets: ['redis-exporter:9121']
+  #       labels:
+  #         service: redis
+  #         tier: cache
+
+# ====================================================================
+# 存储配置（通过命令行参数指定，容器启动时传入）
+# retention.time: 15d 通过 docker-compose.monitoring.yml 的 command 段传入
+# ====================================================================
+
+# ====================================================================
+# 其他全局配置
+# ====================================================================
+# 日志级别（info / debug / warn）
+# log_level: info

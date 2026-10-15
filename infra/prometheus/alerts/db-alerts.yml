@@ -1,0 +1,247 @@
+# ====================================================================
+# 数据库 / 中间件告警规则
+# Gate 3 批次 1.4b — P0-B 监控采集
+# 评估周期：1m
+# ====================================================================
+
+groups:
+  - name: meiyetec-mysql
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------------------
+      # MySQL 不可达（DOWN）
+      # ---------------------------------------------------------------------------
+      - alert: MySqlDown
+        expr: |
+          mysql_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: mysql
+          tier: database
+        annotations:
+          summary: "MySQL 数据库不可达"
+          description: |
+            MySQL exporter 报告 mysql_up == 0（持续 1 分钟）。
+            立即检查：
+            1. mysql 容器状态：docker compose ps mysql
+            2. MySQL 端口：telnet localhost 3306
+            3. 磁盘空间：df -h（MySQL 无法启动时常见原因）
+            4. MySQL 错误日志：docker compose logs mysql --tail 100
+
+      # ---------------------------------------------------------------------------
+      # MySQL 慢查询（> 1s 占比高）
+      # ---------------------------------------------------------------------------
+      - alert: MySqlSlowQueriesHigh
+        expr: |
+          rate(mysql_global_status_slow_queries[5m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+          service: mysql
+          tier: database
+        annotations:
+          summary: "MySQL 慢查询速率过高（5 分钟平均 > 5 QPS）"
+          description: |
+            慢查询速率：{{ $value | printf "%.2f" }} QPS。
+            建议：开启 slow_query_log 分析 TOP 慢查询，优化索引。
+
+      # ---------------------------------------------------------------------------
+      # MySQL 连接数接近上限
+      # ---------------------------------------------------------------------------
+      - alert: MySqlConnectionUsageHigh
+        expr: |
+          (
+            mysql_global_status_threads_connected
+            /
+            mysql_global_variables_max_connections
+          ) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: mysql
+          tier: database
+        annotations:
+          summary: "MySQL 连接数超过上限 80%（持续 5 分钟）"
+          description: |
+            当前连接：{{ $labels.threads_connected }} / 最大：{{ $labels.max_connections }}。
+            可能原因：连接泄漏 / 连接未关闭 / 慢查询占用连接。
+            紧急扩容：max_connections 建议至少 200（生产）。
+
+      # ---------------------------------------------------------------------------
+      # MySQL InnoDB Buffer Pool 使用率高
+      # ---------------------------------------------------------------------------
+      - alert: MySqlInnodbBufferPoolUsageHigh
+        expr: |
+          (
+            innodb_buffer_pool_pages_data
+            /
+            innodb_buffer_pool_pages_total
+          ) * 100 > 85
+        for: 10m
+        labels:
+          severity: warning
+          service: mysql
+          tier: database
+        annotations:
+          summary: "InnoDB Buffer Pool 使用率超过 85%（持续 10 分钟）"
+          description: |
+            Buffer Pool 使用率：{{ $value | printf "%.1f" }}%。
+            可能导致频繁磁盘 I/O。请考虑扩容 innodb_buffer_pool_size。
+
+  - name: meiyetec-redis
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------------------
+      # Redis 不可达（DOWN）
+      # ---------------------------------------------------------------------------
+      - alert: RedisDown
+        expr: |
+          redis_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: redis
+          tier: cache
+        annotations:
+          summary: "Redis 缓存不可达"
+          description: |
+            Redis exporter 报告 redis_up == 0（持续 1 分钟）。
+            立即检查：
+            1. redis 容器状态：docker compose ps redis
+            2. Redis 端口：telnet localhost 6379
+            3. 内存使用：redis-cli info memory
+            4. Redis 错误日志：docker compose logs redis --tail 50
+
+      # ---------------------------------------------------------------------------
+      # Redis 内存使用率高（OOM 风险）
+      # ---------------------------------------------------------------------------
+      - alert: RedisMemoryUsageHigh
+        expr: |
+          (
+            redis_memory_used_bytes
+            /
+            redis_memory_max_bytes
+          ) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: redis
+          tier: cache
+        annotations:
+          summary: "Redis 内存使用率超过 80%（持续 5 分钟）"
+          description: |
+            内存使用率：{{ $value | printf "%.1f" }}%。
+            Redis OOM 会导致数据丢失（noeviction 策略）或拒绝写入。
+
+      # ---------------------------------------------------------------------------
+      # Redis 内存使用率 > 90%（OOM 紧急）
+      # ---------------------------------------------------------------------------
+      - alert: RedisMemoryUsageCritical
+        expr: |
+          (
+            redis_memory_used_bytes
+            /
+            redis_memory_max_bytes
+          ) * 100 > 90
+        for: 2m
+        labels:
+          severity: critical
+          service: redis
+          tier: cache
+        annotations:
+          summary: "Redis 内存使用率超过 90%（持续 2 分钟）"
+          description: |
+            内存使用率：{{ $value | printf "%.1f" }}%。
+            高风险 OOM。请立即：
+            1. 检查大 Key：redis-cli --bigkeys
+            2. 检查内存碎片：redis-cli info memory | grep mem_fragmentation_ratio
+            3. 考虑 KEY 清理或扩容 maxmemory
+
+      # ---------------------------------------------------------------------------
+      # Redis 拒绝连接（连接数耗尽）
+      # ---------------------------------------------------------------------------
+      - alert: RedisConnectionsRejected
+        expr: |
+          rate(redis_rejected_connections_total[5m]) > 0
+        for: 0m
+        labels:
+          severity: critical
+          service: redis
+          tier: cache
+        annotations:
+          summary: "Redis 拒绝连接"
+          description: |
+            Redis 在 5 分钟内拒绝了 {{ $value | printf "%.0f" }} 次新连接。
+            maxclients 可能已达上限。请检查连接泄漏或扩容 maxclients。
+
+      # ---------------------------------------------------------------------------
+      # Redis 命中率低（未缓存 / 缓存失效）
+      # ---------------------------------------------------------------------------
+      - alert: RedisHitRateLow
+        expr: |
+          (
+            rate(redis_keyspace_hits_total[5m])
+            /
+            (
+              rate(redis_keyspace_hits_total[5m])
+              +
+              rate(redis_keyspace_misses_total[5m])
+            )
+          ) * 100 < 60
+        for: 10m
+        labels:
+          severity: warning
+          service: redis
+          tier: cache
+        annotations:
+          summary: "Redis 缓存命中率低于 60%（持续 10 分钟）"
+          description: |
+            当前命中率：{{ $value | printf "%.1f" }}%。
+            可能原因：TTL 设置过短 / 缓存未预热 / 热数据量超过缓存容量。
+
+  - name: meiyetec-disk
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------------------
+      # 磁盘使用率过高（影响 MySQL / 日志写入）
+      # ---------------------------------------------------------------------------
+      - alert: DiskUsageHigh
+        expr: |
+          (
+            node_filesystem_avail_bytes{mountpoint="/",fstype!="tmpfs"}
+            /
+            node_filesystem_size_bytes{mountpoint="/",fstype!="tmpfs"}
+          ) * 100 < 20
+        for: 5m
+        labels:
+          severity: warning
+          service: host
+          tier: infrastructure
+        annotations:
+          summary: "磁盘可用空间低于 20%（持续 5 分钟）"
+          description: |
+            磁盘可用空间已低于 20%，{{ $value | printf "%.1f" }}% 剩余。
+            若低于 10% 可能导致 MySQL / 应用无法写入。
+            清理方向：日志文件 / 旧镜像 / target 构建产物。
+
+      # ---------------------------------------------------------------------------
+      # Docker 数据盘使用率高
+      # ---------------------------------------------------------------------------
+      - alert: DockerDiskUsageHigh
+        expr: |
+          (
+            node_filesystem_avail_bytes{mountpoint="/var/lib/docker",fstype!="tmpfs"}
+            /
+            node_filesystem_size_bytes{mountpoint="/var/lib/docker",fstype!="tmpfs"}
+          ) * 100 < 20
+        for: 5m
+        labels:
+          severity: warning
+          service: docker
+          tier: infrastructure
+        annotations:
+          summary: "Docker 数据盘可用空间低于 20%"
+          description: |
+            Docker 数据盘可用空间已低于 20%，{{ $value | printf "%.1f" }}% 剩余。
+            请运行：docker system prune -a --volumes 清理未使用资源。

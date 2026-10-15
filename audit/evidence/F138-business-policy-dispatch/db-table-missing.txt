@@ -1,0 +1,4 @@
+﻿=== F138 DB 4 table missing verification ===
+---
+Expected: 4 rows (1 per missing table)
+Actual: 0 rows (all 4 tables MISSING)

@@ -1,0 +1,31 @@
+---
+description: Feature ID 命名规则
+globs: ["audit/**/*", "docs/**/*"]
+alwaysApply: false
+---
+
+# Feature ID 规则
+
+格式：F + 三位数字，如 F001、F012、F123。
+
+## 拆分粒度
+一个 Feature = 一个可独立验收的业务能力。
+
+## 示例
+F001 登录
+F002 退出登录
+F003 用户列表查询
+F004 新增用户
+F005 编辑用户
+F006 删除用户
+F007 用户详情
+F008 权限配置
+
+## 禁止
+- 不要把"用户管理"作为一个 Feature
+- 不要把"订单模块"作为一个 Feature
+- 不要把一张数据库表作为一个 Feature
+
+## Evidence 目录
+audit/evidence/F001-login/
+audit/evidence/F004-create-user/

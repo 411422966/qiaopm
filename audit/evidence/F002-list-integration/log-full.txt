@@ -1,0 +1,5 @@
+﻿
+backend\logs\meiyetec.log:2571:2026-09-12 23:10:40.917 [http-nio-8080-exec-8] ERROR c.m.exception.GlobalExceptionHandle
+r [traceId=f589a40454e8479c8b678effb821827a] [tenant=] [order=] [pay=] [DBError]
+
+

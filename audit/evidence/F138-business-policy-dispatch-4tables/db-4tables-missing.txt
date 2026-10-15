@@ -1,0 +1,10 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+section
+== Phase 5B: 4 表存在性实证 ==
+section
+== 通过 4 张表的任意一条 SQL 触发看错 ==
+hint
+expect: ERROR 1146 Table doesn't exist
+step
+-- SELECT from mkt_dispatch --
+ERROR 1146 (42S02) at line 13: Table 'meiyetec.mkt_dispatch' doesn't exist

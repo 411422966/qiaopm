@@ -1,0 +1,288 @@
+---
+description: EXT-23 插件运行时（pf4j 3.10.0 + 业务 SPI）的关键约束 — 目录布局 / 生命周期 / 三件套（persistence/tenant/security）
+globs:
+  - backend/src/main/java/com/meiyetec/plugin/**/*.java
+  - backend/src/main/java/com/meiyetec/controller/PluginRuntimeController.java
+  - backend/src/main/java/com/meiyetec/entity/PluginRuntimeState.java
+  - backend/src/main/java/com/meiyetec/mapper/PluginRuntimeStateMapper.java
+  - backend/src/main/resources/application.yml
+  - plugins/**/META-INF/pf4j/plugin.properties
+  - plugins/**/pom.xml
+  - frontend/meiyetec-web/src/views/plugin/**/*.vue
+  - frontend/meiyetec-web/src/api/plugin.ts
+---
+
+# EXT-23 Plugin Runtime — Operational Notes
+
+> 适用范围：pf4j 3.10.0 + `com.meiyetec.plugin` SPI 体系；`/plugin/runtime/*` 数据看板 + 启停 API；`plugin_runtime_state` / `plugin_install` 持久化；`PluginSecurityPolicy` 合作式沙箱。
+> **不**包含 `PluginService`（marketplace CRUD）— 那是 `/plugin/market*` `/install*` `/review*`，与 runtime 是两套互不感知的体系。
+
+---
+
+## 0. 关键约束（改之前必读）
+
+### 0.1 架构分层
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  业务层调用（pay/marketing/fiscal/...）                       │
+│       ↓                                                      │
+│  PluginRuntimeService.isEnabledForTenant(code, tenantId)     │  ← 业务入口前必调
+│       ↓                                                      │
+│  PluginTenantService（tenant-level enable）                  │
+│       ↓                                                      │
+│  pf4j PluginManager（platform-level enable, STARTED state）  │
+│       ↓                                                      │
+│  PluginSecurityPolicy（合作式沙箱）                            │
+│       ↓                                                      │
+│  插件 MeiyetecPlugin.onStart / 业务入口方法                    │
+└──────────────────────────────────────────────────────────────┘
+```
+
+- **pf4j 3.10.0**（本地仓库 `C:\Users\qq411\.m2\repository\org\pf4j\pf4j\3.10.0\pf4j-3.10.0.jar`），**Plugin.getPluginId() 是 final 不能 override**，pluginId 由 `META-INF/pf4j/plugin.properties` 的 `plugin.id` 提供
+- **业务 SPI**：`MeiyetecPlugin`（`pluginCode / version / displayName / description / vendor / onStart / onStop`），与 pf4j 解耦
+- **桥接**：`MeiyetecPluginAdapter extends Plugin implements MeiyetecPlugin` — 拿 pf4j lifecycle + 业务 SPI
+- **强制声明**：每个插件必须在 `META-INF/pf4j/plugin.properties` 写 `plugin.class=<FQN>`，否则 pf4j 找不到入口类
+
+### 0.2 目录布局（**约定**）
+
+```
+${plugin.runtime.plugins-root}/
+├── demo-hello/
+│   └── 1.0.0/
+│       └── demo-hello-1.0.0.jar     ← 业务 jar（含 plugin.properties）
+├── <pluginCode>/
+│   └── <version>/
+│       └── <pluginCode>-<version>.jar
+```
+
+- `plugin.runtime.plugins-root` 默认 `./plugins`（**生产建议绝对路径或外挂卷**，避免相对路径问题）
+- 未指定 version 时按目录名字典序倒序挑最大版本号（**依赖 semver 风格 `x.y.z`**，否则挑错版本）
+- 一个 pluginCode 一个文件夹 → 多版本并列（loadPlugin 加载多个版本会冲突，建议先 unload 再 load）
+- 启动期自动 mkdir 根目录（`init()` @PostConstruct），子目录失败仅 warn 不阻塞
+
+### 0.3 PluginRuntimeService 生命周期（核心 API）
+
+| 方法 | 触发时机 | 副作用 |
+|---|---|---|
+| `init()` @PostConstruct | Bean 创建时 | 检查 enabled，懒初始化 `PluginManager`，自动 mkdir |
+| `run()` ApplicationRunner | Spring 启动后 | auto-load-on-startup=true 时 `loadAllFromDisk` + 写持久化 |
+| `loadPlugin(code, version)` | 手动 / 启动期 | pf4j loadPlugin + 立即 enable |
+| `enablePlugin(code)` | 手动 | 平台级 enable + `recordState` |
+| `disablePlugin(code)` | 手动 | 平台级 disable（不释放 classloader）+ `recordState` |
+| `unloadPlugin(code)` | 手动 | pf4j unloadPlugin + 持久化写 `UNLOADED` |
+| `listPlugins()` / `dashboard()` | 看板拉取 | 包装 pf4j wrappers + 叠加持久化摘要 |
+| `getByCode(code)` | 调试 / 租户查询 | 单个 plugin 的当前 state |
+| `isEnabledForTenant(code, tenantId)` | **业务入口必调** | pf4j STARTED ∧ tenant-level enabled |
+
+- `PluginManager` 是**懒加载 + volatile 单例**（线程安全 DCL），不在 Bean 创建时初始化（避免无插件时浪费）
+- `loadAllFromDisk` 遍历两层目录（pluginCode → version），单版本目录失败 try/catch 不影响其他
+
+### 0.4 状态机速查
+
+| state | 含义 | 进入路径 |
+|---|---|---|
+| `CREATED` | 已 load，未 start | pf4j loadPlugin 后 |
+| `STARTED` | 已 enable，onStart 已调 | pf4j enablePlugin → Plugin#start() → MeiyetecPluginAdapter.start() → MeiyetecPlugin.onStart(ctx) |
+| `STOPPED` | 已 disable，未 unload | pf4j disablePlugin 后 |
+| `FAILED` | load 或 start 抛异常 | `w.getFailedException()` 非空 |
+| `DISABLED` | pf4j 显式 disable | `disablePlugin` |
+| `NOT_FOUND` | 未在 plugins-root 找到 | 业务定义（`PluginRuntimeInfo.notFound`） |
+| `RUNTIME_DISABLED` | `plugin.runtime.enabled=false` | 业务定义（`PluginRuntimeInfo.disabled`） |
+| `UNLOADED` | 卸载完成（持久化用） | `PluginPersistenceService.recordState` 写入 |
+
+### 0.5 EXT-23 三件套
+
+#### a. `PluginPersistenceService` — 状态持久化（`plugin_runtime_state` 表）
+
+- 唯一键：`uk_tenant_plugin(tenant_id, plugin_code)` — **0 = 平台级**
+- `recordState(...)`：upsert by `(tenantId, pluginCode)`，**异常仅 warn 不抛**（持久化失败不影响 pf4j 状态机）
+- 写入策略：
+  - `lastError` **始终刷新**（即使是 null，覆盖成功清错误）
+  - `loadedAt` 仅在 `STARTED` / `CREATED` 时刷新
+  - `version` / `pluginId` / `state` 为 null 时**保留旧值**（不覆盖）
+- `restoreStates()`：启动期读所有历史状态，dashboard 显示「persistedRecords」/「lastKnownFailed」
+
+#### b. `PluginTenantService` — 租户级启停（叠加 pf4j 之上）
+
+- 数据源：`plugin_install` 表 + `enabled` 字段
+- 判断逻辑 `isEnabledForTenant`：
+  ```
+  return pf4j.state == "STARTED" ∧ (无 plugin_install 记录 ? 默认 true : enabled == 1)
+  ```
+- **兜底**：
+  - 无任何 plugin_install 记录 → 默认启用（保持历史兼容 — pf4j STARTED 的插件对所有租户可见）
+  - 租户级无记录但平台级（tenantId=0）有记录 → 递归回退查平台级
+- `setTenantEnabled(code, tenantId, true|false)`：upsert 写 plugin_install
+
+#### c. `PluginSecurityPolicy` — 合作式沙箱
+
+⚠️ **Java 17 已弃用 SecurityManager**，本沙箱是**合作式** — 插件作者必须主动调用 `assertPackageAllowed`，否则无拦截效果。
+
+| 名单 | 内容 |
+|---|---|
+| 白名单 `HOST_PUBLIC_PACKAGES` | `com.meiyetec.plugin.` / `util.` / `exception.` |
+| 黑名单 `HOST_FORBIDDEN_PACKAGES`（**优先级高**） | `com.meiyetec.service.internal.` / `service.impl.` / `security.` / `mapper.` / `config.` + `plugin.PluginRuntimeService` / `PersistenceService` / `TenantService` |
+| 黑名单 `FORBIDDEN_JDK_PACKAGES` | `java.lang.reflect.` / `Runtime` / `Process` / `URLClassLoader` / `sun.misc.` / `sun.reflect.` / `jdk.internal.` / `java.io.FileSystem` / `java.nio.file.Files` |
+
+- 调用方契约：
+  - 插件 `onStart` 内：`assertPackageAllowed(pluginCode, "my.plugin.pkg")` 自检
+  - 宿主业务代码调用前：`assertCallerAllowed(MyExtension.class)`
+- `assertCallerAllowed` 仅做轻量 `Class.forName("com.meiyetec.service.internal.NonExistent", false, cl)` 探测 — **反射加载 `com.meiyetec.service.*` 实际不拦截**（因为 service 包非 `internal`）
+
+### 0.6 Configuration（application.yml）
+
+```yaml
+plugin:
+  runtime:
+    enabled: ${PLUGIN_RUNTIME_ENABLED:true}    # 总开关；false 时仍暴露 REST 元数据
+    plugins-root: ${PLUGIN_PLUGINS_ROOT:./plugins}   # 生产建议绝对路径
+    auto-load-on-startup: ${PLUGIN_AUTOLOAD:true}    # 启动时自动 load+enable
+```
+
+### 0.7 业务侧 `/plugin/*` ≠ 运行时 `/plugin/runtime/*`
+
+| 路径 | 职责 | 是否触达 pf4j |
+|---|---|---|
+| `POST /plugin/market` `/market/list` `/market/{id}` | 插件市场 CRUD（`plugin_market` 表） | ❌ |
+| `POST /plugin/install` `/install/{id}/uninstall` `/install/list` | 安装记录（`plugin_install` 表） | ❌ |
+| `POST /plugin/review` `/review/list/{pluginId}` | 评价（`plugin_review` 表） | ❌ |
+| `GET /plugin/runtime/list` `/dashboard` | pf4j 状态看板 | ✅ |
+| `POST /plugin/runtime/{code}/load\|enable\|disable\|unload` | pf4j 生命周期 | ✅ |
+| `GET /plugin/runtime/tenant/{tid}/list` | 租户级视图（叠加 platform+tenant state） | ✅ |
+| `POST /plugin/runtime/tenant/{tid}/{code}/enable\|disable` | 租户级启停 | ✅ |
+| `GET /plugin/runtime/persisted` | 持久化状态（跨重启可观测） | ❌（只读 DB） |
+
+**关键**：前端「安装」按钮只插 `plugin_install` 表，**不触发 runtime load**。要让插件真正能调用，需另调 `/plugin/runtime/{code}/load`。
+
+---
+
+## 1. Touchpoints
+
+后端核心（`com.meiyetec.plugin`）：
+- `MeiyetecPlugin.java` — 业务 SPI 接口
+- `MeiyetecPluginAdapter.java` — pf4j Plugin 桥接
+- `PluginRuntimeService.java` — 核心 service（`PluginRuntimeProperties` 在其内部静态类）
+- `PluginPersistenceService.java` — EXT-23 持久化
+- `PluginTenantService.java` — EXT-23 租户级
+- `PluginSecurityPolicy.java` — EXT-23 沙箱（final class，工具方法）
+- `PluginRuntimeInfo.java` — 看板 DTO
+- `PluginRuntimeContext.java` — onStart/onStop 上下文（不可变快照，含 KV 属性）
+
+后端控制器：
+- `controller/PluginRuntimeController.java` — `/plugin/runtime/*`
+- `service/PluginService.java` — `/plugin/market*` `/install*` `/review*`（marketplace，不触达 pf4j）
+
+实体 / Mapper：
+- `entity/PluginRuntimeState.java` — `plugin_runtime_state` 表（EXT-23 新增）
+- `entity/PluginInstall.java` — `plugin_install` 表（含 enabled 字段，EXT-23 复用）
+- `entity/PluginMarket.java` / `entity/PluginReview.java` — marketplace
+- `mapper/PluginRuntimeStateMapper.java`
+
+插件示例：
+- `plugins/demo-hello/pom.xml` — `provided` scope 引用 meiyetec-api + pf4j（jar 极小）
+- `plugins/demo-hello/src/main/java/com/meiyetec/demo/DemoHelloPlugin.java` — 继承 MeiyetecPluginAdapter
+- `plugins/demo-hello/src/main/resources/META-INF/pf4j/plugin.properties` — 声明 plugin.class
+
+前端：
+- `frontend/meiyetec-web/src/views/plugin/index.vue` — **只有 marketplace + 已安装 tab，无 runtime tab**
+- `frontend/meiyetec-web/src/api/plugin.ts` — `pluginApi` 封装
+
+---
+
+## 2. Re-confirmation Checklist
+
+生产 / 联调 / 上线前对照勾选：
+
+- [ ] `plugin.runtime.plugins-root` 设为**绝对路径**或外挂卷（避免相对路径在容器/服务模式下找不到）
+- [ ] `plugin.runtime.auto-load-on-startup=false` 在生产**首启**时建议关闭（避免未审核插件自动加载）
+- [ ] 部署目录结构：`${plugins-root}/{pluginCode}/{version}/*.jar` — **目录名 = pluginCode + semver**，否则版本选择错乱
+- [ ] 每个插件 `META-INF/pf4j/plugin.properties` 含 `plugin.id` + `plugin.class` + `plugin.version`
+- [ ] 插件 pom 用 `provided` scope 引用 meiyetec-api + pf4j（避免 jar 巨大且版本冲突）
+- [ ] 业务代码调用插件入口前**必调** `PluginRuntimeService.isEnabledForTenant(code, tenantId)`
+- [ ] 业务代码先查 `plugin_install.enabled == 1` — 租户显式停用后即便 pf4j STARTED 也不能调
+- [ ] 插件 `onStart` 内调用 `PluginSecurityPolicy.assertPackageAllowed(code, pkgPrefix)` 声明权限
+- [ ] 沙箱**黑名单**（`service.internal` / `service.impl` / `security` / `mapper` / `config`）绝不传给插件
+- [ ] 跨重启验证：`/plugin/runtime/persisted` 能查到上次启停记录
+- [ ] 失败态验证：`plugin_runtime_state.lastError` 写入 → 启动后 dashboard `lastKnownFailed > 0`
+- [ ] 租户级 enable/disable 后，前端 `/plugin/runtime/tenant/{tid}/list` 的 `effectiveEnabled` 同步刷新
+
+---
+
+## 3. Endpoints
+
+```
+GET    /plugin/runtime/list                                    # pf4j 全部插件（含 NOT_FOUND / RUNTIME_DISABLED）
+GET    /plugin/runtime/dashboard                               # 摘要统计
+POST   /plugin/runtime/{pluginCode}/load                       # body: {version?: "x.y.z"}
+POST   /plugin/runtime/{pluginCode}/enable                     # 平台级启用
+POST   /plugin/runtime/{pluginCode}/disable                    # 平台级停用
+POST   /plugin/runtime/{pluginCode}/unload                     # 卸载（释放 classloader）
+
+GET    /plugin/runtime/tenant/{tenantId}/list                  # 叠加 platform + tenant state
+POST   /plugin/runtime/tenant/{tenantId}/{pluginCode}/enable   # 租户级启用
+POST   /plugin/runtime/tenant/{tenantId}/{pluginCode}/disable  # 租户级停用
+GET    /plugin/runtime/persisted?tenantId=                     # 持久化状态查询
+```
+
+> ✅ `PluginRuntimeController.assertTenantAccess(Long)` 已实现（`controller/PluginRuntimeController.java:55-65`）：`dataScope=ALL` 平台超管放行 / 租户等值校验通过 / 非空非 ALL 返回 `Result.error(BizCode.FORBIDDEN, "跨租户访问被拒绝")`。**已在 4 个 tenantId 端点接入**：`listTenant L132` / `enableForTenant L160` / `disableForTenant L176` / `persisted L193`。
+
+---
+
+## 4. 新增插件 checklist
+
+要加新插件（如 `wechat-pay-plugin`）：
+
+1. 新建独立 Maven 项目（参考 `plugins/demo-hello/pom.xml`）
+2. 写插件类继承 `MeiyetecPluginAdapter`，实现 `pluginCode / version / displayName / description`
+3. `onStart` 内调 `PluginSecurityPolicy.assertPackageAllowed(pluginCode(), "你的包前缀")`
+4. 写 `META-INF/pf4j/plugin.properties`：
+   ```properties
+   plugin.id=wechat-pay-plugin
+   plugin.class=com.example.wechatpay.WechatPayPlugin
+   plugin.version=1.0.0
+   plugin.provider=your-org
+   ```
+5. `mvn clean package` → 拷贝 jar 到 `${plugins-root}/wechat-pay-plugin/1.0.0/`
+6. **重启应用** 或调 `POST /plugin/runtime/wechat-pay-plugin/load` body `{version: "1.0.0"}`
+7. 业务代码调前必过 `isEnabledForTenant("wechat-pay-plugin", currentTenantId)`
+
+---
+
+## 5. 已知问题 / 限制
+
+- **沙箱是合作式**：`PluginSecurityPolicy.assertCallerAllowed` 仅做 `Class.forName(... internal.NonExistent)` 探测，**反射加载 `com.meiyetec.service.*`（非 internal）实际不拦截**。要真正隔离需 JVM 字节码增强（agent）或 OSGi
+- **pluginId 约定漂移**：`resolvePluginId` 在插件未注册时返回 `pluginCode + "@unknown"`，后续 `enablePlugin("xxx")` 会误报 `NOT_FOUND` 而非真正错误（建议明确抛异常）
+- **目录选择策略简陋**：`resolvePluginDir` 未指定 version 时按目录名**字典序倒序**挑最大，**非真正的 semver 比较**（`1.10.0` < `1.2.0` 字典序会出错）
+- **多版本并存冲突**：`loadPlugin(code, v1)` + `loadPlugin(code, v2)` 会让 pf4j 内部两个 wrapper 共存，**`resolvePluginId` 取第一个匹配的版本**，行为不可预期
+- **`plugin_install` 幽灵记录**：marketplace 安装只插 `plugin_install`，**runtime 未加载**时 `isEnabledForTenant` 仍返回 `STARTED && true`（兜底默认启用）→ 业务侧可能调到一个不存在的插件入口（NPE）
+- **`disablePlugin` 副作用**：禁用成功也写 `recordState(... state=DISABLED, errorMsg=null)`，**会把上一次的 FAILED 错误也清掉**（与 `recordState` 文档「成功覆盖失败」语义一致，但运维侧会失去审计线索）
+- **前端无 runtime tab**：`plugin/index.vue` 只有「市场」+「已安装」，看不到 pf4j 状态机；「安装」按钮无 loading、无 force、无确认
+- **`loadPlugin` 不写 `autoLoaded=true`**：`PluginRuntimeInfo.autoLoaded` 字段定义了但实际未填充
+- **持久化表无租户隔离索引**：高频写场景下 `uk_tenant_plugin` 唯一约束可能成为瓶颈
+- **`pluginId` 与 `pluginCode` 强约定**：META-INF/pf4j/plugin.properties 的 `plugin.id` **建议与 `pluginCode` 保持一致**，否则 `resolvePluginId` 会通过遍历匹配，可能拿错版本
+
+---
+
+## 6. 业务侧调用模板
+
+```java
+// 1. 业务入口前 — 检查租户级 + 平台级双开
+if (!pluginRuntimeService.isEnabledForTenant("wechat-pay-plugin", TenantContextHolder.get().getTenantId())) {
+    return Result.error(BizCode.FORBIDDEN, "插件未启用");
+}
+
+// 2. 拿插件实例（避免硬编码 import — 用反射或 pf4j Extension 机制）
+PluginWrapper wrapper = pluginManager.getPlugin("wechat-pay-plugin@1.0.0");
+if (wrapper == null || wrapper.getPlugin() == null) {
+    return Result.error(BizCode.NOT_FOUND, "插件未加载");
+}
+Object plugin = wrapper.getPlugin();
+Method helloMethod = plugin.getClass().getMethod("hello", String.class);
+String result = (String) helloMethod.invoke(plugin, "world");
+
+// 3. 业务前置：调用方沙箱自检（可选）
+PluginSecurityPolicy.assertCallerAllowed(getClass());
+```
+
+> ⚠️ 反射调用丢失编译期类型检查；建议后续用 pf4j `@Extension` 机制 + ExtensionPoint 接口约定。

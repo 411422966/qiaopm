@@ -1,0 +1,30 @@
+﻿=== F139: MktEffectController.snapshot 验证 market_activity count ===
+{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "totalPromotions":  1,
+                 "journeyEnterCount":  6,
+                 "promotions":  [
+                                    {
+                                        "promotionName":  "audit-5A-F133",
+                                        "promotionType":  "DISCOUNT",
+                                        "discountTotal":  0.00,
+                                        "orderCount":  3,
+                                        "id":  5
+                                    }
+                                ],
+                 "touchConverted":  2,
+                 "queryDate":  "2026-09-16",
+                 "pointsGranted":  29500,
+                 "couponUsageRate":  0,
+                 "totalDiscount":  399.48,
+                 "totalReach":  3935,
+                 "totalOrders":  3,
+                 "touchSuccess":  2075,
+                 "totalActivities":  5,
+                 "usedCoupon":  0
+             },
+    "traceId":  "07e7e858eaf742e0b6f5e1db7e01d53a",
+    "timestamp":  "2026-09-16 23:28:13"
+}

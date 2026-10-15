@@ -1,0 +1,9 @@
+﻿mysql : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-bdb95cec-c69e-477a-89c9-7681b9255060.ps1:102 字符: 1
++ mysql -h 127.0.0.1 -P 3307 -u root -proot123456 -e "SELECT id, journe ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+id	journey_name	status	published_at
+6	audit-5A-F124-UPDATED	3	2026-09-16 02:48:16

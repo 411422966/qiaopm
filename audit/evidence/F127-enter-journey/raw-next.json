@@ -1,0 +1,10 @@
+﻿{
+    "code":  200,
+    "message":  "旅程已结束",
+    "data":  {
+                 "status":  2,
+                 "id":  2
+             },
+    "traceId":  "869ada6a618648c682deb6e4f7235252",
+    "timestamp":  "2026-09-16 01:56:06"
+}

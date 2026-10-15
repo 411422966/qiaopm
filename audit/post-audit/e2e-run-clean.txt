@@ -1,0 +1,515 @@
+﻿[global-setup] OK user=admin token.len=246 state→.auth-state.json
+
+Running 19 tests using 1 worker
+
+node.exe : (node:20596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+所在位置 行:1 字符: 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:20596) Wa... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-warnings ...` to show where the warning was created)
+已发现 tabs: [ '集成配置', '同步日志' ]
+  ok  1 ..\..\audit\scripts\e2e\F007-no-dashboard-tab.spec.ts:26:7 › F007 — Dashboard tab Shadow Feature › I006: 应无 dashboard tab (1.7s)
+dashboard 响应: {
+  "code": 200,
+  "message": "操作成功",
+  "data": {
+    "totalIntegrations": 6,
+    "totalSyncLogs": 24
+  },
+  "traceId": "332c2e92cd2c434c90ce1c9c141a27b2",
+  "timestamp": "2026-09-21 23:55:35"
+}
+  ok  2 ..\..\audit\scripts\e2e\F007-no-dashboard-tab.spec.ts:48:7 › F007 — Dashboard tab Shadow Feature › API 端点可访问（I008 Fake Success 链） (60ms)
+列表列头: [
+  'ID',       '平台',
+  '店铺',     '方向',
+  '最近同步', '状态',
+  '操作',     'ID',
+  '集成',     '类型',
+  '状态',     '同步时间',
+  '备注'
+]
+集成行数: 30
+状态 enum 实际值: ACTIVE=false, DISABLED=false, PAUSED=false
+  x   3 ..\..\audit\scripts\e2e\F024-list-ui.spec.ts:22:7 › F024 — 集成列表 UI › 集成列表渲染 + 列名 + 状态 enum (1.6s)
+(node:14436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+表单字段: [ '平台', '店铺名称', '方向', '自动同步' ]
+  ok  4 ..\..\audit\scripts\e2e\F025-create-form.spec.ts:27:7 › F025 — 新建集成表单 › 对话框渲染 + I005 C4 字段缺失 (2.3s)
+  x   5 ..\..\audit\scripts\e2e\F025-create-form.spec.ts:54:7 › F025 — 新建集成表单 › 填表保存 → 列表新增行 (8.0s)
+(node:18216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+同步日志列头: [
+  'ID',       '平台',
+  '店铺',     '方向',
+  '最近同步', '状态',
+  '操作',     'ID',
+  '集成',     '类型',
+  '状态',     '同步时间',
+  '备注'
+]
+  ok  6 ..\..\audit\scripts\e2e\F026-sync-log-tab.spec.ts:26:7 › F026 — 同步日志 tab › 切到同步日志 tab + 验证 integrationId 列 (3.9s)
+sync-log/list 响应: {
+  "code": 200,
+  "message": "操作成功",
+  "data": [
+    {
+      "id": 27,
+      "tenantId": 1,
+      "platform": "SALESFORCE",
+      "syncType": "MANUAL",
+      "direction": "PULL",
+      "successCount": 0,
+      "failCount": 0,
+      "skippedCount": 0,
+      "errorMessage": null,
+      "durationMs": 14,
+      "status": "SUCCESS",
+      "createdAt": "2026-09-21T23:53:15",
+      "syncToken": null,
+      "recordsTotal": 0,
+      "recordsFiltered": 0
+    },
+    {
+      "id": 24,
+      "tenantId": 1,
+
+第一条日志字段: [
+  'id',              'tenantId',
+  'platform',        'syncType',
+  'direction',       'successCount',
+  'failCount',       'skippedCount',
+  'errorMessage',    'durationMs',
+  'status',          'createdAt',
+  'syncToken',       'recordsTotal',
+  'recordsFiltered'
+]
+  ok  7 ..\..\audit\scripts\e2e\F026-sync-log-tab.spec.ts:49:7 › F026 — 同步日志 tab › 同步日志 API 响应（I003 漂移实证） (230ms)
+捕获到的 sync 请求: [
+  {
+    url: 'http://127.0.0.1:5173/api/crm-integration/sync-log/list',
+    method: 'GET'
+  },
+  {
+    url: 'http://127.0.0.1:5173/api/crm-integration/8/sync',
+    method: 'POST'
+  },
+  {
+    url: 'http://127.0.0.1:5173/api/crm-integration/sync-log/list',
+    method: 'GET'
+  }
+]
+sync URL: http://127.0.0.1:5173/api/crm-integration/sync-log/list
+  x   8 ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:26:7 › F027 — sync 按钮 force 未传 › 点击同步按钮 → URL 不带 ?force=1 (4.8s)
+(node:19900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+sync 响应（无 force）: {
+  "code": 500,
+  "message": "Cannot invoke \"java.lang.Integer.intValue()\" because the return value of \"com.meiyetec.entity.CrmSyncLog.getSuccessCount()\" is null",
+  "data": null,
+  "traceId": "1be38c0015e54c6185a37faf2f080fa7",
+  "timestamp": "2026-09-21 23:56:02"
+}
+  x   9 ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:71:7 › F027 — sync 按钮 force 未传 › API 直调验证 force 未传 (104ms)
+(node:20668) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+sync 响应（force=1）: {
+  "code": 500,
+  "message": "Cannot invoke \"java.lang.Integer.intValue()\" because the return value of \"com.meiyetec.entity.CrmSyncLog.getSuccessCount()\" is null",
+  "data": null,
+  "traceId": "c9e505f5b4d44bbe918275539d7d1770",
+  "timestamp": "2026-09-21 23:56:03"
+}
+  x  10 ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:86:7 › F027 — sync 按钮 force 未传 › API 直调 force=1 验证 (103ms)
+(node:14816) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+表单字段: [ '平台', '店铺名称', '方向', '自动同步' ]
+placeholder: []
+✅ 表单缺 "clientId"
+✅ 表单缺 "clientSecret"
+✅ 表单缺 "privateKey"
+✅ 表单缺 "username"
+✅ 表单缺 "loginUrl"
+✅ 表单缺 "objectMappings"
+  ok 11 ..\..\audit\scripts\e2e\F028-object-mappings.spec.ts:28:7 › F028 — objectMappings UI 缺失 › 新建表单无 objectMappings 字段（I005 C4） (1.8s)
+list 响应 code: 200
+第一条 integration 字段: [
+  'id',             'tenantId',
+  'platform',       'appId',
+  'clientId',       'clientSecret',
+  'accessToken',    'refreshToken',
+  'tokenExpireAt',  'apiBaseUrl',
+  'portalId',       'syncDirection',
+  'syncMembers',    'syncOrders',
+  'syncContacts',   'syncDeals',
+  'autoSync',       'lastSyncAt',
+  'status',         'errorMessage',
+  'createdAt',      'updatedAt',
+  'syncToken',      'syncSchedule',
+  'syncEnabled',    'lastIncrementalSyncAt',
+  'username',       'loginUrl',
+  'objectMappings', 'syncWindowMinutes'
+]
+  ok 12 ..\..\audit\scripts\e2e\F028-object-mappings.spec.ts:58:7 › F028 — objectMappings UI 缺失 › 后端 API + DB 验证 object_mappings 持久化为 NULL (66ms)
+  x  13 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:31:7 › F111 — intl-booking/index.vue Shadow 验证 › 页面加载 + 2 tab 结构（"渠道连接" + "国际预约"） (12.0s)
+(node:22452) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+绑定按钮数（Google + Instagram）: 0
+  x  14 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:46:7 › F111 — intl-booking/index.vue Shadow 验证 › 3 对话框结构（Google OAuth / Instagram OAuth / 模板预览） (2.5s)
+(node:17992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+I040 — 前端 UI 含 autoSend 元素 = false（应 false）
+  ok 15 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:65:7 › F111 — intl-booking/index.vue Shadow 验证 › I040 — autoSend=false UI 缺失（Shadow 实证） (2.2s)
+  x  16 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:80:7 › F111 — intl-booking/index.vue Shadow 验证 › I041 — "确认"按钮文案无"发送通知"提示（Shadow 实证） (12.1s)
+(node:3644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  17 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:113:7 › F112 — intl-booking.ts API 端点封装 Shadow 验证 › I042 — intlBookingApi 无 sendConfirmation 方法（Shadow 实证） (656ms)
+(node:21940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  18 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:130:7 › F112 — intl-booking.ts API 端点封装 Shadow 验证 › 12 端点方法完整性（对照 F112 期望清单） (588ms)
+(node:21260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  19 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:163:7 › F112 — intl-booking.ts API 端点封装 Shadow 验证 › updateStatus 仅传 status 字段，不支持 autoSend (446ms)
+
+
+  1) ..\..\audit\scripts\e2e\F024-list-ui.spec.ts:22:7 › F024 — 集成列表 UI › 集成列表渲染 + 列名 + 状态 enum ────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      60 |
+      61 |     // ⚠️ 期望：前端 PAUSED（toggle inactive-value），后端 ACTIVE/DISABLED/ERROR（I005 C1 漂移）
+    > 62 |     expect(hasActive || hasPaused || hasDisabled).toBe(true)
+         |                                                   ^
+      63 |   })
+      64 | })
+      65 |
+        at D:\QiaoPM\audit\scripts\e2e\F024-list-ui.spec.ts:62:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\F024-list-ui-F024-—-集成列表-UI-集成列表渲染-列名-状态-enum\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\F024-list-ui-F024-—-集成列表-UI-集成列表渲染-列名-状态-enum\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\F024-list-ui-F024-—-集成列表-UI-集成列表渲染-列名-状态-enum\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F024-list-ui-F024-—-集成列表-UI-集成列表渲染-列名-状态-enum\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) ..\..\audit\scripts\e2e\F025-create-form.spec.ts:54:7 › F025 — 新建集成表单 › 填表保存 → 列表新增行 ──────────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.el-dialog')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('.el-dialog')
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      72 |
+      73 |     // 等待对话框关闭（必须真关闭，否则视为保存失败）
+    > 74 |     await expect(page.locator('.el-dialog')).toHaveCount(0, { timeout: 5000 })
+         |                                              ^
+      75 |
+      76 |     // 等待列表刷新
+      77 |     await page.waitForTimeout(3_000)
+        at D:\QiaoPM\audit\scripts\e2e\F025-create-form.spec.ts:74:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\F025-create-form-F025-—-新建集成表单-填表保存-→-列表新增行\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\F025-create-form-F025-—-新建集成表单-填表保存-→-列表新增行\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\F025-create-form-F025-—-新建集成表单-填表保存-→-列表新增行\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F025-create-form-F025-—-新建集成表单-填表保存-→-列表新增行\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:26:7 › F027 — sync 按钮 force 未传 › 点击同步按钮 → URL 不带 ?force=1 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "POST"
+    Received: "GET"
+
+      66 |     // 验证响应（I008 Fake Success 链 — 即使 I002 阻塞也会 200 + code=500）
+      67 |     // 注：当前环境 I002 阻塞 → 响应 code=500，但 API 调用本身被发出
+    > 68 |     expect(syncReq.method).toBe('POST')
+         |                            ^
+      69 |   })
+      70 |
+      71 |   test('API 直调验证 force 未传', async ({ request }) => {
+        at D:\QiaoPM\audit\scripts\e2e\F027-sync-button.spec.ts:68:28
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\F027-sync-button-F027-—-sy-7240d--未传-点击同步按钮-→-URL-不带-force-1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\F027-sync-button-F027-—-sy-7240d--未传-点击同步按钮-→-URL-不带-force-1\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\F027-sync-button-F027-—-sy-7240d--未传-点击同步按钮-→-URL-不带-force-1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F027-sync-button-F027-—-sy-7240d--未传-点击同步按钮-→-URL-不带-force-1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:71:7 › F027 — sync 按钮 force 未传 › API 直调验证 force 未传 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 500
+
+      81 |
+      82 |     // ✅ 修复 false positive：业务码必须 200（I002 修好后 skipped=true 也是 code=200；I002 阻塞 → code=500 直接 FAIL）
+    > 83 |     expect(body.code).toBe(200)
+         |                       ^
+      84 |   })
+      85 |
+      86 |   test('API 直调 force=1 验证', async ({ request }) => {
+        at D:\QiaoPM\audit\scripts\e2e\F027-sync-button.spec.ts:83:23
+
+    Error Context: test-results\F027-sync-button-F027-—-sync-按钮-force-未传-API-直调验证-force-未传\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\F027-sync-button-F027-—-sync-按钮-force-未传-API-直调验证-force-未传\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F027-sync-button-F027-—-sync-按钮-force-未传-API-直调验证-force-未传\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:86:7 › F027 — sync 按钮 force 未传 › API 直调 force=1 验证 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 500
+
+      94 |     console.log('sync 响应（force=1）:', JSON.stringify(body, null, 2))
+      95 |
+    > 96 |     expect(body.code).toBe(200)
+         |                       ^
+      97 |     expect(body.data?.forced).toBe(true)
+      98 |   })
+      99 | })
+        at D:\QiaoPM\audit\scripts\e2e\F027-sync-button.spec.ts:96:23
+
+    Error Context: test-results\F027-sync-button-F027-—-sync-按钮-force-未传-API-直调-force-1-验证\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\F027-sync-button-F027-—-sync-按钮-force-未传-API-直调-force-1-验证\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F027-sync-button-F027-—-sync-按钮-force-未传-API-直调-force-1-验证\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:31:7 › F111 — intl-booking/index.vue Shadow 验证 › 页面加载 + 2 tab 结构（"渠道连接" + "国际预约"） 
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('.el-tabs__nav') to be visible
+
+
+      34 |
+      35 |     // 等待 tabs 渲染
+    > 36 |     await page.waitForSelector('.el-tabs__nav', { timeout: 10_000 })
+         |                ^
+      37 |
+      38 |     const tabs = await page.locator('.el-tabs__item').allTextContents()
+      39 |     console.log('intl-booking tabs:', tabs)
+        at D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:36:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\F111-F112-shadow-F111-—-in-0c295--页面加载-2-tab-结构（-渠道连接-国际预约-）\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\F111-F112-shadow-F111-—-in-0c295--页面加载-2-tab-结构（-渠道连接-国际预约-）\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\F111-F112-shadow-F111-—-in-0c295--页面加载-2-tab-结构（-渠道连接-国际预约-）\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F111-F112-shadow-F111-—-in-0c295--页面加载-2-tab-结构（-渠道连接-国际预约-）\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:46:7 › F111 — intl-booking/index.vue Shadow 验证 › 3 对话框结构（Google OAuth / Instagram OAuth / 模板预览） 
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 2
+    Received:    0
+
+      52 |     const connectButtons = await page.getByRole('button', { name: '绑定' }).count()
+      53 |     console.log('绑定按钮数（Google + Instagram）:', connectButtons)
+    > 54 |     expect(connectButtons).toBeGreaterThanOrEqual(2)
+         |                            ^
+      55 |
+      56 |     // 切换到"国际预约" tab — 验证页面无确认 → 需要先有数据（I038 表缺失时为空，跳过）
+      57 |     await page.getByRole('tab', { name: /国际预约/ }).click()
+        at D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:54:28
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\F111-F112-shadow-F111-—-in-ca6fc-OAuth-Instagram-OAuth-模板预览）\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\F111-F112-shadow-F111-—-in-ca6fc-OAuth-Instagram-OAuth-模板预览）\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\F111-F112-shadow-F111-—-in-ca6fc-OAuth-Instagram-OAuth-模板预览）\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F111-F112-shadow-F111-—-in-ca6fc-OAuth-Instagram-OAuth-模板预览）\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:80:7 › F111 — intl-booking/index.vue Shadow 验证 › I041 — "确认"按钮文案无"发送通知"提示（Shadow 实证） 
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: /国际预约/ })
+
+
+      83 |
+      84 |     // 切换到"国际预约" tab
+    > 85 |     await page.getByRole('tab', { name: /国际预约/ }).click()
+         |                                                   ^
+      86 |     await page.waitForTimeout(1_000)
+      87 |
+      88 |     // 查找"确认"按钮 — Vue 模板 L66 按钮文案是「确认」,无「即发送通知」提示
+        at D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:85:51
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\F111-F112-shadow-F111-—-in-caed3-确认-按钮文案无-发送通知-提示（Shadow-实证）\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\F111-F112-shadow-F111-—-in-caed3-确认-按钮文案无-发送通知-提示（Shadow-实证）\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\F111-F112-shadow-F111-—-in-caed3-确认-按钮文案无-发送通知-提示（Shadow-实证）\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F111-F112-shadow-F111-—-in-caed3-确认-按钮文案无-发送通知-提示（Shadow-实证）\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:113:7 › F112 — intl-booking.ts API 端点封装 Shadow 验证 › I042 — intlBookingApi 无 sendConfirmation 方法（Shadow 实证） 
+
+    Error: ENOENT: no such file or directory, open 'D:\QiaoPM\src\api\intl-booking.ts'
+
+      25 | function loadApiSource(): string {
+      26 |   const apiPath = resolve(__dirname, '../../../src/api/intl-booking.ts')
+    > 27 |   return readFileSync(apiPath, 'utf-8')
+         |                      ^
+      28 | }
+      29 |
+      30 | test.describe('F111 — intl-booking/index.vue Shadow 验证', () => {
+        at loadApiSource (D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:27:22)
+        at D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:115:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\F111-F112-shadow-F112-—-in-729cb-dConfirmation-方法（Shadow-实证）\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\F111-F112-shadow-F112-—-in-729cb-dConfirmation-方法（Shadow-实证）\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\F111-F112-shadow-F112-—-in-729cb-dConfirmation-方法（Shadow-实证）\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F111-F112-shadow-F112-—-in-729cb-dConfirmation-方法（Shadow-实证）\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:130:7 › F112 — intl-booking.ts API 端点封装 Shadow 验证 › 12 端点方法完整性（对照 F112 期望清单） 
+
+    Error: ENOENT: no such file or directory, open 'D:\QiaoPM\src\api\intl-booking.ts'
+
+      25 | function loadApiSource(): string {
+      26 |   const apiPath = resolve(__dirname, '../../../src/api/intl-booking.ts')
+    > 27 |   return readFileSync(apiPath, 'utf-8')
+         |                      ^
+      28 | }
+      29 |
+      30 | test.describe('F111 — intl-booking/index.vue Shadow 验证', () => {
+        at loadApiSource (D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:27:22)
+        at D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:131:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\F111-F112-shadow-F112-—-in-0fc56-验证-12-端点方法完整性（对照-F112-期望清单）\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\F111-F112-shadow-F112-—-in-0fc56-验证-12-端点方法完整性（对照-F112-期望清单）\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\F111-F112-shadow-F112-—-in-0fc56-验证-12-端点方法完整性（对照-F112-期望清单）\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F111-F112-shadow-F112-—-in-0fc56-验证-12-端点方法完整性（对照-F112-期望清单）\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:163:7 › F112 — intl-booking.ts API 端点封装 Shadow 验证 › updateStatus 仅传 status 字段，不支持 autoSend 
+
+    Error: ENOENT: no such file or directory, open 'D:\QiaoPM\src\api\intl-booking.ts'
+
+      25 | function loadApiSource(): string {
+      26 |   const apiPath = resolve(__dirname, '../../../src/api/intl-booking.ts')
+    > 27 |   return readFileSync(apiPath, 'utf-8')
+         |                      ^
+      28 | }
+      29 |
+      30 | test.describe('F111 — intl-booking/index.vue Shadow 验证', () => {
+        at loadApiSource (D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:27:22)
+        at D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:164:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\F111-F112-shadow-F112-—-in-972a2-s-仅传-status-字段，不支持-autoSend\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\F111-F112-shadow-F112-—-in-972a2-s-仅传-status-字段，不支持-autoSend\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\F111-F112-shadow-F112-—-in-972a2-s-仅传-status-字段，不支持-autoSend\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F111-F112-shadow-F112-—-in-972a2-s-仅传-status-字段，不支持-autoSend\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11 failed
+    ..\..\audit\scripts\e2e\F024-list-ui.spec.ts:22:7 › F024 — 集成列表 UI › 集成列表渲染 + 列名 + 状态 enum ─────
+    ..\..\audit\scripts\e2e\F025-create-form.spec.ts:54:7 › F025 — 新建集成表单 › 填表保存 → 列表新增行 ───────────
+    ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:26:7 › F027 — sync 按钮 force 未传 › 点击同步按钮 → URL 不带 ?force=1 
+    ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:71:7 › F027 — sync 按钮 force 未传 › API 直调验证 force 未传 
+    ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:86:7 › F027 — sync 按钮 force 未传 › API 直调 force=1 验证 
+    ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:31:7 › F111 — intl-booking/index.vue Shadow 验证 › 页面加载 + 2 tab 结构（"渠道连接" + "国际预约"） 
+    ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:46:7 › F111 — intl-booking/index.vue Shadow 验证 › 3 对话框结构（Google OAuth / Instagram OAuth / 模板预览） 
+    ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:80:7 › F111 — intl-booking/index.vue Shadow 验证 › I041 — "确认"按钮文案无"发送通知"提示（Shadow 实证） 
+    ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:113:7 › F112 — intl-booking.ts API 端点封装 Shadow 验证 › I042 — intlBookingApi 无 sendConfirmation 方法（Shadow 实证） 
+    ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:130:7 › F112 — intl-booking.ts API 端点封装 Shadow 验证 › 12 端点方法完整性（对照 F112 期望清单） 
+    ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:163:7 › F112 — intl-booking.ts API 端点封装 Shadow 验证 › updateStatus 仅传 status 字段，不支持 autoSend 
+  8 passed (1.2m)

@@ -1,0 +1,84 @@
+﻿{
+    "detail":  {
+                   "code":  200,
+                   "message":  "操作成功",
+                   "data":  {
+                                "nodes":  [
+                                              {
+                                                  "nodeOrder":  1,
+                                                  "nodeName":  "step1",
+                                                  "templateCode":  "SMS_TPL_001",
+                                                  "delayMinutes":  0
+                                              }
+                                          ],
+                                "journey":  {
+                                                "journeyName":  "5A-TestJourney",
+                                                "exitCount":  0,
+                                                "publishedAt":  null,
+                                                "description":  null,
+                                                "updateTime":  "2026-09-16T01:50:20",
+                                                "journeyCode":  "5A_J_001",
+                                                "completeCount":  0,
+                                                "operatorName":  "admin",
+                                                "nodesJson":  "[{\"nodeOrder\":1,\"nodeName\":\"step1\",\"templateCode\":\"SMS_TPL_001\",\"delayMinutes\":0}]",
+                                                "deleted":  0,
+                                                "journeyType":  "REENGAGEMENT",
+                                                "createTime":  "2026-09-16T01:50:20",
+                                                "edgesJson":  null,
+                                                "brandId":  null,
+                                                "triggerFilter":  null,
+                                                "tenantId":  1,
+                                                "triggerEvent":  null,
+                                                "id":  3,
+                                                "enterCount":  0,
+                                                "operatorId":  null,
+                                                "status":  1
+                                            }
+                            },
+                   "traceId":  "77232c03d2a7498889252516f556d223",
+                   "timestamp":  "2026-09-16 01:50:20"
+               },
+    "pause":  {
+                  "code":  200,
+                  "message":  "已暂停",
+                  "data":  null,
+                  "traceId":  "0ff2c76efe7f4ac6bd6be9a1c8e9b4d3",
+                  "timestamp":  "2026-09-16 01:50:20"
+              },
+    "publish":  {
+                    "code":  200,
+                    "message":  "已发布",
+                    "data":  null,
+                    "traceId":  "40ca500a86b3427893e0e863d9521553",
+                    "timestamp":  "2026-09-16 01:50:20"
+                },
+    "update":  {
+                   "code":  200,
+                   "message":  "已更新",
+                   "data":  {
+                                "id":  3,
+                                "tenantId":  1,
+                                "brandId":  null,
+                                "journeyCode":  "5A_J_001",
+                                "journeyName":  "5A-Journey-Updated",
+                                "journeyType":  "REENGAGEMENT",
+                                "description":  null,
+                                "nodesJson":  null,
+                                "edgesJson":  null,
+                                "triggerEvent":  null,
+                                "triggerFilter":  null,
+                                "status":  1,
+                                "publishedAt":  null,
+                                "enterCount":  0,
+                                "completeCount":  0,
+                                "exitCount":  0,
+                                "operatorId":  null,
+                                "operatorName":  "admin",
+                                "createTime":  "2026-09-16T01:50:20",
+                                "updateTime":  "2026-09-16T01:50:20",
+                                "deleted":  0
+                            },
+                   "traceId":  "07f40832aa214ed08df629c2c1e8f90c",
+                   "timestamp":  "2026-09-16 01:50:20"
+               }
+}

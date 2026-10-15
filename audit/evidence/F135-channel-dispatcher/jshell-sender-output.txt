@@ -1,0 +1,57 @@
+=== F135 + F137 鎺㈤拡 5 sender channelType 瀹炶瘉 ===
+=== F135 + F137 鎺㈤拡锛?5 sender channelType 瀹炶瘉 ===
+
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+SmsSender.channelType()              = SMS
+EmailSender.channelType()            = EMAIL
+MiniProgramSender.channelType()      = MINI_PROGRAM
+InAppSender.channelType()            = IN_APP
+WechatOfficialAccountSender.channelType() = WECHAT_OFFICIAL_ACCOUNT
+
+=== F135 ChannelDispatcher.getSender 瀹炶瘉 ===
+
+Sender list size = 5
+
+--- Case 1: getSender("SMS") 鏈熸湜杩斿洖 SmsSender ---
+Result: SmsSender
+PASS: true
+
+--- Case 2: getSender("EMAIL") 鏈熸湜杩斿洖 EmailSender ---
+Result: EmailSender
+PASS: true
+
+--- Case 3: getSender("MINI_PROGRAM") ---
+Result: MiniProgramSender
+PASS: true
+
+--- Case 4: getSender("IN_APP") ---
+Result: InAppSender
+PASS: true
+
+--- Case 5: getSender("WECHAT_OFFICIAL_ACCOUNT") ---
+Result: WechatOfficialAccountSender
+PASS: true
+
+--- Case 6: getSender("UNKNOWN") 鏈熸湜杩斿洖 null 锛圛061 NPE 椋庨櫓瀹炶瘉锛?---
+Result: null
+PASS (杩斿洖 null): true
+I061 瀹炶瘉椋庨櫓: 璋冪敤鏂规嬁鍒? null 鍚庝换浣曟柟娉曡皟鐢ㄩ兘浼? NPE
+
+--- Case 7: getSender("WECHAT_OA") 鍒悕婕傜Щ I039 瀹炶瘉 ---
+Result: null
+FAIL (别名不匹配): true
+→ sender 返回 "WECHAT_OFFICIAL_ACCOUNT" 但 DB 里如果以 "WECHAT_OA" 存储会查不到 sender
+
+--- Case 8: getSender("MP") DB channel_type 瀹炶瘉 ---
+Result: null
+FAIL ("MP" 不在 sender 注册列表): true
+→ DB channel_type="MP" 但 sender 返回 "WECHAT_OFFICIAL_ACCOUNT" → dispatch 时查不到 sender
+
+--- Case 9: getSender("PUSH") DB channel_type 瀹炶瘉 ---
+Result: null
+FAIL ("PUSH" 不在 sender 注册列表): true
+→ DB channel_type="PUSH" 但 sender 未注册 → dispatch 时查不到 sender
+
+=== 实证完成 ===

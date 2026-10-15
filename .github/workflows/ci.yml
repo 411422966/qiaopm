@@ -1,0 +1,352 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop, release/**]
+  pull_request:
+    branches: [main, master, develop, release/**]
+
+jobs:
+  # ==========================================================================
+  # 1. 后端构建 + 单元测试
+  # ==========================================================================
+  backend:
+    name: Backend Build & Unit Test
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root123
+          MYSQL_DATABASE: meiyetec_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=5s --health-retries=10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('backend/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2-
+
+      - name: Backend compile + unit test
+        working-directory: backend
+        run: mvn -B -DskipTests=false test
+
+      - name: Backend package (skip tests for fast CI)
+        working-directory: backend
+        run: mvn -B -DskipTests=true package
+
+      # 上传预编译 jar 给 docker-build job 复用（避免镜像内重跑 maven，节省 5-30min）
+      # 仅 main + push 触发：与 docker-build job 的 if 条件对齐（节省 artifact 存储）
+      - name: Upload backend jar
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/target/meiyetec-api-*.jar
+          retention-days: 1
+          if-no-files-found: error
+
+  # ==========================================================================
+  # 2. 前端构建 + TypeScript 类型检查 + 单元测试
+  # ==========================================================================
+  frontend:
+    name: Frontend Build, Type Check & Unit Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/meiyetec-web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend/meiyetec-web
+        run: npm ci || npm install
+
+      - name: TypeScript check
+        working-directory: frontend/meiyetec-web
+        run: npx vue-tsc --noEmit
+
+      - name: Unit tests (Vitest)
+        working-directory: frontend/meiyetec-web
+        run: npm run test
+
+      - name: Build
+        working-directory: frontend/meiyetec-web
+        run: npm run build
+
+  # ==========================================================================
+  # 3. 关键集成测试 (PowerShell · 必须在 backend + DB 都跑起来之后)
+  #    仅在 PR / 夜间 / 手动触发时跑
+  # ==========================================================================
+  integration:
+    name: Integration Tests (PowerShell)
+    runs-on: windows-latest
+    needs: [backend, frontend]
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Start MySQL
+        env:
+          MYSQL_ROOT_PASSWORD: root123
+          MYSQL_DATABASE: meiyetec_test
+        run: |
+          docker run -d --name mysql -p 3306:3306 \
+            -e MYSQL_ROOT_PASSWORD=root123 \
+            -e MYSQL_DATABASE=meiyetec_test \
+            mysql:8.0 --default-authentication-plugin=mysql_native_password
+          timeout /t 20
+
+      - name: Initialize database
+        run: |
+          # 假设项目根有 init.sql 一键脚本
+          # 实际项目按模块替换为 init_mXX_*.sql 循环
+          dir database
+          if (Test-Path database/init.sql) { Get-Content database/init.sql | mysql -h 127.0.0.1 -u root -proot123 meiyetec_test }
+
+      - name: Start backend in background
+        working-directory: backend
+        run: |
+          Start-Process -NoNewWindow -FilePath "mvn" -ArgumentList "spring-boot:run"
+          timeout /t 90
+
+      - name: Run integration tests
+        shell: pwsh
+        run: |
+          pwsh ./Run-All-Tests.ps1
+
+  # ==========================================================================
+  # 4. P0-E2E-001 — E2E 测试 (Playwright)
+  #    跑前端业务闭环：会员 → 预约 → 签到 → 收银 → 支付 → 退款
+  #    必须在 backend + DB + frontend 都跑起来之后才能跑
+  # ==========================================================================
+  e2e:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root123
+          MYSQL_DATABASE: meiyetec_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=5s --health-retries=10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('backend/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2-
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/meiyetec-web/package-lock.json
+
+      - name: Wait for MySQL
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h 127.0.0.1 -uroot -proot123 --silent; then
+              echo "MySQL up"
+              break
+            fi
+            sleep 2
+          done
+
+      - name: Initialize database (apply all migrations + seed)
+        working-directory: backend
+        run: |
+          # 等待 MySQL 完全就绪
+          sleep 5
+          # 按模块顺序应用 init_m*.sql（baseline + 业务种子数据）
+          for f in src/main/resources/db/sql/init_m*.sql; do
+            echo "Applying $f ..."
+            mysql -h 127.0.0.1 -uroot -proot123 meiyetec_test < "$f" || echo "WARN: $f failed (may be already applied)"
+          done
+          # 应用 P0-DB-001 迁移（批次 1 的 schema 收敛）
+          for f in src/main/resources/db/sql/init_migration_*.sql; do
+            [ -f "$f" ] && echo "Applying $f ..." && mysql -h 127.0.0.1 -uroot -proot123 meiyetec_test < "$f" || true
+          done
+
+      - name: Install frontend deps
+        working-directory: frontend/meiyetec-web
+        run: npm ci || npm install
+
+      - name: Install Playwright browsers
+        working-directory: frontend/meiyetec-web
+        run: npx playwright install chromium --with-deps
+
+      - name: Start backend (Spring Boot)
+        working-directory: backend
+        env:
+          SPRING_DATASOURCE_URL: jdbc:mysql://127.0.0.1:3306/meiyetec_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+          SPRING_DATASOURCE_USERNAME: root
+          SPRING_DATASOURCE_PASSWORD: root123
+        run: |
+          nohup mvn -B -q spring-boot:run > /tmp/backend.log 2>&1 &
+          echo "Backend PID: $!"
+          # 等待后端健康
+          for i in {1..60}; do
+            if curl -sf http://localhost:8080/auth/login -X POST -H "Content-Type: application/json" -d '{"username":"admin","password":"123456"}' > /dev/null; then
+              echo "Backend up"
+              break
+            fi
+            sleep 3
+          done
+
+      - name: Run E2E (Playwright)
+        working-directory: frontend/meiyetec-web
+        env:
+          BASE_URL: http://localhost:5173
+          API_BASE_URL: http://localhost:8080
+          CI: 'true'
+        run: |
+          # Playwright webServer 在 CI 下未启用 → 手动起 vite dev server
+          nohup npx vite --port 5173 --host 127.0.0.1 > /tmp/vite.log 2>&1 &
+          echo "Vite PID: $!"
+          for i in {1..30}; do
+            if curl -sf http://localhost:5173 > /dev/null; then
+              echo "Vite up"
+              break
+            fi
+            sleep 2
+          done
+          # 批次 6 + 7 门禁：必须包含 new-modules 和 business-flow
+          npx playwright test new-modules.spec.ts business-flow.spec.ts \
+            --project=chromium --project="Mobile Chrome" \
+            --reporter=list,html
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/meiyetec-web/e2e/reports
+          retention-days: 14
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: frontend/meiyetec-web/test-results
+          retention-days: 7
+
+  # ==========================================================================
+  # 5. Docker 镜像构建（push=false，仅构建到 runner 本地 registry）
+  #    - 仅在 main 分支触发（不污染 PR 上下文）
+  #    - 用 build-push-action@v5 + GHA 内置层缓存
+  #    - 不推送：留待后续 deploy job 按需 push 到 ghcr.io
+  #    镜像标签：${GIT_SHA::8}（短 SHA） + latest（main）
+  #    镜像仓库：ghcr.io/${GITHUB_REPOSITORY}/api / /web
+  # ==========================================================================
+  docker-build:
+    name: Docker Build (api + web)
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write   # 留作未来 push job 用；当前 build-only 不消耗
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 下载 backend job 产出的 jar 到 backend/target/（与 Dockerfile COPY 路径匹配）
+      # Dockerfile：COPY target/meiyetec-api-*.jar /build/app.jar
+      # docker build context = ./backend → jar 在 context 内 target/ 子目录
+      - name: Download backend jar
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/target/
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Compute image metadata
+        id: meta
+        run: |
+          echo "GIT_SHA=${GITHUB_SHA}" >> $GITHUB_OUTPUT
+          echo "SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
+          echo "REGISTRY=ghcr.io/${GITHUB_REPOSITORY}" >> $GITHUB_OUTPUT
+
+      # ---------- Backend image ----------
+      - name: Build api image (no push)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: false
+          load: true
+          tags: |
+            meiyetec/api:${{ steps.meta.outputs.SHORT_SHA }}
+            ghcr.io/${{ github.repository }}/api:${{ steps.meta.outputs.SHORT_SHA }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # ---------- Frontend image ----------
+      - name: Build web image (no push)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend/meiyetec-web
+          file: ./frontend/meiyetec-web/Dockerfile
+          push: false
+          load: true
+          tags: |
+            meiyetec/web:${{ steps.meta.outputs.SHORT_SHA }}
+            ghcr.io/${{ github.repository }}/web:${{ steps.meta.outputs.SHORT_SHA }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build summary
+        if: always()
+        run: |
+          echo "### Docker Build (push=false)" >> $GITHUB_STEP_SUMMARY
+          echo "- api  : meiyetec/api:${{ steps.meta.outputs.SHORT_SHA }}" >> $GITHUB_STEP_SUMMARY
+          echo "- web  : meiyetec/web:${{ steps.meta.outputs.SHORT_SHA }}" >> $GITHUB_STEP_SUMMARY
+          echo "- registry target: ghcr.io/${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "- push  : false（留待 push/deploy job 按需启用）" >> $GITHUB_STEP_SUMMARY

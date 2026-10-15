@@ -1,0 +1,29 @@
+﻿{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "totalPromotions":  1,
+                 "journeyEnterCount":  2,
+                 "promotions":  [
+                                    {
+                                        "promotionName":  "audit-test-promotion-2-updated",
+                                        "promotionType":  "FULL_REDUCE",
+                                        "discountTotal":  20.00,
+                                        "orderCount":  1,
+                                        "id":  2
+                                    }
+                                ],
+                 "touchConverted":  1,
+                 "queryDate":  "2026-09-16",
+                 "pointsGranted":  29500,
+                 "couponUsageRate":  0,
+                 "totalDiscount":  99.99,
+                 "totalReach":  491,
+                 "totalOrders":  1,
+                 "touchSuccess":  0,
+                 "totalActivities":  0,
+                 "usedCoupon":  0
+             },
+    "traceId":  "475aa1b08fd6455997510971151f22e4",
+    "timestamp":  "2026-09-16 01:52:14"
+}

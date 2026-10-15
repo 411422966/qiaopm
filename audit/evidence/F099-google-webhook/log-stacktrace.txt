@@ -1,0 +1,31 @@
+﻿2026-09-14 22:17:04.232 [http-nio-8080-exec-8] INFO  c.m.service.IntlBookingService [traceId=f9979c8a66124683b600ee1287853729] [tenant=] [order=] [pay=] [GOOGLE WEBHOOK] payload={notificationId=test-001, customerName=Alice, customerPhone=+8613500000000, customerEmail=alice@test.com, locale=en-US, serviceName=Facial, bookingTime=2026-10-01T14:00}
+2026-09-14 22:17:04.239 [http-nio-8080-exec-8] ERROR c.m.exception.GlobalExceptionHandler [traceId=f9979c8a66124683b600ee1287853729] [tenant=] [order=] [pay=] [DBError]
+org.springframework.jdbc.BadSqlGrammarException: 
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.overseas_booking' doesn't exist
+### The error may exist in com/meiyetec/mapper/OverseasBookingMapper.java (best guess)
+### The error may involve com.meiyetec.mapper.OverseasBookingMapper.insert-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO overseas_booking  ( tenant_id, booking_no, source, external_id, customer_name, customer_phone, customer_email, customer_locale,   service_name,   booking_date, booking_time,  status,   raw_payload,   created_at, updated_at )  VALUES (  ?, ?, ?, ?, ?, ?, ?, ?,   ?,   ?, ?,  ?,   ?,   ?, ?  )
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.overseas_booking' doesn't exist
+; bad SQL grammar []
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:246)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:73)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:92)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:439)
+	at jdk.proxy2/jdk.proxy2.$Proxy89.insert(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:272)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:59)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:152)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)
+	at jdk.proxy2/jdk.proxy2.$Proxy444.insert(Unknown Source)
+	at com.meiyetec.service.IntlBookingService.googleWebhook(IntlBookingService.java:297)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:751)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)

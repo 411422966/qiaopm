@@ -1,0 +1,16 @@
+﻿{
+    "post":  {
+                 "code":  500,
+                 "message":  "数据库异常",
+                 "data":  null,
+                 "traceId":  "f0802fb1585242bba347602146ee7f59",
+                 "timestamp":  "2026-09-16 01:54:11"
+             },
+    "get":  {
+                "code":  500,
+                "message":  "数据库异常",
+                "data":  null,
+                "traceId":  "0d502bb558a6476a9803da0c700af121",
+                "timestamp":  "2026-09-16 01:54:11"
+            }
+}

@@ -1,0 +1,24 @@
+﻿mysql: [Warning] Using a password on the command line interface can be insecure.
+*************************** 1. row ***************************
+             id: 2
+      tenant_id: 1
+       platform: MOCK
+         app_id: NULL
+      client_id: NULL
+  client_secret: NULL
+   access_token: NULL
+  refresh_token: NULL
+token_expire_at: NULL
+   api_base_url: NULL
+      portal_id: NULL
+ sync_direction: PULL
+   sync_members: 0
+    sync_orders: 0
+  sync_contacts: 0
+     sync_deals: 0
+      auto_sync: 1
+   last_sync_at: NULL
+         status: ACTIVE
+  error_message: NULL
+     created_at: 2026-09-12 23:09:46
+     updated_at: NULL

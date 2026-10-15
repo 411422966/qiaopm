@@ -1,0 +1,46 @@
+MySQL DESCRIBE pos_store — Phase 5A.3 实证 (I046 字段对齐检查)
+
+> 创建时间：2026-09-14 20:40 (UTC+8)
+> 执行命令：mysql -h 127.0.0.1 -P 3307 -u root -proot123456 -e "DESCRIBE pos_store" --default-character-set=utf8mb4 meiyetec
+> 验证目标：StoreLookupService 期望字段 store_name + contact_phone 是否存在 (I046)
+> 实测时间：2026-09-14 20:40
+
+--- RAW OUTPUT ---
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+store_name	varchar(100)	NO		NULL
+store_code	varchar(50)	YES	UNI	NULL
+contact_person	varchar(50)	YES		NULL
+contact_phone	varchar(20)	YES		NULL
+address	varchar(255)	YES		NULL
+province	varchar(50)	YES		NULL
+city	varchar(50)	YES		NULL
+district	varchar(50)	YES		NULL
+business_hours	varchar(100)	YES		NULL
+status	tinyint	YES	MUL	1
+logo_url	varchar(255)	YES		NULL
+description	text	YES		NULL
+create_time	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+update_time	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+deleted	tinyint	YES		0
+tenant_id	bigint	YES	MUL	NULL
+brand_id	bigint	YES	MUL	NULL
+store_type	varchar(16)	YES		DIRECT
+region_code	varchar(32)	YES		NULL
+is_hq	tinyint	YES		0
+manager_employee_id	bigint	YES		NULL
+manager_name	varchar(64)	YES		NULL
+open_date	date	YES		NULL
+brand_priority	int	YES		0
+
+--- VERDICT ---
+✅ PASS — I046 字段对齐验证成功
+- store_name: ✅ varchar(100) NOT NULL — 匹配 StoreLookupService 期望
+- contact_phone: ✅ varchar(20) YES NULL — 匹配 StoreLookupService 期望
+- 表存在，24 个字段完整
+
+--- 关联 ---
+- SoT §0.4 StoreLookupService 字段映射：当前代码用 `store_name + contact_phone` ✓ 验证通过
+- SoT §0.4 备注："如生产表有 service_hotline / hotline_phone 等更合适字段，需调整 StoreLookupService.lookup() 的 SQL"
+- 当前表确实无 service_hotline / hotline_phone 字段，但 StoreLookupService 当前实现可工作（store_name + contact_phone 都在）
+- F087 (StoreLookupService) 影响：字段对齐 OK，可继续走 Phase 5B 验证 lookup() + 5 分钟缓存

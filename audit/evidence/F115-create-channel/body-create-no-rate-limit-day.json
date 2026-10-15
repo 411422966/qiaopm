@@ -1,0 +1,10 @@
+{
+  "channelType": "IN_APP",
+  "channelName": "audit-test-rate-limit-per-day",
+  "provider": "test",
+  "configJson": "{}",
+  "rateLimitPerMin": 10,
+  "retryMax": 3,
+  "retryIntervalSec": 60,
+  "status": 1
+}

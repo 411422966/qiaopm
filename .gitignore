@@ -1,0 +1,487 @@
+# ============================================================
+# QiaoPM - QiaoPM 美业 SaaS 系统
+# .gitignore - Git 版本控制忽略规则
+# ============================================================
+
+# =====================
+# 1. Build 输出
+# =====================
+
+# Java / Maven
+backend/target/
+backend/*.log
+backend/boot*.log
+backend/backend.log
+backend/app*.log
+backend/out.log
+backend/hs_err_*.log
+backend/logs/
+backend/logs_p0_run/
+backend/src/main/resources/application-local.yml
+
+# Gradle
+build/
+gradle/
+
+# Frontend dist
+frontend/meiyetec-web/dist/
+frontend/meiyetec-web/node_modules/.cache/
+
+# =====================
+# 2. 依赖
+# =====================
+
+backend/lib/
+frontend/meiyetec-web/node_modules/
+
+# =====================
+# 3. IDE
+# =====================
+
+.idea/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# =====================
+# 4. 敏感配置
+# =====================
+
+.env
+.env.*
+# 例外：.env.example 是占位模板（含描述性默认值，无真实凭据），必须提交
+!.env.example
+# AlertManager 部署凭据（项目子目录的 .env，不在根 .env 通配范围内）
+infra/alertmanager/alertmanager.env
+*.pem
+*.key
+credentials.json
+secrets.json
+application-local.yml
+# 例外：application-prod.yml 是 prod profile 配置模板（所有值为 ${ENV} 占位，无真实凭据），必须提交
+!backend/src/main/resources/application-prod.yml
+
+# =====================
+# 5. 日志 / 临时 / 缓存
+# =====================
+
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
+*.cache
+*.sqlite
+*.sqlite3
+
+# =====================
+# 6. 测试产物
+# =====================
+
+test-results/
+playwright-report/
+playwright/.cache/
+frontend/meiyetec-web/playwright-report/
+frontend/meiyetec-web/test-results/
+frontend/meiyetec-web/playwright/.auth/
+# E2E 报告（实时生成，html 大文件不入仓）
+frontend/meiyetec-web/e2e/reports/
+frontend/meiyetec-web/e2e/.auth/
+
+# audit E2E 登录态缓存（global-setup 写入，含 JWT token，不能入仓）
+audit/scripts/e2e/.auth-state.json
+audit/scripts/e2e/.token.json
+
+# =====================
+# 7. Docker
+# =====================
+
+docker-compose.override.yml
+
+# =====================
+# 8. Cursor IDE
+# =====================
+
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/*.mdc
+
+# =====================
+# 9. 文档构建产物
+# =====================
+
+docs/_site/
+docs/.cache/
+
+# =====================
+# 10. Misc
+# =====================
+
+*.tgz
+*.zip
+*.tar
+*.rar
+*.7z
+benchmark/
+
+# =====================
+# 11. 根目录临时开发文件（开发脚本、SQL、输出、快照）
+# =====================
+# 防止调试过程中产生的 .ps1/.out/.sql/.json/.csv/.xlsx/.err/.txt/.png 临时文件污染仓库
+# 这些是一次性脚本/输出，应该在 docs/evidence/ 或 docs/audit/ 留存，根目录不留
+*.ps1
+*.out
+*.err
+*.csv
+*.xlsx
+*.png
+!/docs/**/*.ps1
+!/docs/**/*.png
+!/docs/**/*.csv
+!/docs/**/*.xlsx
+!/README*.png
+
+# 根目录的临时 SQL / JSON / TXT 临时文件不提交
+/test-*.sql
+/test-*.json
+/test-*.txt
+/test-*.ps1
+/check-*.out
+/check-*.sql
+/check-*.txt
+/verify-*.ps1
+/verify-*.out
+/init-*.out
+/fix-*.out
+/fix-*.sql
+/find-*.out
+/counts.out
+/hex_*.out
+/hex_*.txt
+/perms*.out
+/login*.json
+/login*.out
+/login*.txt
+/menu-bug.png
+/mp.json
+/req-*.json
+/req-*.csv
+/report_*.xlsx
+/sys_log_test.csv
+/tables.txt
+/db_show.txt
+/ts_check*.txt
+/token.txt
+/reset_seed.sql
+/seed_*.sql
+/setup_*.sql
+/setup_*.out
+/cleanup_*.sql
+/cleanup_*.out
+/reseed_*.out
+/find_broken_tables.out
+/audit_*.sql
+/audit_*.out
+/create_tenant.out
+/bind_role.out
+/data_check.out
+/exports/
+/springboot-final.err
+/backend-runtime.err
+/common.ps1
+/Run-All-Tests.ps1
+/apply_fix.ps1
+/seed_wallet.sql
+/test-insert.out
+/test_alive*.ps1
+/fix_mojibake.out
+/fix_password.*
+/check*.sql
+/check*.txt
+/check*.out
+/req.json
+/test.sql
+
+# =====================
+# 12. 调试产物 / 开发中间文件
+# =====================
+
+# cp.txt — 编译 classpath 快照（调试用）
+cp.txt
+backend/cp.txt
+backend/cp_*.txt
+backend/cp_full*.txt
+backend/cp_per_line.txt
+backend/cp_inline.txt
+backend/javac_*.txt
+backend/compile_*.txt
+backend/test_*.txt
+backend/layer*.txt
+backend/impl*.txt
+backend/entities.txt
+backend/service.txt
+backend/rui.txt
+backend/all_*.txt
+backend/bc_args*.txt
+backend/compile_args*.txt
+backend/all_routes.json
+backend/all_java_files.txt
+backend/check_*.sql
+backend/diag_*.sql
+backend/fix_*.sql
+backend/insert_*.sql
+backend/reset_*.sql
+backend/seed_*.sql
+backend/fix_newlines.py
+backend/compile_p*.bat
+backend/run_*.bat
+backend/update_jar*.bat
+backend/probe*.js
+backend/gen-*.js
+backend/*.js
+backend/node_modules/
+backend/package.json
+backend/TT.java
+backend/Clear
+backend/`
+backend/0
+backend/$null
+backend/Fix*.java
+backend/FixMany.java
+backend/engine_full.java
+backend/javap_out.txt
+backend/login_*.json
+backend/login_*.txt
+backend/login_body.json
+backend/login_resp.txt
+backend/ai_ddl.sql
+backend/probe*.js
+backend/verify_bcrypt.js
+backend/login_test.json
+backend/sql/
+backend/rui.txt
+backend/fix_admin_pwd.sql
+backend/insert_activity.sql
+backend/check_users.sql
+backend/check_tenant_null.sql
+backend/compile_err.txt
+backend/compile_out.txt
+backend/probe.js
+backend/probe2.js
+backend/probe3.js
+backend/probe4.js
+backend/probe4.js
+backend/probe_token.js
+backend/jvm_args.txt
+backend/service.txt
+backend/impl.txt
+backend/impls.txt
+backend/fix_bc_blockchain_status_col.sql
+backend/fix_bc_blockchain_tables.sql
+backend/fix_crm_follow_plan_add_columns_only.sql
+backend/fix_crm_follow_plan_ddl_20260821.sql
+backend/fix_fiscal_recharge_audit_log.sql
+backend/fix_gift_card_transaction.sql
+backend/fix_subs_missing_tables.sql
+backend/migrate_qpm_006_007_rfm_batch.sql
+backend/seed_cross_rules.sql
+backend/seed_ltv.sql
+backend/seed_ltv_simple.sql
+backend/report_ddl.sql
+backend/fix_newlines.py
+backend/compile_spa.bat
+backend/gen_cp.bat
+backend/gen_hash.js
+backend/layer2.txt
+backend/layer2a.txt
+backend/layer3.txt
+backend/layer4.txt
+backend/layer5.txt
+backend/probe.js
+backend/probe2.js
+backend/probe3.js
+backend/probe4.js
+backend/probe_token.js
+backend/sql/fix_bc_blockchain_status_col.sql
+backend/sql/fix_bc_blockchain_tables.sql
+backend/sql/fix_crm_follow_plan_add_columns_only.sql
+backend/sql/fix_crm_follow_plan_ddl_20260821.sql
+backend/sql/fix_fiscal_recharge_audit_log.sql
+backend/sql/fix_gift_card_transaction.sql
+backend/sql/fix_subs_missing_tables.sql
+backend/sql/migrate_qpm_006_007_rfm_batch.sql
+backend/sql/seed_ltv.sql
+backend/sql/seed_ltv_simple.sql
+backend/sql/report_ddl.sql
+backend/sql/fix_bc_blockchain_status_col.sql
+
+# 根目录调试快照文件
+baseline_*.txt
+broken.txt
+broken_controllers.txt
+compile_check*.txt
+compile_out.txt
+compile_step*.txt
+controllers.txt
+cp.txt
+entity_only.txt
+entity_tables_unique.txt
+javac-args.txt
+ldconfig*.txt
+ldcontext*.txt
+ldctx_builder.txt
+ldreason*.txt
+ldreason_kind.txt
+mqtt_*.txt
+sql_only.txt
+stubs.txt
+test_args*.txt
+test_compile.txt
+unimpl.txt
+baseline_cb.txt
+baseline_cd.txt
+baseline_cohort.txt
+baseline_cs.txt
+baseline_ltv.txt
+baseline_ma.txt
+baseline_mc.txt
+baseline_rfm.txt
+Debug*.java
+Debug*.class
+DelLine.*
+FindExact.*
+FixAll*.*
+FixBadParenPattern.*
+FixBomAndLine.*
+FixCrmFollow.*
+FixEngine*.*
+FixExtraParen.*
+FixLike*.*
+FixLineByLine.*
+FixMapper*.*
+FixMapperPatterns.*
+FixMappers.*
+FixMethodSignature.*
+FixMissingParen.*
+FixMore*.*
+FixParamLists*.*
+FixQuotes*.*
+FixStray.*
+FixTableNames*.*
+FixTierLine.*
+FixUnclosedStrings*.*
+FixUtf8.*
+UndoBadFix*.*
+AddMissingClose.java
+backend/FixAttendanceRecord.*
+backend/FixMany.*
+# node_modules in backend root (shouldn't exist, but just in case)
+/backend/node_modules/
+backend/channel.txt
+backend/compile_all.bat
+backend/restart_backend.bat
+backend/scripts/
+backend/token.txt
+backend/cp.txt.lines
+backend/pos008_cp*.txt
+# scripts dir at workspace root
+# 策略：精确 ignore 文件名（避免 /scripts/ 或 /scripts/* 隐式排除整个目录）
+# 这是 git 限制：「It is not possible to re-include a file if a parent directory is excluded」
+# 一次性 dev 脚本不入仓，运维脚本 .sh 默认 tracked + 显式白名单
+/scripts/fix_lbs.py
+/scripts/verify-B1-B4.ps1
+/scripts/.token
+/scripts/.commit-msg-2.3.txt
+/scripts/.commit-msg-b-docs.txt
+# 显式白名单 — 运维脚本（防御性，主目录已默认 tracked）
+!/scripts/backup-db.sh
+!/scripts/restore-db.sh
+!/scripts/cleanup-local-backups.sh
+# 子目录（如 recovery/）默认 tracked；其下 .ps1 被全局 *.ps1 忽略，需显式 allowlist
+!/scripts/recovery/**/*.ps1
+/plugins/
+/tests/
+/baseline_cb.txt
+/baseline_cd.txt
+/baseline_cohort.txt
+/baseline_cs.txt
+/baseline_ltv.txt
+/baseline_ma.txt
+/baseline_mc.txt
+/baseline_rfm.txt
+/broken.txt
+/broken_controllers.txt
+/compile_check.txt
+/compile_check2.txt
+/compile_check3.txt
+/compile_check4.txt
+/compile_check5.txt
+/compile_check6.txt
+/compile_out.txt
+/compile_step1.txt
+/compile_step2.txt
+/compile_step3.txt
+/compile_step4.txt
+/controllers.txt
+/entity_only.txt
+/entity_tables_unique.txt
+/javac-args.txt
+/ldconfig.txt
+/ldconfig_builder.txt
+/ldcontext.txt
+/ldcontext_builder.txt
+/ldctx_builder.txt
+/ldreason.txt
+/ldreason_kind.txt
+/mqtt_payload.txt
+/mqtt_publish.txt
+/sql_only.txt
+/stubs.txt
+/test_args.txt
+/test_args2.txt
+/test_args3.txt
+/test_compile.txt
+/unimpl.txt
+# backend backup dirs
+backend/._backup_services_*/
+
+# =====================
+# 13. .disabled 文件（保留 untracked）
+# =====================
+*.disabled
+
+# =====================
+# 14. Workspace 根目录调试 Java 文件
+# =====================
+/Fix*.java
+/Debug*.java
+/AddMissingClose.java
+/DelLine.java
+/FindExact.java
+/UndoBadFix*.java
+
+
+# audit E2E node_modules (transient dev dependency)
+audit/scripts/e2e/node_modules/
+
+
+# =====================
+# 15. audit/scripts/ 临时调试产物（_ 前缀约定）
+# =====================
+# 防止一次性 insert / python / grep 输出污染仓库
+# 真实证据请放 audit/evidence/<feature>/，根目录不留
+audit/scripts/_*.txt
+audit/scripts/_*.py
+audit/scripts/_*.log
+audit/scripts/_*.json

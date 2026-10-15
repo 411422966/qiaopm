@@ -1,0 +1,16 @@
+﻿
+=== traceId=8dcfabb586274defb924f6969106f7da ===
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'sync_token' in 'field list'
+### The error may exist in com/meiyetec/mapper/CrmIntegrationMapper.java (best guess)
+### The error may involve defaultParameterMap
+
+=== traceId=2458fec1d84a46d58162dd7f05aaf5bb ===
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'sync_token' in 'field list'
+### The error may exist in com/meiyetec/mapper/CrmIntegrationMapper.java (best guess)
+### The error may involve defaultParameterMap
+
+=== traceId=4779eed1d5c64b0fb26d8f55726b9049 ===
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'sync_token' in 'field list'
+### The error may exist in com/meiyetec/mapper/CrmIntegrationMapper.java (best guess)
+### The error may involve defaultParameterMap
+

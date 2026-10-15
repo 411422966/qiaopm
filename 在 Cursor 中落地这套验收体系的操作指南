@@ -1,0 +1,746 @@
+# 在 Cursor 中落地这套验收体系的操作指南
+
+体系是"标准"，Cursor 是"执行器"。下面讲的是**具体怎么把这份体系放进 Cursor，怎么一步步跑完 Phase 0 → Phase 10，最终拿到验收报告。**
+
+---
+
+## 一、第一步：把体系落盘（30 分钟）
+
+### 1.1 在项目根目录建目录
+
+```text
+your-project/
+├── .cursor/
+│   └── rules/
+│       ├── project-audit.mdc       ← 主规则
+│       └── feature-id.mdc          ← Feature ID 命名规则
+├── audit/
+│   ├── baseline/
+│   │   ├── commit.txt
+│   │   ├── db-snapshot-YYYYMMDD.sql
+│   │   └── env.md
+│   ├── evidence/                   ← 空目录，后面按 FXXX 建
+│   ├── scripts/                    ← 8 个守门脚本
+│   ├── static-gap/
+│   ├── runtime/
+│   ├── db/
+│   ├── business/
+│   ├── non-functional/
+│   └── reports/
+└── docs/
+    ├── PROJECT_AUDIT_PLAYBOOK.md   ← 体系全文
+    └── EXT-*.md                    ← 你的 Operational Notes
+```
+
+### 1.2 把体系全文存为 `docs/PROJECT_AUDIT_PLAYBOOK.md`
+
+把你那份《最终融合版》原文粘进去。这是**人看的**，不是 Cursor 每次都要读的。
+
+### 1.3 写 `.cursor/rules/project-audit.mdc`
+
+这是**Cursor 每次自动读的**。内容要短、硬、可执行：
+
+```markdown
+---
+description: 项目验收规则
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# 项目验收规则
+
+## 身份
+你是资深全栈架构师、测试分析师、数据库分析师。
+
+## 核心规则
+1. 所有分析以 Feature ID 为单位，不以模块/Controller/页面为单位。
+2. 严格区分 L0–L5a/L5b 验证等级。
+3. 没有运行证据只能标 UNVERIFIED。
+4. 所有结论必须带：文件路径、类名、方法名、路由、API、表名、行号。
+5. 无法确认标注"未确认"，禁止猜测。
+6. 不修改业务代码。
+7. 最终状态只允许：
+   VERIFIED / PARTIAL-BLOCKER / PARTIAL-NON-BLOCKER /
+   BROKEN / MOCK-INTENTIONAL / MOCK-FAKE /
+   SHELL-INTENTIONAL / SHELL-ABANDONED / MISSING / UNVERIFIED
+8. 输出必须是 Markdown 表格 + 问题清单。
+9. 不能声称自己能打开浏览器、连生产库、替人工验收。
+10. 发现假成功、契约漂移、数据血缘缺失、影子/幽灵/僵尸功能必须单独标记。
+11. EXT-* Operational Notes 为事实来源（SoT），冲突时以 EXT-* 为准并标 ISSUE。
+12. Evidence 必须落在 audit/evidence/FXXX-<slug>/，编号固定。
+13. 每次验证必须绑定 commit hash + DB snapshot + env.md。
+14. 重构类变更必须先跑 Phase 3.5 Diff Audit。
+15. 自动化守门脚本每次 PR 必须跑。
+
+## 能力边界
+你不能：
+- 真打开浏览器点击（除非配置 Playwright MCP）
+- 连生产数据库执行查询
+- 判断业务是否符合 PRD（除非提供 PRD）
+- 替代人工验收
+- 在没有运行证据时声称 VERIFIED
+
+你只能：
+- 静态分析代码
+- 生成测试代码和 SQL
+- 根据看到的内容推断
+- 标注 UNVERIFIED
+
+## 完整体系
+详细定义见 docs/PROJECT_AUDIT_PLAYBOOK.md。
+```
+
+### 1.4 写 `.cursor/rules/feature-id.mdc`
+
+```markdown
+---
+description: Feature ID 命名规则
+globs: ["audit/**/*", "docs/**/*"]
+alwaysApply: false
+---
+
+# Feature ID 规则
+
+格式：F + 三位数字，如 F001、F012、F123。
+
+## 拆分粒度
+一个 Feature = 一个可独立验收的业务能力。
+
+## 示例
+F001 登录
+F002 退出登录
+F003 用户列表查询
+F004 新增用户
+F005 编辑用户
+F006 删除用户
+F007 用户详情
+F008 权限配置
+
+## 禁止
+- 不要把"用户管理"作为一个 Feature
+- 不要把"订单模块"作为一个 Feature
+- 不要把一张数据库表作为一个 Feature
+
+## Evidence 目录
+audit/evidence/F001-login/
+audit/evidence/F004-create-user/
+```
+
+---
+
+## 二、第二步：配置 Cursor（15 分钟）
+
+### 2.1 开启 Codebase Indexing
+
+`Cursor Settings → Indexing → 勾选 Codebase Indexing`  
+让 Cursor 索引整个项目，后续 `@Codebase` 才有效。
+
+### 2.2 配置 MCP（按需）
+
+| MCP | 用途 | 是否必须 |
+|---|---|---|
+| MySQL MCP | 让 Cursor 直接查库 | Phase 6 强烈建议 |
+| Playwright MCP | 让 Cursor 真点浏览器 | Phase 5 建议 |
+| Filesystem MCP | 写 audit/evidence | 可选 |
+
+**没有 MCP 也能做**，只是 Phase 5/6 需要你手动执行 Cursor 生成的 SQL / 测试脚本，再把结果贴回去。
+
+### 2.3 建 baseline
+
+```bash
+cd your-project
+git rev-parse HEAD > audit/baseline/commit.txt
+mysqldump -u root -p your_db > audit/baseline/db-snapshot-$(date +%Y%m%d).sql
+```
+
+`audit/baseline/env.md` 手写：
+
+```markdown
+# 环境说明
+- 分支：main
+- commit：abc1234
+- 前端：Vue 3 + Vite，端口 5173
+- 后端：Spring Boot 3，端口 8080
+- 数据库：MySQL 8.0，库名 your_db
+- Redis：localhost:6379
+- 启动命令：见 README
+```
+
+---
+
+## 二点五、Phase -1：Pre-flight Check 操作步骤
+
+### 用 Ask 模式，发以下 Prompt
+
+```text
+读取《项目开发完成度与最终验收体系》的 Phase -1 章节。
+
+执行 Pre-flight Check，输出 audit/baseline/preflight.md，包含：
+
+一、MCP 配置状态
+- MySQL MCP：已配置 / 未配置
+- Playwright MCP：已配置 / 未配置
+- 未配置影响：Phase 5/6 将手工执行
+
+二、PRD 是否存在
+- 路径：
+- 覆盖范围：
+- 缺失部分：
+- 影响：Phase 7 是否按 PRD 对照
+
+三、BLOCKER 判定阈值
+- 以下情况是否算 BLOCKER：
+  - Mock 未清理
+  - 迁移脚本未在生产跑过
+  - webhook 端点缺失
+  - 未跑 E2E 的核心业务
+- 需用户确认项：
+
+四、git 状态
+- 未提交文件数：
+- 临时文件：
+- 需 commit 或 stash 项：
+
+五、受保护页面清单
+- 列出已知不得修改的页面
+- 影响：Phase 3/5 只观察不修复
+
+六、守门脚本是否进 CI
+- 当前 CI 文件：
+- 已包含脚本：
+- 缺失脚本：
+
+七、当前批次
+- 批次号：
+- 涉及模块：
+- 是否重构批次：
+
+八、已知约束汇总
+（上述所有未确认项的清单）
+
+不要改代码。只输出 preflight.md。
+```
+
+---
+
+## 三、第三步：执行节奏（关键）
+
+**不要一次把 Phase 0–10 全发给 Cursor。** 按阶段发，每阶段确认后再进下一步。
+
+### 用什么模式？
+
+| Phase | Cursor 模式 | 原因 |
+|---|---|---|
+| Phase -1 | Ask | 只输出 preflight.md，不改代码 |
+| Phase 0 | Ask | 只确认规则，不改文件 |
+| Phase 1 | Agent + @Codebase | 需要读全项目 |
+| Phase 2 | Agent + @Codebase | 需要建矩阵 |
+| Phase 3 | Agent | 生成脚本 + 跑静态扫描 |
+| Phase 3.5 | Agent | diff 分析 |
+| Phase 4 | Ask | 只出计划 |
+| Phase 5 | Agent + Playwright MCP | 真跑 |
+| Phase 6 | Agent + MySQL MCP | 真查库 |
+| Phase 7 | Agent | 业务链路 |
+| Phase 8 | Agent | 非功能 |
+| Phase 9 | Agent | Git / 清理 |
+| Phase 10 | Ask | 出最终报告 |
+
+---
+
+## 四、每个 Phase 发什么 Prompt（可直接复制）
+
+### Phase -1 — Pre-flight Check
+
+（使用 Ask 模式，Prompt 同"二点五"章节）
+
+---
+
+### Phase 0 — 冻结规则
+
+```text
+读取 .cursor/rules/project-audit.mdc 和 docs/PROJECT_AUDIT_PLAYBOOK.md。
+
+确认你已理解：
+1. Feature ID 为最小验收单元
+2. L0–L5a/L5b 验证等级
+3. 带子标签的 Result
+4. Evidence 目录约定
+5. EXT-* 为 SoT
+6. 你的能力边界
+
+然后输出：
+- 你打算如何分阶段执行
+- 你打算如何保证不猜测
+- 你打算如何保存 Evidence
+
+不要改代码，只确认理解。
+```
+
+---
+
+### Phase 1 — Feature Inventory
+
+```text
+@Codebase
+
+执行 Phase 1：建立 Feature Inventory。
+
+从四个来源交叉汇总：
+1. 前端：菜单、路由、页面、Tab、Button、Form、Dialog、Table、Action
+2. 后端：Controller、Service、Mapper、Entity、定时任务、MQ
+3. 数据库：db/sql/*.sql、DDL、Seed Data
+4. 需求：docs/PROJECT_AUDIT_PLAYBOOK.md、docs/EXT-*.md、README
+
+按 Feature ID 规则拆分，输出到 audit/feature-inventory.md：
+
+| Feature ID | Module | 功能点 | Priority | 需求来源 | 前端入口 | 后端入口 | DB表 | 证据 |
+
+最后统计总 Feature 数。
+```
+
+---
+
+### Phase 2 — Full-Stack Mapping
+
+```text
+基于 audit/feature-inventory.md，执行 Phase 2。
+
+对每个 Feature 建立 Full-Stack Traceability Matrix，写入
+audit/traceability-matrix.md：
+
+| Feature ID | 前端路由 | 页面 | UI板块 | Action | Handler | API | Method |
+| Controller | Service | Mapper | DB表 | 关联表 | 读/写 | 事务 | 权限 |
+| 软删除 | 审计字段 | Static Status | Runtime Status | DB Status |
+| Business Status | E2E Status | Final Result | Evidence | Issue |
+
+每条必须带证据：文件路径 + 行号。
+无法确认写"未确认"，不要猜。
+```
+
+---
+
+### Phase 3 — Static Gap Audit
+
+```text
+执行 Phase 3：Static Gap Audit。
+
+一、生成 8 个守门脚本到 audit/scripts/：
+01-scan-fake-success.sh
+02-scan-mock.sh
+03-scan-disabled.sh
+04-scan-endpoint-coverage.sh
+05-scan-contract-drift.sh
+06-scan-soft-delete.sh
+07-scan-transaction.sh
+08-scan-shadow-ghost.sh
+
+二、运行脚本，输出到 audit/static-gap/。
+
+三、识别：
+- Shadow / Ghost / Zombie / Fake / Shell Feature
+- Contract Drift
+- 假成功
+- Mock / Hardcode / localStorage
+
+输出 audit/reports/static-gap-report.md：
+
+| Feature ID | 缺口类型 | 位置 | 证据 | 严重程度 | 建议 |
+```
+
+---
+
+### Phase 3.5 — Diff Audit（仅重构批次）
+
+```text
+本轮变更是重构（删旧加新）。
+
+执行 Phase 3.5：Diff Audit。
+
+对比：
+- 删除的旧类 vs 新增的类
+- 旧 API URL vs 新 API URL
+- 旧 entity 引用是否残留
+- 关联 Service / Report / Dispatch 是否被破坏
+- 删表 SQL vs 回滚 SQL
+
+输出 audit/reports/diff-audit-report.md：
+
+| 检查项 | 方法 | 结果 | 差集 | 风险 |
+```
+
+---
+
+### Phase 4 — Runtime Verification Plan
+
+```text
+执行 Phase 4：制定 Runtime Verification Plan。
+
+筛选需要真实运行验证的 Feature：
+- P0 / P1
+- 核心业务、资金、订单、库存、权限、状态流转
+- Static Gap 发现的异常 Feature
+- Mock / Shell 疑似 Feature
+
+输出 audit/runtime/plan.md：
+
+| Feature ID | 优先级 | 验证方式 | 是否需 E2E | 是否需 DB 断言 | 理由 |
+```
+
+---
+
+### Phase 5 — Runtime Verification
+
+**有 Playwright MCP：**
+
+```text
+按 audit/runtime/plan.md，使用 Playwright MCP 逐项验证。
+
+对每个 Feature：
+1. 打开页面
+2. 点击按钮
+3. 捕获请求
+4. 捕获响应
+5. 截图
+
+保存到 audit/evidence/FXXX-<slug>/：
+01-page.png
+02-api-request.json
+03-api-response.json
+06-frontend-refresh.png
+
+输出 audit/runtime/report.md：
+| Feature ID | 可进入 | 可点击 | 发请求 | 响应状态 | 报错 | Runtime Level | Evidence |
+```
+
+**无 Playwright MCP：**
+
+```text
+生成 Playwright 测试脚本到 audit/scripts/e2e/，
+并生成运行命令。我手动跑完后把结果贴回来。
+```
+
+---
+
+### Phase 6 — Database Verification
+
+**有 MySQL MCP：**
+
+```text
+按 audit/runtime/plan.md，逐项验证 MySQL。
+
+对每个写操作：
+1. 操作前 SELECT，存 04-mysql-before.sql
+2. 执行操作
+3. 操作后 SELECT，存 05-mysql-after.sql
+4. 检查关联表、事务、审计字段、软删除
+
+输出 audit/db/report.md：
+| Feature ID | 操作 | SQL类型 | 目标表 | 事务 | 软删除 | 审计字段 | 关联表 | DB Level | Evidence |
+```
+
+**无 MySQL MCP：**
+
+```text
+生成 SQL 脚本到 audit/scripts/sql/，
+我手动执行后把结果贴回来。
+```
+
+---
+
+### Phase 7 — Business Verification
+
+```text
+执行 Phase 7：Business Verification。
+
+对核心业务做 L5b 跨模块业务流验证：
+- 下单 → 支付 → 库存 → 财务
+- 审批 → 状态流转 → 通知
+- 注册 → 登录 → 权限分配
+
+输出 audit/business/report.md：
+| Feature ID | 操作前状态 | 操作 | 操作后状态 | 涉及表 | 预期变化 | 实际变化 | 一致 | Business Level |
+```
+
+---
+
+### Phase 8 — Non-Functional
+
+```text
+执行 Phase 8：Non-Functional / Closure Readiness。
+
+检查：
+- 权限（菜单/页面/按钮/数据/API/字段脱敏）
+- 异常处理
+- 事务边界
+- 并发 / 幂等
+- 软删除与唯一索引冲突
+- 多租户隔离
+- 可观测性（traceId / 埋点 / 指标 / 日志）
+- 环境配置差异（dev/test/prod）
+- 种子数据与字典完整性
+
+输出 audit/non-functional/report.md。
+```
+
+---
+
+### Phase 9 — Regression / Git / Cleanup
+
+```text
+执行 Phase 9：Regression / Git / Cleanup。
+
+一、git status 检查：
+- 未提交修改
+- 临时文件
+- debug 代码
+- TODO / console.log
+- Mock / 临时开关
+- disabled 代码
+
+二、跑 8 个守门脚本，确认无新增缺口。
+
+三、更新 audit/baseline/commit.txt。
+
+输出 audit/reports/regression-report.md。
+```
+
+---
+
+### Phase 10 — Final Closure Assessment
+
+```text
+执行 Phase 10：Final Closure Assessment。
+
+读取：
+- audit/feature-inventory.md
+- audit/traceability-matrix.md
+- audit/reports/static-gap-report.md
+- audit/runtime/report.md
+- audit/db/report.md
+- audit/business/report.md
+- audit/non-functional/report.md
+- audit/reports/regression-report.md
+
+输出 audit/reports/final-acceptance.md：
+
+1. 总 Feature 数
+2. 各 Result 统计（含 PARTIAL-BLOCKER 单独一栏）
+3. Final Feature Acceptance Matrix
+4. Issue Register（按严重程度排序）
+5. EXT-* Compliance
+6. P0/P1 完成率
+7. 四个结论：
+   - Development Status
+   - Acceptance Readiness
+   - Production Readiness
+   - Closure Recommendation
+```
+
+---
+
+## 五、项目大怎么办：分批策略
+
+**不要一次全项目跑。** 按模块切批次。
+
+### 推荐批次顺序
+
+```text
+Batch 1  P0 核心：登录、权限、核心业务主流程
+Batch 2  P0 资金：订单、支付、库存
+Batch 3  P1 业务：CRM、插件、报表
+Batch 4  P1 配置：字典、菜单、角色
+Batch 5  P2 边缘：导出、通知、日志
+```
+
+### 每批次的流程
+
+```text
+Phase 1（本批次 Feature）
+  → Phase 2
+  → Phase 3
+  → Phase 3.5（如重构）
+  → Phase 4
+  → Phase 5
+  → Phase 6
+  → Phase 7
+  → 批次小结
+```
+
+### 批次小结模板
+
+```text
+Batch X 完成：
+- Feature 数：N
+- VERIFIED：N1
+- PARTIAL-BLOCKER：N2
+- BROKEN：N3
+- 阻塞项：列出
+- 下一步：Batch X+1 或先修阻塞
+```
+
+---
+
+## 六、每天怎么用 Cursor
+
+### 早上：确认基线
+
+```text
+git rev-parse HEAD
+cat audit/baseline/commit.txt
+```
+
+不一致就更新 baseline。
+
+### 开发中：每次改动后跑守门
+
+```bash
+bash audit/scripts/01-scan-fake-success.sh
+bash audit/scripts/02-scan-mock.sh
+...
+```
+
+### 提交前：跑受影响 Feature
+
+```text
+根据 git diff 判断影响了哪些 Feature ID，
+只重跑这些 Feature 的 Phase 5/6，
+更新 traceability-matrix.md 的 Last Verified At。
+未重跑的自动降级为 UNVERIFIED。
+```
+
+### 每周：跑一次完整 Phase 9
+
+```text
+执行 Phase 9，确认没有回归。
+```
+
+---
+
+## 七、Cursor 不听话怎么办
+
+### 问题 1：Cursor 不读规则
+
+解决：
+- 确认 `.cursor/rules/project-audit.mdc` 的 `alwaysApply: true`
+- 在 Prompt 里显式写 `@project-audit.mdc`
+- 重启 Cursor
+
+### 问题 2：Cursor 编造接口/表
+
+解决：
+```text
+你刚才的输出没有文件路径和行号。
+请重新输出，每条结论必须带：
+- 文件路径:行号
+- 类名.方法名
+- API 路径
+- 表名
+无法确认的写"未确认"。
+```
+
+### 问题 3：Cursor 说"应该可以"
+
+解决：
+```text
+"应该可以"不是证据。
+请区分：
+- L1 STATIC：代码结构存在
+- L2 RUNTIME：实际跑过
+- L3 DB：实际落库
+- L4 BUSINESS：业务正确
+- L5a/L5b E2E：全链路
+没有 L2 以上证据，只能标 UNVERIFIED。
+```
+
+### 问题 4：Cursor 一次读不完项目
+
+解决：
+- 按模块分批
+- 用 `@Folders` 指定目录
+- 让它先输出"我读了哪些文件"，再分析
+
+### 问题 5：Cursor 想改代码
+
+解决：
+```text
+停。规则第 6 条：不修改业务代码。
+只输出分析报告。
+```
+
+---
+
+## 八、最终你会得到什么
+
+```text
+audit/
+├── baseline/
+│   ├── commit.txt
+│   ├── db-snapshot-20260912.sql
+│   └── env.md
+├── feature-inventory.md              ← 所有 Feature
+├── traceability-matrix.md            ← 全栈映射
+├── evidence/
+│   ├── F001-login/
+│   ├── F004-create-user/
+│   └── ...
+├── scripts/
+│   ├── 01-scan-fake-success.sh
+│   ├── ...
+│   └── e2e/
+├── static-gap/
+├── runtime/
+│   └── report.md
+├── db/
+│   └── report.md
+├── business/
+│   └── report.md
+├── non-functional/
+│   └── report.md
+└── reports/
+    ├── static-gap-report.md
+    ├── diff-audit-report.md
+    ├── regression-report.md
+    └── final-acceptance.md           ← 最终报告
+```
+
+`final-acceptance.md` 里就是你要的：
+
+```text
+总功能点：200
+VERIFIED 120 / PARTIAL-BLOCKER 8 / ...
+Development Status: PARTIALLY COMPLETE
+Acceptance Readiness: CONDITIONAL READY
+Production Readiness: NOT READY
+Closure Recommendation: 先修 8 个 PARTIAL-BLOCKER
+```
+
+---
+
+## 九、一张图看懂怎么用
+
+```text
+0. Phase -1 Pre-flight Check      （每批次一次）
+        ↓
+1. 落盘体系 + rules          （一次）
+        ↓
+2. 建 baseline               （每次大改前）
+        ↓
+3. Phase 0 确认规则          （一次）
+        ↓
+4. 按批次循环：
+   Phase 1 → 2 → 3 → 3.5 → 4 → 5 → 6 → 7
+        ↓
+5. 每批次小结
+        ↓
+6. 全部批次完成
+        ↓
+7. Phase 8 → 9 → 10
+        ↓
+8. final-acceptance.md
+```
+
+---
+
+## 十、一句话总结
+
+**把体系落盘成 `.cursor/rules` + `docs/PROJECT_AUDIT_PLAYBOOK.md`，建好 `audit/` 目录和 baseline，然后按 Phase 0 → 10 分阶段给 Cursor 发 Prompt，每个 Phase 用对应模式（Ask/Agent/MCP），项目大就按模块分批，每次改动跑守门脚本，未重跑的 Feature 自动降级 UNVERIFIED。最终产出 `audit/reports/final-acceptance.md`，里面就是你要的四个结论。**

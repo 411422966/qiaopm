@@ -1,0 +1,12 @@
+﻿{
+    "code":  200,
+    "message":  "已推进",
+    "data":  {
+                 "nextNodeType":  "sms",
+                 "currentNodeId":  "n2",
+                 "id":  3,
+                 "status":  1
+             },
+    "traceId":  "02f4a1b270fc477ba1324cb94bbe990f",
+    "timestamp":  "2026-09-16 02:17:17"
+}

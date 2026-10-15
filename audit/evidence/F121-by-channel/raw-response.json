@@ -1,0 +1,14 @@
+﻿{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  [
+                 {
+                     "channelType":  "SMS",
+                     "sent":  0,
+                     "converted":  1,
+                     "reach":  491
+                 }
+             ],
+    "traceId":  "3cf0cd8832924d779697e4bd9febac40",
+    "timestamp":  "2026-09-16 01:48:47"
+}

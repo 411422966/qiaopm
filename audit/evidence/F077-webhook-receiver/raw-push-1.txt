@@ -1,0 +1,8 @@
+﻿
+=== F077 第 1 次推送 (正确签名) ===
+secret=test-sign-secret-5B
+body={"id":"msg-5B-001","msg_type":"TRADE_ORDER_STATE_UPDATE","status":"WAIT_SELLER_SEND_GOODS","tid":"E-5B-0001","total_amount":"128.00","receiver_name":"TestBuyer","receiver_phone":"13800000001"}
+sig=1825f6762aee9b4b95bc8eaa5d13dd99
+kdt_id=test-kdt-5B
+status=401 msg=远程服务器返回错误: (401) 未经授权。
+body: 

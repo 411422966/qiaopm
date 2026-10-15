@@ -1,0 +1,19 @@
+﻿
+=== mkt_channel_template ===
+mkt_channel_template	0	uk_tenant_code	1	tenant_id	A	1	NULL	NULL		BTREE			YES	NULL mkt_channel_template	0	uk_tenant_code	2	template_code	A	8	NULL	NULL		BTREE			YES	NULL
+=== mkt_coupon ===
+mkt_coupon	0	uk_tenant_code	1	tenant_id	A	0	NULL	NULL	YES	BTREE			YES	NULL mkt_coupon	0	uk_tenant_code	2	coupon_code	A	0	NULL	NULL		BTREE			YES	NULL
+=== mkt_coupon_batch ===
+mkt_coupon_batch	0	uk_tenant_batch	1	tenant_id	A	1	NULL	NULL	YES	BTREE			YES	NULL mkt_coupon_batch	0	uk_tenant_batch	2	batch_no	A	5	NULL	NULL		BTREE			YES	NULL
+=== mkt_dynamic_pricing_rule ===
+mkt_dynamic_pricing_rule	0	uk_tenant_code	1	tenant_id	A	1	NULL	NULL		BTREE			YES	NULL mkt_dynamic_pricing_rule	0	uk_tenant_code	2	rule_code	A	6	NULL	NULL		BTREE			YES	NULL
+=== mkt_journey ===
+mkt_journey	0	uk_tenant_code	1	tenant_id	A	1	NULL	NULL		BTREE			YES	NULL mkt_journey	0	uk_tenant_code	2	journey_code	A	6	NULL	NULL		BTREE			YES	NULL
+=== mkt_promotion ===
+mkt_promotion	0	uk_tenant_code	1	tenant_id	A	1	NULL	NULL	YES	BTREE			YES	NULL mkt_promotion	0	uk_tenant_code	2	promotion_code	A	5	NULL	NULL		BTREE			YES	NULL
+=== mkt_segment ===
+mkt_segment	0	uk_tenant_code	1	tenant_id	A	0	NULL	NULL		BTREE			YES	NULL mkt_segment	0	uk_tenant_code	2	segment_code	A	0	NULL	NULL		BTREE			YES	NULL
+=== marketing_touch_task ===
+marketing_touch_task	0	uk_tenant_task	1	tenant_id	A	1	NULL	NULL		BTREE			YES	NULL marketing_touch_task	0	uk_tenant_task	2	task_no	A	5	NULL	NULL		BTREE			YES	NULL
+=== mkt_brand ===
+mkt_brand	0	uk_tenant_code	1	tenant_id	A	0	NULL	NULL		BTREE			YES	NULL mkt_brand	0	uk_tenant_code	2	brand_code	A	0	NULL	NULL		BTREE			YES	NULL

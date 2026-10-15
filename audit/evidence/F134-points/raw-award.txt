@@ -1,0 +1,10 @@
+﻿{
+    "code":  200,
+    "message":  "已发放",
+    "data":  {
+                 "recordId":  491,
+                 "points":  100
+             },
+    "traceId":  "596074f6a4f1415bb73c96a4cde4c0b2",
+    "timestamp":  "2026-09-16 02:19:21"
+}

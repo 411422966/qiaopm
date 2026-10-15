@@ -1,0 +1,73 @@
+﻿
+  logs\meiyetec.log:28819:	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.jav
+a:425)
+  logs\meiyetec.log:28820:	... 27 common frames omitted
+  logs\meiyetec.log:28821:2026-09-16 22:55:04.286 [scheduling-1] WARN  com.meiyetec.crm.CrmSyncScheduler [traceId=] [te
+nant=] [order=] [pay=] [CRM-Scheduler] 拉取集成列表失败：
+  logs\meiyetec.log:28822:### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'sync_t
+oken' in 'field list'
+  logs\meiyetec.log:28823:### The error may exist in com/meiyetec/mapper/CrmIntegrationMapper.java (best guess)
+  logs\meiyetec.log:28824:### The error may involve defaultParameterMap
+  logs\meiyetec.log:28825:### The error occurred while setting parameters
+  logs\meiyetec.log:28826:### SQL: SELECT  id,tenant_id,platform,app_id,client_id,client_secret,access_token,refresh_to
+ken,token_expire_at,api_base_url,portal_id,sync_direction,sync_members,sync_orders,sync_contacts,sync_deals,auto_sync,l
+ast_sync_at,status,error_message,created_at,updated_at,sync_token,sync_schedule,sync_enabled,last_incremental_sync_at,p
+rivate_key,username,login_url,object_mappings,sync_window_minutes  FROM crm_integration      WHERE  (status = ? AND syn
+c_enabled = ?)
+  logs\meiyetec.log:28827:### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'sync_token' in 'field list'
+  logs\meiyetec.log:28828:; bad SQL grammar []
+  logs\meiyetec.log:28829:2026-09-16 23:00:04.325 [scheduling-1] WARN  com.meiyetec.crm.CrmSyncScheduler [traceId=] [te
+nant=] [order=] [pay=] [CRM-Scheduler] 拉取集成列表失败：
+  logs\meiyetec.log:28830:### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'sync_t
+oken' in 'field list'
+  logs\meiyetec.log:28831:### The error may exist in com/meiyetec/mapper/CrmIntegrationMapper.java (best guess)
+  logs\meiyetec.log:28832:### The error may involve defaultParameterMap
+  logs\meiyetec.log:28833:### The error occurred while setting parameters
+  logs\meiyetec.log:28834:### SQL: SELECT  id,tenant_id,platform,app_id,client_id,client_secret,access_token,refresh_to
+ken,token_expire_at,api_base_url,portal_id,sync_direction,sync_members,sync_orders,sync_contacts,sync_deals,auto_sync,l
+ast_sync_at,status,error_message,created_at,updated_at,sync_token,sync_schedule,sync_enabled,last_incremental_sync_at,p
+rivate_key,username,login_url,object_mappings,sync_window_minutes  FROM crm_integration      WHERE  (status = ? AND syn
+c_enabled = ?)
+  logs\meiyetec.log:28835:### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'sync_token' in 'field list'
+  logs\meiyetec.log:28836:; bad SQL grammar []
+  logs\meiyetec.log:28837:2026-09-16 23:00:33.920 [http-nio-8080-exec-4] WARN  c.m.exception.GlobalExceptionHandler [tr
+aceId=aed92f4095294330b5e0244a5976249f] [tenant=] [order=] [pay=] [BizException] code=400 msg=请求参数错误: dispatchType 必填
+  logs\meiyetec.log:28838:2026-09-16 23:01:09.178 [http-nio-8080-exec-3] WARN  c.m.exception.GlobalExceptionHandler [tr
+aceId=c7242580c6204231835eff09814e3b6c] [tenant=] [order=] [pay=] [BizException] code=400 msg=请求参数错误: dispatchType 必须为 
+[PACKAGE, PRICING_RULE, COUPON, ACTIVITY, DISCOUNT] 之一
+> logs\meiyetec.log:28839:2026-09-16 23:01:21.047 [http-nio-8080-exec-8] ERROR c.m.exception.GlobalExceptionHandler [tr
+aceId=00e729b8fec64115b9a7547caaab30ab] [tenant=] [order=] [pay=] [DBError]
+  logs\meiyetec.log:28840:org.springframework.jdbc.BadSqlGrammarException: 
+  logs\meiyetec.log:28841:### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_di
+spatch' doesn't exist
+  logs\meiyetec.log:28842:### The error may exist in com/meiyetec/mapper/MktDispatchMapper.java (best guess)
+  logs\meiyetec.log:28843:### The error may involve com.meiyetec.mapper.MktDispatchMapper.insert-Inline
+  logs\meiyetec.log:28844:### The error occurred while setting parameters
+  logs\meiyetec.log:28845:### SQL: INSERT INTO mkt_dispatch  ( tenant_id,  dispatch_no, dispatch_type, dispatch_subtype
+, source_id, source_version, published_version, title,  target_type,  status,    success_count, fail_count, total_count
+, operator_id, operator_name, remark, create_time, update_time )  VALUES (  ?,  ?, ?, ?, ?, ?, ?, ?,  ?,  ?,    ?, ?, ?
+, ?, ?, ?, ?, ?  )
+  logs\meiyetec.log:28846:### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+  logs\meiyetec.log:28847:; bad SQL grammar []
+  logs\meiyetec.log:28848:	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorC
+odeSQLExceptionTranslator.java:246)
+  logs\meiyetec.log:28849:	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(Abstrac
+tFallbackSQLExceptionTranslator.java:73)
+  logs\meiyetec.log:28850:	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExcepti
+onTranslator.java:92)
+  logs\meiyetec.log:28851:	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.jav
+a:439)
+  logs\meiyetec.log:28852:	at jdk.proxy2/jdk.proxy2.$Proxy89.insert(Unknown Source)
+  logs\meiyetec.log:28853:	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:272)
+  logs\meiyetec.log:28854:	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.ja
+va:59)
+  logs\meiyetec.log:28855:	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(Mybat
+isMapperProxy.java:152)
+  logs\meiyetec.log:28856:	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:
+89)
+  logs\meiyetec.log:28857:	at jdk.proxy2/jdk.proxy2.$Proxy134.insert(Unknown Source)
+  logs\meiyetec.log:28858:	at com.baomidou.mybatisplus.extension.service.IService.save(IService.java:60)
+  logs\meiyetec.log:28859:	at com.meiyetec.service.impl.BusinessPolicyDispatchServiceImpl.createDispatch(BusinessPolicy
+DispatchServiceImpl.java:70)
+
+

@@ -1,0 +1,271 @@
+# 📋 任务执行清单（修正版）
+
+> 依据：《项目开发完成度与最终验收体系（最终融合版）》v1 + 《在 Cursor 中落地这套验收体系的操作指南》
+> 版本：v3（修正 3 处漏洞 + 保留 v2 的 6 处修正，合计 9 处）
+> 全部任务按 **A→B→C→D→E→F→G→H** 顺序串行
+> ⚠️ 阻塞项 ｜ 📌 非阻塞可后置 ｜ 🔁 每批次重复 ｜ 1️⃣ 一次性
+
+---
+
+## A. 一次性初始化（首次落地，约 30 分钟）1️⃣
+
+| # | 任务 | 模式 | 前置 | 产出物 | 章节 |
+|---|---|---|---|---|---|
+| A1 | 建目录结构：`.cursor/rules/` + `audit/` + `docs/` | 手动 / Shell | — | 空目录骨架 | §1.1 |
+| A2 | 把《最终融合版》原文存为 `docs/PROJECT_AUDIT_PLAYBOOK.md` | 手动 | A1 | `PROJECT_AUDIT_PLAYBOOK.md` | §1.2 |
+| A3 | 写 `.cursor/rules/project-audit.mdc`（`alwaysApply: true`） | Write | A1 | `project-audit.mdc` | §1.3 |
+| A4 | 写 `.cursor/rules/feature-id.mdc` | Write | A1 | `feature-id.mdc` | §1.4 |
+| A5 | 把所有 EXT-* Operational Notes 拷到 `docs/EXT-*.md`<br>⚠️ **若项目无 EXT-*，跳过 A5，Phase 0 时声明"无 EXT-* SoT"** | 手动 | A1 | `EXT-19/22/23/24.md` | §1.1 |
+
+### A 目录结构参考
+
+```text
+D:\QiaoPM\
+├── .cursor/
+│   └── rules/
+│       ├── project-audit.mdc
+│       └── feature-id.mdc
+├── audit/
+│   ├── baseline/
+│   ├── evidence/
+│   ├── scripts/
+│   ├── static-gap/
+│   ├── runtime/
+│   ├── db/
+│   ├── business/
+│   ├── non-functional/
+│   └── reports/
+└── docs/
+    ├── PROJECT_AUDIT_PLAYBOOK.md       ← §1.2 必存（最终融合版原文）
+    ├── CURSOR_AUDIT_GUIDE.md           ← 📌 可选：操作指南原文副本，便于 Cursor 引用
+    └── EXT-*.md                        ← §1.1：EXT-19/22/23/24 等
+```
+
+> 📌 **A 目录修正说明**：操作指南 §1.2 只硬性要求 1 个文件 `PROJECT_AUDIT_PLAYBOOK.md`。`CURSOR_AUDIT_GUIDE.md` 是**可选**的——若希望 Cursor 在引用规则时也能直接读到《操作指南》原文，再额外存一份；否则可删。
+
+---
+
+## B. Cursor 配置（约 15 分钟）1️⃣
+
+| # | 任务 | 模式 | 前置 | 产出物 | 章节 |
+|---|---|---|---|---|---|
+| B1 | 开启 Codebase Indexing | 手动 | — | Cursor 设置生效 | §2.1 |
+| B2 | 配置 MySQL MCP（Phase 6 强烈建议） | 手动 | — | MCP 可用 | §2.2 |
+| B3 | 配置 Playwright MCP（Phase 5 建议） | 手动 | — | MCP 可用 | §2.2 |
+| B4 | （可选）配置 Filesystem MCP | 手动 | — | MCP 可用 | §2.2 |
+| B5 | 建 baseline：`git rev-parse HEAD > audit/baseline/commit.txt` | Shell | A1 | `commit.txt` | §2.3 |
+| B6 | 建 baseline：`mysqldump -u root -p db > audit/baseline/db-snapshot-YYYYMMDD.sql`<br>⚠️ **前置改为：A1 + 命令行 mysqldump 可用（不依赖 MySQL MCP）** | Shell | A1 | `db-snapshot-*.sql` | §2.3 |
+| B7 | 写 `audit/baseline/env.md`（分支 / commit / 前后端 / 数据库 / Redis / 启动命令） | Write | — | `env.md` | §2.3 |
+
+---
+
+## C. ⚠️ Phase -1 Pre-flight Check（首次，一次性）1️⃣
+
+| # | 任务 | 模式 | 前置 | 产出物 | 章节 |
+|---|---|---|---|---|---|
+| C1 | Ask 模式发 Phase -1 Prompt（检查 8 项：MCP / PRD / BLOCKER / git / 受保护页 / 守门入 CI / 守门边界 / 批次划分） | Ask | A1–A5, B5–B7 | `audit/baseline/preflight.md` | §二点五 |
+
+> **未确认项**写进 preflight.md 的"已知约束"段；
+> **不阻塞** Phase 0，但必须在对应 Phase 前解决。
+
+---
+
+## D. Phase 0 — 规则冻结（一次性）1️⃣
+
+| # | 任务 | 模式 | 前置 | 产出物 | 章节 |
+|---|---|---|---|---|---|
+| D1 | Ask 模式确认理解 6 项（Feature ID / L0–L5a·L5b / Result 子标签 / Evidence / EXT-* SoT / 能力边界） | Ask | C1 | `audit/baseline/scope-freeze.md`（Cursor 复述理解 + 计划） | §Phase 0 |
+
+---
+
+## E. 批次循环（🔁 每批次一次）
+
+### E.0 ⚠️ 每批次开头必跑：Phase -1（本批次）🔁
+
+| # | 任务 | 模式 | 前置 | 产出物 | 章节 |
+|---|---|---|---|---|---|
+| **E0-0** | **Batch 1 的 E0（首次实例，本质即 C1 的延续）**：跑 Phase -1，输出 `preflight-batch-1.md` | Ask | D1 完成 | `audit/baseline/preflight-batch-1.md` | §二点五 |
+| **E0-N** | **Batch N（N≥2）的 E0**：跑 Phase -1，输出 `preflight-batch-N.md`<br>内容：本批次范围 / 受保护页 / MCP 状态 / BLOCKER 阈值是否变化 | Ask | E(N-1)-09 完成 | `audit/baseline/preflight-batch-N.md` | §二点五 |
+
+> 📌 **E0 修正说明**：原清单「前置：上一批次 E-09 完成」会导致 Batch 1 死锁（没有「上一批次」）。已拆为 `E0-0`（首次无前置）+ `E0-N`（N≥2 有前置）两条互不矛盾的规则。
+
+### E.1 批次划分（首次必做）1️⃣
+
+| # | 任务 | 模式 | 前置 | 产出物 | 章节 |
+|---|---|---|---|---|---|
+| E1 | 划分批次（推荐顺序：P0核心 → P0资金 → P1业务 → P1配置 → P2边缘） | 手动 + Ask | D1 | `audit/batches.md`（批次计划） | §五 |
+
+### E.2 每批次执行（每个批次 9 步）🔁
+
+> 编号规则：**E{批次号}-{步骤号}**，例如 Batch 1 的 Phase 5 = `E1-06`。
+> 下表以 **Batch N** 为例。
+
+| # | 任务 | 模式 | 前置（本批次） | 产出物 | 章节 |
+|---|---|---|---|---|---|
+| EN-01 | **Phase 1 Feature Inventory**：4 来源（前端/后端/DB/需求）交叉汇总 → Feature ID 表 | Agent + @Codebase | E0, E1 | `audit/feature-inventory.md`（本批次段） | §Phase 1 |
+| EN-02 | **Phase 2 Full-Stack Mapping**：每 Feature 建 Traceability Matrix<br>**矩阵模板必须额外含 `Last Verified At` 列**（G3 手动降级依赖此列） | Agent + @Codebase | EN-01 | `audit/traceability-matrix.md`（本批次段） | §Phase 2 |
+| EN-03 | **Phase 3 Static Gap Audit**：生成 8 个守门脚本 + 跑静态扫描 + 识别 Shadow/Ghost/Zombie/Fake/Shell + Contract Drift | Agent | EN-01 | `audit/scripts/01–08*.sh` + `audit/static-gap/` + `audit/reports/static-gap-report.md` | §Phase 3 |
+| EN-04 | **Phase 3.5 Diff Audit**（仅重构批次：删旧加新） | Agent | 重构变更 | `audit/reports/diff-audit-report.md` | §Phase 3.5 |
+| EN-05 | **Phase 4 Runtime Plan**：筛选 P0/P1 / 资金 / 订单 / 库存 / 权限 / 状态流转 / 异常 Feature | Ask | EN-02, EN-03 | `audit/runtime/plan.md` | §Phase 4 |
+| EN-06 | **Phase 5 Runtime Verification**：Playwright MCP 真点 OR 生成脚本手工跑 | Agent + Playwright MCP | EN-05 | `audit/evidence/FXXX-*/` + `audit/runtime/report.md` | §Phase 5 |
+| EN-07 | **Phase 6 Database Verification**：MySQL MCP 真查 OR 生成 SQL 手工跑 | Agent + MySQL MCP | EN-05 | `audit/db/report.md`（含 before/after SQL） | §Phase 6 |
+| EN-08 | **Phase 7 Business Verification**：L5b 跨模块业务流（下单→支付→库存→财务；审批→通知…） | Agent | EN-06, EN-07 | `audit/business/report.md` | §Phase 7 |
+| EN-09 | **批次小结 + Issue Register 追加**：写 VERIFIED / PARTIAL-BLOCKER / BROKEN 统计 + 阻塞项 + 下一步；**本批次所有 Issue 追加到统一 `audit/reports/issue-register.md`** | 手动 + Write | EN-08 | `audit/batches.md` 追加段 + `audit/reports/issue-register.md` 追加段 | §五 |
+
+### E.3 全部批次完成后回填
+
+所有批次 E*-09 完成后，回到 Phase 8/9/10（见 F 段）。
+
+---
+
+## F. 收尾阶段（全部批次完成后）1️⃣
+
+| # | 任务 | 模式 | 前置 | 产出物 | 章节 |
+|---|---|---|---|---|---|
+| F1 | **Phase 8 Non-Functional**：权限 / 异常 / 事务 / 并发幂等 / 软删除与唯一索引冲突 / 多租户隔离 / 可观测性 / 环境差异 / 种子字典 | Agent | 所有 EN-09 | `audit/non-functional/report.md` | §Phase 8 |
+| F2 | **Phase 9 Regression / Git / Cleanup**：git status 干净 + 跑 8 守门 + 更新 `audit/baseline/commit.txt` | Agent + Shell | F1 | `audit/reports/regression-report.md` | §Phase 9 |
+| F3 | **Phase 10 Final Closure Assessment**：读 8 个报告 → 总数 / 矩阵 / Issue Register / EXT-* Compliance / P0·P1 完成率 / 四个结论 | Ask | F2 | `audit/reports/final-acceptance.md` | §Phase 10 |
+
+---
+
+## G. 📌 日常维护（项目上线后）
+
+| # | 任务 | 频率 | 操作 | 章节 |
+|---|---|---|---|---|
+| G1 | 早上确认基线：`git rev-parse HEAD` 对比 `audit/baseline/commit.txt`，不一致则重建 baseline | 每日 | Shell | §六 |
+| G2 | 开发中改动后跑守门脚本（`audit/scripts/01–08*.sh`） | 每次改动 | Shell | §六 |
+| G3 | 提交前按 `git diff` 判断影响 Feature ID：<br>1. 重跑对应 Phase 5/6<br>2. **手动**在 `traceability-matrix.md` 中把未重跑 Feature 的 `Last Verified At` 清空、`Result` 改 `UNVERIFIED`（前提：EN-02 已加该列）<br>3. 把已重跑 Feature 的 `Last Verified At` 写为本次 commit hash + 时间戳 | 每次提交 | Agent + @Codebase | §六 |
+| G4 | 完整跑一次 Phase 9 | 每周 | Agent + Shell | §六 |
+
+> ⚠️ **G3 修正说明**：原清单"未跑自动降级 UNVERIFIED"不准确。降级动作是**手动**的，没有工具自动扫描矩阵并改状态。
+
+---
+
+## H. 故障排查（Cursor 不听话时）📌
+
+| # | 任务 | 触发条件 | 操作 | 章节 |
+|---|---|---|---|---|
+| H1 | Cursor 不读规则 → 检查 `alwaysApply:true` / `@project-audit.mdc` / 重启 Cursor | Cursor 不应用规则 | 手动 + Write | §七·问题 1 |
+| H2 | Cursor 编造接口/表 → 要求每条带 `文件路径:行号` + 类.方法 + API + 表名 | Cursor 输出无证据 | Ask 反驳 | §七·问题 2 |
+| H3 | Cursor 说"应该可以" → 区分 L1/L2/L3/L4/L5a·L5b，缺 L2 以上证据则 UNVERIFIED | Cursor 用模糊词 | Ask 反驳 | §七·问题 3 |
+| H4 | Cursor 一次读不完项目 → 按模块分批 + `@Folders` + 让 Cursor 先报"读了哪些文件" | Cursor 漏读 | Ask 拆解 | §七·问题 4 |
+| H5 | Cursor 想改代码 → 引用规则第 6 条"不修改业务代码" | Cursor 越界 | Ask 阻止 | §七·问题 5 |
+
+---
+
+## 🗺️ 关键路径速览（一张图）
+
+```text
+[A1→A5] 落盘体系                                1️⃣
+   ↓
+[B1→B7] Cursor + MCP + baseline                 1️⃣
+   ↓
+[C1]    Phase -1 Pre-flight Check（首次）       1️⃣
+   ↓
+[D1]    Phase 0 冻结规则                        1️⃣
+   ↓
+[E1]    划分批次（5 批推荐）                     1️⃣
+   ↓
+   ┌─ 每批次循环（Batch N）──────────────────┐
+   │  E0     Phase -1（本批次）      🔁      │
+   │  EN-01  Phase 1 Feature Inventory       │
+   │  EN-02  Phase 2 Full-Stack Mapping      │
+   │  EN-03  Phase 3 Static Gap（8 守门）     │
+   │  EN-04  Phase 3.5 Diff（仅重构）         │
+   │  EN-05  Phase 4 Runtime Plan            │
+   │  EN-06  Phase 5 Runtime（Playwright）    │
+   │  EN-07  Phase 6 DB（MySQL）              │
+   │  EN-08  Phase 7 Business（L5b）          │
+   │  EN-09  批次小结 + Issue Register 追加    │
+   └─────────────────────────────────────────┘
+   ↓ （全部批次完成）
+[F1]    Phase 8 Non-Functional                  1️⃣
+   ↓
+[F2]    Phase 9 Regression + baseline 更新       1️⃣
+   ↓
+[F3]    Phase 10 Final Closure → final-acceptance.md  1️⃣
+   ↓
+[G1–G4] 日常维护（每日 / 每周）📌
+   ↓
+[H1–H5] 故障排查（按需触发）📌
+```
+
+---
+
+## 📊 任务统计
+
+| 分类 | 数量（模板） | 5 批实际执行点 | 阻塞性 |
+|---|---|---|---|
+| A. 初始化 | 5 | 5 | ⚠️ 阻塞后续 |
+| B. Cursor 配置 | 7 | 7 | ⚠️ 阻塞 Phase 5/6 |
+| C. Phase -1（首次） | 1 | 1 | ⚠️ 一次性 |
+| D. Phase 0 | 1 | 1 | ⚠️ 一次性 |
+| E.1 批次划分 | 1 | 1 | ⚠️ 一次性 |
+| E.0 每批次 Phase -1 | 2（E0-0 + E0-N） | **5** | ⚠️ 每批次必跑 |
+| E.2 每批次执行 | 9 | **45** | ⚠️ 核心 |
+| F. 收尾 | 3 | 3 | 📌 全部批次后 |
+| G. 日常 | 4 | 按需 | 📌 上线后 |
+| H. 故障 | 5 | 按需 | 📌 按需 |
+| **合计** | **38** | **约 68** | — |
+
+> 与 v2（原版 37 项 / ~68 执行点）对比：
+> - E0 拆为 `E0-0` + `E0-N` 两条，模板 +1（实际执行点不变）
+> - EN-02 矩阵模板加 `Last Verified At` 列（依赖 G3）
+> - G3 措辞明确「前提：EN-02 已加该列」+ 已重跑 Feature 写 commit+时间戳
+> - A 目录示例加注 `CURSOR_AUDIT_GUIDE.md` 为可选
+
+---
+
+## ✅ 下一步建议
+
+按当前 QiaoPM 项目状态，建议从 **C1（Phase -1 Pre-flight Check）** 开始：
+
+1. A 已基本完成（操作指南已落盘）
+2. B 的 baseline 可立即执行（git 状态可读）
+3. Phase -1 输出 `preflight.md` 是 Phase 0 的前置输入
+4. Phase -1 会暴露 MCP 配置 / PRD 缺失 / 受保护页清单等关键约束
+
+**推荐路径：**
+
+```text
+A（补齐 A1 目录、A3/A4 rules 文件）
+   ↓
+B（B5/B6/B7 baseline）
+   ↓
+C1 Phase -1 → preflight.md
+   ↓
+D1 Phase 0 → scope-freeze.md
+   ↓
+E0 Batch 1 Phase -1 → preflight-batch-1.md
+   ↓
+E1 划批次
+   ↓
+E1-01 → E1-09
+```
+
+---
+
+## 📌 版本差异对照
+
+### v2 vs v1（原版）6 处修正
+
+| 变化点 | v1（原版） | v2 |
+|---|---|---|
+| 每批次 Phase -1 | 无 | 新增 E0 🔁 |
+| 批次内任务编号 | E2–E10 固定 | E{批次}-{步骤}，如 E1-06 |
+| B6 前置 | "前置 B2"（错） | "前置 A1 + mysqldump 命令" |
+| A5 EXT-* 缺失 | 未说明 | 加"跳过并声明无 EXT-* SoT" |
+| EN-09 批次小结 | 仅统计 | 追加统一 `issue-register.md` |
+| G3 降级机制 | "自动降级" | 改为"手动改矩阵 + 清空 Last Verified At" |
+
+### v3 vs v2（本次）3 处修正
+
+| 变化点 | v2 | v3 |
+|---|---|---|
+| E0 前置死锁 | "上一批次 E-09 完成"（Batch 1 死锁） | 拆为 E0-0（首次无前置） + E0-N（N≥2 有前置） |
+| G3 字段不存在 | "清空 Last Verified At"（矩阵无此列） | EN-02 矩阵模板必须加 `Last Verified At` 列；G3 措辞加注前提 |
+| A 目录示例 | CURSOR_AUDIT_GUIDE.md 未说明 | 标记为「可选：操作指南原文副本」 |
+
+---
+
+**v3 清单可直接作为执行唯一入口。** 下一步从 C1 开始。

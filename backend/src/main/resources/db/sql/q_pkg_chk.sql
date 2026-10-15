@@ -1,0 +1,1 @@
+SELECT id, name, deleted FROM crm_package WHERE id = 6;

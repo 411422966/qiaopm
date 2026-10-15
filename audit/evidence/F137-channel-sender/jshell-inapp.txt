@@ -1,0 +1,11 @@
+=== InAppSender.healthCheck 验证 ===
+InAppSender.channelType() = IN_APP
+21:53:48.630 [main] WARN com.meiyetec.service.channel.InAppSender -- [IN_APP] healthCheck fail: Cannot invoke "org.springframework.jdbc.core.JdbcTemplate.queryForObject(String, java.lang.Class)" because "this.jdbc" is null
+healthCheck() = false (期望 false — member_message 表 MISSING)
+
+=== InAppSender.send() 写库逻辑 (member_message 表 MISSING) ===
+InAppSender.send 会调 messageMapper.insert(MemberMessage)
+实际: INSERT INTO member_message ...
+由于 member_message 表不存在 (I045)，调用会抛异常
+InAppSender.send 内部 try/catch 包裹 → 返回 SendResult.fail
+不会让 Spring 抛 500

@@ -1,0 +1,2 @@
+﻿{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"convertRate":0.61,"read":494,"sentRate":66.85,"converted":3,"reach":1472,"sent":984,"readRate":50.2},"traceId":"8ba1f54130d34d0cb5e9ac0c4cda2314","timestamp":"2026-09-16 02:44:23"}
+HTTP 200

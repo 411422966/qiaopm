@@ -1,0 +1,9 @@
+﻿mysql : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-1d9c8481-af84-4d60-8816-f6e2b7a20fe9.ps1:79 字符: 1
++ mysql -h 127.0.0.1 -P 3307 -uroot -proot123456 -e "USE meiyetec; SHOW ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Table	Create Table
+marketing_touch_log	CREATE TABLE `marketing_touch_log` (\n  `id` bigint NOT NULL AUTO_INCREMENT,\n  `tenant_id` bigint NOT NULL DEFAULT '1',\n  `task_id` bigint NOT NULL,\n  `member_id` bigint DEFAULT NULL,\n  `member_name` varchar(64) DEFAULT NULL,\n  `member_phone` varchar(20) DEFAULT NULL,\n  `channel_type` varchar(32) DEFAULT NULL,\n  `content` varchar(2000) DEFAULT NULL,\n  `status` tinyint DEFAULT '1' COMMENT '1待发送 2已发送 3失败 4已读 5已转化',\n  `error_msg` varchar(500) DEFAULT NULL,\n  `scheduled_at` datetime DEFAULT NULL,\n  `sent_at` datetime DEFAULT NULL,\n  `read_at` datetime DEFAULT NULL,\n  `convert_at` datetime DEFAULT NULL,\n  `related_order_id` bigint DEFAULT NULL,\n  `retry_count` int DEFAULT '0',\n  `external_msg_id` varchar(128) DEFAULT NULL,\n  `create_time` datetime DEFAULT CURRENT_TIMESTAMP,\n  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  `deleted` tinyint DEFAULT '0',\n  PRIMARY KEY (`id`),\n  KEY `idx_task` (`task_id`,`status`),\n  KEY `idx_member` (`member_id`,`status`),\n  KEY `idx_status_time` (`status`,`scheduled_at`)\n) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='触达执行明细'

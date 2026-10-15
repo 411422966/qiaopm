@@ -1,0 +1,18 @@
+{
+  "locale": "fr-FR",
+  "scene": "BOOKING_CONFIRMATION",
+  "subject": "Réservation confirmée",
+  "sms": "Bonjour ${customerName}, votre réservation pour ${serviceName} est confirmée le ${bookingDate} à ${bookingTime}. N° de réservation : ${bookingNo}. À bientôt chez ${storeName}.",
+  "miniProgram": {
+    "title": "Confirmation de réservation",
+    "keyword1": "N° de réservation : ${bookingNo}",
+    "keyword2": "Service : ${serviceName}",
+    "keyword3": "Date et heure : ${bookingDate} ${bookingTime}",
+    "keyword4": "Salon : ${storeName}",
+    "keyword5": "Contact : ${storePhone}"
+  },
+  "email": {
+    "subject": "Votre réservation est confirmée — N° ${bookingNo}",
+    "body": "Bonjour ${customerName},\n\nVotre réservation a été confirmée avec succès.\n\n【Détails de la réservation】\nN° de réservation : ${bookingNo}\nService : ${serviceName}\nDate et heure : ${bookingDate} ${bookingTime}\nSalon : ${storeName}\nContact : ${storePhone}\n\nPour toute modification ou annulation, merci de nous prévenir au moins 24 heures à l'avance. Nous avons hâte de vous accueillir !\n\nMeiye Beauty Tech"
+  }
+}

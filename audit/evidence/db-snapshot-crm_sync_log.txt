@@ -1,0 +1,14 @@
+﻿mysql: [Warning] Using a password on the command line interface can be insecure.
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+tenant_id	bigint	YES	MUL	NULL	
+platform	varchar(64)	YES		NULL	
+sync_type	varchar(32)	YES		NULL	
+direction	varchar(16)	YES		NULL	
+success_count	int	YES		0	
+fail_count	int	YES		0	
+skipped_count	int	YES		0	
+error_message	varchar(500)	YES		NULL	
+duration_ms	int	YES		NULL	
+status	varchar(32)	YES		NULL	
+created_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED

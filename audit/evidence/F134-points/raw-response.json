@@ -1,0 +1,89 @@
+﻿{
+    "list":  {
+                 "code":  200,
+                 "message":  "操作成功",
+                 "data":  [
+                              {
+                                  "id":  1,
+                                  "tenantId":  1,
+                                  "ruleName":  "audit-test-points-rule-updated",
+                                  "consumeRate":  1.50,
+                                  "rechargeMultiplier":  1.00,
+                                  "promotionMultiplier":  1.00,
+                                  "pointsToCash":  0.02,
+                                  "maxUsePercent":  30.00,
+                                  "enabled":  1,
+                                  "priority":  1,
+                                  "effectiveDate":  null,
+                                  "expiryDate":  null,
+                                  "operatorId":  null,
+                                  "operatorName":  null,
+                                  "createTime":  "2026-09-16T01:44:39",
+                                  "updateTime":  "2026-09-16T01:44:39",
+                                  "deleted":  0
+                              }
+                          ],
+                 "traceId":  "efeafbd03ef84d08add9835230851677",
+                 "timestamp":  "2026-09-16 01:52:15"
+             },
+    "create":  {
+                   "code":  200,
+                   "message":  "创建成功",
+                   "data":  {
+                                "id":  2,
+                                "tenantId":  1,
+                                "ruleName":  "5A-TestRule",
+                                "consumeRate":  1.5,
+                                "rechargeMultiplier":  1.00,
+                                "promotionMultiplier":  1.00,
+                                "pointsToCash":  0.01,
+                                "maxUsePercent":  30.00,
+                                "enabled":  1,
+                                "priority":  null,
+                                "effectiveDate":  null,
+                                "expiryDate":  null,
+                                "operatorId":  null,
+                                "operatorName":  null,
+                                "createTime":  "2026-09-16T01:52:15.5469397",
+                                "updateTime":  "2026-09-16T01:52:15.5469397",
+                                "deleted":  null
+                            },
+                   "traceId":  "b2421cd013974440acf55db140ce7d41",
+                   "timestamp":  "2026-09-16 01:52:15"
+               },
+    "award":  {
+                  "code":  200,
+                  "message":  "已发放",
+                  "data":  {
+                               "recordId":  490,
+                               "points":  100
+                           },
+                  "traceId":  "e649f0d528724fd0ae94074619fde3f3",
+                  "timestamp":  "2026-09-16 01:52:15"
+              },
+    "update":  {
+                   "code":  200,
+                   "message":  "更新成功",
+                   "data":  {
+                                "id":  2,
+                                "tenantId":  1,
+                                "ruleName":  "5A-TestRule",
+                                "consumeRate":  1.50,
+                                "rechargeMultiplier":  1.00,
+                                "promotionMultiplier":  1.00,
+                                "pointsToCash":  0.01,
+                                "maxUsePercent":  50.00,
+                                "enabled":  1,
+                                "priority":  0,
+                                "effectiveDate":  null,
+                                "expiryDate":  null,
+                                "operatorId":  null,
+                                "operatorName":  null,
+                                "createTime":  "2026-09-16T01:52:16",
+                                "updateTime":  "2026-09-16T01:52:16",
+                                "deleted":  0
+                            },
+                   "traceId":  "37b7e5742d4d4558973fc72d4da58b4f",
+                   "timestamp":  "2026-09-16 01:52:15"
+               }
+}

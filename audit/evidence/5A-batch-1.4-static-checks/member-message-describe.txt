@@ -1,0 +1,16 @@
+MySQL DESCRIBE member_message — Phase 5A.2 实证 (I045 MISSING)
+
+> 创建时间：2026-09-14 20:40 (UTC+8)
+> 执行命令：mysql -h 127.0.0.1 -P 3307 -u root -proot123456 -e "DESCRIBE member_message" --default-character-set=utf8mb4 meiyetec
+> 预期结果：Table 'meiyetec.member_message' doesn't exist (I045 MISSING 实证)
+
+--- RAW OUTPUT ---
+mysql : mysql: [Warning] Using a password on the command line interface can be insecure.
+ERROR 1146 (42S02) at line 1: Table 'meiyetec.member_message' doesn't exist
+
+--- VERDICT ---
+✅ PASS — I045 MISSING 实证成功
+- 状态：Table 不存在（Error 1146 / 42S02）
+- 决策：D22 不跑迁移（沿用 I002/I017/I029 模式；Post-Audit 统一跑）
+- 影响：F091（InAppSender）维持 MISSING
+- 关键观察：BookingConfirmationService 5 渠道路由**未包含 IN_APP**（与 SoT §4 一致 — SoT 仅明确 SMS / EMAIL / MINI_PROGRAM 3 路由）；InAppSender 类存在但未在 dispatcher 中被路由使用

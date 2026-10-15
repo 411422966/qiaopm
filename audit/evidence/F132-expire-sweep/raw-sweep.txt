@@ -1,0 +1,11 @@
+﻿{
+    "code":  200,
+    "message":  "扫描完成",
+    "data":  {
+                 "nearExpireCount":  0,
+                 "expiredCount":  0,
+                 "batchesClosed":  0
+             },
+    "traceId":  "77a59c9417634ec5b1108979c6a3d348",
+    "timestamp":  "2026-09-16 02:18:37"
+}

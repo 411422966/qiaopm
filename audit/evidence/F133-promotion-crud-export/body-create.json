@@ -1,0 +1,10 @@
+{
+  "promotionName": "audit-test-promotion",
+  "promotionCode": "AUDIT_PROM_001",
+  "promotionType": "FULL_REDUCE",
+  "thresholdAmount": 200.00,
+  "reduceAmount": 30.00,
+  "startTime": "2026-09-16T00:00:00",
+  "endTime": "2026-12-31T23:59:59",
+  "status": 1
+}

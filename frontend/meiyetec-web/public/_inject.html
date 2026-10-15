@@ -1,0 +1,54 @@
+﻿<!doctype html><html><head><meta charset="utf-8"></head><body>
+<div id="log" style="font-family:monospace;font-size:14px;line-height:1.5;color:black;background:white;padding:20px;height:100vh;overflow:auto;box-sizing:border-box"></div>
+<script>
+var log = document.getElementById('log');
+function L(m){log.innerHTML += '<div>'+m+'</div>';}
+window.console.log = function(){L('[LOG] '+Array.from(arguments).join(' '))};
+window.console.warn = function(){L('[WARN] '+Array.from(arguments).join(' '))};
+window.console.error = function(){L('[ERR] '+Array.from(arguments).join(' '))};
+window.addEventListener('error', e => L('UNCAUGHT: ' + e.message + ' at ' + e.filename + ':' + e.lineno));
+
+// intercept fetch
+var _origFetch = window.fetch;
+window.fetch = function(url, opts) {
+  if (typeof url === 'string' && url.indexOf('permission') !== -1) {
+    L('FETCH: ' + url);
+    if (opts && opts.headers) L('  hdr: ' + JSON.stringify(opts.headers).substring(0,200));
+  }
+  return _origFetch.apply(this, arguments).then(r => {
+    if (typeof url === 'string' && url.indexOf('permission') !== -1) L('  status: ' + r.status);
+    return r;
+  });
+};
+
+// intercept XHR
+var _origOpen = XMLHttpRequest.prototype.open;
+var _origSend = XMLHttpRequest.prototype.send;
+XMLHttpRequest.prototype.open = function(method, url) {
+  this._url = url;
+  return _origOpen.apply(this, arguments);
+};
+XMLHttpRequest.prototype.send = function() {
+  if (this._url && this._url.indexOf && this._url.indexOf('permission') !== -1) {
+    L('XHR: ' + this._url);
+  }
+  this.addEventListener('loadend', () => {
+    if (this._url && this._url.indexOf && this._url.indexOf('permission') !== -1) {
+      L('  status: ' + this.status);
+      L('  body: ' + (this.responseText ? this.responseText.substring(0,300) : ''));
+    }
+  });
+  return _origSend.apply(this, arguments);
+};
+
+L('--- BEFORE login ---');
+L('token: ' + (localStorage.getItem('token') || 'NONE'));
+
+// 写 token 然后跳到 dashboard
+localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJzdWIiOiJhZG1pbiIsImlhdCI6MTc4NjM3NDAyNywiZXhwIjoxNzg2NDYwNDI3fQ.skCZuEo-pUrZir7Xd-RfFRNZH1m9U621bD09CC-CxDE');
+localStorage.setItem('user', JSON.stringify({id:1, username:'admin', realName:'admin'}));
+L('--- AFTER login ---');
+L('token in storage: ' + (localStorage.getItem('token') ? 'YES (len=' + localStorage.getItem('token').length + ')' : 'NONE'));
+window.location.href = 'http://localhost:5173/dashboard';
+</script>
+</body></html>

@@ -1,0 +1,11 @@
+{
+  "journeyCode": "AUDIT_JOURNEY_001",
+  "journeyName": "audit-test-journey",
+  "journeyType": "MEMBER_BIRTHDAY",
+  "description": "Phase5A 审计测试旅程",
+  "triggerEvent": "MEMBER_BIRTHDAY",
+  "nodes": [
+    {"nodeOrder": 1, "nodeType": "SEND_SMS", "tplCode": "BIRTHDAY_V1", "delayMinutes": 0},
+    {"nodeOrder": 2, "nodeType": "SEND_COUPON", "tplCode": "BIRTHDAY_COUPON", "delayMinutes": 1440}
+  ]
+}

@@ -1,0 +1,66 @@
+﻿[
+    {
+        "label":  "clerk01 list tenant 2",
+        "method":  "GET",
+        "url":  "http://localhost:8080/plugin/runtime/tenant/2/list",
+        "status":  403,
+        "success":  null,
+        "body":  "{\"code\":403,\"message\":\"无权访问: 跨租户访问被拒绝\",\"data\":null,\"traceId\":\"5095700646eb4a5cbcd9429a11eb4d41\",\"timestamp\":\"2026-09-13 20:38:00\"}"
+    },
+    {
+        "label":  "clerk01 enable demo-hello tenant 2",
+        "method":  "POST",
+        "url":  "http://localhost:8080/plugin/runtime/tenant/2/demo-hello/enable",
+        "status":  403,
+        "success":  null,
+        "body":  "{\"code\":403,\"message\":\"无权访问: 跨租户访问被拒绝\",\"data\":null,\"traceId\":\"b2da28bba1614031bc25a01a554fa6b2\",\"timestamp\":\"2026-09-13 20:38:00\"}"
+    },
+    {
+        "label":  "clerk01 disable demo-hello tenant 2",
+        "method":  "POST",
+        "url":  "http://localhost:8080/plugin/runtime/tenant/2/demo-hello/disable",
+        "status":  403,
+        "success":  null,
+        "body":  "{\"code\":403,\"message\":\"无权访问: 跨租户访问被拒绝\",\"data\":null,\"traceId\":\"6d8ae01058f7488cb819f6f5658597c9\",\"timestamp\":\"2026-09-13 20:38:00\"}"
+    },
+    {
+        "label":  "clerk01 persisted tenantId=2",
+        "method":  "GET",
+        "url":  "http://localhost:8080/plugin/runtime/persisted?tenantId=2",
+        "status":  403,
+        "success":  null,
+        "body":  "{\"code\":403,\"message\":\"无权访问: 跨租户访问被拒绝\",\"data\":null,\"traceId\":\"1482ed76e4044e94a72a968a0141d5db\",\"timestamp\":\"2026-09-13 20:38:00\"}"
+    },
+    {
+        "label":  "clerk01 list tenant 1",
+        "method":  "GET",
+        "url":  "http://localhost:8080/plugin/runtime/tenant/1/list",
+        "status":  200,
+        "success":  null,
+        "body":  "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"44870d62faca4ddcb9a8cabe2b0d23c0\",\"timestamp\":\"2026-09-13 20:38:01\"}"
+    },
+    {
+        "label":  "admin list tenant 2",
+        "method":  "GET",
+        "url":  "http://localhost:8080/plugin/runtime/tenant/2/list",
+        "status":  200,
+        "success":  null,
+        "body":  "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"6f9b80bddaa645ecbaa60dd0e8227f82\",\"timestamp\":\"2026-09-13 20:38:01\"}"
+    },
+    {
+        "label":  "admin persisted tenantId=2",
+        "method":  "GET",
+        "url":  "http://localhost:8080/plugin/runtime/persisted?tenantId=2",
+        "status":  200,
+        "success":  null,
+        "body":  "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"e0549ebe3ad14e7290d437697b29eac8\",\"timestamp\":\"2026-09-13 20:38:01\"}"
+    },
+    {
+        "label":  "admin list tenant 999",
+        "method":  "GET",
+        "url":  "http://localhost:8080/plugin/runtime/tenant/999/list",
+        "status":  200,
+        "success":  null,
+        "body":  "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"477e00baf92d4a9eb081fd996bd4e998\",\"timestamp\":\"2026-09-13 20:38:01\"}"
+    }
+]

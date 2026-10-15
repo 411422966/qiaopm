@@ -1,0 +1,2 @@
+﻿{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"totalPromotions":1,"journeyEnterCount":6,"promotions":[{"promotionName":"5A-F133-updated","promotionType":"FULL_REDUCE","discountTotal":150.00,"orderCount":3,"id":4}],"touchConverted":2,"queryDate":"2026-09-16","pointsGranted":29500,"couponUsageRate":0,"totalDiscount":399.48,"totalReach":1961,"totalOrders":3,"touchSuccess":979,"totalActivities":0,"usedCoupon":0},"traceId":"ddf7ca3ea3b945b68979e4349db1cf38","timestamp":"2026-09-16 02:51:37"}
+HTTP 200

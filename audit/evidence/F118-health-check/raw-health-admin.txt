@@ -1,0 +1,1 @@
+{"code":200,"message":"操作成功","data":{"results":[{"healthy":false,"channelType":"EMAIL"},{"healthy":false,"channelType":"IN_APP"},{"healthy":false,"channelType":"MINI_PROGRAM"},{"healthy":false,"channelType":"SMS"},{"healthy":false,"channelType":"WECHAT_OFFICIAL_ACCOUNT"}]},"traceId":"731b2e227f9746d0921062e0d31b983b","timestamp":"2026-09-16 01:33:34"}

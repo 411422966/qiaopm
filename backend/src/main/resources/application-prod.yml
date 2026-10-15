@@ -1,0 +1,193 @@
+# ====================================================================
+# PRODUCTION PROFILE — 美业 SaaS 后端生产环境配置
+# ====================================================================
+# 激活方式：java -jar app.jar --spring.profiles.active=prod
+#
+# 设计原则（方案 B+，修订版）：
+# 1. 本文件仅覆盖 prod 严格项，base 字段在 application.yml 已 ENV 化
+# 2. 所有 prod 必填项使用 ${ENV:} 空 default（Spring 6.x 不识别 ${ENV:?}
+#    fail-fast 语法 — 该语法会被解析为 default 字符串而非抛异常）
+# 3. 实际 fail-fast 行为 = 下游组件（DataSource / Flyway / JwtUtil）启动期
+#    校验失败触发（隐式 fail-fast），不是本文件层显式抛异常
+# 4. 与 docs/prod-env-manifest.md 一一对应（manifest 是事实源）
+#
+# ⚠️ 关键发现（2026-10-09 批次 1.7 启动验证）：
+#   - 尝试 ${SPRING_DATASOURCE_URL:?PROD...} → Spring 把 `?PROD...` 整体当
+#     default 解析为字面值，URL 变成 "jdbc:mysql://...?PROD..."，DataSource
+#     报 "Driver claims to not accept jdbcUrl" 失败（隐式 fail-fast，但
+#     失败信息混在 Flyway 堆栈里，不友好）
+#   - 撤回 `:?` 语法 → 改用 `${ENV:}` 空 default + 显式 manifest 约束
+#   - 真正显式 fail-fast 必须由 EnvValidator / EnvironmentPostProcessor 实现
+#     （**未在本批次实现**，与用户"不写 ProdConfigValidator 类"约定一致）
+#
+# 覆盖关系（base → prod 叠加）：
+#   spring.datasource.url          : base=${ENV:default}    → prod=${ENV:}（隐式 fail-fast）
+#   spring.datasource.password     : base=${ENV:root123456} → prod=${ENV:}（隐式 fail-fast）
+#   spring.data.redis.host         : base=${ENV:localhost}  → prod=${ENV:}（隐式 fail-fast）
+#   spring.flyway.enabled          : base=false             → prod=true
+#   app.dcep.mode                  : base=dev               → prod=prod
+#   app-cn-pay.env-mode            : base=sandbox           → prod=production
+#   fiscal.mode                    : base=mock              → prod=baiwang
+#   mybatis-plus SQL log           : base=StdOutImpl        → prod=NoLoggingImpl
+#   jwt.secret                     : base=dev base64        → prod=${ENV:}（隐式 fail-fast）
+#   app.id-generator.worker-id     : base=0                 → prod=${ENV:}（prod 必设）
+#   plugin.runtime.plugins-root    : base=./plugins         → prod=${ENV:}（prod 必设）
+# ====================================================================
+
+spring:
+  datasource:
+    # PROD-001：prod 必须用真实 DB URL（不允许默认 localhost）
+    # ⚠️ 隐式 fail-fast：缺 ENV → 解析为空串 → DataSource 报
+    #    "Driver claims to not accept jdbcUrl"（隐式启动失败）
+    url: ${SPRING_DATASOURCE_URL:}
+    username: ${SPRING_DATASOURCE_USERNAME:}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+
+  data:
+    redis:
+      # PROD-002：prod 不允许 localhost（容器内会找不到 host）
+      host: ${SPRING_DATA_REDIS_HOST:}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      # prod 推荐启用 password（即使 Redis 内网也建议设）
+      password: ${SPRING_DATA_REDIS_PASSWORD:}
+
+  flyway:
+    # PROD-003：prod 强制开启 Flyway（生产 schema 演进必须有 migration 痕迹）
+    # 修复 I010（V1 编码问题）后此值方可设为 true
+    enabled: ${FLYWAY_ENABLED:true}
+    encoding: UTF-8
+    clean-disabled: true
+
+server:
+  port: ${SERVER_PORT:8080}
+  # prod 建议关闭 server 详细错误（避免堆栈泄露）
+  error:
+    include-stacktrace: never
+    include-message: always
+    include-binding-errors: never
+    include-exception: false
+
+# ====================================================================
+# 安全相关（prod 必填，隐式 fail-fast 通过 JwtUtil 校验触发）
+# ====================================================================
+jwt:
+  # PROD-004：prod JWT secret 必须从 ENV 注入
+  # 缺则 JwtUtil 启动期校验：长度 < 32 字节或命中弱值模式 → fail-fast
+  secret: ${JWT_SECRET:}
+  expiration: ${JWT_EXPIRATION:7200000}  # prod 默认 2h（base 是 24h）
+
+# ====================================================================
+# 业务关键模式（prod 强约束）
+# ====================================================================
+app:
+  dcep:
+    # PROD-005：DCEP 强制 prod 模式（禁止 dev 的 mock 行为）
+    mode: ${APP_DCEP_MODE:prod}
+  id-generator:
+    # PROD-006：雪花 ID 多实例必须唯一（0 冲突 = 主键重复）
+    # 缺则：多实例部署主键冲突（运行时而非启动期报错）
+    worker-id: ${APP_ID_GENERATOR_WORKER_ID:}
+    datacenter-id: ${APP_ID_GENERATOR_DATACENTER_ID:}
+
+# ====================================================================
+# 支付 / 财税（prod 强约束）
+# ====================================================================
+app-cn-pay:
+  # PROD-007：支付环境强制 production（禁止 sandbox）
+  env-mode: ${APP_CN_PAY_ENV_MODE:production}
+
+fiscal:
+  # PROD-008：财税开票强制百望（mock 不允许上生产）
+  mode: ${FISCAL_MODE:baiwang}
+
+# ====================================================================
+# 第三方平台（按需启用）
+# ====================================================================
+feature:
+  launchdarkly:
+    enabled: ${LAUNCHDARKLY_ENABLED:false}
+    sdk-key: ${LAUNCHDARKLY_SDK_KEY:}
+
+bnpl:
+  klarna:
+    base-url: ${KLARNA_BASE_URL:}
+    client-id: ${KLARNA_CLIENT_ID:}
+    client-secret: ${KLARNA_CLIENT_SECRET:}
+    merchant-id: ${KLARNA_MERCHANT_ID:}
+    test-mode: ${KLARNA_TEST_MODE:false}
+  afterpay:
+    base-url: ${AFTERPAY_BASE_URL:}
+    merchant-id: ${AFTERPAY_MERCHANT_ID:}
+    secret-key: ${AFTERPAY_SECRET_KEY:}
+    public-key: ${AFTERPAY_PUBLIC_KEY:}
+    test-mode: ${AFTERPAY_TEST_MODE:false}
+
+# ====================================================================
+# 插件运行时
+# ====================================================================
+plugin:
+  runtime:
+    # PROD-009：plugins-root 必须为绝对路径
+    # 缺则：相对路径在容器/服务模式下失效
+    plugins-root: ${PLUGIN_PLUGINS_ROOT:}
+    enabled: ${PLUGIN_RUNTIME_ENABLED:true}
+    auto-load-on-startup: ${PLUGIN_AUTOLOAD:false}
+
+# ====================================================================
+# IoT / MQTT
+# ====================================================================
+iot:
+  mqtt:
+    enabled: ${IOT_MQTT_ENABLED:false}
+    host: ${IOT_MQTT_HOST:}
+    port: ${IOT_MQTT_PORT:8883}
+    username: ${IOT_MQTT_USERNAME:}
+    password: ${IOT_MQTT_PASSWORD:}
+
+# ====================================================================
+# MyBatis-Plus 性能与安全
+# ====================================================================
+mybatis-plus:
+  configuration:
+    # PROD-010：关闭 SQL 日志（base 用 StdOutImpl 打 stdout — 性能 + 数据泄露）
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+  global-config:
+    banner: false
+
+# ====================================================================
+# 邮件渠道
+# ====================================================================
+mail:
+  default-charset: UTF-8
+  connection-timeout-ms: 5000
+  timeout-ms: 15000
+  write-timeout-ms: 15000
+
+# ====================================================================
+# CRM 同步排程
+# ====================================================================
+crm:
+  sync:
+    tick-interval-ms: ${CRM_SYNC_TICK_MS:300000}
+
+# ====================================================================
+# Kiosk 告警
+# ====================================================================
+kiosk:
+  alert:
+    enabled: ${KIOSK_ALERT_ENABLED:true}
+    push-enabled: ${KIOSK_ALERT_PUSH_ENABLED:true}
+    push-channel: ${KIOSK_ALERT_PUSH_CHANNEL:IN_APP}
+
+# ====================================================================
+# 监控基础设施（覆盖 base，prod 强化）
+# ====================================================================
+# PROD-011：prod 不暴露 health 细节（防 component 状态泄露 → 推断内网拓扑）
+# 但保留 liveness / readiness 探针（K8s 需要 200/503 区分，不泄露细节）
+# show-components: when-authorized → 内部 SRE 鉴权后可看
+# ====================================================================
+management:
+  endpoint:
+    health:
+      show-details: never
+      show-components: when-authorized

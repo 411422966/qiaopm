@@ -1,0 +1,234 @@
+﻿{
+    "features":  [
+                     {
+                         "id":  "P0-01",
+                         "module":  "AI智能排班",
+                         "code":  0.7,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.55
+                     },
+                     {
+                         "id":  "P0-02",
+                         "module":  "配方/护理建议",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P0-03",
+                         "module":  "多人共享套餐",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "0.0",
+                         "doc":  0.5,
+                         "score":  0.55
+                     },
+                     {
+                         "id":  "P0-04",
+                         "module":  "会员日自动化",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P1-05",
+                         "module":  "美甲款式图库",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P1-06",
+                         "module":  "上门服务LBS",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P1-07",
+                         "module":  "GiftCard",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P1-08",
+                         "module":  "订阅/会员制",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P1-09",
+                         "module":  "Stripe/Square/BNPL",
+                         "code":  0.7,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.55
+                     },
+                     {
+                         "id":  "P1-10",
+                         "module":  "Google/IG国际预约",
+                         "code":  0.7,
+                         "e2e":  0,
+                         "runtime":  "0.0",
+                         "doc":  0.5,
+                         "score":  0.4
+                     },
+                     {
+                         "id":  "P1-11",
+                         "module":  "自助签到Kiosk",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P1-12",
+                         "module":  "并发症SOP",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P1-13",
+                         "module":  "独立资金风控",
+                         "code":  0.7,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.55
+                     },
+                     {
+                         "id":  "P1-14",
+                         "module":  "Cohort分析",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P2-15",
+                         "module":  "AI视觉识别",
+                         "code":  0.7,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.55
+                     },
+                     {
+                         "id":  "P2-16",
+                         "module":  "LTV/Churn验证",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P2-17",
+                         "module":  "IoT设备驱动",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P2-18",
+                         "module":  "GDPR合规",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P2-19",
+                         "module":  "HIPAA合规",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P2-20",
+                         "module":  "Google Maps",
+                         "code":  0.7,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.55
+                     },
+                     {
+                         "id":  "P2-21",
+                         "module":  "海外POS终端",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "0.0",
+                         "doc":  0.5,
+                         "score":  0.55
+                     },
+                     {
+                         "id":  "P3-22",
+                         "module":  "插件市场",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P3-23",
+                         "module":  "财税直连",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "0.0",
+                         "doc":  0.5,
+                         "score":  0.55
+                     },
+                     {
+                         "id":  "P3-24",
+                         "module":  "CRM集成",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "1.0",
+                         "doc":  0.5,
+                         "score":  0.7
+                     },
+                     {
+                         "id":  "P3-25",
+                         "module":  "电商集成",
+                         "code":  1,
+                         "e2e":  0,
+                         "runtime":  "0.0",
+                         "doc":  0.5,
+                         "score":  0.55
+                     }
+                 ],
+    "overall_score":  0.634,
+    "scored_at":  "2026-08-17T23:13:16",
+    "inventory":  "D:\\QiaoPM\\docs\\governance\\feature_inventory.tsv",
+    "model":  "0.50*code + 0.25*e2e + 0.15*runtime + 0.10*doc (runtime=N/A 鏃惰皟鏁翠负 0.55/0.27/0.18)",
+    "feature_count":  25
+}

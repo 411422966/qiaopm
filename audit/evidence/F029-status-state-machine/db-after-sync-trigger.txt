@@ -1,0 +1,19 @@
+﻿
+=== after sync: status should remain ERROR (I002 blocks state transition) ===
+mysql.exe : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-d5ad7fda-6c5c-41a5-98d2-34c7f2f3e078.ps1:79 字符: 379
++ ... oding utf8; & mysql -h 127.0.0.1 -P 3307 -uroot -proot123456 --defaul ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+id	status	error_message
+2	ERROR	manual test (audit)
+SELECT id, sync_type, status, error_message FROM crm_sync_log ORDER BY id DESC LIMIT 3;
+mysql.exe : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-017b3dc4-cc28-43dc-bf62-d1f7f5c3ab20.ps1:79 字符: 337
++ ... oding utf8; & mysql -h 127.0.0.1 -P 3307 -uroot -proot123456 --defaul ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

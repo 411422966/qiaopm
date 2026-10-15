@@ -1,0 +1,32 @@
+# QiaoPM 功能清单 (Feature Inventory)
+# 列: feature_id<TAB>module<TAB>ctrl_re<TAB>svc_re<TAB>mapper_re<TAB>entity_re<TAB>e2e_spec_substr<TAB>runtime_url<TAB>doc_keyword
+# 用于 reality_score.sh 自动评分，禁止人工填写分数
+# 最后更新: 2026-08-17 (RC6 复核)
+# REAL 标 ✓ 的功能：四个层级（controller/service/mapper/entity）均存在
+# 注：本仓库采用 Service + Controller 合并写法（Service 类上标注 @RestController）
+#
+P0-01	AI智能排班	AiScheduler	AiScheduler	AiScheduler	AiScheduler	p4-1-ai-scheduler	http://localhost:8080/ai-scheduler/forecasts	AI 智能排班
+P0-02	配方/护理建议	CareSuggestion|CareRecipe|Care	CareSuggestion|CareRecipe|Care	CareSuggestion|CareRecipe|Care	CareSuggestion|CareRecipe|Care	p4-2-formula	http://localhost:8080/care/recipe/list	配方
+P0-03	多人共享套餐	SharedPackage|SharePackage	SharedPackage|SharePackage	SharedPackage|SharePackage	SharedPackage|SharePackage	p4-5-shared-package	http://localhost:8080/shared/package/list	多人共享套餐
+P0-04	会员日自动化	MemberDay|MemberLifecycle|BirthdayReminder	MemberDay|MemberLifecycle|BirthdayReminder	MemberDay|MemberLifecycle|BirthdayReminder	MemberDay|MemberLifecycle|BirthdayReminder	p4-2-lifecycle	http://localhost:8080/member-day/config/list	会员日
+P1-05	美甲款式图库	StyleGallery|NailStyle	StyleGallery|NailStyle	StyleGallery|NailStyle	StyleGallery|NailStyle	p4-5-style	http://localhost:8080/style/list	款式图库
+P1-06	上门服务LBS	LbsDispatch|Dispatch	Dispatch|LbsDispatch	Dispatch|LbsDispatch	Dispatch|LbsDispatch	p4-6-lbs	http://localhost:8080/lbs/technician/list	LBS
+P1-07	GiftCard	GiftCard	GiftCard	GiftCard	GiftCard	p4-7-gift-card	http://localhost:8080/gift-card/list	Gift Card
+P1-08	订阅/会员制	Subscription	Subscription	Subscription	Subscription	p4-8-subscription	http://localhost:8080/subscription/plan/list	订阅
+P1-09	Stripe/Square/BNPL	IntlPayment	IntlPayment	IntlPayment	IntlPayment		http://localhost:8080/intl-payment/gateways	Stripe
+P1-10	Google/IG国际预约	IntlBooking|GoogleBooking	IntlBooking|GoogleBooking	IntlBooking|GoogleBooking	IntlBooking|GoogleBooking		http://localhost:8080/intl-booking/channel/list	Google Booking
+P1-11	自助签到Kiosk	Kiosk|SelfCheckin	Kiosk|SelfCheckin	Kiosk|SelfCheckin	Kiosk|SelfCheckin	p4-11-kiosk	http://localhost:8080/kiosk/device/list	Kiosk
+P1-12	并发症SOP	Complication	Complication	Complication	Complication	p4-12-complication	http://localhost:8080/complication/sop/list	SOP
+P1-13	独立资金风控	RiskControl|WalletRisk	RiskControl|WalletRisk	RiskControl|WalletRisk	RiskControl|WalletRisk	p4-13-risk	http://localhost:8080/risk-control/rule/list	风控
+P1-14	Cohort分析	Cohort|RFM|CustomerSegment	Cohort|RFM|CustomerSegment	Cohort|RFM|CustomerSegment	Cohort|RFM|CustomerSegment	p4-14-cohort	http://localhost:8080/cohort/definition/list	Cohort
+P2-15	AI视觉识别	AIVision|Vision	AIVision|Vision	AIVision|Vision	AIVision|Vision	p4-15-vision	http://localhost:8080/ai/vision/model/list	AI 视觉
+P2-16	LTV/Churn验证	LtvChurn|Churn|LTV	LtvChurn|Churn|LTV	LtvChurn|Churn|LTV	LtvChurn|Churn|LTV	p4-16-ltvchurn	http://localhost:8080/ltv-churn/ltv/top	LTV
+P2-17	IoT设备驱动	IoT|DeviceDriver	IoT|DeviceDriver	IoT|DeviceDriver	IoT|DeviceDriver	p4-17-iot	http://localhost:8080/iot/device/list	IoT
+P2-18	GDPR合规	GDPR|Compliance|Gdpr	GDPR|Compliance|Gdpr	GDPR|Compliance|Gdpr	GDPR|Compliance|Gdpr	p4-18-gdpr	http://localhost:8080/gdpr/consent/list	GDPR
+P2-19	HIPAA合规	HIPAA|Hipaa|HIPAACompliance	HIPAA|Hipaa|HIPAACompliance	HIPAA|Hipaa|HIPAACompliance	HIPAA|Hipaa|HIPAACompliance	p4-19-hipaa	http://localhost:8080/hipaa/key/list	HIPAA
+P2-20	Google Maps	GoogleMaps|MapsApi	GoogleMaps|MapsApi	GoogleMaps|MapsApi	GoogleMaps|MapsApi		http://localhost:8080/google-maps/config	Google Maps
+P2-21	海外POS终端	PosDevice|OverseasPos	PosDevice|OverseasPos	PosDevice|OverseasPos	PosDevice|OverseasPos	p4-21-pos-device	http://localhost:8080/pos/device/list	POS
+P3-22	插件市场	PluginMarket|Plugin	PluginMarket|Plugin	PluginMarket|Plugin	PluginMarket|Plugin	p4-22-plugin	http://localhost:8080/plugin/market/list	插件
+P3-23	财税直连	Dcep|TaxDirect|FiscalConfig	Dcep|TaxDirect|FiscalConfig	Dcep|TaxDirect|FiscalConfig	Dcep|TaxDirect|FiscalConfig	p4-23-dcep	http://localhost:8080/dcep-config/list	财税
+P3-24	CRM集成	CrmIntegration|CRMIntegration	CrmIntegration|CRMIntegration	CrmIntegration|CRMIntegration	CrmIntegration|CRMIntegration	p4-24-crm	http://localhost:8080/crm-integration/list	CRM
+P3-25	电商集成	Ecommerce|ECommerce|Ecom	Ecommerce|ECommerce|Ecom	Ecommerce|ECommerce|Ecom	p4-25-ecommerce	http://localhost:8080/ecommerce/platform/list	电商

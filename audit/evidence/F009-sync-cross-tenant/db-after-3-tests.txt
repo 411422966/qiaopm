@@ -1,0 +1,7 @@
+﻿mysql: [Warning] Using a password on the command line interface can be insecure.
+id	tenant_id	platform	status	error_message
+1	1	SALESFORCE	ACTIVE	NULL
+2	1	MOCK	ACTIVE	NULL
+3	2	MOCK	ACTIVE	NULL
+sync_log_total
+0

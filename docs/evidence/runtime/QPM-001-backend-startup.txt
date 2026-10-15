@@ -1,0 +1,41 @@
+# Backend Startup Evidence
+# QPM-001: Runtime Recovery
+
+## 启动信息
+
+| 字段 | 值 |
+|------|-----|
+| 启动时间 | 2026-08-17T09:42:33Z |
+| 启动命令 | `mvn spring-boot:run` |
+| 启动目录 | D:\QiaoPM\backend |
+| JDK 版本 | Java 17 (Maven 自带) |
+| Maven 版本 | 3.9.6 |
+| Spring Boot 版本 | 3.1.5 |
+| 监听端口 | 8080 |
+| 新进程 PID | 13880 |
+| 日志文件 | D:\QiaoPM\docs\evidence\runtime\backend-startup.log |
+
+## HTTP 验证
+
+| 端点 | 方法 | 状态 |
+|------|------|------|
+| http://localhost:8080/auth/login | POST | 200 ✅ |
+| http://localhost:5173/ | GET | 200 ✅ |
+
+## 启动时非致命警告
+
+1. **trace_span 表不存在**：`INSERT INTO trace_span` 失败（表未创建）
+   - 影响：TraceService 写入失败，但不影响主业务
+   - 来源：`p3_01_trace_span.sql` 可能未执行
+
+2. **iot_device 表不存在**：`UPDATE iot_device SET online_status = 'OFFLINE'` 失败
+   - 影响：定时心跳检查失败，但不影响主业务
+   - 来源：`iot_device` 表可能未创建
+
+3. **PreparedStatement 参数错误**：`Parameter index out of range (2 > number of parameters, which is 1)`
+   - 来源：某个 PreparedStatement SQL 参数个数不匹配
+   - 影响：局部请求日志写入失败，不影响主业务
+
+## 结论
+
+✅ **后端启动成功**，主业务 API 可用。trace_span 和 iot_device 属于可选追踪/IoT 模块，不阻塞核心功能。

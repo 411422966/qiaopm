@@ -1,0 +1,4 @@
+﻿=== F078 同 msg_id 第 2 次推送（应触发幂等 duplicate=true）===
+msg_id=msg-5B-001 (重复)
+sig=1825f6762aee9b4b95bc8eaa5d13dd99
+code=500 msg=数据库异常

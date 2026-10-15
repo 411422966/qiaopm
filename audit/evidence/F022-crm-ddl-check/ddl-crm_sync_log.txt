@@ -1,0 +1,25 @@
+﻿mysql : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-8c9e275d-147a-4d5a-8349-962597b02b5d.ps1:79 字符: 1
++ mysql -h 127.0.0.1 -P 3307 -uroot -proot123456 --default-character-se ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+*************************** 1. row ***************************
+       Table: crm_sync_log
+Create Table: CREATE TABLE `crm_sync_log` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `tenant_id` bigint DEFAULT NULL,
+  `platform` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL,
+  `sync_type` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL,
+  `direction` varchar(16) COLLATE utf8mb4_bin DEFAULT NULL,
+  `success_count` int DEFAULT '0',
+  `fail_count` int DEFAULT '0',
+  `skipped_count` int DEFAULT '0',
+  `error_message` varchar(500) COLLATE utf8mb4_bin DEFAULT NULL,
+  `duration_ms` int DEFAULT NULL,
+  `status` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_tenant` (`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin

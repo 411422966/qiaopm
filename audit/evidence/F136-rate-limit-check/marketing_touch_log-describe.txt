@@ -1,0 +1,28 @@
+mysql.exe : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 D:\QiaoPM\tmp-5b-f136-describe-log.ps1:4 字符: 13
++ $mysqlOut = & mysql -h 127.0.0.1 -P 3307 -u root -proot123456 --defau ...
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+tenant_id	bigint	NO		1	
+task_id	bigint	NO	MUL	NULL	
+member_id	bigint	YES	MUL	NULL	
+member_name	varchar(64)	YES		NULL	
+member_phone	varchar(20)	YES		NULL	
+channel_type	varchar(32)	YES		NULL	
+content	varchar(2000)	YES		NULL	
+status	tinyint	YES	MUL	1	
+error_msg	varchar(500)	YES		NULL	
+scheduled_at	datetime	YES		NULL	
+sent_at	datetime	YES		NULL	
+read_at	datetime	YES		NULL	
+convert_at	datetime	YES		NULL	
+related_order_id	bigint	YES		NULL	
+retry_count	int	YES		0	
+external_msg_id	varchar(128)	YES		NULL	
+create_time	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+update_time	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+deleted	tinyint	YES		0	

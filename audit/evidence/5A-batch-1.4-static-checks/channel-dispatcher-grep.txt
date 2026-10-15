@@ -1,0 +1,50 @@
+ChannelDispatcher.healthCheckAll 静态分析 — Phase 5A.4 实证 (I050)
+
+> 创建时间：2026-09-14 20:40 (UTC+8)
+> 文件：backend/src/main/java/com/meiyetec/service/channel/ChannelDispatcher.java
+> 验证目标：healthCheckAll() 仅更新 tenant_id=1（硬编码）+ T07-D4 例外声明确认 (I050)
+> 验证方法：Read 文件全文 + 静态分析
+
+--- RAW CONTENT (L37-53) ---
+    /**
+     * 健康检查（一次轮询所有渠道）
+     *
+     * <p>T07-D4 例外：此方法为系统级批处理入口，无 HTTP/tenant 上下文。
+     * 按设计仅更新默认租户（tenant_id=1）的渠道配置，
+     * 这是有意保留的语义，不当作 T07 全局 1L 替换的覆盖目标。
+     */
+    public Result<Map<String, Object>> healthCheckAll() {
+        Long tenantId = 1L;
+        // T07-D4：明示此处的 1L 是有意保留的"系统级默认租户"，非 fallback
+        log.warn("[T07-D4] healthCheckAll 仅更新默认租户(tenant_id=1) 的渠道配置；其他租户的渠道健康状态不会被更新（按设计保留）");
+        List<Map<String, Object>> results = senders.stream().map(s -> {
+            boolean ok = s.healthCheck();
+            jdbc.update("UPDATE mkt_channel_config SET last_health_at = NOW(), last_health_msg = ? WHERE tenant_id = ? AND channel_type = ? AND deleted = 0",
+                    ok ? "OK" : "FAIL", tenantId, s.channelType());
+            Map<String, Object> r = new HashMap<>();
+            r.put("channelType", s.channelType());
+            r.put("healthy", ok);
+            return r;
+        }).collect(Collectors.toList());
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("results", results);
+        return Result.success(data);
+    }
+
+--- 关键行分析 ---
+- L39: Long tenantId = 1L;  ← 硬编码
+- L41: log.warn("[T07-D4] healthCheckAll 仅更新默认租户(tenant_id=1) 的渠道配置；其他租户的渠道健康状态不会被更新（按设计保留）");
+- L46: UPDATE mkt_channel_config SET ... WHERE tenant_id = ? AND channel_type = ? AND deleted = 0
+       参数绑定：tenantId (硬编码 1L) + channel_type + deleted
+
+--- VERDICT ---
+✅ PASS — I050 实证成功
+- I050 性质：死代码（T07-D4 例外声明保留）
+- 设计意图：T07-D4 例外 — 系统级批处理入口，无 HTTP/tenant 上下文
+- 影响范围：
+  * 仅 tenant_id=1 的 mkt_channel_config 行的 last_health_at / last_health_msg 会被更新
+  * 其他租户的渠道健康状态**不会**被更新（设计保留）
+- 决策：D28 — I050 维持现状（演示模式足够联调）
+- 副作用：mkt_channel_config 表本身可能 MISSING（按用户决策 #3 统一不跑迁移），所以实际执行 SQL 会抛 TableNotFoundException
+- F094 影响：ChannelDispatcher.healthCheckAll PARTIAL-NON-BLOCKER (T07-D4 例外声明保留)

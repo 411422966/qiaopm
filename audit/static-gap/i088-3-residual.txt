@@ -1,0 +1,5 @@
+﻿D:\QiaoPM\backend\src\main\java\com\meiyetec\service\KioskService.java:184
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\KioskService.java:238
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\KioskService.java:333
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\KioskService.java:365
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\KioskService.java:488

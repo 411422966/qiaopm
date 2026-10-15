@@ -1,0 +1,105 @@
+﻿
+backend\logs\meiyetec.log:3466:2026-09-12 23:18:57.244 [scheduling-1] WARN  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] send failed device=KIOSK_E2E_1786899843571 channel=IN_APP err=BadSqlGrammar
+Exception: 
+backend\logs\meiyetec.log:3474:2026-09-12 23:18:57.250 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901346918, fall
+back to ops
+backend\logs\meiyetec.log:3475:2026-09-12 23:18:57.255 [scheduling-1] ERROR c.m.service.channel.InAppSender [traceId=] 
+[tenant=] [order=] [pay=] [IN_APP] send exception: 
+backend\logs\meiyetec.log:3523:	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRu
+nnable.java:84)
+backend\logs\meiyetec.log:3524:	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(Delegatin
+gErrorHandlingRunnable.java:54)
+backend\logs\meiyetec.log:3567:2026-09-12 23:18:57.257 [scheduling-1] WARN  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] send failed device=KIOSK_E2E_B7_1786901346918 channel=IN_APP err=BadSqlGram
+marException: 
+backend\logs\meiyetec.log:3575:2026-09-12 23:18:57.264 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901428847, fall
+back to ops
+backend\logs\meiyetec.log:3576:2026-09-12 23:18:57.269 [scheduling-1] ERROR c.m.service.channel.InAppSender [traceId=] 
+[tenant=] [order=] [pay=] [IN_APP] send exception: 
+backend\logs\meiyetec.log:3624:	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRu
+nnable.java:84)
+backend\logs\meiyetec.log:3625:	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(Delegatin
+gErrorHandlingRunnable.java:54)
+backend\logs\meiyetec.log:3668:2026-09-12 23:18:57.272 [scheduling-1] WARN  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] send failed device=KIOSK_E2E_B7_1786901428847 channel=IN_APP err=BadSqlGram
+marException: 
+backend\logs\meiyetec.log:3676:2026-09-12 23:18:57.280 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901480172, fall
+back to ops
+backend\logs\meiyetec.log:3677:2026-09-12 23:18:57.287 [scheduling-1] ERROR c.m.service.channel.InAppSender [traceId=] 
+[tenant=] [order=] [pay=] [IN_APP] send exception: 
+backend\logs\meiyetec.log:3725:	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRu
+nnable.java:84)
+backend\logs\meiyetec.log:3726:	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(Delegatin
+gErrorHandlingRunnable.java:54)
+backend\logs\meiyetec.log:3769:2026-09-12 23:18:57.289 [scheduling-1] WARN  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] send failed device=KIOSK_E2E_B7_1786901480172 channel=IN_APP err=BadSqlGram
+marException: 
+backend\logs\meiyetec.log:3777:2026-09-12 23:18:57.296 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901531974, fall
+back to ops
+backend\logs\meiyetec.log:3778:2026-09-12 23:18:57.301 [scheduling-1] ERROR c.m.service.channel.InAppSender [traceId=] 
+[tenant=] [order=] [pay=] [IN_APP] send exception: 
+backend\logs\meiyetec.log:3825:	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRu
+nnable.java:84)
+backend\logs\meiyetec.log:3826:	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(Delegatin
+gErrorHandlingRunnable.java:54)
+backend\logs\meiyetec.log:3869:2026-09-12 23:18:57.303 [scheduling-1] WARN  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] send failed device=KIOSK_E2E_B7_1786901531974 channel=IN_APP err=BadSqlGram
+marException: 
+backend\logs\meiyetec.log:3877:2026-09-12 23:18:57.308 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786960202644, fall
+back to ops
+backend\logs\meiyetec.log:3878:2026-09-12 23:18:57.314 [scheduling-1] ERROR c.m.service.channel.InAppSender [traceId=] 
+[tenant=] [order=] [pay=] [IN_APP] send exception: 
+backend\logs\meiyetec.log:3925:	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRu
+nnable.java:84)
+backend\logs\meiyetec.log:3926:	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(Delegatin
+gErrorHandlingRunnable.java:54)
+backend\logs\meiyetec.log:3969:2026-09-12 23:18:57.317 [scheduling-1] WARN  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] send failed device=KIOSK_E2E_B7_1786960202644 channel=IN_APP err=BadSqlGram
+marException: 
+backend\logs\meiyetec.log:3977:2026-09-12 23:18:57.322 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786960300234, fall
+back to ops
+backend\logs\meiyetec.log:3978:2026-09-12 23:18:57.328 [scheduling-1] ERROR c.m.service.channel.InAppSender [traceId=] 
+[tenant=] [order=] [pay=] [IN_APP] send exception: 
+backend\logs\meiyetec.log:4025:	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRu
+nnable.java:84)
+backend\logs\meiyetec.log:4026:	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(Delegatin
+gErrorHandlingRunnable.java:54)
+backend\logs\meiyetec.log:4069:2026-09-12 23:18:57.331 [scheduling-1] WARN  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] send failed device=KIOSK_E2E_B7_1786960300234 channel=IN_APP err=BadSqlGram
+marException: 
+backend\logs\meiyetec.log:4077:2026-09-12 23:18:57.335 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1787581091714, fall
+back to ops
+backend\logs\meiyetec.log:4078:2026-09-12 23:18:57.339 [scheduling-1] ERROR c.m.service.channel.InAppSender [traceId=] 
+[tenant=] [order=] [pay=] [IN_APP] send exception: 
+backend\logs\meiyetec.log:4125:	at org.springframework.scheduling.support.ScheduledMethodRunnable.run(ScheduledMethodRu
+nnable.java:84)
+backend\logs\meiyetec.log:4126:	at org.springframework.scheduling.support.DelegatingErrorHandlingRunnable.run(Delegatin
+gErrorHandlingRunnable.java:54)
+backend\logs\meiyetec.log:4169:2026-09-12 23:18:57.343 [scheduling-1] WARN  c.m.service.KioskOfflineAlertService [trace
+Id=] [tenant=] [order=] [pay=] [KioskAlert] send failed device=KIOSK_E2E_B7_1787581091714 channel=IN_APP err=BadSqlGram
+marException: 
+backend\logs\meiyetec.log:4177:2026-09-12 23:19:26.568 [scheduling-1] WARN  com.meiyetec.crm.CrmSyncScheduler [traceId=
+] [tenant=] [order=] [pay=] [CRM-Scheduler] 拉取集成列表失败：
+backend\logs\meiyetec.log:4182:### SQL: SELECT  id,tenant_id,platform,app_id,client_id,client_secret,access_token,refre
+sh_token,token_expire_at,api_base_url,portal_id,sync_direction,sync_members,sync_orders,sync_contacts,sync_deals,auto_s
+ync,last_sync_at,status,error_message,created_at,updated_at,sync_token,sync_schedule,sync_enabled,last_incremental_sync
+_at,private_key,username,login_url,object_mappings,sync_window_minutes  FROM crm_integration      WHERE  (status = ? AN
+D sync_enabled = ?)
+backend\logs\meiyetec.log:4191:### SQL: SELECT id,tenant_id,platform,app_id,client_id,client_secret,access_token,refres
+h_token,token_expire_at,api_base_url,portal_id,sync_direction,sync_members,sync_orders,sync_contacts,sync_deals,auto_sy
+nc,last_sync_at,status,error_message,created_at,updated_at,sync_token,sync_schedule,sync_enabled,last_incremental_sync_
+at,private_key,username,login_url,object_mappings,sync_window_minutes FROM crm_integration WHERE id=?
+backend\logs\meiyetec.log:4322:### SQL: SELECT id,tenant_id,platform,app_id,client_id,client_secret,access_token,refres
+h_token,token_expire_at,api_base_url,portal_id,sync_direction,sync_members,sync_orders,sync_contacts,sync_deals,auto_sy
+nc,last_sync_at,status,error_message,created_at,updated_at,sync_token,sync_schedule,sync_enabled,last_incremental_sync_
+at,private_key,username,login_url,object_mappings,sync_window_minutes FROM crm_integration WHERE id=?
+
+

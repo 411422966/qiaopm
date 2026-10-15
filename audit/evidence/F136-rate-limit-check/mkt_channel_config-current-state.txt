@@ -1,0 +1,14 @@
+mysql.exe : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 D:\QiaoPM\tmp-5b-f136-db-query.ps1:3 字符: 13
++ $mysqlOut = & mysql -h 127.0.0.1 -P 3307 -u root -proot123456 --defau ...
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+id	tenant_id	brand_id	channel_type	channel_name	rate_limit_per_min	rate_limit_per_day	status	deleted	last_health_at	last_health_msg
+4	1	NULL	IN_APP	绔欏唴淇?1000	99999	1	0	2026-09-16 21:59:05	FAIL
+10	1	NULL	PUSH	audit-test-F115-push-N7	60	5000	1	0	NULL	NULL
+8	1	NULL	SMS	5A-SMS-Updated-V2	60	5000	1	0	2026-09-16 21:59:05	FAIL
+2	1	1	MINI_PROGRAM	灏忕▼搴忚闃呮秷鎭?100	5000	1	0	2026-09-16 21:59:05	FAIL
+3	1	1	MP	鍏紬鍙锋ā鏉挎秷鎭?50	3000	1	0	NULL	NULL
+1	1	1	SMS	闃块噷浜戠煭淇?30	2000	1	0	2026-09-16 21:59:05	FAIL

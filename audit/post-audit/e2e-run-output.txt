@@ -1,0 +1,508 @@
+﻿[global-setup] OK user=admin token.len=246 state鈫?auth-state.json
+
+Running 19 tests using 1 worker
+
+node.exe : (node:10956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+所在位置 行:1 字符: 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:10956) Wa... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-warnings ...` to show where the warning was created)
+宸插彂鐜?tabs: [ '闆嗘垚閰嶇疆', '鍚屾鏃ュ織' ]
+  ok  1 ..\..\audit\scripts\e2e\F007-no-dashboard-tab.spec.ts:26:7 鈥?F007 鈥?Dashboard tab Shadow Feature 鈥?I006: 搴旀棤 dashboard tab (1.6s)
+dashboard 鍝嶅簲: {
+  "code": 200,
+  "message": "鎿嶄綔鎴愬姛",
+  "data": {
+    "totalIntegrations": 5,
+    "totalSyncLogs": 23
+  },
+  "traceId": "9426c696fd4c4f72ba6f1a8051fe0def",
+  "timestamp": "2026-09-21 23:52:53"
+}
+  ok  2 ..\..\audit\scripts\e2e\F007-no-dashboard-tab.spec.ts:48:7 鈥?F007 鈥?Dashboard tab Shadow Feature 鈥?API 绔偣鍙闂紙I008 Fake Success 閾撅級 (72ms)
+鍒楄〃鍒楀ご: [
+  'ID',       '骞冲彴',
+  '搴楅摵',     '鏂瑰悜',
+  '鏈€杩戝悓姝?, '鐘舵€?,
+  '鎿嶄綔',     'ID',
+  '闆嗘垚',     '绫诲瀷',
+  '鐘舵€?,     '鍚屾鏃堕棿',
+  '澶囨敞'
+]
+闆嗘垚琛屾暟: 28
+鐘舵€?enum 瀹為檯鍊? ACTIVE=false, DISABLED=false, PAUSED=false
+  x   3 ..\..\audit\scripts\e2e\F024-list-ui.spec.ts:22:7 鈥?F024 鈥?闆嗘垚鍒楄〃 UI 鈥?闆嗘垚鍒楄〃娓叉煋 + 鍒楀悕 + 鐘舵€?enum (1.7s)
+(node:11180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+琛ㄥ崟瀛楁: [ '骞冲彴', '搴楅摵鍚嶇О', '鏂瑰悜', '鑷姩鍚屾' ]
+  ok  4 ..\..\audit\scripts\e2e\F025-create-form.spec.ts:27:7 鈥?F025 鈥?鏂板缓闆嗘垚琛ㄥ崟 鈥?瀵硅瘽妗嗘覆鏌?+ I005 C4 瀛楁缂哄け (1.9s)
+  x   5 ..\..\audit\scripts\e2e\F025-create-form.spec.ts:54:7 鈥?F025 鈥?鏂板缓闆嗘垚琛ㄥ崟 鈥?濉〃淇濆瓨 鈫?鍒楄〃鏂板琛?(8.0s)
+(node:18920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+鍚屾鏃ュ織鍒楀ご: [
+  'ID',       '骞冲彴',
+  '搴楅摵',     '鏂瑰悜',
+  '鏈€杩戝悓姝?, '鐘舵€?,
+  '鎿嶄綔',     'ID',
+  '闆嗘垚',     '绫诲瀷',
+  '鐘舵€?,     '鍚屾鏃堕棿',
+  '澶囨敞'
+]
+  ok  6 ..\..\audit\scripts\e2e\F026-sync-log-tab.spec.ts:26:7 鈥?F026 鈥?鍚屾鏃ュ織 tab 鈥?鍒囧埌鍚屾鏃ュ織 tab + 楠岃瘉 integrationId 鍒?(3.7s)
+sync-log/list 鍝嶅簲: {
+  "code": 200,
+  "message": "鎿嶄綔鎴愬姛",
+  "data": [
+    {
+      "id": 24,
+      "tenantId": 1,
+      "platform": "SALESFORCE",
+      "syncType": "MANUAL",
+      "direction": "PULL",
+      "successCount": 0,
+      "failCount": 0,
+      "skippedCount": 0,
+      "errorMessage": null,
+      "durationMs": 15,
+      "status": "SUCCESS",
+      "createdAt": "2026-09-21T23:51:53",
+      "syncToken": null,
+      "recordsTotal": 0,
+      "recordsFiltered": 0
+    },
+    {
+      "id": 23,
+      "tenantId": 1,
+
+绗竴鏉℃棩蹇楀瓧娈? [
+  'id',              'tenantId',
+  'platform',        'syncType',
+  'direction',       'successCount',
+  'failCount',       'skippedCount',
+  'errorMessage',    'durationMs',
+  'status',          'createdAt',
+  'syncToken',       'recordsTotal',
+  'recordsFiltered'
+]
+  ok  7 ..\..\audit\scripts\e2e\F026-sync-log-tab.spec.ts:49:7 鈥?F026 鈥?鍚屾鏃ュ織 tab 鈥?鍚屾鏃ュ織 API 鍝嶅簲锛圛003 婕傜Щ瀹炶瘉锛?(68ms)
+鎹曡幏鍒扮殑 sync 璇锋眰: [
+  {
+    url: 'http://127.0.0.1:5173/api/crm-integration/sync-log/list',
+    method: 'GET'
+  },
+  {
+    url: 'http://127.0.0.1:5173/api/crm-integration/7/sync',
+    method: 'POST'
+  },
+  {
+    url: 'http://127.0.0.1:5173/api/crm-integration/sync-log/list',
+    method: 'GET'
+  }
+]
+sync URL: http://127.0.0.1:5173/api/crm-integration/sync-log/list
+  x   8 ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:26:7 鈥?F027 鈥?sync 鎸夐挳 force 鏈紶 鈥?鐐瑰嚮鍚屾鎸夐挳 鈫?URL 涓嶅甫 ?force=1 (4.9s)
+(node:22432) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+sync 鍝嶅簲锛堟棤 force锛? {
+  "code": 500,
+  "message": "Cannot invoke \"java.lang.Integer.intValue()\" because the return value of \"com.meiyetec.entity.CrmSyncLog.getSuccessCount()\" is null",
+  "data": null,
+  "traceId": "a470d156b8354eb2ab9d9bd31171f40f",
+  "timestamp": "2026-09-21 23:53:19"
+}
+  x   9 ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:71:7 鈥?F027 鈥?sync 鎸夐挳 force 鏈紶 鈥?API 鐩磋皟楠岃瘉 force 鏈紶 (98ms)
+(node:15624) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+sync 鍝嶅簲锛坒orce=1锛? {
+  "code": 500,
+  "message": "Cannot invoke \"java.lang.Integer.intValue()\" because the return value of \"com.meiyetec.entity.CrmSyncLog.getSuccessCount()\" is null",
+  "data": null,
+  "traceId": "cc3bb5df06e74a338f7b36352ea4d518",
+  "timestamp": "2026-09-21 23:53:20"
+}
+  x  10 ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:86:7 鈥?F027 鈥?sync 鎸夐挳 force 鏈紶 鈥?API 鐩磋皟 force=1 楠岃瘉 (100ms)
+(node:4672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+琛ㄥ崟瀛楁: [ '骞冲彴', '搴楅摵鍚嶇О', '鏂瑰悜', '鑷姩鍚屾' ]
+placeholder: []
+鉁?琛ㄥ崟缂?"clientId"
+鉁?琛ㄥ崟缂?"clientSecret"
+鉁?琛ㄥ崟缂?"privateKey"
+鉁?琛ㄥ崟缂?"username"
+鉁?琛ㄥ崟缂?"loginUrl"
+鉁?琛ㄥ崟缂?"objectMappings"
+  ok 11 ..\..\audit\scripts\e2e\F028-object-mappings.spec.ts:28:7 鈥?F028 鈥?objectMappings UI 缂哄け 鈥?鏂板缓琛ㄥ崟鏃?objectMappings 瀛楁锛圛005 C4锛?(2.6s)
+list 鍝嶅簲 code: 200
+绗竴鏉?integration 瀛楁: [
+  'id',             'tenantId',
+  'platform',       'appId',
+  'clientId',       'clientSecret',
+  'accessToken',    'refreshToken',
+  'tokenExpireAt',  'apiBaseUrl',
+  'portalId',       'syncDirection',
+  'syncMembers',    'syncOrders',
+  'syncContacts',   'syncDeals',
+  'autoSync',       'lastSyncAt',
+  'status',         'errorMessage',
+  'createdAt',      'updatedAt',
+  'syncToken',      'syncSchedule',
+  'syncEnabled',    'lastIncrementalSyncAt',
+  'username',       'loginUrl',
+  'objectMappings', 'syncWindowMinutes'
+]
+  ok 12 ..\..\audit\scripts\e2e\F028-object-mappings.spec.ts:58:7 鈥?F028 鈥?objectMappings UI 缂哄け 鈥?鍚庣 API + DB 楠岃瘉 object_mappings 鎸佷箙鍖栦负 NULL (167ms)
+  x  13 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:31:7 鈥?F111 鈥?intl-booking/index.vue Shadow 楠岃瘉 鈥?椤甸潰鍔犺浇 + 2 tab 缁撴瀯锛?娓犻亾杩炴帴" + "鍥介檯棰勭害"锛?(12.2s)
+(node:13516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+缁戝畾鎸夐挳鏁帮紙Google + Instagram锛? 0
+  x  14 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:46:7 鈥?F111 鈥?intl-booking/index.vue Shadow 楠岃瘉 鈥?3 瀵硅瘽妗嗙粨鏋勶紙Google OAuth / Instagram OAuth / 妯℃澘棰勮锛?(2.2s)
+(node:16612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+I040 鈥?鍓嶇 UI 鍚?autoSend 鍏冪礌 = false锛堝簲 false锛?  ok 15 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:65:7 鈥?F111 鈥?intl-booking/index.vue Shadow 楠岃瘉 鈥?I040 鈥?autoSend=false UI 缂哄け锛圫hadow 瀹炶瘉锛?(2.3s)
+  x  16 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:80:7 鈥?F111 鈥?intl-booking/index.vue Shadow 楠岃瘉 鈥?I041 鈥?"纭"鎸夐挳鏂囨鏃?鍙戦€侀€氱煡"鎻愮ず锛圫hadow 瀹炶瘉锛?(12.1s)
+(node:22524) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  17 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:113:7 鈥?F112 鈥?intl-booking.ts API 绔偣灏佽 Shadow 楠岃瘉 鈥?I042 鈥?intlBookingApi 鏃?sendConfirmation 鏂规硶锛圫hadow 瀹炶瘉锛?(455ms)
+(node:16120) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  18 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:130:7 鈥?F112 鈥?intl-booking.ts API 绔偣灏佽 Shadow 楠岃瘉 鈥?12 绔偣鏂规硶瀹屾暣鎬э紙瀵圭収 F112 鏈熸湜娓呭崟锛?(456ms)
+(node:22268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  19 ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:163:7 鈥?F112 鈥?intl-booking.ts API 绔偣灏佽 Shadow 楠岃瘉 鈥?updateStatus 浠呬紶 status 瀛楁锛屼笉鏀寔 autoSend (493ms)
+
+
+  1) ..\..\audit\scripts\e2e\F024-list-ui.spec.ts:22:7 鈥?F024 鈥?闆嗘垚鍒楄〃 UI 鈥?闆嗘垚鍒楄〃娓叉煋 + 鍒楀悕 + 鐘舵€?enum 鈹€鈹€鈹€鈹€
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      60 |
+      61 |     // 鈿狅笍 鏈熸湜锛氬墠绔?PAUSED锛坱oggle inactive-value锛夛紝鍚庣 ACTIVE/DISABLED/ERROR锛圛005 C1 婕傜Щ锛?    > 62 |     expect(hasActive || hasPaused || hasDisabled).toBe(true)
+         |                                                   ^
+      63 |   })
+      64 | })
+      65 |
+        at D:\QiaoPM\audit\scripts\e2e\F024-list-ui.spec.ts:62:51
+
+    attachment #1: screenshot (image/png) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F024-list-ui-F024-鈥?闆嗘垚鍒楄〃-UI-闆嗘垚鍒楄〃娓叉煋-鍒楀悕-鐘舵€?enum\test-failed-1.png
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+    Error Context: test-results\F024-list-ui-F024-鈥?闆嗘垚鍒楄〃-UI-闆嗘垚鍒楄〃娓叉煋-鍒楀悕-鐘舵€?enum\error-context.md
+
+    attachment #3: trace (application/zip) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F024-list-ui-F024-鈥?闆嗘垚鍒楄〃-UI-闆嗘垚鍒楄〃娓叉煋-鍒楀悕-鐘舵€?enum\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F024-list-ui-F024-鈥?闆嗘垚鍒楄〃-UI-闆嗘垚鍒楄〃娓叉煋-鍒楀悕-鐘舵€?enum\trace.zip
+
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  2) ..\..\audit\scripts\e2e\F025-create-form.spec.ts:54:7 鈥?F025 鈥?鏂板缓闆嗘垚琛ㄥ崟 鈥?濉〃淇濆瓨 鈫?鍒楄〃鏂板琛?鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.el-dialog')
+    Expected: 0
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('.el-dialog')
+        14 脳 locator resolved to 1 element
+           - unexpected value "1"
+
+
+      72 |
+      73 |     // 绛夊緟瀵硅瘽妗嗗叧闂紙蹇呴』鐪熷叧闂紝鍚﹀垯瑙嗕负淇濆瓨澶辫触锛?    > 74 |     await expect(page.locator('.el-dialog')).toHaveCount(0, { timeout: 5000 })
+         |                                              ^
+      75 |
+      76 |     // 绛夊緟鍒楄〃鍒锋柊
+      77 |     await page.waitForTimeout(3_000)
+        at D:\QiaoPM\audit\scripts\e2e\F025-create-form.spec.ts:74:46
+
+    attachment #1: screenshot (image/png) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F025-create-form-F025-鈥?鏂板缓闆嗘垚琛ㄥ崟-濉〃淇濆瓨-鈫?鍒楄〃鏂板琛孿test-failed-1.png
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+    Error Context: test-results\F025-create-form-F025-鈥?鏂板缓闆嗘垚琛ㄥ崟-濉〃淇濆瓨-鈫?鍒楄〃鏂板琛孿error-context.md
+
+    attachment #3: trace (application/zip) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F025-create-form-F025-鈥?鏂板缓闆嗘垚琛ㄥ崟-濉〃淇濆瓨-鈫?鍒楄〃鏂板琛孿trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F025-create-form-F025-鈥?鏂板缓闆嗘垚琛ㄥ崟-濉〃淇濆瓨-鈫?鍒楄〃鏂板琛孿trace.zip
+
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  3) ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:26:7 鈥?F027 鈥?sync 鎸夐挳 force 鏈紶 鈥?鐐瑰嚮鍚屾鎸夐挳 鈫?URL 涓嶅甫 ?force=1 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "POST"
+    Received: "GET"
+
+      66 |     // 楠岃瘉鍝嶅簲锛圛008 Fake Success 閾?鈥?鍗充娇 I002 闃诲涔熶細 200 + code=500锛?      67 |     // 娉細褰撳墠鐜 I002 闃诲 鈫?鍝嶅簲 code=500锛屼絾 API 璋冪敤鏈韩琚彂鍑?    > 68 |     expect(syncReq.method).toBe('POST')
+         |                            ^
+      69 |   })
+      70 |
+      71 |   test('API 鐩磋皟楠岃瘉 force 鏈紶', async ({ request }) => {
+        at D:\QiaoPM\audit\scripts\e2e\F027-sync-button.spec.ts:68:28
+
+    attachment #1: screenshot (image/png) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F027-sync-button-F027-鈥?sy-7240d--鏈紶-鐐瑰嚮鍚屾鎸夐挳-鈫?URL-涓嶅甫-force-1\test-failed-1.png
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+    Error Context: test-results\F027-sync-button-F027-鈥?sy-7240d--鏈紶-鐐瑰嚮鍚屾鎸夐挳-鈫?URL-涓嶅甫-force-1\error-context.md
+
+    attachment #3: trace (application/zip) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F027-sync-button-F027-鈥?sy-7240d--鏈紶-鐐瑰嚮鍚屾鎸夐挳-鈫?URL-涓嶅甫-force-1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F027-sync-button-F027-鈥?sy-7240d--鏈紶-鐐瑰嚮鍚屾鎸夐挳-鈫?URL-涓嶅甫-force-1\trace.zip
+
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  4) ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:71:7 鈥?F027 鈥?sync 鎸夐挳 force 鏈紶 鈥?API 鐩磋皟楠岃瘉 force 鏈紶 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 500
+
+      81 |
+      82 |     // 鉁?淇 false positive锛氫笟鍔＄爜蹇呴』 200锛圛002 淇ソ鍚?skipped=true 涔熸槸 code=200锛汭002 闃诲 鈫?code=500 鐩存帴 FAIL锛?    > 83 |     expect(body.code).toBe(200)
+         |                       ^
+      84 |   })
+      85 |
+      86 |   test('API 鐩磋皟 force=1 楠岃瘉', async ({ request }) => {
+        at D:\QiaoPM\audit\scripts\e2e\F027-sync-button.spec.ts:83:23
+
+    Error Context: test-results\F027-sync-button-F027-鈥?sync-鎸夐挳-force-鏈紶-API-鐩磋皟楠岃瘉-force-鏈紶\error-context.md
+
+    attachment #2: trace (application/zip) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F027-sync-button-F027-鈥?sync-鎸夐挳-force-鏈紶-API-鐩磋皟楠岃瘉-force-鏈紶\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F027-sync-button-F027-鈥?sync-鎸夐挳-force-鏈紶-API-鐩磋皟楠岃瘉-force-鏈紶\trace.zip
+
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  5) ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:86:7 鈥?F027 鈥?sync 鎸夐挳 force 鏈紶 鈥?API 鐩磋皟 force=1 楠岃瘉 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 500
+
+      94 |     console.log('sync 鍝嶅簲锛坒orce=1锛?', JSON.stringify(body, null, 2))
+      95 |
+    > 96 |     expect(body.code).toBe(200)
+         |                       ^
+      97 |     expect(body.data?.forced).toBe(true)
+      98 |   })
+      99 | })
+        at D:\QiaoPM\audit\scripts\e2e\F027-sync-button.spec.ts:96:23
+
+    Error Context: test-results\F027-sync-button-F027-鈥?sync-鎸夐挳-force-鏈紶-API-鐩磋皟-force-1-楠岃瘉\error-context.md
+
+    attachment #2: trace (application/zip) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F027-sync-button-F027-鈥?sync-鎸夐挳-force-鏈紶-API-鐩磋皟-force-1-楠岃瘉\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F027-sync-button-F027-鈥?sync-鎸夐挳-force-鏈紶-API-鐩磋皟-force-1-楠岃瘉\trace.zip
+
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  6) ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:31:7 鈥?F111 鈥?intl-booking/index.vue Shadow 楠岃瘉 鈥?椤甸潰鍔犺浇 + 2 tab 缁撴瀯锛?娓犻亾杩炴帴" + "鍥介檯棰勭害"锛?
+
+    TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for locator('.el-tabs__nav') to be visible
+
+
+      34 |
+      35 |     // 绛夊緟 tabs 娓叉煋
+    > 36 |     await page.waitForSelector('.el-tabs__nav', { timeout: 10_000 })
+         |                ^
+      37 |
+      38 |     const tabs = await page.locator('.el-tabs__item').allTextContents()
+      39 |     console.log('intl-booking tabs:', tabs)
+        at D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:36:16
+
+    attachment #1: screenshot (image/png) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F111-F112-shadow-F111-鈥?in-0c295--椤甸潰鍔犺浇-2-tab-缁撴瀯锛?娓犻亾杩炴帴-鍥介檯棰勭害-锛塡test-failed-1.png
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+    Error Context: test-results\F111-F112-shadow-F111-鈥?in-0c295--椤甸潰鍔犺浇-2-tab-缁撴瀯锛?娓犻亾杩炴帴-鍥介檯棰勭害-锛塡error-context.md
+
+    attachment #3: trace (application/zip) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F111-F112-shadow-F111-鈥?in-0c295--椤甸潰鍔犺浇-2-tab-缁撴瀯锛?娓犻亾杩炴帴-鍥介檯棰勭害-锛塡trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F111-F112-shadow-F111-鈥?in-0c295--椤甸潰鍔犺浇-2-tab-缁撴瀯锛?娓犻亾杩炴帴-鍥介檯棰勭害-锛塡trace.zip
+
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  7) ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:46:7 鈥?F111 鈥?intl-booking/index.vue Shadow 楠岃瘉 鈥?3 瀵硅瘽妗嗙粨鏋勶紙Google OAuth / Instagram OAuth / 妯℃澘棰勮锛?
+
+    Error: expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 2
+    Received:    0
+
+      52 |     const connectButtons = await page.getByRole('button', { name: '缁戝畾' }).count()
+      53 |     console.log('缁戝畾鎸夐挳鏁帮紙Google + Instagram锛?', connectButtons)
+    > 54 |     expect(connectButtons).toBeGreaterThanOrEqual(2)
+         |                            ^
+      55 |
+      56 |     // 鍒囨崲鍒?鍥介檯棰勭害" tab 鈥?楠岃瘉椤甸潰鏃犵‘璁?鈫?闇€瑕佸厛鏈夋暟鎹紙I038 琛ㄧ己澶辨椂涓虹┖锛岃烦杩囷級
+      57 |     await page.getByRole('tab', { name: /鍥介檯棰勭害/ }).click()
+        at D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:54:28
+
+    attachment #1: screenshot (image/png) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F111-F112-shadow-F111-鈥?in-ca6fc-OAuth-Instagram-OAuth-妯℃澘棰勮锛塡test-failed-1.png
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+    Error Context: test-results\F111-F112-shadow-F111-鈥?in-ca6fc-OAuth-Instagram-OAuth-妯℃澘棰勮锛塡error-context.md
+
+    attachment #3: trace (application/zip) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F111-F112-shadow-F111-鈥?in-ca6fc-OAuth-Instagram-OAuth-妯℃澘棰勮锛塡trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F111-F112-shadow-F111-鈥?in-ca6fc-OAuth-Instagram-OAuth-妯℃澘棰勮锛塡trace.zip
+
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  8) ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:80:7 鈥?F111 鈥?intl-booking/index.vue Shadow 楠岃瘉 鈥?I041 鈥?"纭"鎸夐挳鏂囨鏃?鍙戦€侀€氱煡"鎻愮ず锛圫hadow 瀹炶瘉锛?
+
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+      - waiting for getByRole('tab', { name: /鍥介檯棰勭害/ })
+
+
+      83 |
+      84 |     // 鍒囨崲鍒?鍥介檯棰勭害" tab
+    > 85 |     await page.getByRole('tab', { name: /鍥介檯棰勭害/ }).click()
+         |                                                   ^
+      86 |     await page.waitForTimeout(1_000)
+      87 |
+      88 |     // 鏌ユ壘"纭"鎸夐挳 鈥?Vue 妯℃澘 L66 鎸夐挳鏂囨鏄€岀‘璁ゃ€?鏃犮€屽嵆鍙戦€侀€氱煡銆嶆彁绀?        at D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:85:51
+
+    attachment #1: screenshot (image/png) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F111-F112-shadow-F111-鈥?in-caed3-纭-鎸夐挳鏂囨鏃?鍙戦€侀€氱煡-鎻愮ず锛圫hadow-瀹炶瘉锛塡test-failed-1.png
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+    Error Context: test-results\F111-F112-shadow-F111-鈥?in-caed3-纭-鎸夐挳鏂囨鏃?鍙戦€侀€氱煡-鎻愮ず锛圫hadow-瀹炶瘉锛塡error-context.md
+
+    attachment #3: trace (application/zip) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F111-F112-shadow-F111-鈥?in-caed3-纭-鎸夐挳鏂囨鏃?鍙戦€侀€氱煡-鎻愮ず锛圫hadow-瀹炶瘉锛塡trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F111-F112-shadow-F111-鈥?in-caed3-纭-鎸夐挳鏂囨鏃?鍙戦€侀€氱煡-鎻愮ず锛圫hadow-瀹炶瘉锛塡trace.zip
+
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  9) ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:113:7 鈥?F112 鈥?intl-booking.ts API 绔偣灏佽 Shadow 楠岃瘉 鈥?I042 鈥?intlBookingApi 鏃?sendConfirmation 鏂规硶锛圫hadow 瀹炶瘉锛?
+
+    Error: ENOENT: no such file or directory, open 'D:\QiaoPM\src\api\intl-booking.ts'
+
+      25 | function loadApiSource(): string {
+      26 |   const apiPath = resolve(__dirname, '../../../src/api/intl-booking.ts')
+    > 27 |   return readFileSync(apiPath, 'utf-8')
+         |                      ^
+      28 | }
+      29 |
+      30 | test.describe('F111 鈥?intl-booking/index.vue Shadow 楠岃瘉', () => {
+        at loadApiSource (D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:27:22)
+        at D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:115:23
+
+    attachment #1: screenshot (image/png) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F111-F112-shadow-F112-鈥?in-729cb-dConfirmation-鏂规硶锛圫hadow-瀹炶瘉锛塡test-failed-1.png
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+    Error Context: test-results\F111-F112-shadow-F112-鈥?in-729cb-dConfirmation-鏂规硶锛圫hadow-瀹炶瘉锛塡error-context.md
+
+    attachment #3: trace (application/zip) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F111-F112-shadow-F112-鈥?in-729cb-dConfirmation-鏂规硶锛圫hadow-瀹炶瘉锛塡trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F111-F112-shadow-F112-鈥?in-729cb-dConfirmation-鏂规硶锛圫hadow-瀹炶瘉锛塡trace.zip
+
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  10) ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:130:7 鈥?F112 鈥?intl-booking.ts API 绔偣灏佽 Shadow 楠岃瘉 鈥?12 绔偣鏂规硶瀹屾暣鎬э紙瀵圭収 F112 鏈熸湜娓呭崟锛?
+
+    Error: ENOENT: no such file or directory, open 'D:\QiaoPM\src\api\intl-booking.ts'
+
+      25 | function loadApiSource(): string {
+      26 |   const apiPath = resolve(__dirname, '../../../src/api/intl-booking.ts')
+    > 27 |   return readFileSync(apiPath, 'utf-8')
+         |                      ^
+      28 | }
+      29 |
+      30 | test.describe('F111 鈥?intl-booking/index.vue Shadow 楠岃瘉', () => {
+        at loadApiSource (D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:27:22)
+        at D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:131:23
+
+    attachment #1: screenshot (image/png) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F111-F112-shadow-F112-鈥?in-0fc56-楠岃瘉-12-绔偣鏂规硶瀹屾暣鎬э紙瀵圭収-F112-鏈熸湜娓呭崟锛塡test-failed-1.png
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+    Error Context: test-results\F111-F112-shadow-F112-鈥?in-0fc56-楠岃瘉-12-绔偣鏂规硶瀹屾暣鎬э紙瀵圭収-F112-鏈熸湜娓呭崟锛塡error-context.md
+
+    attachment #3: trace (application/zip) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F111-F112-shadow-F112-鈥?in-0fc56-楠岃瘉-12-绔偣鏂规硶瀹屾暣鎬э紙瀵圭収-F112-鏈熸湜娓呭崟锛塡trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F111-F112-shadow-F112-鈥?in-0fc56-楠岃瘉-12-绔偣鏂规硶瀹屾暣鎬э紙瀵圭収-F112-鏈熸湜娓呭崟锛塡trace.zip
+
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  11) ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:163:7 鈥?F112 鈥?intl-booking.ts API 绔偣灏佽 Shadow 楠岃瘉 鈥?updateStatus 浠呬紶 status 瀛楁锛屼笉鏀寔 autoSend 
+
+    Error: ENOENT: no such file or directory, open 'D:\QiaoPM\src\api\intl-booking.ts'
+
+      25 | function loadApiSource(): string {
+      26 |   const apiPath = resolve(__dirname, '../../../src/api/intl-booking.ts')
+    > 27 |   return readFileSync(apiPath, 'utf-8')
+         |                      ^
+      28 | }
+      29 |
+      30 | test.describe('F111 鈥?intl-booking/index.vue Shadow 楠岃瘉', () => {
+        at loadApiSource (D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:27:22)
+        at D:\QiaoPM\audit\scripts\e2e\F111-F112-shadow.spec.ts:164:23
+
+    attachment #1: screenshot (image/png) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F111-F112-shadow-F112-鈥?in-972a2-s-浠呬紶-status-瀛楁锛屼笉鏀寔-autoSend\test-failed-1.png
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+    Error Context: test-results\F111-F112-shadow-F112-鈥?in-972a2-s-浠呬紶-status-瀛楁锛屼笉鏀寔-autoSend\error-context.md
+
+    attachment #3: trace (application/zip) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    test-results\F111-F112-shadow-F112-鈥?in-972a2-s-浠呬紶-status-瀛楁锛屼笉鏀寔-autoSend\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\F111-F112-shadow-F112-鈥?in-972a2-s-浠呬紶-status-瀛楁锛屼笉鏀寔-autoSend\trace.zip
+
+    鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+
+  11 failed
+    ..\..\audit\scripts\e2e\F024-list-ui.spec.ts:22:7 鈥?F024 鈥?闆嗘垚鍒楄〃 UI 鈥?闆嗘垚鍒楄〃娓叉煋 + 鍒楀悕 + 鐘舵€?enum 鈹€鈹€鈹€鈹€鈹€
+    ..\..\audit\scripts\e2e\F025-create-form.spec.ts:54:7 鈥?F025 鈥?鏂板缓闆嗘垚琛ㄥ崟 鈥?濉〃淇濆瓨 鈫?鍒楄〃鏂板琛?鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+    ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:26:7 鈥?F027 鈥?sync 鎸夐挳 force 鏈紶 鈥?鐐瑰嚮鍚屾鎸夐挳 鈫?URL 涓嶅甫 ?force=1 
+    ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:71:7 鈥?F027 鈥?sync 鎸夐挳 force 鏈紶 鈥?API 鐩磋皟楠岃瘉 force 鏈紶 
+    ..\..\audit\scripts\e2e\F027-sync-button.spec.ts:86:7 鈥?F027 鈥?sync 鎸夐挳 force 鏈紶 鈥?API 鐩磋皟 force=1 楠岃瘉 
+    ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:31:7 鈥?F111 鈥?intl-booking/index.vue Shadow 楠岃瘉 鈥?椤甸潰鍔犺浇 + 2 tab 缁撴瀯锛?娓犻亾杩炴帴" + "鍥介檯棰勭害"锛?
+    ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:46:7 鈥?F111 鈥?intl-booking/index.vue Shadow 楠岃瘉 鈥?3 瀵硅瘽妗嗙粨鏋勶紙Google OAuth / Instagram OAuth / 妯℃澘棰勮锛?
+    ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:80:7 鈥?F111 鈥?intl-booking/index.vue Shadow 楠岃瘉 鈥?I041 鈥?"纭"鎸夐挳鏂囨鏃?鍙戦€侀€氱煡"鎻愮ず锛圫hadow 瀹炶瘉锛?
+    ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:113:7 鈥?F112 鈥?intl-booking.ts API 绔偣灏佽 Shadow 楠岃瘉 鈥?I042 鈥?intlBookingApi 鏃?sendConfirmation 鏂规硶锛圫hadow 瀹炶瘉锛?
+    ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:130:7 鈥?F112 鈥?intl-booking.ts API 绔偣灏佽 Shadow 楠岃瘉 鈥?12 绔偣鏂规硶瀹屾暣鎬э紙瀵圭収 F112 鏈熸湜娓呭崟锛?
+    ..\..\audit\scripts\e2e\F111-F112-shadow.spec.ts:163:7 鈥?F112 鈥?intl-booking.ts API 绔偣灏佽 Shadow 楠岃瘉 鈥?updateStatus 浠呬紶 status 瀛楁锛屼笉鏀寔 autoSend 
+  8 passed (1.2m)

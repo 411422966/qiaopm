@@ -1,0 +1,43 @@
+﻿{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "total":  1,
+                 "pages":  1,
+                 "current":  1,
+                 "size":  5,
+                 "records":  [
+                                 {
+                                     "id":  2,
+                                     "tenantId":  1,
+                                     "storeId":  1,
+                                     "promotionCode":  "AUDIT_PROM_002",
+                                     "promotionName":  "audit-test-promotion-2-updated",
+                                     "promotionType":  "FULL_REDUCE",
+                                     "description":  null,
+                                     "startTime":  "2026-09-16T00:00:00",
+                                     "endTime":  "2026-12-31T23:59:59",
+                                     "thresholdAmount":  100.00,
+                                     "reduceAmount":  20.00,
+                                     "discountRate":  1.00,
+                                     "scopeType":  "ALL",
+                                     "scopeIds":  null,
+                                     "memberLevelIds":  null,
+                                     "stackable":  0,
+                                     "exclusiveCodes":  null,
+                                     "quotaTotal":  0,
+                                     "quotaUsed":  0,
+                                     "perMemberLimit":  0,
+                                     "status":  1,
+                                     "priority":  0,
+                                     "operatorId":  null,
+                                     "operatorName":  null,
+                                     "createTime":  "2026-09-16T01:44:17",
+                                     "updateTime":  "2026-09-16T01:44:17",
+                                     "deleted":  0
+                                 }
+                             ]
+             },
+    "traceId":  "d3587426be254b379ef692b979872249",
+    "timestamp":  "2026-09-16 02:18:45"
+}

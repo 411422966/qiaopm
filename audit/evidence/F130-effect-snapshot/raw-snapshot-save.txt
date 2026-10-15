@@ -1,0 +1,1 @@
+{"code":200,"message":"快照已记录","data":{"totalPromotions":0,"journeyEnterCount":1,"promotions":[],"touchConverted":1,"queryDate":"2026-09-16","pointsGranted":29500,"couponUsageRate":0,"totalDiscount":99.99,"totalReach":491,"totalOrders":1,"touchSuccess":0,"totalActivities":0,"usedCoupon":0},"traceId":"7050421d15174614972fc908cb2dc7eb","timestamp":"2026-09-16 01:41:50"}

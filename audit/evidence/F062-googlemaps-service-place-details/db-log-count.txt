@@ -1,0 +1,8 @@
+﻿mysql.exe : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-f66b0048-c0bb-4ac7-a19a-f858f6d07a65.ps1:112 字符: 1
++ & $mysql -h 127.0.0.1 -P 3307 -uroot -proot123456 meiyetec -e "SELECT ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ERROR 1146 (42S02) at line 1: Table 'meiyetec.google_maps_geocode_log' doesn't exist

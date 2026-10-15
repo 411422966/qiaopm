@@ -1,0 +1,10 @@
+﻿HTTP/1.1 200 
+X-Trace-Id: 64a6f722e25e41d2b632e0665160a077
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sat, 12 Sep 2026 16:25:17 GMT
+
+{"code":500,"message":"数据库异常","data":null,"traceId":"64a6f722e25e41d2b632e0665160a077","timestamp":"2026-09-13 00:25:17"}

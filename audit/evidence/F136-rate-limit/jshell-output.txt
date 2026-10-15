@@ -1,0 +1,40 @@
+=== F136 ChannelDispatcher.rateLimitCheck 行为验证 ===
+
+Source code (ChannelDispatcher.java):
+---
+public boolean rateLimitCheck(Long tenantId, Long brandId, String channelType) {
+    // 1. 每分钟限额
+    String minSql = "SELECT COALESCE(SUM(CASE WHEN t.sent_at >= DATE_SUB(NOW(), INTERVAL 1 MINUTE) THEN 1 ELSE 0 END), 0) AS per_min " +
+            "FROM marketing_touch_log t " +
+            "WHERE t.tenant_id = ? AND t.channel_type = ? AND t.deleted = 0";
+    Long perMin = jdbc.queryForObject(minSql, Long.class, tenantId, channelType);
+    MktChannelConfig cfg = channelConfigMapper.selectOne(...tenantId+brandId+channelType+status=1 LIMIT 1);
+    if (cfg != null && cfg.getRateLimitPerMin() != null && perMin != null && perMin >= cfg.getRateLimitPerMin()) return false;
+    // 2. 每日限额
+    String daySql = "SELECT COUNT(*) FROM marketing_touch_log t WHERE t.tenant_id = ? AND t.channel_type = ? AND t.sent_at >= DATE(NOW()) AND t.deleted = 0";
+    Long perDay = jdbc.queryForObject(daySql, Long.class, tenantId, channelType);
+    if (cfg != null && cfg.getRateLimitPerDay() != null && perDay != null && perDay >= cfg.getRateLimitPerDay()) return false;
+    return true;
+}
+
+=== 静态分析结论 ===
+1. rateLimitCheck 接受 (tenantId, brandId, channelType) 三参数
+2. cfg 通过 (tenantId, brandId, channelType, status=1) 4 字段联合匹配 — status=0 配不上 → null
+3. cfg=null 时不抛错，直接 return true（不限流）— 与空数据时返回 false 不一致
+4. perMin/perDay 单独判断：先 perMin → 再 perDay
+5. 调用方 MarketingAutomationService.startTask (line 257) — 触达每条之前调用
+
+=== 当前 DB 触达状态 (DB 验证) ===
+SMS 渠道 cfg_id=1 tenant=1 brand=1 rate_limit_per_min=30 rate_limit_per_day=2000
+当前实际触达：per_min=0 (今日 per_day=981)
+期望 rateLimitCheck(1, 1, "SMS") 返回 true（未到上限）
+
+MINI_PROGRAM 渠道 cfg_id=2 tenant=1 brand=1 rate_limit_per_min=100 rate_limit_per_day=5000
+当前实际触达：per_min=0 per_day=0
+期望 rateLimitCheck(1, 1, "MINI_PROGRAM") 返回 true
+
+=== 别名漂移 (沿用 I039) ===
+cfg channel_type=MP 但 sender channelType()=MINI_PROGRAM
+调 rateLimitCheck(1, 1, "MP") 时 cfg 查得到（cfg.channel_type=MP 命中）
+但 sender.getSender("MP") → null（I061 NPE 实证）
+结果：限流检查能过，但实际发送时 sender=null 报错

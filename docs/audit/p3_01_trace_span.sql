@@ -1,0 +1,26 @@
+-- P3.1 全链路追踪：Trace Span 表
+CREATE TABLE IF NOT EXISTS `trace_span` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键',
+  `trace_id` VARCHAR(64) NOT NULL COMMENT '追踪 ID',
+  `span_id` VARCHAR(64) NOT NULL COMMENT 'Span ID',
+  `parent_span_id` VARCHAR(64) DEFAULT NULL COMMENT '父 Span ID',
+  `service_name` VARCHAR(128) NOT NULL DEFAULT 'meiyetec-api' COMMENT '服务名',
+  `operation_name` VARCHAR(256) NOT NULL COMMENT '操作名',
+  `http_method` VARCHAR(16) DEFAULT NULL COMMENT 'HTTP 方法',
+  `uri` VARCHAR(512) DEFAULT NULL COMMENT '请求路径',
+  `status` VARCHAR(32) NOT NULL DEFAULT 'SUCCESS' COMMENT '状态 SUCCESS/ERROR/TIMEOUT',
+  `http_status` INT DEFAULT NULL COMMENT 'HTTP 状态码',
+  `error_code` VARCHAR(64) DEFAULT NULL COMMENT '错误码',
+  `start_at` DATETIME DEFAULT NULL COMMENT '开始时间',
+  `duration_ms` BIGINT DEFAULT NULL COMMENT '耗时 ms',
+  `tenant_id` BIGINT DEFAULT NULL COMMENT '租户 ID',
+  `user_id` BIGINT DEFAULT NULL COMMENT '用户 ID',
+  `tags` VARCHAR(512) DEFAULT NULL COMMENT '染色标签',
+  `client_ip` VARCHAR(64) DEFAULT NULL COMMENT '客户端 IP',
+  `user_agent` VARCHAR(256) DEFAULT NULL COMMENT 'User-Agent',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  INDEX `idx_trace_id` (`trace_id`),
+  INDEX `idx_trace_start` (`tenant_id`, `start_at`),
+  INDEX `idx_duration` (`tenant_id`, `duration_ms`),
+  INDEX `idx_status` (`tenant_id`, `status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='追踪链路 Span 表';

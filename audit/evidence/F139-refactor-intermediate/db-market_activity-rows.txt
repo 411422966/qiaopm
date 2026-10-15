@@ -1,0 +1,9 @@
+﻿
+=== market_activity rows (total 4, tenant_id=1: 3) ===
+1	1	NULL	Test Activity	1	1	2026-08-21 16:52:36
+2	NULL	1	5B-test-F139	1	1	2026-09-16 22:40:20
+3	NULL	1	F139-updated	1	0	2026-09-16 23:20:26
+4	NULL	1	F139-updated-副本-20260916232026	1	0	2026-09-16 23:20:27
+
+tenant_id=1 count: 3
+3

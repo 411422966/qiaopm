@@ -1,0 +1,7 @@
+﻿mysql: [Warning] Using a password on the command line interface can be insecure.
+id	username	tenant_id	status
+1	admin	1	1
+900003	clerk01	1	1
+id	tenant_id
+1	1
+2	1

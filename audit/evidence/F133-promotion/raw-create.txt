@@ -1,0 +1,7 @@
+﻿{
+    "code":  500,
+    "message":  "数据库异常",
+    "data":  null,
+    "traceId":  "c28c74b58a7546d6aa3b85ab49b196ed",
+    "timestamp":  "2026-09-16 02:18:46"
+}

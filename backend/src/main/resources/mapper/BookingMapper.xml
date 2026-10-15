@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meiyetec.mapper.BookingMapper">
+
+    <!--
+        M01-04 变更说明：
+        所有冲突检查均以 storeId 为准：
+        - 只有同一门店内的员工时间重叠才算冲突（跨店不算）
+        - 只有同一门店内的房间时间重叠才算冲突（跨店不算）
+    -->
+
+    <!-- 员工冲突检查（悲观锁 FOR UPDATE）— M01-04 加 storeId 条件 -->
+    <select id="countEmployeeConflictForUpdate" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM biz_booking
+        WHERE employee_id = #{employeeId}
+          AND store_id = #{storeId}
+          AND status IN (1, 2, 3)
+          AND deleted = 0
+          AND start_time &lt; #{endTime}
+          AND end_time &gt; #{startTime}
+        FOR UPDATE
+    </select>
+
+    <!-- 房间冲突检查（悲观锁 FOR UPDATE）— M01-04 加 storeId 条件 -->
+    <select id="countRoomConflictForUpdate" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM biz_booking
+        WHERE room_id = #{roomId}
+          AND store_id = #{storeId}
+          AND status IN (1, 2, 3)
+          AND deleted = 0
+          AND start_time &lt; #{endTime}
+          AND end_time &gt; #{startTime}
+        FOR UPDATE
+    </select>
+
+</mapper>

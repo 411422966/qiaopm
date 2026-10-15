@@ -1,0 +1,35 @@
+﻿=== [F135] ChannelDispatcher.getSender() Unit Test ===
+Total senders registered: 5
+Sender types: SMS, EMAIL, MINI_PROGRAM, WECHAT_OFFICIAL_ACCOUNT, IN_APP
+ChannelDispatcher constructed (mapper=null for unit-test isolation)
+
+--- [3.1] Valid channelType ---
+  getSender("SMS") = SmsSender (channelType=SMS)
+  getSender("EMAIL") = EmailSender (channelType=EMAIL)
+  getSender("MINI_PROGRAM") = MiniProgramSender (channelType=MINI_PROGRAM)
+  getSender("WECHAT_OFFICIAL_ACCOUNT") = WechatOfficialAccountSender (channelType=WECHAT_OFFICIAL_ACCOUNT)
+  getSender("IN_APP") = InAppSender (channelType=IN_APP)
+
+--- [3.2] Invalid channelType (I061 NPE risk) ---
+  getSender("UNKNOWN") = null ** NPE risk if caller uses without null check **
+  getSender("WECHAT_OA") = null ** NPE risk if caller uses without null check **
+  getSender("") = null ** NPE risk if caller uses without null check **
+  getSender("PUSH") = null ** NPE risk if caller uses without null check **
+  getSender("SMS_EXT") = null ** NPE risk if caller uses without null check **
+  getSender("wechat") = null ** NPE risk if caller uses without null check **
+
+--- [3.3] NPE Empirics — what happens if caller does null sender.send()? ---
+Step 1: dispatcher.getSender("UNKNOWN_CHANNEL") returns: null
+Step 2: caller does: badSender.send(null, null, null)
+NPE TRIGGERED: NullPointerException — Cannot invoke "com.meiyetec.service.channel.ChannelSender.send(com.meiyetec.entity.MktChannelTemplate, String, java.util.Map)" because "<local0>" is null
+First 3 stack frames:
+    at REPL.$JShell$43.do_it$($JShell$43.java:9)
+    at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+    at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+
+--- [3.4] WECHAT_OA vs WECHAT_OFFICIAL_ACCOUNT alias drift (N12) ---
+  dispatcher.getSender("WECHAT_OA")            = null
+  dispatcher.getSender("WECHAT_OFFICIAL_ACCOUNT") = WechatOfficialAccountSender
+  Frontend mkt_channel_template list likely uses WECHAT_OA (legacy alias)
+  Backend sender's channelType() returns WECHAT_OFFICIAL_ACCOUNT (real name)
+  ====> DISPATCH FAILURE if frontend uses WECHAT_OA and dispatcher only knows WECHAT_OFFICIAL_ACCOUNT <====

@@ -1,0 +1,18 @@
+Command: grep -n "autoSend\|发送通知\|popconfirm" frontend/meiyetec-web/src/views/intl-booking/index.vue
+Result: 0 matches
+
+Cross-validation:
+- I040 (autoSend=false UI 缺失)        → 0 matches → Shadow 实证
+- I041 (无"发送通知"提示)              → 0 matches → Shadow 实证
+- I041 (无 el-popconfirm 二次确认)    → 0 matches → Shadow 实证
+
+Context reference:
+- SoT §0.3: updateStatus 在 非CONFIRMED → CONFIRMED 时自动调 sendConfirmation,
+             前端按钮文案需明确"确认即发送通知" — 当前不满足
+- 5A.7 grep 同模式（已在 5A 阶段实证）: N21 前端缺 autoSend=false UI
+- Phase 5C: F111-F112-shadow.spec.ts Playwright 脚本准备（用户手动跑）
+
+F111 evidence pattern:
+- 已实现 2 tab（渠道连接 + 国际预约）
+- 已实现 3 对话框（Google OAuth / Instagram OAuth / 模板预览）
+- ⚠ Shadow I040+I041: 状态确认按钮无 loading / 无二次确认 / 无"确认即发送通知"提示

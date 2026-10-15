@@ -1,0 +1,214 @@
+---
+description: EXT-24 CRM 集成的关键约束（POST /{id}/sync 行为、objectMappings 解析、known-ids 去重、adapter 选型）
+globs:
+  - backend/src/main/java/com/meiyetec/crm/**/*.java
+  - backend/src/main/java/com/meiyetec/service/CrmIntegrationService.java
+  - backend/src/main/java/com/meiyetec/entity/CrmIntegration.java
+  - frontend/meiyetec-web/src/views/crm-integration/**/*.vue
+  - frontend/meiyetec-web/src/api/crm-integration.ts
+---
+
+# EXT-24 CRM 集成 — Operational Notes
+
+> 适用范围：`POST /crm-integration/{id}/sync`、`crm_integration.objectMappings` JSON 配置、`SyncCursor.knownExternalIds` 去重链路。
+> 涉及模块：`crm`（`CrmAdapter` / `CrmSyncScheduler` / `SalesforceCrmAdapter` / `MockCrmAdapter`）+ `service/CrmIntegrationService` + `entity/CrmIntegration` + 前端 `views/crm-integration/index.vue`。
+
+---
+
+## 0. 关键约束（改之前必读）
+
+### 0.1 `POST /crm-integration/{id}/sync` 行为变更（EXT-24）
+
+`CrmIntegrationService.syncNow` **不再**写空 log 应付前端；改为**直接复用** `CrmSyncScheduler.runIncremental(cfg, "MANUAL")` 排程逻辑，**返回真实同步结果**。
+
+- 请求：`POST /crm-integration/{id}/sync?force=0|1`
+- `force=1` 跳过 `shouldRunForManualTrigger` 窗口检查（默认 `force=null` 时尊重上次 `lastIncrementalSyncAt + syncWindowMinutes` 窗口）
+- 租户隔离：`dataScope != "ALL"` 时，`integration.tenantId != TenantContextHolder.get().getTenantId()` → `BizCode.FORBIDDEN`
+- 跳过场景：未到期时**不执行**，返回 `skipped=true + reason="not in cron window, use ?force=1 to override" + lastIncrementalSyncAt + syncWindowMinutes`，**HTTP 仍为 200**（不要把它当错误）
+- 响应（成功）：
+  ```json
+  {
+    "logId": 123,
+    "integrationId": 7,
+    "platform": "SALESFORCE",
+    "status": "SUCCESS",
+    "successCount": 12,
+    "failCount": 0,
+    "recordsTotal": 12,
+    "durationMs": 845,
+    "errorMessage": null,
+    "forced": false
+  }
+  ```
+- 响应（同步失败）：`Result.error(BizCode.SYSTEM_ERROR, "同步失败：" + errorMessage)`，**不是 200**；前端需要 catch 后展示 `errorMessage`
+
+> ⚠️ **前端配合**：`crmIntegrationApi.syncNow(id)` 当前**未传 `?force=1`**，按钮也无 loading 状态 / 二次确认。如果业务上需要「立刻全量」，必须在 URL 上加 `?force=1`，否则会被窗口限制直接返回 `skipped=true`。
+
+### 0.2 `crm_integration.objectMappings` JSON 配置
+
+字段映射：localField → externalField，决定 Salesforce SOQL `SELECT` 子句与 Contact 字段提取路径。
+
+- 字段类型：`String`（数据库列），JSON 格式
+- 支持的 localField key（由 `SalesforceCrmAdapter.DEFAULT_FIELD_MAP` 决定）：
+  | localField | 默认 externalField | 说明 |
+  |---|---|---|
+  | `externalId` | `Id` | upsert 路径 `/sobjects/Contact/{externalId}` 拼接用 |
+  | `firstName` | `FirstName` | |
+  | `lastName` | `LastName` | |
+  | `email` | `Email` | |
+  | `phone` | `Phone` | |
+  | `title` | `Title` | |
+  | `updatedAtMs` | `SystemModstamp` | 增量 cursor 必需，**不可改名** |
+
+- 解析逻辑（`SalesforceCrmAdapter.parseObjectMappings`）：
+  - 未配置 / JSON 解析失败 / 非对象 → 返回 `DEFAULT_FIELD_MAP` 拷贝（**降级而不是报错**）
+  - 用户定义 merge 到默认之上（`putIfAbsent`：JSON 里没写的 key 保留默认）
+  - `Id` + `SystemModstamp` **强制加入** SOQL（`buildSoqlSelectClause` 自动 `fieldMap.getOrDefault("externalId","Id")` / `getOrDefault("updatedAtMs","SystemModstamp")`）
+
+- 错误配置后果：
+  - `externalId` 映射错字段 → `upsertContact` 路径拼接错（`/sobjects/Contact/{错字段值}`），Salesforce 返回 404
+  - 把 `updatedAtMs` 改成非时间戳字段 → SOQL `WHERE {field} > 2026-...` 报无效日期比较 → 同步失败
+  - 把不存在的自定义字段填进 JSON（如 `Email__c` 拼错） → Salesforce SOQL 报 `No such column` → 同步失败
+
+- URL 编码：整段 SOQL 经 `URLEncoder.encode(soql, "UTF-8")`；fallback 简单替换空格和 `=`
+
+### 0.3 known-ids 去重（EXT-24 核心，避免重复写入）
+
+`CrmSyncScheduler.loadKnownExternalIds(cfg)` 在每次增量同步前把「该 tenant + platform 已经在 `crm_contact_map` 里的 externalId 集合」装进 `SyncCursor.knownExternalIds`，让适配器做**差集**返回。
+
+- **上限保护**：`CrmSyncScheduler.KNOWN_IDS_LIMIT = 5000`
+  - 防止 Salesforce SOQL `WHERE Id NOT IN (10K+)` 性能 / API 限制
+  - 用 `LambdaQueryWrapper.last("LIMIT " + KNOWN_IDS_LIMIT)`（直接拼接 SQL，**不是**分页）
+  - 超出 5000 的旧 ID 会**留在库里但不被传入 adapter**，可能导致老联系人被再次拉取（重复风险）→ 生产环境应考虑分批 + sync_token
+- Mock 适配器按 known 集合做 IN-MEMORY 去重（`known.contains(c.externalId)`）
+- Salesforce 适配器目前**未**把 knownExternalIds 落到 SOQL（仅打 log `knownIds=N`），去重靠 `upsertContactMap` 在 `crm_contact_map` 唯一键 `platform + externalId` 上幂等
+- 首次同步（`cursor.isEmpty() || known.isEmpty()`）→ 全部保留；后续 → 差集
+
+### 0.4 排程与手动触发共用 `runIncremental`
+
+`CrmSyncScheduler` 是**唯一**会跑同步逻辑的入口（手动接口 + 自动排程都委派给它）：
+
+- 自动排程：`@Scheduled(fixedDelayString = "${crm.sync.tick-interval-ms:300000}", initialDelay = 60_000L)` → 每 5 分钟扫一遍所有 `status=ACTIVE && syncEnabled=1` 的集成
+- `shouldRun(cfg)` = `lastIncrementalSyncAt + syncWindowMinutes ≤ now`（`lastIncrementalSyncAt=null` → 立即跑）
+- 同步成功副作用（**会改 crm_integration**）：
+  - `lastIncrementalSyncAt = now()`
+  - `lastSyncAt = now()`
+  - `status = ACTIVE`（失败时切 `ERROR`）
+  - `errorMessage = null`（或异常消息）
+- 同步失败时**不**更新 `lastIncrementalSyncAt`（保留上次成功时间，下次还会再试）
+- 写 `crm_sync_log.syncType = "INCREMENTAL"` / `"MANUAL"`
+
+### 0.5 `CrmContactMap` upsert 行为
+
+- 唯一键：`platform + externalId`（由 `LambdaQueryWrapper` 双重等值定位）
+- 新建：`tenantId / platform / externalId / externalEtag / syncDirection=INBOUND / lastInboundAt / lastFullSyncAt`
+- 更新：仅刷 `externalEtag / lastInboundAt / lastFullSyncAt / conflictFlag=0`
+- 没有**反向绑定**（`crm_contact_map` 不存 `crm_integration.id`，只用 `platform` 区分）→ 多租户用同一个 platform 时，靠 `tenantId` 隔离
+
+### 0.6 平台与凭据
+
+| 平台 | Adapter | 鉴权 | 必需字段 |
+|---|---|---|---|
+| `SALESFORCE` | `SalesforceCrmAdapter` | OAuth2 JWT Bearer Flow（RS256） | `clientId / username / privateKey(PEM) / loginUrl` |
+| `HUBSPOT` | `HubSpotCrmAdapter`（379 行，`crm/HubSpotCrmAdapter.java`） | OAuth2 refresh-token 流 + PAT fallback | `clientId / clientSecret / accessToken / refreshToken / apiBaseUrl` |
+| `ZOHO` | `ZohoCrmAdapter`（383 行，`crm/ZohoCrmAdapter.java`） | OAuth2 refresh-token 流 | `clientId / clientSecret / accessToken / refreshToken / apiBaseUrl` |
+| `MOCK` | `MockCrmAdapter`（默认 fallback） | 无 | — |
+
+- `@ConditionalOnMissingBean(name = "salesforceCrmAdapter")` → Mock 是 fallback
+- `CrmIntegration.privateKey` 是 `JsonProperty.WRITE_ONLY` → 前端**永远读不到**，只能保存时上传
+- Salesforce Token 缓存：`cfg.tokenExpireAt > now() + 2min` 直接复用；JWT 自身 5 分钟有效（`exp = Instant.now().getEpochSecond() + 300`）
+
+### 0.7 跨租户访问
+
+- `dataScope = "ALL"`（平台超管）可跨租户访问
+- 普通租户：`integration.tenantId != currentTenantId` → `BizCode.FORBIDDEN`
+- `crm_contact_map` 也按 tenant 隔离（`loadKnownExternalIds` 已加 `eq(tenantId)`）
+
+---
+
+## 1. Touchpoints
+
+后端核心：
+- `backend/src/main/java/com/meiyetec/service/CrmIntegrationService.java` — `POST /{id}/sync` 入口
+- `backend/src/main/java/com/meiyetec/crm/CrmSyncScheduler.java` — `runIncremental` / `shouldRun` / `loadKnownExternalIds` / `KNOWN_IDS_LIMIT`
+- `backend/src/main/java/com/meiyetec/crm/CrmAdapter.java` — `SyncCursor.knownExternalIds` / `ExternalContact` / `AuthResult` / `PushResult` / `HealthStatus`
+- `backend/src/main/java/com/meiyetec/crm/SalesforceCrmAdapter.java` — `parseObjectMappings` / `buildSoqlSelectClause` / `DEFAULT_FIELD_MAP` / OAuth2 JWT
+- `backend/src/main/java/com/meiyetec/crm/MockCrmAdapter.java` — 滚动缓冲 + known-id 内存去重
+- `backend/src/main/java/com/meiyetec/crm/CrmAdapterRouter.java` — platform → adapter 分发
+
+实体：
+- `backend/src/main/java/com/meiyetec/entity/CrmIntegration.java` — `objectMappings` / `syncToken` / `syncSchedule` / `syncEnabled` / `syncWindowMinutes` / `lastIncrementalSyncAt`
+- `backend/src/main/java/com/meiyetec/entity/CrmContactMap.java` — `platform + externalId` 唯一键
+- `backend/src/main/java/com/meiyetec/entity/CrmSyncLog.java` — `syncType INCREMENTAL/MANUAL` / `status RUNNING/SUCCESS/FAILED`
+
+前端：
+- `frontend/meiyetec-web/src/views/crm-integration/index.vue` — 「同步」按钮（目前未传 `?force=1`）
+- `frontend/meiyetec-web/src/api/crm-integration.ts` — `crmIntegrationApi` 封装
+
+---
+
+## 2. Re-confirmation Checklist
+
+生产 / 联调 / 上线前对照勾选：
+
+- [ ] `POST /{id}/sync` 在 `force=null` 时确实尊重窗口（验证返回 `skipped=true`）
+- [ ] `?force=1` 手动触发能跨窗口执行（验证响应 `forced=true` 且 `recordsTotal > 0`）
+- [ ] Salesforce `objectMappings` 写入后端**不会因 fetchContacts 失败**（用真实 SF 沙箱跑一次完整同步）
+- [ ] Salesforce 凭据 `clientId / username / privateKey(PEM) / loginUrl` 四件套齐全（PEM 需含 `-----BEGIN PRIVATE KEY-----` 头尾）
+- [ ] `privateKey` 在 `GET /list` 响应中**不可见**（验证 response JSON 不含该字段）
+- [ ] `crm_contact_map` 行数 < 5000 → known-ids 完整加载；超过 → 接受部分老 ID 重复拉取风险
+- [ ] Mock 适配器首次同步返回 3 条样本 + N 条 rollingBuffer；后续同步按 known 差集
+- [ ] `crm_sync_log.syncType` 区分 `INCREMENTAL` / `MANUAL`（前端日志 tab 可筛）
+- [ ] 跨租户访问：普通租户调别人 integrationId → 403
+- [ ] 同步失败时 `crm_integration.status` 切 `ERROR` 且 `errorMessage` 有内容（前端 dashboard 能体现）
+
+---
+
+## 3. Endpoints（CRM 集成相关）
+
+```
+POST   /crm-integration                          # 新建集成
+GET    /crm-integration/list?platform=&status=   # 集成列表
+POST   /crm-integration/{id}                     # 更新
+POST   /crm-integration/{id}/toggle              # ACTIVE / DISABLED
+POST   /crm-integration/{id}/sync?force=0|1      # ⭐ 手动触发（EXT-24 行为变更）
+GET    /crm-integration/sync-log/list?integrationId=  # 同步日志
+GET    /crm-integration/dashboard                # 看板
+```
+
+---
+
+## 4. 状态机速查
+
+| 实体.字段 | 值 | 含义 |
+|---|---|---|
+| `crm_integration.status` | `ACTIVE` / `DISABLED` / `ERROR` | 集成整体状态（ERROR 表示上次同步失败） |
+| `crm_integration.syncEnabled` | `0` / `1` | 排程是否启用（与 `status=ACTIVE` 是 AND 关系） |
+| `crm_sync_log.status` | `RUNNING` / `SUCCESS` / `FAILED` | 单次同步状态 |
+| `crm_sync_log.syncType` | `INCREMENTAL` / `MANUAL` | 触发方式 |
+| `crm_sync_log.syncDirection` | `PUSH` / `PULL` / `BIDIRECTIONAL` | 同步方向（继承自 integration） |
+
+---
+
+## 5. 已知问题 / 限制
+
+- Salesforce adapter **未把 `knownExternalIds` 落到 SOQL**（只是 log），差集去重靠 `crm_contact_map` upsert 幂等 — 如果 Salesforce 端同一条 contact 改了字段而非新建，且没有外部 ID 标识，会被当作新行（重复风险）
+- `KNOWN_IDS_LIMIT = 5000` 是**硬截断**，超过 5000 的旧 ID 不会传给 adapter — 大体量租户应考虑改用 sync_token 增量（platform 侧支持的话）
+- 前端 `crm-integration/index.vue` 「同步」按钮：
+  - 未传 `?force=1` → 窗口外返回 `skipped=true`，**UI 无提示**
+  - 无 loading 态（点击完直接 `ElMessage.success`，实际可能在跑）
+  - 无二次确认
+- 前端「新建集成」表单**没有 `objectMappings` 输入入口**，默认 Salesforce 字段映射生效 — 如客户用了自定义字段（`Email__c` 等），需通过后端 SQL 直接 update `crm_integration.objectMappings`
+
+---
+
+## 6. 新增 adapter checklist
+
+要加新平台（如 HubSpot）：
+
+1. 实现 `CrmAdapter` 接口（authenticate / fetchContactsIncremental / upsertContact / healthCheck）
+2. 用 `@Component` 注册，`platformCode()` 返回 `"HUBSPOT"`
+3. 在 `CrmAdapterRouter` 加分发（按 platform 字符串 switch）
+4. 复用 `DEFAULT_FIELD_MAP` 风格，HubSpot 用 `hs_object_id / firstname / lastname / email / phone / jobtitle / hs_lastmodifieddate`
+5. 不要删 Mock 的 `@ConditionalOnMissingBean(name = "...")` fallback，否则无凭据集成全部 500
+6. 单元测试覆盖：known-ids 差集 / 鉴权失败 / SOQL 400 透传

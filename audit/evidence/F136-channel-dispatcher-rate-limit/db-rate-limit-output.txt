@@ -1,0 +1,26 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+section
+== mkt_channel_config 限流配置 ==
+id	tenant_id	brand_id	channel_type	status	deleted	rate_limit_per_min	rate_limit_per_day	last_health_at	last_health_msg
+4	1	NULL	IN_APP	1	0	1000	99999	2026-09-16 21:59:05	FAIL
+2	1	1	MINI_PROGRAM	1	0	100	5000	2026-09-16 21:59:05	FAIL
+3	1	1	MP	1	0	50	3000	NULL	NULL
+10	1	NULL	PUSH	1	0	60	5000	NULL	NULL
+13	1	NULL	SMS	1	0	3	5	NULL	NULL
+section
+== marketing_touch_log 触达量统计 ==
+tenant_id	channel_type	per_min	per_day	total
+1	SMS	0	1488	2957
+2	SMS	0	0	1
+section
+== rateLimitCheck SQL 逻辑验证 ==
+case_name
+-- tenant=1 brand=1 SMS --
+metric	value
+per_min	0
+metric	value
+per_day	1488
+section
+== 5A 跨租户验证（tenant=900003 clerk01）==
+metric	value
+tenant=900003 IN_APP per_day	0

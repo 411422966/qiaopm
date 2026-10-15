@@ -1,0 +1,33 @@
+=== F135.1 Sender 注册验证 ===
+senders.size = 5
+  SMS -> SmsSender
+  EMAIL -> EmailSender
+  MINI_PROGRAM -> MiniProgramSender
+  IN_APP -> InAppSender
+  WECHAT_OFFICIAL_ACCOUNT -> WechatOfficialAccountSender
+=== F135.2 5 个有效 channelType 查询 ===
+  getSender("SMS") = SmsSender
+  getSender("EMAIL") = EmailSender
+  getSender("MINI_PROGRAM") = MiniProgramSender
+  getSender("IN_APP") = InAppSender
+  getSender("WECHAT_OFFICIAL_ACCOUNT") = WechatOfficialAccountSender
+  valid null count = 0 (期望 0)
+=== F135.3 NPE 风险实证 (N3 I061) ===
+  getSender("UNKNOWN") = NULL
+  getSender("WECHAT_OA") = NULL
+  getSender("PUSH") = NULL
+  getSender("SMS_GATEWAY") = NULL
+  getSender("ALIYUN") = NULL
+  getSender(""(empty)) = NULL
+  invalid null count = 6 (期望 6 — 全部返回 null)
+=== F135.4 WECHAT_OA 别名漂移验证 (N12 沿用 I039) ===
+  WECHAT_OFFICIAL_ACCOUNT -> WechatOfficialAccountSender
+  WECHAT_OA (legacy 别名) -> NULL
+  结论: code 用 WECHAT_OFFICIAL_ACCOUNT, db mkt_channel_config.channel_type 也应一致; 前端/老数据如用 WECHAT_OA 会出现 null
+=== F135.5 NPE 实证: 调用方不做 null 检查会怎样 ===
+  NPE caught: Cannot invoke "com.meiyetec.service.channel.ChannelSender.send(com.meiyetec.entity.MktChannelTemplate, String, java.util.Map)" because "<local0>" is null
+  实证成功: getSender 返回 null → 业务侧 .send() → NPE
+=== F135 结论 ===
+  VERIFIED: 5 sender 全部注册 + 有效 channelType 路由正确
+  I061 NPE 实证: invalid channelType 返回 null, 业务侧无 null 检查 → NPE 风险
+  I039 N12 别名漂移: code=WECHAT_OFFICIAL_ACCOUNT, 别名 WECHAT_OA 不存在

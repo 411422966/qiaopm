@@ -1,0 +1,65 @@
+﻿[
+    {
+        "label":  "publish probe-mkt-5b",
+        "method":  "POST",
+        "url":  "http://localhost:8080/plugin/market",
+        "status":  200,
+        "body":  "{\"code\":200,\"message\":\"已上架\",\"data\":{\"id\":20,\"tenantId\":0,\"pluginCode\":\"probe-mkt-5b\",\"pluginName\":\"?????? 5B\",\"category\":\"test\",\"version\":\"1.0.0\",\"vendor\":\"probe\",\"shortDesc\":\"probe\",\"description\":\"probe desc\",\"iconUrl\":null,\"tags\":null,\"price\":null,\"billingType\":null,\"installCou..."
+    },
+    {
+        "label":  "publish bad",
+        "method":  "POST",
+        "url":  "http://localhost:8080/plugin/market",
+        "status":  500,
+        "body":  "{\"code\":500,\"message\":\"JSON parse error: Unexpected end-of-input in VALUE_STRING\",\"data\":null,\"traceId\":\"67a2116af2ed43f28144d0ec674f89f2\",\"timestamp\":\"2026-09-13 20:44:48\"}"
+    },
+    {
+        "label":  "list market",
+        "method":  "GET",
+        "url":  "http://localhost:8080/plugin/market/list",
+        "status":  200,
+        "body":  "{\"code\":200,\"message\":\"操作成功\",\"data\":[{\"id\":2,\"tenantId\":0,\"pluginCode\":\"E2E_PLUGIN_1786899820536\",\"pluginName\":\"E2E 测试插件\",\"category\":\"MARKETING\",\"version\":\"1.0.0\",\"vendor\":null,\"shortDesc\":\"自动化测试\",\"description\":null,\"iconUrl\":null,\"tags\":null,\"price\":null,\"billingType\":null,\"inst..."
+    },
+    {
+        "label":  "update market 20",
+        "method":  "POST",
+        "url":  "http://localhost:8080/plugin/market/20",
+        "status":  200,
+        "body":  "{\"code\":200,\"message\":\"已更新\",\"data\":{\"id\":20,\"tenantId\":0,\"pluginCode\":\"probe-mkt-5b\",\"pluginName\":\"?????? 5B\",\"category\":\"test\",\"version\":\"1.0.0\",\"vendor\":\"probe\",\"shortDesc\":\"updated\",\"description\":\"?????????\",\"iconUrl\":null,\"tags\":null,\"price\":null,\"billingType\":null,\"installCo..."
+    },
+    {
+        "label":  "install 20",
+        "method":  "POST",
+        "url":  "http://localhost:8080/plugin/install",
+        "status":  200,
+        "body":  "{\"code\":200,\"message\":\"已安装\",\"data\":{\"id\":12,\"tenantId\":1,\"pluginId\":20,\"pluginCode\":\"probe-mkt-5b\",\"version\":\"1.0.0\",\"installedAt\":\"2026-09-13T20:44:49.26787\",\"expireAt\":null,\"configJson\":null,\"enabled\":1,\"installStatus\":\"ACTIVE\",\"errorMessage\":null,\"lastUsedAt\":null,\"useCount\":n..."
+    },
+    {
+        "label":  "uninstall 12",
+        "method":  "POST",
+        "url":  "http://localhost:8080/plugin/install/12/uninstall",
+        "status":  200,
+        "body":  "{\"code\":200,\"message\":\"已卸载\",\"data\":null,\"traceId\":\"8bccf1d77854435ea0d2d9357b19b446\",\"timestamp\":\"2026-09-13 20:44:49\"}"
+    },
+    {
+        "label":  "list install clerk",
+        "method":  "GET",
+        "url":  "http://localhost:8080/plugin/install/list",
+        "status":  200,
+        "body":  "{\"code\":200,\"message\":\"操作成功\",\"data\":[{\"id\":12,\"tenantId\":1,\"pluginId\":20,\"pluginCode\":\"probe-mkt-5b\",\"version\":\"1.0.0\",\"installedAt\":\"2026-09-13T20:44:49\",\"expireAt\":null,\"configJson\":null,\"enabled\":0,\"installStatus\":\"REMOVED\",\"errorMessage\":null,\"lastUsedAt\":null,\"useCount\":0,\"c..."
+    },
+    {
+        "label":  "list review 20",
+        "method":  "GET",
+        "url":  "http://localhost:8080/plugin/review/list/20",
+        "status":  200,
+        "body":  "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"32cf667523364d61a047f35586893782\",\"timestamp\":\"2026-09-13 20:44:49\"}"
+    },
+    {
+        "label":  "list review after SQL tamper (tenant should be 2)",
+        "method":  "GET",
+        "url":  "http://localhost:8080/plugin/review/list/20",
+        "status":  200,
+        "body":  "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"c00899033c934456ab33ca88bd26bbd8\",\"timestamp\":\"2026-09-13 20:44:49\"}"
+    }
+]

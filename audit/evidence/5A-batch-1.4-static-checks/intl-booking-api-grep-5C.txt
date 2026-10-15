@@ -1,0 +1,20 @@
+Command: grep -n "sendConfirmation\|send-confirmation\|autoSend" frontend/meiyetec-web/src/api/intl-booking.ts
+Result: 0 matches
+
+Cross-validation:
+- I042 (前端 intlBookingApi.sendConfirmation 方法缺失)   → 0 matches → Shadow 实证
+- I042 (无 send-confirmation endpoint URL 引用)        → 0 matches → Shadow 实证
+- I040 (intlBookingApi 类型签名无 autoSend 字段)       → 0 matches → 间接实证
+
+Context reference:
+- SoT §0.3 + §3: 后端 POST /intl-booking/{id}/send-confirmation 端点存在
+                  IntlBookingService.sendConfirmation(id) 方法存在
+                  前端 intl-booking.ts:1-31 共 11 个方法（不含 sendConfirmation）
+- 5A.7 grep 同模式: N23 前端 intl-booking.ts 无 sendConfirmation 方法
+- Phase 5C: F111-F112-shadow.spec.ts 第 5/6/7 test 块实证（用户手动跑）
+
+F112 evidence pattern:
+- 已实现 11 端点（OAuth×4 + listChannels + pullBookings + listBookings + getBooking
+                 + updateStatus + convertBooking + confirmationTemplate）
+- ⚠ Shadow I042: 缺 sendConfirmation（店长无 UI 触发手动重发）
+- ⚠ Shadow I040: updateStatus 类型签名仅 {status: string}，无 autoSend 字段

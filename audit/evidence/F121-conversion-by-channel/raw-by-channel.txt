@@ -1,0 +1,1 @@
+{"code":200,"message":"操作成功","data":[{"channelType":"SMS","sent":489,"converted":1,"reach":980}],"traceId":"498307a931da4031a2edbe33b53addca","timestamp":"2026-09-16 02:06:27"}

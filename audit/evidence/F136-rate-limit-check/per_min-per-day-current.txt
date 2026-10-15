@@ -1,0 +1,11 @@
+mysql.exe : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 D:\QiaoPM\tmp-5b-f136-perminday.ps1:20 字符: 13
++ $mysqlOut = & mysql -h 127.0.0.1 -P 3307 -u root -proot123456 --defau ...
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+per_min_SMS	per_day_SMS	per_min_INAPP	per_day_INAPP	per_min_PUSH	per_day_PUSH	per_min_MP	per_day_MP	per_min_OA	per_day_OA
+0	1476	0	0	0	0	0	0	0	0
+channel_type	total_rows
+SMS	2946

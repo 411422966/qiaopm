@@ -1,0 +1,171 @@
+﻿=== F139: 旧 MarketActivityController 9 端点路由存活验证 ===
+
+--- 1. GET /market/activity/page ---
+{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "records":  [
+                                 {
+                                     "createdAt":  "2026-09-16T23:20:27",
+                                     "typeText":  "满减",
+                                     "statusText":  "禁用",
+                                     "name":  "F139-updated-副本-20260916232026",
+                                     "startTime":  "2026-09-17T23:20:27",
+                                     "id":  4,
+                                     "endTime":  "2026-10-17T23:20:27",
+                                     "type":  1,
+                                     "ruleConfig":  "{}",
+                                     "status":  0
+                                 },
+                                 {
+                                     "createdAt":  "2026-09-16T23:20:26",
+                                     "typeText":  "满减",
+                                     "statusText":  "禁用",
+                                     "name":  "F139-updated",
+                                     "startTime":  "2026-09-16T00:00:00",
+                                     "id":  3,
+                                     "endTime":  "2026-12-31T23:59:59",
+                                     "type":  1,
+                                     "ruleConfig":  "{}",
+                                     "status":  0
+                                 },
+                                 {
+                                     "createdAt":  "2026-09-16T22:40:20",
+                                     "typeText":  "满减",
+                                     "statusText":  "启用",
+                                     "name":  "5B-test-F139",
+                                     "startTime":  "2026-09-16T10:00:00",
+                                     "id":  2,
+                                     "endTime":  "2026-12-31T23:59:59",
+                                     "type":  1,
+                                     "ruleConfig":  "{}",
+                                     "status":  1
+                                 }
+                             ],
+                 "total":  3,
+                 "size":  10,
+                 "current":  1,
+                 "pages":  1
+             },
+    "traceId":  "8fc29b34c5c84d9dba47a2d37a91a1ab",
+    "timestamp":  "2026-09-16 23:26:38"
+}
+
+--- 2. GET /market/activity/2 ---
+{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "name":  "5B-test-F139",
+                 "startTime":  "2026-09-16T10:00:00",
+                 "id":  2,
+                 "endTime":  "2026-12-31T23:59:59",
+                 "type":  1,
+                 "ruleConfig":  "{}",
+                 "status":  1
+             },
+    "traceId":  "3fda8f4fdbf24719af1b036112a8fc43",
+    "timestamp":  "2026-09-16 23:26:39"
+}
+
+--- 3. GET /market/activity/2/detail ---
+{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "name":  "5B-test-F139",
+                 "startTime":  "2026-09-16T10:00:00",
+                 "id":  2,
+                 "endTime":  "2026-12-31T23:59:59",
+                 "type":  1,
+                 "ruleConfig":  "{}",
+                 "status":  1
+             },
+    "traceId":  "bb94560a116d4caca67b35e4fd1a3bfe",
+    "timestamp":  "2026-09-16 23:26:39"
+}
+
+--- 4. GET /market/activity/stats ---
+{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "total":  3,
+                 "active":  1
+             },
+    "traceId":  "cd72d9436adc4d3a9e9cbd56b5e62d03",
+    "timestamp":  "2026-09-16 23:26:39"
+}
+
+--- 5. POST /market/activity ---
+{
+    "code":  500,
+    "message":  "Cannot invoke \"Object.toString()\" because the return value of \"java.util.Map.get(Object)\" is null",
+    "data":  null,
+    "traceId":  "a16212aa9ad348468c23ff43d3f7832a",
+    "timestamp":  "2026-09-16 23:26:39"
+}
+--- 5b. POST /market/activity (correct body) ---
+{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  null,
+    "traceId":  "bd8a5616021343e0978d888a713ea450",
+    "timestamp":  "2026-09-16 23:27:41"
+}
+
+--- 6. PUT /market/activity/2 (update name) ---
+{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  null,
+    "traceId":  "ff430f1f2f394f1398495e012698e686",
+    "timestamp":  "2026-09-16 23:27:42"
+}
+
+--- 7. POST /market/activity/2/toggle ---
+{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "statusText":  "禁用",
+                 "id":  2,
+                 "status":  0
+             },
+    "traceId":  "971301b9c1a8408590a41d370aecec56",
+    "timestamp":  "2026-09-16 23:27:42"
+}
+
+--- 8. POST /market/activity/2/copy ---
+{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "sourceId":  2,
+                 "name":  "5B-F139-Updated-副本-20260916232742",
+                 "id":  6
+             },
+    "traceId":  "fbe05e25565141e38ea6ac52f791aad5",
+    "timestamp":  "2026-09-16 23:27:42"
+}
+
+--- 9. GET /market/activity/2/participants ---
+{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "records":  [
+
+                             ],
+                 "total":  0,
+                 "size":  20,
+                 "current":  1,
+                 "pages":  0
+             },
+    "traceId":  "711c77a240784ce393c3de4695b1dc6c",
+    "timestamp":  "2026-09-16 23:27:43"
+}
+
+--- 10. DB row count (market_activity) ---
+6	5

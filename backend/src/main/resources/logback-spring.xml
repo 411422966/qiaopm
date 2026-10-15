@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 控制台输出格式：包含 traceId / tenantId / orderNo / paymentMethod 等全 MDC 字段 -->
+    <property name="CONSOLE_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} [traceId=%X{traceId:-}] [tenant=%X{tenantId:-}] [order=%X{orderNo:-}] [pay=%X{paymentMethod:-}] %msg%n"/>
+
+    <!-- 文件输出格式 -->
+    <property name="FILE_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} [traceId=%X{traceId:-}] [tenant=%X{tenantId:-}] [order=%X{orderNo:-}] [pay=%X{paymentMethod:-}] %msg%n"/>
+
+    <!-- 国内支付专用 logger：仅输出关键事件（INFO 级别），高频噪声走 DEBUG -->
+    <property name="DOMESTIC_PAY_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} [traceId=%X{traceId:-}] [tenant=%X{tenantId:-}] [order=%X{orderNo:-}] [pay=%X{paymentMethod:-}] [channel=%X{channelCode:-}] [sig=%X{signatureValid:-}] %msg%n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 按大小滚动的日志文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/meiyetec.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/meiyetec.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 错误日志单独输出 -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/meiyetec-error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/meiyetec-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 业务日志（幂等、并发相关） -->
+    <appender name="BIZ_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/meiyetec-biz.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/meiyetec-biz.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 业务日志 logger -->
+    <logger name="com.meiyetec.service.IdempotencyService" level="DEBUG" additivity="false">
+        <appender-ref ref="BIZ_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="com.meiyetec.service.impl.PointServiceImpl" level="DEBUG" additivity="false">
+        <appender-ref ref="BIZ_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="com.meiyetec.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- ================================================================
+         国内支付专用 logger（EXT-P0-1）
+         - 输出 traceId / tenantId / orderNo / paymentMethod / channelCode / signatureValid
+         - 异步写到 logs/domestic-pay.log（按日切分），便于对接对账
+         ================================================================ -->
+    <appender name="DOMESTIC_PAY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/domestic-pay.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/domestic-pay.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${DOMESTIC_PAY_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="com.meiyetec.cn.domestic" level="INFO" additivity="false">
+        <appender-ref ref="DOMESTIC_PAY_FILE"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+    </root>
+</configuration>

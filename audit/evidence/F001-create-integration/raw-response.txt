@@ -1,0 +1,10 @@
+﻿HTTP/1.1 200 
+X-Trace-Id: ac198eff93aa4f7d86ffde1d61d4f831
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sat, 12 Sep 2026 15:09:45 GMT
+
+{"code":200,"message":"已创建","data":{"id":2,"tenantId":1,"platform":"MOCK","appId":null,"clientId":null,"clientSecret":null,"accessToken":null,"refreshToken":null,"tokenExpireAt":null,"apiBaseUrl":null,"portalId":null,"syncDirection":"PULL","syncMembers":null,"syncOrders":null,"syncContacts":null,"syncDeals":null,"autoSync":1,"lastSyncAt":null,"status":"ACTIVE","errorMessage":null,"createdAt":"2026-09-12T23:09:45.6004","updatedAt":null,"syncToken":null,"syncSchedule":null,"syncEnabled":null,"lastIncrementalSyncAt":null,"username":null,"loginUrl":null,"objectMappings":null,"syncWindowMinutes":null},"traceId":"ac198eff93aa4f7d86ffde1d61d4f831","timestamp":"2026-09-12 23:09:45"}

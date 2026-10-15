@@ -1,0 +1,30 @@
+﻿### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+Caused by: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+Caused by: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+Caused by: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+Caused by: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+Caused by: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+Caused by: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+Caused by: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+Caused by: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+Caused by: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist
+Caused by: java.sql.SQLSyntaxErrorException: Table 'meiyetec.mkt_dispatch' doesn't exist

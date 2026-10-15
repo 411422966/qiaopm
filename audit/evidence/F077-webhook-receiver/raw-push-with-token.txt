@@ -1,0 +1,6 @@
+﻿
+=== F077 用 admin token 推送（应通过 JwtInterceptor 但被反查卡住）===
+code=500 msg=数据库异常
+
+=== F077 不带 token 推送（确认 401）===
+status=401 msg=远程服务器返回错误: (401) 未经授权。

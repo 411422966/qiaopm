@@ -1,0 +1,18 @@
+{
+  "locale": "zh-TW",
+  "scene": "BOOKING_CONFIRMATION",
+  "subject": "您的預約已確認",
+  "sms": "尊敬的 ${customerName} 您好，您預約的 ${serviceName} 已確認。時間：${bookingDate} ${bookingTime}。預約編號：${bookingNo}。門市：${storeName}。",
+  "miniProgram": {
+    "title": "預約確認通知",
+    "keyword1": "預約編號：${bookingNo}",
+    "keyword2": "服務項目：${serviceName}",
+    "keyword3": "預約時間：${bookingDate} ${bookingTime}",
+    "keyword4": "門市：${storeName}",
+    "keyword5": "聯絡電話：${storePhone}"
+  },
+  "email": {
+    "subject": "您的預約已確認 — 預約編號 ${bookingNo}",
+    "body": "${customerName} 您好：\n\n您預約的 ${serviceName} 已成功確認。\n\n【預約詳情】\n預約編號：${bookingNo}\n服務項目：${serviceName}\n預約時間：${bookingDate} ${bookingTime}\n門市：${storeName}\n聯絡電話：${storePhone}\n\n如需改期或取消，請提前 24 小時與我們聯繫。期待您的光臨！\n\n美業科技"
+  }
+}

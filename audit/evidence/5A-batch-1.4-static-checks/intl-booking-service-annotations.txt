@@ -1,0 +1,100 @@
+命名异味静态分析 — Phase 5A.8 实证 (I044)
+
+> 创建时间：2026-09-14 20:40 (UTC+8)
+> 文件：backend/src/main/java/com/meiyetec/service/IntlBookingService.java
+> 验证目标：IntlBookingService 含 @RestController @RequestMapping 注解 — Service as Controller 命名异味第 N 次出现 (I044)
+> 验证方法：Grep 注解 + Read 文件 + 历史 Issue 模式对照
+
+==============================================================
+--- 1. 当前文件注解实证 ---
+==============================================================
+
+# grep @RestController @RequestMapping @Service
+$ grep -E "@RestController|@RequestMapping|@Service" backend/src/main/java/com/meiyetec/service/IntlBookingService.java
+33:@RestController
+34:@RequestMapping("/intl-booking")
+
+# 文件包路径
+backend/src/main/java/com/meiyetec/service/IntlBookingService.java
+                    ^^^^^^^^ service 包
+                                              ^^^^^^^^^^^^^^^^^^^^ 文件名 *Service.java
+
+# 文件 L31-35 (imports 之后)
+@Slf4j
+@RestController
+@RequestMapping("/intl-booking")
+@RequiredArgsConstructor
+public class IntlBookingService {
+
+==============================================================
+--- 2. 命名异味本质 ---
+==============================================================
+
+问题：
+- 文件位于 `service/` 包
+- 文件名 `*Service.java`（暗示业务 Service 层）
+- 但实际带 `@RestController` 注解，是 REST 控制器
+- 同时文件内含 12 个 HTTP 端点：
+  * POST /google/connect
+  * POST /google/callback
+  * POST /instagram/connect
+  * POST /instagram/callback
+  * GET /channels
+  * POST /{channelId}/pull
+  * GET /list
+  * GET /{id}
+  * POST /{id}/status
+  * POST /{id}/send-confirmation
+  * POST /webhook/google
+  * POST /webhook/instagram
+  * GET /webhook/instagram (verify)
+  * POST /{id}/convert
+  * GET /{id}/confirmation-template
+
+→ 这是 Controller 集中单文件模式，但文件名误导
+
+==============================================================
+--- 3. 历史 Issue 模式对照 ---
+==============================================================
+
+命名异味历史（Service as Controller 模式）：
+
+| Issue | 批次 | 文件 | 状态 |
+|---|---|---|---|
+| I004 | Batch 1.1 | CrmIntegrationService | 🟢 低（backlog）已登记 |
+| I019 | Batch 1.2 | PluginService | 🟢 低（backlog）已登记 |
+| C4 实证（I019 模式覆盖）| Batch 1.3 | EcommerceService | ⚠️ 未单独登记新 Issue |
+| I044（本批次）| Batch 1.4 | IntlBookingService | 🟢 低（backlog）待登记 |
+
+注：
+- Batch 1.3 的 C4 实证在 issue-register.md §二十七："EcommerceService 强制 tenantId=0L...沿用 I019 / I004 命名异味 + 跨租户读风险模式"
+- C4 未单独登记新 Issue，I019 模式覆盖
+- 所以 I044 在严格意义上是第 3 次明确命名异味登记
+- 但 plan-batch-1.4.md §三.3 F113 称为"第 4 次出现（沿用 Batch 1.1 I004 / 1.2 I019 / 1.3 I029 模式）"
+  * 注：plan 引用 I029 是文档笔误（I029 是 DB 缺失），应该引用 I019 模式或 C4 实证
+  * 不影响 Issue 本身性质：Service as Controller 命名异味
+
+==============================================================
+--- 4. 决策 ---
+==============================================================
+
+按 I004 / I019 backlog 模式：
+- Fix Phase = Post-Audit（重构）
+- 不阻塞 Phase 5
+- Phase 7 Post-Audit 期间统一整改所有 Service as Controller 文件
+
+==============================================================
+--- 5. 关联 Feature ---
+==============================================================
+
+- F113 (IntlBookingService 命名异味) → PARTIAL-NON-BLOCKER + 架构异味标注
+- D24 决策：I044 沿用 I004 / I019 模式，登记 backlog，不进 Phase 5 修复
+
+==============================================================
+--- VERDICT ---
+==============================================================
+
+✅ PASS — I044 命名异味实证成功
+- Service as Controller 模式成立
+- 第 3 次明确命名异味登记（第 1 次 I004 + 第 2 次 I019 + 第 3 次 I044）
+- 不阻塞 Phase 5；Post-Audit 整改

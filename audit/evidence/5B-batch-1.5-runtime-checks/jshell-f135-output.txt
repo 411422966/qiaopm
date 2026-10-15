@@ -1,0 +1,25 @@
+[F135] Loaded: com.meiyetec.service.channel.ChannelDispatcher
+[F135] Constructor params: 2
+[F135] Created 5 mock senders
+[F135] ChannelDispatcher instance: com.meiyetec.service.channel.ChannelDispatcher@4c40b76e
+
+[F135-TEST-1] getSender('SMS'):
+  result = $Proxy0
+[F135-TEST-2] getSender('EMAIL'):
+  result = $Proxy0
+[F135-TEST-3] getSender('MINI_PROGRAM'):
+  result = $Proxy0
+[F135-TEST-4] getSender('IN_APP'):
+  result = $Proxy0
+[F135-TEST-5] getSender('WECHAT_OFFICIAL_ACCOUNT'):
+  result = $Proxy0
+
+[F135-I061-CRITICAL] getSender('UNKNOWN_CHANNEL'):
+  result = null
+  *** I061 实证: getSender 返回 null — 调用方未检查 null 会触发 NPE ***
+
+[F135-I061-DEMO] 模拟调用方未检查 null:
+  *** NPE 实证: NullPointerException: Cannot invoke "Object.getClass()" because "obj" is null ***
+
+[F135-N12-ALIAS] WECHAT_OA vs WECHAT_OFFICIAL_ACCOUNT 别名漂移验证:
+  getSender('WECHAT_OA'): null（别名漂移 — I039/I047）

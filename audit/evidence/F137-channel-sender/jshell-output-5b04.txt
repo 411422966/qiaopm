@@ -1,0 +1,91 @@
+=== F137 Phase 5B v5锛堢湡瀹?backend classpath锛夆€?鏃堕棿鎴?2026-09-16 22:23:09 ===
+
+--- STDOUT ---
+=== F137 Probe v5 begin ===
+=== F137 5 Sender 鍗曞厓娴嬭瘯  ===
+
+[step 0] 5 Sender class loadable: OK
+
+--- [1/5] SMS / SmsSender.render 绠楁硶 (涓嶄緷璧栧閮? ---
+render(template,vars) = 灏婃暚鐨?{name}锛?{date}鏄偍鐨勭敓鏃ワ紝缇庝笟绉戞妧绁濇偍鐢熸棩蹇箰锛岀壒璧?{amount}鍏冧紭鎯犲埜
+EXPECT                  = 灏婃暚鐨勫紶涓夛紝2026-09-16鏄偍鐨勭敓鏃ワ紝缇庝笟绉戞妧绁濇偍鐢熸棩蹇箰锛岀壒璧?00鍏冧紭鎯犲埜
+MATCH                   = false
+
+--- render 杈圭晫 ---
+  null template: null
+  null vars    : 灏婃暚鐨?{name}锛?{date}鏄偍鐨勭敓鏃ワ紝缇庝笟绉戞妧绁濇偍鐢熸棩蹇箰锛岀壒璧?{amount}鍏冧紭鎯犲埜
+
+--- sms.channelType() ---
+  sms.channelType() = SMS
+  MATCH 'SMS'       = true
+
+--- [2/5] EMAIL / EmailSender.channelType + demoMode fallback ---
+  email.channelType() = EMAIL
+  MATCH 'EMAIL'       = true
+
+--- [3/5] IN_APP / InAppSender.channelType + 鍐欏簱 ---
+  inApp.channelType() = IN_APP
+  MATCH 'IN_APP'      = true
+
+--- [4/5] MINI_PROGRAM / MiniProgramSender.channelType + buildPayload ---
+  mp.channelType()     = MINI_PROGRAM
+  MATCH 'MINI_PROGRAM' = true
+
+--- [5/5] WECHAT_OFFICIAL_ACCOUNT / WechatOfficialAccountSender.channelType ---
+  oa.channelType()                       = WECHAT_OFFICIAL_ACCOUNT
+  MATCH 'WECHAT_OFFICIAL_ACCOUNT'        = true
+  NOT 'WECHAT_OA' (N12 I039)             = true
+
+--- [N12] 鍒悕婕傜Щ锛堟部鐢?I039锛?--
+  channelType='WECHAT_OA' (case 1)        -> sender.channelType() = MINI_PROGRAM
+  NOTE: only WECHAT_OFFICIAL_ACCOUNT is the canonical channelType; WECHAT_OA has NO sender mapping
+
+=== Sender 鍑嵁渚濊禆鐭╅樀 ===
+[VERIFIED/UNVERIFIED 鍐宠]
+  SMS                 : UNVERIFIED (闃块噷浜?accessKey/secret 缂哄け 鈫?demo 闄嶇骇)
+  EMAIL               : UNVERIFIED (SMTP username/password 缂哄け 鈫?demo 闄嶇骇)
+  MINI_PROGRAM        : UNVERIFIED (寰俊 appId/appSecret 缂哄け 鈫?demo 闄嶇骇)
+  WECHAT_OFFICIAL_ACC : UNVERIFIED (寰俊鍏紬鍙?appId/appSecret 缂哄け 鈫?demo 闄嶇骇)
+  IN_APP              : VERIFIED (JdbcTemplate 鐩村啓搴擄紝鏃犵涓夋柟渚濊禆)
+  SmsSender.render    : VERIFIED (绾畻娉曪紝鏃犲閮ㄤ緷璧?鈥?鏈瀹炶瘉宸查氳繃)
+=== ExitCode=0 ===
+
+--- STDERR ---
+错误:
+非法字符: '\ufeff'
+?// === F137 Phase 5B v5 鈥?鐪熷疄 backend classpath 鈥?鏃堕棿鎴?2026-09-16 22:23:09 ===
+^
+错误:
+进行语法分析时已到达文件结尾
+?// === F137 Phase 5B v5 鈥?鐪熷疄 backend classpath 鈥?鏃堕棿鎴?2026-09-16 22:23:09 ===
+ ^
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+错误:
+非法逃逸 符
+System.out.println("  missing key  : '" + SmsSender.render("test \ suffix", vars) + "'");
+                                                                  ^
+错误:
+非法逃逸 符
+System.out.println("  澶氭鏇挎崲       : " + SmsSender.render("\-\-\", vars));
+                                                            ^
+错误:
+非法逃逸 符
+System.out.println("  澶氭鏇挎崲       : " + SmsSender.render("\-\-\", vars));
+                                                              ^
+错误:
+未结束的字符串文字
+System.out.println("  澶氭鏇挎崲       : " + SmsSender.render("\-\-\", vars));
+                                                          ^
+异常错误 java.lang.NoClassDefFoundError：jakarta/mail/MessagingException
+      at Class.getDeclaredMethods0 (本机方法)
+      at Class.privateGetDeclaredMethods (Class.java:3580)
+      at Class.getDeclaredMethod (Class.java:2848)
+      at (#40:2)
+原因: java.lang.ClassNotFoundException： jakarta.mail.MessagingException
+      at BuiltinClassLoader.loadClass (BuiltinClassLoader.java:641)
+      at ClassLoaders$AppClassLoader.loadClass (ClassLoaders.java:188)
+      at ClassLoader.loadClass (ClassLoader.java:526)
+      ...
+

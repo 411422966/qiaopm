@@ -1,0 +1,12 @@
+﻿=== F139: market_activity rows (5B) ===
+1	1	NULL	Test Activity	1	1	2026-08-21 16:52:36
+2	NULL	1	5B-F139-Updated	1	0	2026-09-16 22:40:20
+3	NULL	1	F139-updated	1	0	2026-09-16 23:20:26
+4	NULL	1	F139-updated-副本-20260916232026	1	0	2026-09-16 23:20:27
+5	NULL	1	5B-F139-Test	1	1	2026-09-16 23:27:42
+6	NULL	1	5B-F139-Updated-副本-20260916232742	1	0	2026-09-16 23:27:43
+
+--- tenant_id=1 count ---
+5
+
+--- MktEffectController.snapshot reads market_activity ---

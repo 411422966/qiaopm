@@ -1,0 +1,29 @@
+﻿{
+    "code":  200,
+    "message":  "已更新",
+    "data":  {
+                 "id":  4,
+                 "tenantId":  1,
+                 "brandId":  null,
+                 "journeyCode":  "5A-F124-J1",
+                 "journeyName":  "5A F124 ??-???",
+                 "journeyType":  "MARKETING",
+                 "description":  "Phase 5A F126 update test",
+                 "nodesJson":  null,
+                 "edgesJson":  null,
+                 "triggerEvent":  "NEW_MEMBER",
+                 "triggerFilter":  null,
+                 "status":  1,
+                 "publishedAt":  null,
+                 "enterCount":  0,
+                 "completeCount":  0,
+                 "exitCount":  0,
+                 "operatorId":  null,
+                 "operatorName":  "admin",
+                 "createTime":  "2026-09-16T02:14:26",
+                 "updateTime":  "2026-09-16T02:14:26",
+                 "deleted":  0
+             },
+    "traceId":  "eea9d9d6ccc3469ca37a34ef97a74b61",
+    "timestamp":  "2026-09-16 02:16:48"
+}

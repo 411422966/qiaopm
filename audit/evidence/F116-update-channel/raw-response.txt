@@ -1,0 +1,2 @@
+﻿{"code":200,"message":"宸叉洿鏂?,"data":{"id":12,"tenantId":1,"brandId":null,"channelType":"PUSH","channelName":"audit-5A-F115-N7","provider":"audit","configJson":null,"rateLimitPerMin":120,"rateLimitPerDay":5000,"signature":null,"templatePrefix":null,"status":1,"lastHealthAt":null,"lastHealthMsg":null,"retryMax":3,"retryIntervalSec":60,"operatorId":null,"operatorName":null,"createTime":"2026-09-16T02:42:27","updateTime":"2026-09-16T02:43:15","deleted":0},"traceId":"08d51879b3534e7182e01fd7cec58f1c","timestamp":"2026-09-16 02:43:14"}
+HTTP 200

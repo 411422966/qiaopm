@@ -1,0 +1,3 @@
+﻿2026-09-13 00:03:26.434 [scheduling-1] INFO  c.m.m.e.ComplaintSlaAutoEscalationJob [traceId=] [tenant=] [order=] [pay=] [M9.5-ComplaintSLA] SLA 瓒呮椂妫€鏌ュ紑濮?
+2026-09-13 00:03:26.515 [scheduling-1] INFO  c.m.m.e.ComplaintSlaAutoEscalationJob [traceId=] [tenant=] [order=] [pay=] [M9.5-ComplaintSLA] 妫€鏌ュ畬鎴? 宸ュ崟鏁?10 绉熸埛鏁?1 鍗囩骇鏁?0 cost=81ms
+2026-09-13 00:03:26.615 [scheduling-1] ERROR o.s.s.s.TaskUtils$LoggingErrorHandler [traceId=] [tenant=] [order=] [pay=] Unexpected error occurred in scheduled task

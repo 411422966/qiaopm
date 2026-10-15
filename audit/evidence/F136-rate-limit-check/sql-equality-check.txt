@@ -1,0 +1,15 @@
+mysql.exe : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 D:\QiaoPM\tmp-5b-f136-equal.ps1:45 字符: 13
++ $mysqlOut = & mysql -h 127.0.0.1 -P 3307 -u root -proot123456 --defau ...
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+case_label	match_count	cfg_ids
+SKIP-brandid: matches any brand	1	13
+case_label	match_count	cfg_ids
+IS-NULL brandId: only NULL rows	1	13
+case_label	id	brand_id	rate_limit_per_min	rate_limit_per_day
+order by id LIMIT 1 if SKIP brandId	13	NULL	3	5
+expected	id	brand_id	channel_type	rate_limit_per_min	rate_limit_per_day
+actual cfg selectOne result (id 13)	13	NULL	SMS	3	5

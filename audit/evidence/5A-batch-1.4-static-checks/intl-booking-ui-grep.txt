@@ -1,0 +1,114 @@
+Frontend Shadow 静态分析 — Phase 5A.7 实证 (I040 / I041 / I042)
+
+> 创建时间：2026-09-14 20:40 (UTC+8)
+> 验证文件：
+>   - frontend/meiyetec-web/src/views/intl-booking/index.vue
+>   - frontend/meiyetec-web/src/api/intl-booking.ts
+> 验证目标：
+>   - I040: autoSend=false UI 缺失
+>   - I041: 状态确认按钮文案无"确认即发送通知"提示
+>   - I042: intl-booking.ts 无 sendConfirmation 方法
+> 验证方法：Read 文件全文 + Grep 工程范围
+
+==============================================================
+--- I040 实证：autoSend=false UI 缺失 ---
+==============================================================
+
+# grep 验证（仅 intl-booking 目录）
+$ grep -r "autoSend|发送通知|二次确认|loading" frontend/meiyetec-web/src/views/intl-booking/
+→ No matches found
+
+# 关键 setStatus 函数 (intl-booking/index.vue L124-128)
+```javascript
+async function setStatus(row: any, status: string) {
+  await intlBookingApi.updateStatus(row.id, { status })
+  ElMessage.success('已更新状态')
+  load()
+}
+```
+
+分析：
+- setStatus 调用 `intlBookingApi.updateStatus(row.id, { status })`
+- **不传 autoSend 字段** → 后端默认 autoSend=true（IntlBookingService L195）
+- 用户**无法在 UI 上关闭自动发送**
+- SoT §0.3："默认开启，可通过请求体 {"status":"CONFIRMED", "autoSend": false} 关闭"
+- 前端缺对应开关
+
+✅ I040 实证成功 — autoSend=false UI 缺失
+
+==============================================================
+--- I041 实证：状态确认按钮文案无"确认即发送通知"提示 ---
+==============================================================
+
+# intl-booking/index.vue L38 (状态确认按钮)
+```html
+<el-button v-if="row.status === 'NEW'" size="small" type="success" @click="setStatus(row, 'CONFIRMED')">确认</el-button>
+```
+
+# 其他 intl-booking 出现的"确认"相关字串
+- L38: "确认"（按钮文案）
+- L40: "确认模板"（不同按钮，跳转 confirmationTemplate 弹窗）
+- L71: "预约确认模板（多语言）"（弹窗标题）
+- L141: confirmationTemplate API 调用
+
+分析：
+- 状态确认按钮文案仅"确认"二字
+- 无 loading 状态
+- 无二次确认对话框（setStatus 直接提交）
+- 无任何"确认即发送通知"文案提示用户
+- 与 Batch 1.1 I006 / I007 Dashboard Shadow + Update Shadow 同模式
+
+✅ I041 实证成功 — 按钮文案无"确认即发送通知"提示
+
+==============================================================
+--- I042 实证：intl-booking.ts 无 sendConfirmation 方法 ---
+==============================================================
+
+# grep 工程范围（前端 src 全部）
+$ grep -r "sendConfirmation|send-confirmation" frontend/meiyetec-web/src/
+→ No matches found
+
+# intl-booking.ts 方法清单（11 个）
+1. connectGoogle
+2. googleCallback
+3. connectInstagram
+4. instagramCallback
+5. listChannels
+6. pullBookings
+7. listBookings
+8. getBooking
+9. updateStatus
+10. convertBooking
+11. confirmationTemplate
+
+# 后端存在的端点（IntlBookingService L226-232）
+@PostMapping("/{id}/send-confirmation")
+public Result<BookingConfirmationResult> sendConfirmation(@PathVariable Long id) {
+    OverseasBooking b = bookingMapper.selectById(id);
+    if (b == null) return Result.error(BizCode.NOT_FOUND, "预约不存在");
+    BookingConfirmationResult r = confirmationService.sendConfirmation(b);
+    return Result.success("已发送", r);
+}
+
+分析：
+- 后端 `POST /intl-booking/{id}/send-confirmation` 端点已实现（F095）
+- 前端 `intlBookingApi` **未封装**对应方法
+- 店长无法在前端手动重发确认（即使客户改了联系方式或首次发送失败）
+- 与 Batch 1.1 I007 Update Shadow 同模式
+
+✅ I042 实证成功 — intl-booking.ts 无 sendConfirmation 方法
+
+==============================================================
+--- 决策 ---
+==============================================================
+
+D23 决策：I040 / I041 / I042 暂缓 Frontend Shadow，Post-Audit 整改
+- F111 (intl-booking/index.vue) → PARTIAL-NON-BLOCKER（I040 + I041）
+- F112 (intl-booking.ts) → PARTIAL-NON-BLOCKER（I042）
+- Phase 5B 期间不修；Phase 7 Post-Audit 决定
+
+==============================================================
+--- VERDICT ---
+==============================================================
+
+✅ PASS — I040 + I041 + I042 全部实证成功

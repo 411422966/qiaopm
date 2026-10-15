@@ -1,0 +1,1 @@
+{"code":200,"message":"操作成功","data":{"convertRate":0.2,"read":491,"sentRate":100.0,"converted":1,"reach":980,"sent":980,"readRate":50.1},"traceId":"f9871809a0fd407cb840682206d31222","timestamp":"2026-09-16 02:06:27"}

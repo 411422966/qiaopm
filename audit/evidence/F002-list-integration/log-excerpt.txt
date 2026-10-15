@@ -1,0 +1,65 @@
+﻿
+  backend\logs\meiyetec.log:2566:### The error may involve defaultParameterMap
+  backend\logs\meiyetec.log:2567:### The error occurred while setting parameters
+  backend\logs\meiyetec.log:2568:### SQL: SELECT  id,tenant_id,platform,app_id,client_id,client_secret,access_token,ref
+resh_token,token_expire_at,api_base_url,portal_id,sync_direction,sync_members,sync_orders,sync_contacts,sync_deals,auto
+_sync,last_sync_at,status,error_message,created_at,updated_at,sync_token,sync_schedule,sync_enabled,last_incremental_sy
+nc_at,private_key,username,login_url,object_mappings,sync_window_minutes  FROM crm_integration      WHERE  (status = ? 
+AND sync_enabled = ?)
+  backend\logs\meiyetec.log:2569:### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'sync_token' in 'field lis
+t'
+  backend\logs\meiyetec.log:2570:; bad SQL grammar []
+> backend\logs\meiyetec.log:2571:2026-09-12 23:10:40.917 [http-nio-8080-exec-8] ERROR c.m.exception.GlobalExceptionHand
+ler [traceId=f589a40454e8479c8b678effb821827a] [tenant=] [order=] [pay=] [DBError]
+  backend\logs\meiyetec.log:2572:org.springframework.jdbc.BadSqlGrammarException: 
+  backend\logs\meiyetec.log:2573:### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 
+'sync_token' in 'field list'
+  backend\logs\meiyetec.log:2574:### The error may exist in com/meiyetec/mapper/CrmIntegrationMapper.java (best guess)
+  backend\logs\meiyetec.log:2575:### The error may involve defaultParameterMap
+  backend\logs\meiyetec.log:2576:### The error occurred while setting parameters
+  backend\logs\meiyetec.log:2577:### SQL: SELECT  id,tenant_id,platform,app_id,client_id,client_secret,access_token,ref
+resh_token,token_expire_at,api_base_url,portal_id,sync_direction,sync_members,sync_orders,sync_contacts,sync_deals,auto
+_sync,last_sync_at,status,error_message,created_at,updated_at,sync_token,sync_schedule,sync_enabled,last_incremental_sy
+nc_at,private_key,username,login_url,object_mappings,sync_window_minutes  FROM crm_integration      WHERE  (tenant_id =
+ ?) ORDER BY id DESC
+  backend\logs\meiyetec.log:2578:### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'sync_token' in 'field lis
+t'
+  backend\logs\meiyetec.log:2579:; bad SQL grammar []
+  backend\logs\meiyetec.log:2580:	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQ
+LErrorCodeSQLExceptionTranslator.java:246)
+  backend\logs\meiyetec.log:2581:	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(
+AbstractFallbackSQLExceptionTranslator.java:73)
+  backend\logs\meiyetec.log:2582:	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatis
+ExceptionTranslator.java:92)
+  backend\logs\meiyetec.log:2583:	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTempl
+ate.java:439)
+  backend\logs\meiyetec.log:2584:	at jdk.proxy2/jdk.proxy2.$Proxy89.selectList(Unknown Source)
+  backend\logs\meiyetec.log:2585:	at org.mybatis.spring.SqlSessionTemplate.selectList(SqlSessionTemplate.java:224)
+  backend\logs\meiyetec.log:2586:	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.executeForMany(MybatisM
+apperMethod.java:164)
+  backend\logs\meiyetec.log:2587:	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMe
+thod.java:77)
+  backend\logs\meiyetec.log:2588:	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invok
+e(MybatisMapperProxy.java:152)
+  backend\logs\meiyetec.log:2589:	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProx
+y.java:89)
+  backend\logs\meiyetec.log:2590:	at jdk.proxy2/jdk.proxy2.$Proxy314.selectList(Unknown Source)
+  backend\logs\meiyetec.log:2591:	at com.meiyetec.service.CrmIntegrationService.list(CrmIntegrationService.java:55)
+  backend\logs\meiyetec.log:2592:	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+  backend\logs\meiyetec.log:2593:	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccesso
+rImpl.java:77)
+  backend\logs\meiyetec.log:2594:	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMetho
+dAccessorImpl.java:43)
+  backend\logs\meiyetec.log:2595:	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+  backend\logs\meiyetec.log:2596:	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.j
+ava:343)
+  backend\logs\meiyetec.log:2597:	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercep
+t(CglibAopProxy.java:699)
+  backend\logs\meiyetec.log:2598:	at com.meiyetec.service.CrmIntegrationService$$SpringCGLIB$$0.list(<generated>)
+  backend\logs\meiyetec.log:2599:	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+  backend\logs\meiyetec.log:2600:	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccesso
+rImpl.java:77)
+  backend\logs\meiyetec.log:2601:	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMetho
+dAccessorImpl.java:43)
+
+

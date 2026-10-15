@@ -1,0 +1,194 @@
+# ====================================================================
+# 监控栈（Prometheus + AlertManager）
+# Gate 3 批次 1.4b — P0-B 监控采集
+# 使用方式：docker compose -f docker-compose.yml -f docker-compose.monitoring.yml up -d
+# ====================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # Prometheus — 指标采集 server
+  # ---------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:v2.55.0
+    container_name: meiyetec-prometheus
+    restart: unless-stopped
+    command:
+      # 挂载外部配置文件（只读）
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      # 开启热重载（POST /-/reload）
+      - '--web.enable-lifecycle'
+      # TSDB 数据保留 15 天
+      - '--storage.tsdb.retention.time=15d'
+    ports:
+      # Prometheus Web UI + API
+      - "9090:9090"
+    volumes:
+      # 挂载 Prometheus 配置（只读）
+      - ./infra/prometheus:/etc/prometheus:ro
+      # 持久化 TSDB 数据（重启不丢历史数据）
+      - prometheus-data:/prometheus
+    networks:
+      - meiyetec-net
+    healthcheck:
+      # Prometheus Ready 端点
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9090/-/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    # 资源限制（生产可按需调整）
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+
+  # ---------------------------------------------------------------------------
+  # AlertManager — 告警路由和通知
+  # ---------------------------------------------------------------------------
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: meiyetec-alertmanager
+    restart: unless-stopped
+    command:
+      # 用 shell wrapper 做 env var 注入（AM v0.27 url 字段不支持 env 展开）
+      # 把 alertmanager.yml 中的 __WECHAT_WEBHOOK_URL__ 占位符替换为实际值
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        sed "s|__WECHAT_WEBHOOK_URL__|$${WECHAT_WEBHOOK_URL}|g" \
+          /etc/alertmanager/alertmanager.yml > /tmp/alertmanager.generated.yml &&
+        exec /bin/alertmanager --config.file=/tmp/alertmanager.generated.yml \
+          --storage.path=/alertmanager --log.level=info
+    entrypoint: []
+    # 覆盖镜像默认 ENTRYPOINT /bin/alertmanager（让上面 command 直接由 /bin/sh 接管）
+    ports:
+      # AlertManager Web UI + API
+      - "9093:9093"
+    # 企业微信群机器人 webhook URL（通过 env_file 注入；缺值 → AM 启动失败 fail-fast）
+    # 部署时复制 infra/alertmanager/alertmanager.env.example 为 alertmanager.env 并填入真实 URL
+    # ⚠️ AlertManager v0.27.0 的 webhook_configs.url 字段不支持 env var / Go template 展开
+    #    故用 wrapper command：sed 把 alertmanager.yml 中的 __WECHAT_WEBHOOK_URL__ 占位符
+    #    替换为 env var 实际值，再 exec AM 加载生成的配置
+    env_file:
+      - ./infra/alertmanager/alertmanager.env
+    volumes:
+      # 挂载 AlertManager 配置（只读）
+      - ./infra/alertmanager:/etc/alertmanager:ro
+      # 持久化静音状态和通知状态
+      - alertmanager-data:/alertmanager
+    networks:
+      - meiyetec-net
+    depends_on:
+      - httpbin
+    healthcheck:
+      # AlertManager Ready 端点
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9093/-/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 128M
+
+  # ---------------------------------------------------------------------------
+  # httpbin — 简易 HTTP echo 服务（仅本地测试告警 webhook 通道连通性）
+  #
+  # 由于外部镜像拉取受限（kennethreitz/httpbin / mccutchen/go-httpbin 等
+  # 公网镜像在本地网络下均拉不下来），改用预编译的 JDK 17 echo server。
+  # 实现位置：infra/alertmanager/echo-server/EchoServer.java
+  # 编译方式：javac -source 17 -target 17 EchoServer.java
+  # 字节码版本：61（major，可被 eclipse-temurin:17-jre-alpine 加载）
+  #
+  # 生产环境请移除此 service，并通过 WECHAT_WEBHOOK_URL 注入真实 webhook
+  # ---------------------------------------------------------------------------
+  httpbin:
+    image: eclipse-temurin:17-jre-alpine
+    container_name: meiyetec-httpbin
+    restart: "no"
+    # 不暴露端口 — 仅供同网络 (meiyetec-net) 内的 alertmanager 访问
+    # EchoServer 监听容器内 :80
+    command: ["java", "-cp", "/app", "EchoServer"]
+    volumes:
+      # bind mount 预编译的 .class 文件（只读）
+      - ./infra/alertmanager/echo-server:/app:ro
+    networks:
+      - meiyetec-net
+    healthcheck:
+      # EchoServer 的 GET / 返回 200 JSON
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+
+  # ---------------------------------------------------------------------------
+  # Grafana — 可视化 dashboard（依赖 Prometheus 数据源）
+  # ---------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:11.3.0
+    container_name: meiyetec-grafana
+    restart: unless-stopped
+    ports:
+      # Grafana Web UI（默认 3000）
+      - "3000:3000"
+    environment:
+      # admin 密码必须由 env 注入（无 default）
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_ADMIN_PASSWORD:?GF_ADMIN_PASSWORD required}
+      # 关闭匿名注册
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      # 挂载 datasources + dashboards provisioning（只读）
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning:ro
+      # dashboard JSON 文件目录（只读）
+      - ./infra/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      # 持久化 Grafana 内部状态（用户、库、dashboard 改动）
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - meiyetec-net
+    healthcheck:
+      # Grafana health 端点
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+# ---------------------------------------------------------------------------
+# 网络（复用主 stack 的 meiyetec-net，主 compose file 的 project=meiyetec，
+#       docker 创建时实际名称为 meiyetec_meiyetec-net）
+# ---------------------------------------------------------------------------
+networks:
+  meiyetec-net:
+    # 实际 docker 网络名（= project_name + 声明的网络名）
+    # project_name 默认 = 当前目录名（QiaoPM），但主 compose file 顶部显式声明
+    # `name: ${COMPOSE_PROJECT_NAME:-meiyetec}`，所以两者保持一致
+    name: ${COMPOSE_PROJECT_NAME:-meiyetec}_meiyetec-net
+    external: true
+
+# ---------------------------------------------------------------------------
+# 数据卷（Prometheus TSDB + AlertManager 状态持久化）
+# ---------------------------------------------------------------------------
+volumes:
+  prometheus-data:
+    driver: local
+  alertmanager-data:
+    driver: local
+  grafana-data:
+    driver: local

@@ -1,0 +1,20 @@
+﻿
+=== 后端日志（找 WEBHOOK/YOUZAN 关键词）===
+
+  ### The error may involve defaultParameterMap
+  ### The error occurred while setting parameters
+> ### SQL: SELECT  id,tenant_id,platform,shop_name,shop_id,app_key,app_secret,app_id,kdt_id,sign_secret,access_token,to
+ken_expire_at,webhook_url,webhook_secret,api_base_url,sync_products,sync_orders,sync_inventory,last_sync_at,status,erro
+r_message,created_at,updated_at  FROM ecommerce_platform      WHERE  (platform = ? AND kdt_id = ?) LIMIT 1
+  ### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'app_id' in 'field list'
+  	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)
+  	at jdk.proxy2/jdk.proxy2.$Proxy311.selectOne(Unknown Source)
+> 	at com.meiyetec.controller.YouzanWebhookController.HandleYouzan(YouzanWebhookController.java:113)
+  	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+  	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:751)
+  	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:703)
+> 	at com.meiyetec.controller.YouzanWebhookController$$SpringCGLIB$$0.HandleYouzan(<generated>)
+  	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+
+---

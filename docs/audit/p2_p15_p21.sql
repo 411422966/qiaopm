@@ -1,0 +1,232 @@
+-- P2 批次：AI 视觉 / LTV-Churn / IoT 硬件 / GDPR / HIPAA / Google Maps / 海外 POS
+
+-- 0015 CV 视觉识别
+CREATE TABLE IF NOT EXISTS `cv_model` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT DEFAULT 0 COMMENT '0=全局',
+  `model_code` VARCHAR(64) NOT NULL,
+  `model_name` VARCHAR(128) NOT NULL,
+  `provider` VARCHAR(32) DEFAULT 'TENCENT' COMMENT 'TENCENT/ALIYUN/BAIDU/AZURE/GOOGLE/MODEL_ART/SELF',
+  `model_type` VARCHAR(32) DEFAULT 'FACE' COMMENT 'FACE/SKIN/NAIL/BODY/SCENE/OCR',
+  `endpoint` VARCHAR(255) DEFAULT NULL,
+  `api_key` VARCHAR(255) DEFAULT NULL,
+  `api_secret` VARCHAR(255) DEFAULT NULL,
+  `version` VARCHAR(32) DEFAULT '1.0',
+  `accuracy` DECIMAL(5,2) DEFAULT NULL,
+  `latency_ms` INT DEFAULT NULL,
+  `is_sandbox` TINYINT DEFAULT 1,
+  `enabled` TINYINT DEFAULT 1,
+  `description` VARCHAR(500) DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `uk_code` (`tenant_id`, `model_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='CV 模型';
+
+CREATE TABLE IF NOT EXISTS `cv_recognition_log` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `model_code` VARCHAR(64) DEFAULT NULL,
+  `biz_type` VARCHAR(32) DEFAULT NULL COMMENT 'SKIN_TEST/NAIL_TRYON/FACE_COMPARE',
+  `image_url` VARCHAR(500) DEFAULT NULL,
+  `member_id` BIGINT DEFAULT NULL,
+  `result_json` TEXT,
+  `confidence` DECIMAL(5,2) DEFAULT NULL,
+  `latency_ms` INT DEFAULT NULL,
+  `status` VARCHAR(16) DEFAULT 'SUCCESS',
+  `error_message` VARCHAR(255) DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_member` (`member_id`),
+  INDEX `idx_biz` (`biz_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='CV 识别日志';
+
+-- 0017 IoT 设备
+CREATE TABLE IF NOT EXISTS `iot_device` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `store_id` BIGINT DEFAULT NULL,
+  `device_code` VARCHAR(64) NOT NULL,
+  `device_name` VARCHAR(128) DEFAULT NULL,
+  `device_type` VARCHAR(32) DEFAULT 'MASSAGE_CHAIR' COMMENT 'MASSAGE_CHAIR/HUMIDIFIER/SCALE/THERMOMETER/LED/LOCK/...',
+  `protocol` VARCHAR(16) DEFAULT 'MQTT' COMMENT 'MQTT/HTTP/MODBUS/ZIGBEE/BLE',
+  `manufacturer` VARCHAR(64) DEFAULT NULL,
+  `model` VARCHAR(64) DEFAULT NULL,
+  `firmware_version` VARCHAR(32) DEFAULT NULL,
+  `mqtt_client_id` VARCHAR(128) DEFAULT NULL,
+  `mqtt_topic` VARCHAR(255) DEFAULT NULL,
+  `auth_token` VARCHAR(255) DEFAULT NULL,
+  `last_telemetry` TEXT,
+  `last_online_at` DATETIME DEFAULT NULL,
+  `online_status` VARCHAR(16) DEFAULT 'OFFLINE',
+  `bind_member_id` BIGINT DEFAULT NULL,
+  `status` VARCHAR(16) DEFAULT 'ACTIVE',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `uk_code` (`tenant_id`, `device_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='IoT 设备';
+
+CREATE TABLE IF NOT EXISTS `iot_telemetry` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `device_id` BIGINT NOT NULL,
+  `metric` VARCHAR(64) DEFAULT NULL,
+  `value_str` VARCHAR(255) DEFAULT NULL,
+  `value_num` DECIMAL(15,4) DEFAULT NULL,
+  `unit` VARCHAR(16) DEFAULT NULL,
+  `topic` VARCHAR(255) DEFAULT NULL,
+  `payload` TEXT,
+  `recorded_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_device_time` (`device_id`, `recorded_at`),
+  INDEX `idx_metric` (`metric`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='IoT 遥测';
+
+-- 0018 GDPR
+CREATE TABLE IF NOT EXISTS `gdpr_consent` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `member_id` BIGINT NOT NULL,
+  `consent_type` VARCHAR(32) DEFAULT 'MARKETING' COMMENT 'MARKETING/ANALYTICS/PROFILING/THIRD_PARTY',
+  `granted` TINYINT DEFAULT 0,
+  `version` VARCHAR(16) DEFAULT '1.0',
+  `ip_address` VARCHAR(64) DEFAULT NULL,
+  `user_agent` VARCHAR(500) DEFAULT NULL,
+  `channel` VARCHAR(32) DEFAULT 'WEB',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_member` (`member_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='GDPR 同意';
+
+CREATE TABLE IF NOT EXISTS `gdpr_data_request` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `request_no` VARCHAR(64) NOT NULL,
+  `member_id` BIGINT NOT NULL,
+  `request_type` VARCHAR(32) DEFAULT 'EXPORT' COMMENT 'EXPORT/DELETE/RECTIFY',
+  `status` VARCHAR(16) DEFAULT 'PENDING' COMMENT 'PENDING/PROCESSING/COMPLETED/REJECTED',
+  `export_url` VARCHAR(500) DEFAULT NULL,
+  `export_expire_at` DATETIME DEFAULT NULL,
+  `reason` VARCHAR(500) DEFAULT NULL,
+  `processor_id` BIGINT DEFAULT NULL,
+  `processed_at` DATETIME DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `uk_no` (`tenant_id`, `request_no`),
+  INDEX `idx_member` (`member_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='GDPR 数据请求';
+
+CREATE TABLE IF NOT EXISTS `gdpr_audit_log` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `actor_id` BIGINT DEFAULT NULL,
+  `actor_name` VARCHAR(64) DEFAULT NULL,
+  `action` VARCHAR(64) NOT NULL,
+  `target_type` VARCHAR(32) DEFAULT NULL,
+  `target_id` BIGINT DEFAULT NULL,
+  `pii_data` TINYINT DEFAULT 0 COMMENT '是否涉及 PII',
+  `details` TEXT,
+  `ip_address` VARCHAR(64) DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_actor_time` (`actor_id`, `created_at`),
+  INDEX `idx_pii` (`pii_data`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='GDPR 审计';
+
+-- 0019 HIPAA
+CREATE TABLE IF NOT EXISTS `hipaa_phi_access` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `member_id` BIGINT DEFAULT NULL,
+  `field_name` VARCHAR(64) DEFAULT NULL,
+  `access_type` VARCHAR(16) DEFAULT 'READ' COMMENT 'READ/WRITE/EXPORT/PRINT',
+  `actor_id` BIGINT DEFAULT NULL,
+  `actor_name` VARCHAR(64) DEFAULT NULL,
+  `actor_role` VARCHAR(32) DEFAULT NULL,
+  `purpose` VARCHAR(255) DEFAULT NULL,
+  `ip_address` VARCHAR(64) DEFAULT NULL,
+  `is_break_glass` TINYINT DEFAULT 0,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_member_time` (`member_id`, `created_at`),
+  INDEX `idx_actor` (`actor_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='HIPAA PHI 访问';
+
+CREATE TABLE IF NOT EXISTS `hipaa_encryption_key` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `key_alias` VARCHAR(64) DEFAULT NULL,
+  `key_version` INT DEFAULT 1,
+  `algorithm` VARCHAR(32) DEFAULT 'AES-256-GCM',
+  `key_status` VARCHAR(16) DEFAULT 'ACTIVE' COMMENT 'ACTIVE/ROTATED/DISABLED',
+  `public_key` VARCHAR(500) DEFAULT NULL,
+  `kms_arn` VARCHAR(255) DEFAULT NULL,
+  `rotated_at` DATETIME DEFAULT NULL,
+  `next_rotate_at` DATETIME DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_tenant` (`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='HIPAA 加密密钥';
+
+-- 0020 Google Maps
+CREATE TABLE IF NOT EXISTS `map_config` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `provider` VARCHAR(32) DEFAULT 'GOOGLE' COMMENT 'GOOGLE/AMAP/BAIDU/MAPBOX',
+  `api_key` VARCHAR(255) DEFAULT NULL,
+  `default_lat` DECIMAL(10,6) DEFAULT NULL,
+  `default_lng` DECIMAL(10,6) DEFAULT NULL,
+  `default_zoom` INT DEFAULT 12,
+  `region` VARCHAR(8) DEFAULT 'CN',
+  `enabled` TINYINT DEFAULT 1,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `uk_tenant` (`tenant_id`, `provider`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='地图配置';
+
+CREATE TABLE IF NOT EXISTS `geofence` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `store_id` BIGINT DEFAULT NULL,
+  `fence_name` VARCHAR(128) DEFAULT NULL,
+  `center_lat` DECIMAL(10,6) DEFAULT NULL,
+  `center_lng` DECIMAL(10,6) DEFAULT NULL,
+  `radius_m` INT DEFAULT 200,
+  `alert_type` VARCHAR(32) DEFAULT 'CHECK_IN' COMMENT 'CHECK_IN/CHECK_OUT/OVER_SPEED',
+  `enabled` TINYINT DEFAULT 1,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_tenant_store` (`tenant_id`, `store_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='地理围栏';
+
+-- 0021 海外 POS
+CREATE TABLE IF NOT EXISTS `pos_device` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `store_id` BIGINT NOT NULL,
+  `vendor` VARCHAR(32) DEFAULT 'SQUARE' COMMENT 'SQUARE/STRIPE_TERMINAL/CAVAV/PAX/VERIFONE',
+  `device_code` VARCHAR(64) NOT NULL,
+  `device_name` VARCHAR(128) DEFAULT NULL,
+  `serial_number` VARCHAR(64) DEFAULT NULL,
+  `api_key` VARCHAR(255) DEFAULT NULL,
+  `location_id` VARCHAR(64) DEFAULT NULL,
+  `webhook_url` VARCHAR(500) DEFAULT NULL,
+  `last_heartbeat` DATETIME DEFAULT NULL,
+  `status` VARCHAR(16) DEFAULT 'ONLINE',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `uk_dev` (`tenant_id`, `device_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='POS 设备';
+
+CREATE TABLE IF NOT EXISTS `pos_transaction` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `pos_id` BIGINT DEFAULT NULL,
+  `store_id` BIGINT DEFAULT NULL,
+  `tx_no` VARCHAR(64) NOT NULL,
+  `vendor` VARCHAR(32) DEFAULT 'SQUARE',
+  `external_tx_id` VARCHAR(128) DEFAULT NULL,
+  `amount` DECIMAL(10,2) DEFAULT 0,
+  `tip` DECIMAL(10,2) DEFAULT 0,
+  `tax` DECIMAL(10,2) DEFAULT 0,
+  `currency` VARCHAR(8) DEFAULT 'USD',
+  `card_brand` VARCHAR(16) DEFAULT NULL,
+  `card_last4` VARCHAR(4) DEFAULT NULL,
+  `status` VARCHAR(16) DEFAULT 'PENDING' COMMENT 'PENDING/AUTHORIZED/COMPLETED/FAILED/REFUNDED/VOIDED',
+  `order_id` BIGINT DEFAULT NULL,
+  `member_id` BIGINT DEFAULT NULL,
+  `raw_payload` TEXT,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `uk_tx` (`tenant_id`, `tx_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='POS 流水';

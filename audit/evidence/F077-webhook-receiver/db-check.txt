@@ -1,0 +1,19 @@
+﻿=== F077/F078 前置检查 ===
+
+--- webhook_msg_log ---
+mysql.exe : ERROR 1146 (42S02) at line 1: Table 'meiyetec.webhook_msg_log' doesn't exist
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-32fc7836-fc58-4468-80cb-a5dc695a9dd9.ps1:87 字符: 1
++ & $mysql -h 127.0.0.1 -P 3307 -uroot --default-character-set=utf8mb4  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR 1146 (42S...' doesn't exist:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+--- ecommerce_platform 行（看哪个能用作 kdt_id）---
+mysql.exe : ERROR 1054 (42S22) at line 1: Unknown column 'kdt_id' in 'field list'
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-32fc7836-fc58-4468-80cb-a5dc695a9dd9.ps1:89 字符: 1
++ & $mysql -h 127.0.0.1 -P 3307 -uroot --default-character-set=utf8mb4  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR 1054 (42S...in 'field list':String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

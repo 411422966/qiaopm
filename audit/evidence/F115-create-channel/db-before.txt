@@ -1,0 +1,9 @@
+﻿mysql : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-0f484221-44fe-4fb6-8e39-94db9c89ce7e.ps1:96 字符: 1
++ mysql -h 127.0.0.1 -P 3307 -u root -proot123456 -e "SELECT COUNT(*) A ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+before_count	min_rlpd	max_rlpd
+6	2000	99999

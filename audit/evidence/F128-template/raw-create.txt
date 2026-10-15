@@ -1,0 +1,30 @@
+﻿{
+    "code":  200,
+    "message":  "已创建",
+    "data":  {
+                 "id":  10,
+                 "tenantId":  1,
+                 "brandId":  null,
+                 "channelType":  "SMS",
+                 "channelConfigId":  null,
+                 "templateCode":  "5A-F128-T1",
+                 "templateName":  "5A F128 SMS template",
+                 "externalTemplateId":  null,
+                 "scene":  "BIRTHDAY",
+                 "subject":  null,
+                 "content":  "Hi ${customerName}, 5A F128 ????",
+                 "variables":  "customerName",
+                 "linkUrl":  null,
+                 "linkType":  "MINI",
+                 "auditStatus":  1,
+                 "auditRemark":  null,
+                 "enabled":  1,
+                 "operatorId":  null,
+                 "operatorName":  null,
+                 "createTime":  "2026-09-16T02:17:36.2442603",
+                 "updateTime":  "2026-09-16T02:17:36.2442603",
+                 "deleted":  null
+             },
+    "traceId":  "211990075f9748e899f614497c29e25d",
+    "timestamp":  "2026-09-16 02:17:36"
+}

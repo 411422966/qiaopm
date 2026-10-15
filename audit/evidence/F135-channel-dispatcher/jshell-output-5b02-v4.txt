@@ -1,0 +1,62 @@
+=== F135 Phase 5B v4 (mybatis-plus + spring-jdbc/tx) 鈥?鏃堕棿鎴?2026-09-16 22:14:21 ===
+
+--- STDOUT ---
+=== F135 Probe v4 begin ===
+--- step 1: load all classes ---
+[OK] 6 classes loadable
+
+--- step 2: 5 Sender channelType() ---
+Sms.channelType()=SMS
+Email.channelType()=EMAIL
+InApp.channelType()=IN_APP
+MiniProgram.channelType()=MINI_PROGRAM
+WechatOA.channelType()=WECHAT_OFFICIAL_ACCOUNT
+
+--- step 3: instantiate ChannelDispatcher via reflect ---
+ctor count=1
+  ctor: paramCount=2 types=[interface java.util.List, interface com.meiyetec.mapper.MktChannelConfigMapper]
+[OK] dispatcher instance: com.meiyetec.service.channel.ChannelDispatcher@16293aa2
+
+--- step 4: valid channelType (5) ---
+  getSender("SMS") = SmsSender
+  getSender("EMAIL") = EmailSender
+  getSender("IN_APP") = InAppSender
+  getSender("MINI_PROGRAM") = MiniProgramSender
+  getSender("WECHAT_OFFICIAL_ACCOUNT") = WechatOfficialAccountSender
+
+--- step 5: invalid channelType (9) 鈥?I061 NPE risk ---
+  getSender("UNKNOWN") = null
+  getSender("WECHAT_OA") = null
+  getSender("WECHAT") = null
+  getSender("wechat_mp") = null
+  getSender("") = null
+  getSender(null) = null
+  getSender("SMS_EXTRA") = null
+  getSender("sms") = null
+  getSender("sms ") = null
+
+--- step 6: N12 alias verification ---
+  WECHAT_OFFICIAL_ACCOUNT -> non-null
+  WECHAT_OA              -> null (no alias)
+
+--- step 7: I061 NPE risk simulated ---
+  NPE TRIGGERED (call on null) 鈥?I061 confirmed
+=== ExitCode=0 ===
+
+--- STDERR ---
+错误:
+非法字符: '\ufeff'
+?// === F135 Phase 5B v4 鈥?鍔?mybatis-plus + spring-jdbc/tx 鈥?鏃堕棿鎴?2026-09-16 22:14:12 ===
+^
+错误:
+进行语法分析时已到达文件结尾
+?// === F135 Phase 5B v4 鈥?鍔?mybatis-plus + spring-jdbc/tx 鈥?鏃堕棿鎴?2026-09-16 22:14:12 ===
+ ^
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+错误:
+非法的表达式开始
+if (ctor2 == null) { System.out.println("[FAIL] no 2-param ctor"); /exit; }
+                                                                   ^
+

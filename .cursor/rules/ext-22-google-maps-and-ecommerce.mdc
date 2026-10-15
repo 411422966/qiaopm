@@ -1,0 +1,272 @@
+---
+description: EXT-22 Google Maps Place Details 计费开关 + 有赞开放平台签名字段（app_id / kdt_id / sign_secret）+ webhook 签名算法
+globs:
+  - backend/src/main/java/com/meiyetec/entity/GoogleMapsConfig.java
+  - backend/src/main/java/com/meiyetec/entity/GoogleMapsGeocodeLog.java
+  - backend/src/main/java/com/meiyetec/entity/EcommercePlatform.java
+  - backend/src/main/java/com/meiyetec/googlemaps/**/*.java
+  - backend/src/main/java/com/meiyetec/service/GoogleMapsService.java
+  - backend/src/main/java/com/meiyetec/ecommerce/YouzanEcommerceAdapter.java
+  - backend/src/main/java/com/meiyetec/ecommerce/EcommerceAdapter.java
+  - backend/src/main/java/com/meiyetec/service/EcommerceService.java
+  - backend/src/main/resources/db/sql/migrate_ext_22_google_maps_place_details.sql
+  - frontend/meiyetec-web/src/views/google-maps/**/*.vue
+  - frontend/meiyetec-web/src/views/ecommerce/**/*.vue
+---
+
+# EXT-22 Operational Notes — Google Maps Place Details + Youzan 签名
+
+> 适用范围：
+> - Google Maps **Place Details** 计费接口（`/google-maps/place/details`）+ `google_maps_config.enable_place_details` 计费开关
+> - 有赞开放平台三个新字段：`ecommerce_platform.app_id` / `kdt_id` / `sign_secret`
+> - 有赞 webhook 验签算法（`md5(signSecret + rawBody)`，HTTP 头 `X-Youzan-Sign`）
+>
+> **不**包含：Google Maps Geocoding API（EXT-17，详见 googlemaps 包内注释）+ EcommercePlatform CRUD（EXT-16，已稳定）
+
+---
+
+## 0. 关键约束（改之前必读）
+
+### 0.1 Google Maps Place Details 计费开关
+
+Google Places API **Place Details** 是**付费接口**，SKUs 与定价（美元 / 1000 次）：
+
+| SKU | 单价 | 触发的 fields |
+|---|---|---|
+| Basic Data | $17 | `name / formatted_address / geometry / place_id` |
+| Contact Data | $3 | `formatted_phone_number / international_phone_number / website` |
+| Atmosphere Data | $5 | `rating / user_ratings_total / opening_hours / business_status` |
+
+- 当前 `placeDetails` **一次请求拿 11 个 fields** → 单次调用可能命中 3 个 SKU，**单条成本 ≈ $0.025**
+- 默认 `enable_place_details = 0`（关闭）→ `POST /google-maps/place/details` 返回 `PERMISSION_DENIED`
+- 启用前必须确认 GCP 后台**已开通 Places API（New）+ 绑定结算账号 + 设了预算告警**
+
+### 0.2 `enable_place_details` 写入策略
+
+- 字段位置：`entity/GoogleMapsConfig.enablePlaceDetails`（Integer，1=启用 / 0=默认）
+- 写入入口：`POST /google-maps/config`（`GoogleMapsService.saveConfig`）— 当前**默认填充 `enablePlaceDetails = 0`**，但**前端无对应开关 UI**
+- 读回入口：`GET /google-maps/config` — 当前**返回 `enablePlaceDetails` 字段**，但前端未渲染
+- 启用方式（生产）：**直接 SQL UPDATE `google_maps_config SET enable_place_details = 1 WHERE tenant_id = ?`**（前端缺 UI 时唯一可行路径）
+
+### 0.3 `GoogleMapsGeocodingClient.placeDetails` 行为
+
+```
+请求：POST /google-maps/place/details  body: { placeId, language? }
+返回：{ placeId, name, formattedAddress, formattedPhoneNumber, internationalPhoneNumber,
+        website, openNow, weekdayText, rating, userRatingsTotal,
+        businessStatus, types, lat, lng, elapsedMs, status }
+```
+
+门禁顺序（`GoogleMapsService.placeDetails`）：
+1. `tenantId` + `enabled=1` 配置存在 + `apiKey` 非空 → 否则 `NOT_FOUND`
+2. `enablePlaceDetails == 1` → 否则 **`PERMISSION_DENIED`**（不调 Google）
+3. 调用 `geocodingClient.placeDetails(apiKey, placeId, lang)` → 真实链路
+
+> ⚠️ 步骤 2 是**唯一计费闸门**，前端 / 后端 / 中间人绕过它都能直接打到 Google — 切勿把 step 1+2 合并判断。
+
+### 0.4 有赞 `appKey` ≠ `appId`（常见混淆）
+
+| 字段 | 含义 | 用途 |
+|---|---|---|
+| `appKey` | OAuth2 `client_id` | token 端点鉴权 |
+| `appSecret` | OAuth2 `client_secret` | token 端点鉴权 |
+| **`appId`** | 有赞开放平台 AppID（**区别于 appKey**） | 消息验签标识 / 推送通道 |
+| **`kdtId`** | 店铺 ID | 构造回调 URL：`https://your-domain/webhook/youzan?kdt_id={kdtId}` |
+| **`signSecret`** | 消息签名密钥 | webhook / 回调验签（HTTP 头 `X-Youzan-Sign`） |
+
+- `appKey` / `appSecret` 在 token 端点使用 → 必须填
+- `appId` / `kdtId` / `signSecret` **仅 webhook / 回调场景使用** → token 鉴权不需要
+- 三者**独立**，有赞后台位置不同：开放平台 → 应用 → 「消息推送」页签
+
+### 0.5 有赞 webhook 签名算法
+
+```
+expected = lowercase( hex( md5( signSecret + rawBody ) ) )
+compare expected == X-Youzan-Sign header value   (case-insensitive)
+```
+
+- 实现位置：`YouzanEcommerceAdapter.verifyWebhookSignature(signSecret, rawBody, signature)` — `static` / package-private
+- **关键细节**：
+  - `rawBody` 是**原始字节**的字符串形式（**不是** JSON 反序列化后的对象 — 字段顺序、空白都参与哈希）
+  - 拼接顺序：`signSecret + rawBody`（secret 在前）
+  - 输出 32 位小写 hex
+  - 比较时 `equalsIgnoreCase`（防御性）
+
+### 0.6 `buildWebhookUrl(baseUrl, kdtId)` 工具
+
+```java
+String url = YouzanEcommerceAdapter.buildWebhookUrl("https://meiyetec.com/webhook/youzan", "123456");
+// → "https://meiyetec.com/webhook/youzan?kdt_id=123456"
+```
+
+- 用于**注册到有赞后台**（开发者后台 → 应用 → 消息推送 → 推送 URL）
+
+### 0.7 SQL 迁移兼容（同 EXT-19 约束）
+
+- `migrate_ext_22_google_maps_place_details.sql` 使用 `ADD COLUMN IF NOT EXISTS`（**MySQL 8.0.29+**）
+- 旧版本 MySQL（< 8.0.29）需先 `SHOW COLUMNS FROM google_maps_config LIKE 'enable_place_details'` 检查再 ALTER
+- 同步检查 `ecommerce_platform` 表是否存在（**脚本无 `CREATE TABLE IF NOT EXISTS` 兜底** — 需先确认表存在）
+
+---
+
+## 1. Touchpoints
+
+后端 Google Maps：
+- `entity/GoogleMapsConfig.java` — `enablePlaceDetails` 字段（Integer，1=启用）
+- `entity/GoogleMapsGeocodeLog.java` — 日志（含 `place_id` 列，Place Details 也复用）
+- `googlemaps/GoogleMapsGeocodingClient.java` — `placeDetails(...)` + `PlaceDetailResult` DTO
+- `googlemaps/GoogleMapsClientConfig.java` — Spring Bean 注册
+- `service/GoogleMapsService.java` — `/google-maps/place/details` + `/google-maps/geocode/batch`（admin-only）
+
+后端 Ecommerce：
+- `entity/EcommercePlatform.java` — `appId` / `kdtId` / `signSecret` 三个字段（EXT-22 新增）
+- `ecommerce/EcommerceAdapter.java` — 接口（`AuthResult / ProductPage / OrderPage / HealthStatus`）
+- `ecommerce/YouzanEcommerceAdapter.java` — `verifyWebhookSignature` + `buildWebhookUrl` 工具
+- `ecommerce/MockEcommerceAdapter.java` — dev fallback
+- `service/EcommerceService.java` — `/ecommerce/*`（webhook 接收端见 `controller/YouzanWebhookController.java`）
+
+SQL：
+- `db/sql/migrate_ext_22_google_maps_place_details.sql` — ALTER google_maps_config + ecommerce_platform
+
+前端：
+- `views/google-maps/index.vue` — **未渲染** `enablePlaceDetails` 开关
+- `views/ecommerce/index.vue` — **未渲染** `appId` / `kdtId` / `signSecret` 字段
+
+---
+
+## 2. Re-confirmation Checklist
+
+### Place Details 计费上线前必查
+
+- [ ] GCP 项目已启用 Places API（New）并绑定结算账号
+- [ ] GCP 预算告警已配置（建议月度上限 = `quotaDaily × 30` 的 1.5x）
+- [ ] `enable_place_details = 1` 通过 SQL 直接 UPDATE（前端无 UI 入口）
+- [ ] `/google-maps/place/details` 实际响应中 11 个 fields 都返回（验证 SKU 命中）
+- [ ] `google_maps_geocode_log.durationMs` 写入正常 → 后续可对账 GCP 后台用量
+- [ ] 监控告警：单租户日调用量 > `quotaDaily` 时告警（**目前未实现**）
+
+### 有赞 webhook 上线前必查
+
+- [ ] 有赞开发者后台「消息推送」页签已配置 `push_url = buildWebhookUrl(本服务域名, kdtId)`
+- [ ] 有赞后台保存了 `signSecret`（与 `ecommerce_platform.sign_secret` 一致）
+- [ ] 后端实现 `POST /webhook/youzan` 路由（**✅ 已实现，见 I027**）
+- [ ] 实现中读取**原始 body**（`HttpServletRequest.getInputStream()` / `ContentCachingRequestWrapper`）而非 `@RequestBody String` 自动反序列化（Jackson 重排字段顺序会破坏签名）
+- [ ] 接收端：先调 `YouzanEcommerceAdapter.verifyWebhookSignature` → 不通过直接 401
+- [ ] 签名通过后按 `kdt_id`（query 参数）反查 `EcommercePlatform.platform = 'YOUZAN'` → 不存在 404
+
+### 数据迁移前必查
+
+- [ ] `mysql --version` ≥ 8.0.29（否则手动 `SHOW COLUMNS` 检查）
+- [ ] `google_maps_config` 表已存在（脚本无 `CREATE TABLE IF NOT EXISTS`）
+- [ ] `ecommerce_platform` 表已存在（同上）
+- [ ] ALTER 后查表结构确认 4 个新列到位（`enable_place_details / app_id / kdt_id / sign_secret`）
+
+---
+
+## 3. Endpoints
+
+### Google Maps 新增 / 变更
+
+```
+POST /google-maps/place/details          # ⭐ 计费接口（受 enable_place_details 控制）
+POST /google-maps/geocode/batch          # 批量解析（admin-only，最多 50 条 / 单次）
+POST /google-maps/config                 # 配置（saveConfig 默认 enablePlaceDetails=0）
+GET  /google-maps/config                 # 配置读回（返回 enablePlaceDetails 字段）
+POST /google-maps/health                 # 健康检查（Geocoding 不走 Place Details）
+```
+
+### Ecommerce（**webhook 缺失**）
+
+```
+POST   /ecommerce/platform               # 新建（可写入 appId/kdtId/signSecret，但前端无 UI）
+GET    /ecommerce/platform/list
+POST   /ecommerce/platform/{id}          # 更新
+GET    /ecommerce/platform/{id}/health
+POST   /ecommerce/product/sync/{pid}
+POST   /ecommerce/order/sync/{pid}
+GET    /ecommerce/dashboard
+
+# ✅ 已实现（I027）：
+# POST /webhook/youzan?kdt_id={kdtId}    # controller/YouzanWebhookController.java:76-203+
+```
+
+---
+
+## 4. 字段映射速查
+
+### `google_maps_config`
+
+| 字段 | 类型 | 默认 | 备注 |
+|---|---|---|---|
+| `enable_place_details` | TINYINT(1) | 0 | EXT-22 新增；0=关闭，1=开启 |
+
+### `ecommerce_platform`
+
+| 字段 | 类型 | 备注 |
+|---|---|---|
+| `app_id` | VARCHAR(64) | EXT-22 新增；有赞 AppID（≠ appKey），消息验签标识 |
+| `kdt_id` | VARCHAR(64) | EXT-22 新增；店铺 ID（kdtId），回调 URL 用 |
+| `sign_secret` | VARCHAR(255) | EXT-22 新增；webhook 签名密钥（X-Youzan-Sign） |
+
+### `google_maps_geocode_log`
+
+| 字段 | 类型 | 备注 |
+|---|---|---|
+| `place_id` | VARCHAR(64) | 已存在；Place Details 也写入（可对账 GCP Place API 用量） |
+| `status` | VARCHAR(32) | OK / ZERO_RESULTS / OVER_QUERY_LIMIT / REQUEST_DENIED |
+
+---
+
+## 5. 已知问题 / 限制
+
+- ~~**`verifyWebhookSignature` 是孤儿代码**：~~ **已于 I026 解决**：被 `controller/YouzanWebhookController.java:160` 实际调用（验签失败 → 403）。
+- ~~**webhook 接收端未实现**：~~ **已于 I027 解决**：`controller/YouzanWebhookController.HandleYouzan`（`YouzanWebhookController.java:76-203+`）已完整实现 — ContentCachingRequestWrapper 读原始 body + 平台反查 + `YouzanEcommerceAdapter.verifyWebhookSignature` 验签 + msg_id 幂等去重 + `ecommerce_order` upsert + `webhook_msg_log` 写入。
+- **`buildWebhookUrl` 是孤儿工具**：构造了 push_url 模板，但**没有任何代码把 url 注册到有赞后台**（需要人工到开发者后台填一次）
+- **前端缺 UI**：`google-maps/index.vue` 不显示 `enablePlaceDetails` 开关；`ecommerce/index.vue` 不显示 `appId/kdtId/signSecret` 字段 — 启用 / 配置只能走 SQL 直写
+- **Place Details 无降级**：未配置或关闭时**直接报错**（不像 Geocoding 会降级 mock），业务侧需要做好"灰度开关 + 容错"
+- **批量 geocode 无 audit**：admin-only 但**无 audit log 记录**是谁调了多少条，建议后续加 `geocode_batch_log` 表
+- **SQL 缺 `CREATE TABLE IF NOT EXISTS`**：`migrate_ext_22_*.sql` 没有 google_maps_config / ecommerce_platform 的表存在性兜底（与 EXT-19 不一样），首次部署需要先建表
+- **`getConfig` 端点泄露风险**：`apiKey.substring(length-4)` 仅遮蔽后 4 位 → 整段 39 字符 API key 仍可猜测前 35 位（**生产建议改成完全不回显，前端用 masked input**）
+- **Place Details 字段全拿**：当前 `fields=name,formatted_address,formatted_phone_number,international_phone_number,website,opening_hours,rating,user_ratings_total,business_status,geometry,types` — 11 个字段**全部一次性**，无法按需选择 → 始终命中 Basic+Contact+Atmosphere 三 SKU（成本无法拆分优化）
+- ~~**没有 webhook 重放保护**：~~ **已于 I030 解决（msg_id 幂等层面）**：`controller/YouzanWebhookController.java:188-196` 用 `WebhookMsgLog` 表 + `selectOne(eq source, eq msgId, LIMIT 1)` 做幂等去重，命中直接返回 `duplicate=true + previousStatus`。
+- ⚠️ **I035 时间窗缺失仍 OPEN**：当前去重**无 `created_at > now() - window` 时间窗**（永远不去重历史 msg_id，如上游重发半年前的订单会"幂等成功"但实际应该报警）→ 仍 PARTIAL-NON-BLOCKER，**不得视为已修**。
+
+---
+
+## 6. 业务侧调用模板
+
+```java
+// === Google Maps Place Details（计费）===
+GoogleMapsGeocodingClient.PlaceDetailResult r =
+    googleMapsGeocodingClient.placeDetails(apiKey, placeId, "zh-CN");
+if (!r.ok()) {
+    // status: ZERO_RESULTS / OVER_QUERY_LIMIT / REQUEST_DENIED / NETWORK_ERROR
+    log.warn("[GOOGLE-MAPS] placeDetails failed: status={} err={}", r.getStatus(), r.getErrorMessage());
+}
+```
+
+```java
+// === 有赞 webhook 验签（待实现接收端）===
+@PostMapping("/webhook/youzan")
+public Result<Void> handleYouzanWebhook(
+        HttpServletRequest request,
+        @RequestParam("kdt_id") String kdtId,
+        @RequestHeader("X-Youzan-Sign") String signature) {
+
+    // 1. 用 ContentCachingRequestWrapper 读原始 body（避免 Jackson 重排）
+    String rawBody = readRawBody(request);
+    // 2. 反查平台
+    EcommercePlatform pf = platformMapper.selectOne(... kdtId 匹配 ...);
+    if (pf == null) return Result.error(BizCode.NOT_FOUND, "未配置有赞店铺");
+    // 3. 验签
+    if (!YouzanEcommerceAdapter.verifyWebhookSignature(pf.getSignSecret(), rawBody, signature)) {
+        return Result.error(BizCode.PERMISSION_DENIED, "签名不匹配");
+    }
+    // 4. 解析 + 写库
+    JsonNode payload = jackson.readTree(rawBody);
+    // ... upsert order ...
+    return Result.success();
+}
+```
+
+> ⚠️ `rawBody` 必须在 Jackson 反序列化**之前**缓存，否则字段顺序重排会破坏签名。

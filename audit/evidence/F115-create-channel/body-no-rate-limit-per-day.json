@@ -1,0 +1,8 @@
+{
+  "channelType": "IN_APP",
+  "channelName": "5A-F115-I062-NullEvidence",
+  "provider": "test",
+  "rateLimitPerMin": 25,
+  "retryMax": 2,
+  "retryIntervalSec": 30
+}

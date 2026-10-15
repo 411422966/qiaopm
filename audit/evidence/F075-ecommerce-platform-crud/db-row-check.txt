@@ -1,0 +1,9 @@
+﻿=== F075 DB 行检查 (POST /platform 200 后) ===
+id	tenant_id	platform	shop_name	shop_id	status	created_at
+3	0	YOUZAN	test-shop	test-kdt-5B	ACTIVE	2026-09-14 01:01:50
+2	0	YOUZAN	test-shop	test-kdt-5B	ACTIVE	2026-09-14 01:01:25
+1	0	WEIDIAN	S	WD1	ACTIVE	2026-08-17 00:49:18
+
+--- count ---
+total	max_id
+3	3

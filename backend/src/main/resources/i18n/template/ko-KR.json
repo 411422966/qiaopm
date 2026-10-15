@@ -1,0 +1,18 @@
+{
+  "locale": "ko-KR",
+  "scene": "BOOKING_CONFIRMATION",
+  "subject": "예약 확인",
+  "sms": "${customerName}님, ${serviceName} 예약이 확인되었습니다. 일시: ${bookingDate} ${bookingTime}. 예약 번호: ${bookingNo}. 매장: ${storeName}.",
+  "miniProgram": {
+    "title": "예약 확인 알림",
+    "keyword1": "예약 번호: ${bookingNo}",
+    "keyword2": "서비스: ${serviceName}",
+    "keyword3": "일시: ${bookingDate} ${bookingTime}",
+    "keyword4": "매장: ${storeName}",
+    "keyword5": "연락처: ${storePhone}"
+  },
+  "email": {
+    "subject": "예약 확인 — 예약 번호 ${bookingNo}",
+    "body": "${customerName}님께,\n\n${serviceName} 예약이 성공적으로 확인되었습니다.\n\n【예약 상세】\n예약 번호: ${bookingNo}\n서비스: ${serviceName}\n일시: ${bookingDate} ${bookingTime}\n매장: ${storeName}\n연락처: ${storePhone}\n\n변경 또는 취소는 24시간 전에 알려 주세요. 곧 뵙겠습니다!\n\nMeiye Beauty Tech"
+  }
+}

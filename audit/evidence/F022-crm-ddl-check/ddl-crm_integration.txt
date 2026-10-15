@@ -1,0 +1,35 @@
+﻿mysql : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-b2f88891-8d3f-4d6b-8993-d3486023f71e.ps1:79 字符: 1
++ mysql -h 127.0.0.1 -P 3307 -uroot -proot123456 --default-character-se ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+*************************** 1. row ***************************
+       Table: crm_integration
+Create Table: CREATE TABLE `crm_integration` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `tenant_id` bigint NOT NULL DEFAULT '1',
+  `platform` varchar(64) COLLATE utf8mb4_bin NOT NULL,
+  `app_id` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL,
+  `client_id` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL,
+  `client_secret` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `access_token` varchar(500) COLLATE utf8mb4_bin DEFAULT NULL,
+  `refresh_token` varchar(500) COLLATE utf8mb4_bin DEFAULT NULL,
+  `token_expire_at` datetime DEFAULT NULL,
+  `api_base_url` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `portal_id` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL,
+  `sync_direction` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL,
+  `sync_members` tinyint DEFAULT '0',
+  `sync_orders` tinyint DEFAULT '0',
+  `sync_contacts` tinyint DEFAULT '0',
+  `sync_deals` tinyint DEFAULT '0',
+  `auto_sync` tinyint DEFAULT '0',
+  `last_sync_at` datetime DEFAULT NULL,
+  `status` varchar(16) COLLATE utf8mb4_bin DEFAULT 'ACTIVE',
+  `error_message` varchar(500) COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_tenant` (`tenant_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin

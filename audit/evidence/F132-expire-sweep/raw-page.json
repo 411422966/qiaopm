@@ -1,0 +1,15 @@
+﻿{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "total":  0,
+                 "pages":  0,
+                 "current":  1,
+                 "size":  5,
+                 "records":  [
+
+                             ]
+             },
+    "traceId":  "78a2fa549ec54c49a3e1c05b5bf33373",
+    "timestamp":  "2026-09-16 01:53:15"
+}

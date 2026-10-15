@@ -1,0 +1,9 @@
+﻿{
+    "new_issue":  "I075 NEW - rateLimitCheck brand_id NULL handling - real rate-limit only works when brand_id is set",
+    "task11_start":  "POST /mkt/task/11/start -\u003e 200 successCount=100 failCount=0 (traceId=cc2f84ed02d94f8e8aa781c12f5e156a) - rate_limit_per_min=100 TRIGGERED",
+    "task11_db":  "marketing_touch_task id=11 status=3 target=489 success=100 fail=0 brand_id=1",
+    "config":  "5 mkt_channel_config rows, id=13 SMS brand_id=NULL rate_limit_per_min=3 rate_limit_per_day=5",
+    "task10_start":  "POST /mkt/task/10/start -\u003e 200 successCount=489 failCount=0 (traceId=bddd1429d2a84fb7bdbc1dbd4e47c692) - DESPITE rate_limit_per_day=5 and perDay already 1488",
+    "task10_db":  "marketing_touch_task id=10 status=3 target=489 success=489 fail=0 brand_id=NULL",
+    "root_cause":  "MyBatis-Plus LambdaQueryWrapper.eq(brandId,null) generates SQL \u0027brand_id = NULL\u0027 which never matches -\u003e cfg=null -\u003e rateLimitCheck returns true (skip rate limit)"
+}

@@ -1,0 +1,29 @@
+﻿{
+    "code":  200,
+    "message":  "已更新",
+    "data":  {
+                 "id":  6,
+                 "tenantId":  1,
+                 "brandId":  null,
+                 "channelType":  "SMS",
+                 "channelName":  "5A-SMS-Updated",
+                 "provider":  null,
+                 "configJson":  "{\"smtpHost\":\"smtp.test.com\"}",
+                 "rateLimitPerMin":  60,
+                 "rateLimitPerDay":  5000,
+                 "signature":  null,
+                 "templatePrefix":  null,
+                 "status":  1,
+                 "lastHealthAt":  null,
+                 "lastHealthMsg":  null,
+                 "retryMax":  3,
+                 "retryIntervalSec":  60,
+                 "operatorId":  null,
+                 "operatorName":  null,
+                 "createTime":  "2026-09-16T01:48:19",
+                 "updateTime":  "2026-09-16T01:48:47",
+                 "deleted":  0
+             },
+    "traceId":  "dff44aa817a245a297986f6c4fbefe9b",
+    "timestamp":  "2026-09-16 01:48:47"
+}

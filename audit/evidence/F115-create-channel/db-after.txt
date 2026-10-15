@@ -1,0 +1,9 @@
+﻿mysql : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-f916cd13-9b6e-4a47-b8a1-3516d13df483.ps1:83 字符: 1
++ mysql -h 127.0.0.1 -P 3307 -u root -proot123456 -e "SELECT id, channe ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+id	channel_name	channel_type	rate_limit_per_min	rate_limit_per_day	retry_max	retry_interval_sec	status	deleted	tenant_id
+12	audit-5A-F115-N7	PUSH	60	5000	3	60	1	0	1

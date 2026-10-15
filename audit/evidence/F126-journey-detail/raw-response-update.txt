@@ -1,0 +1,2 @@
+﻿{"code":200,"message":"宸叉洿鏂?,"data":{"id":6,"tenantId":1,"brandId":null,"journeyCode":"audit-5A-F124","journeyName":"audit-5A-F124-UPDATED","journeyType":"WELCOME","description":null,"nodesJson":null,"edgesJson":null,"triggerEvent":"MEMBER_CREATED","triggerFilter":null,"status":1,"publishedAt":null,"enterCount":0,"completeCount":0,"exitCount":0,"operatorId":null,"operatorName":"admin","createTime":"2026-09-16T02:47:32","updateTime":"2026-09-16T02:47:32","deleted":0},"traceId":"180b6d965731484fb6259b7fb28afed0","timestamp":"2026-09-16 02:48:16"}
+HTTP 200

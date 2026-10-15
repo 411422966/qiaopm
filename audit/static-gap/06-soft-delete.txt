@@ -1,0 +1,98 @@
+﻿========================================
+Static Gap Audit -- 06 Soft Delete + Unique Index Conflict Scan
+========================================
+Execution Time: 2026-10-09 00:02:15
+DB Snapshot: D:\QiaoPM\audit\baseline\db-snapshot.sql
+Total Hits: 77
+
+Risk Classification:
+- HIGH: Table has deleted column but UNIQUE KEY excludes it
+  -> Soft delete + re-insert with same key fields will trigger UNIQUE constraint
+- OK: UNIQUE KEY already includes deleted column
+  -> MySQL 8.0+ uses deleted=0 vs deleted=ID to differentiate
+
+Hits:
+
+
+No Table                            UniqueKey                                                                          
+-- -----                            ---------                                                                          
+ 1 ai_ltv_model                     UNIQUE KEY `uk_tenant_code` (`tenant_id`,`model_code`)                             
+ 2 ai_tag_model                     UNIQUE KEY `uk_tenant_code` (`tenant_id`,`model_code`)                             
+ 3 attendance_record                UNIQUE KEY `uk_employee_date` (`employee_id`,`check_date`,`deleted`)               
+ 4 biz_dcep_sub_wallet              UNIQUE KEY `uk_sub_wallet_code` (`sub_wallet_code`)                                
+ 5 biz_iot_device                   UNIQUE KEY `uk_device_code` (`device_code`)                                        
+ 6 biz_overseas_payment             UNIQUE KEY `uk_order_no` (`order_no`)                                              
+ 7 biz_payment_webhook_log          UNIQUE KEY `uk_event_id` (`gateway_event_id`)                                      
+ 8 biz_service_category             UNIQUE KEY `uk_tenant_category` (`tenant_id`,`category_code`)                      
+ 9 biz_service_item                 UNIQUE KEY `uk_tenant_code` (`tenant_id`,`service_code`)                           
+10 biz_service_material             UNIQUE KEY `uk_tenant_service_product` (`tenant_id`,`service_id`,`product_id`)     
+11 biz_spa_scene_mode               UNIQUE KEY `uk_tenant_store_code` (`tenant_id`,`store_id`,`scene_code`,`deleted`)  
+12 biz_technician_level             UNIQUE KEY `uk_level_code` (`level_code`,`deleted`)                                
+13 biz_treatment_phase              UNIQUE KEY `uk_plan_phase` (`plan_id`,`phase_no`)                                  
+14 biz_treatment_plan               UNIQUE KEY `uk_tenant_plan_code` (`tenant_id`,`plan_code`)                         
+15 booking_booking_resource         UNIQUE KEY `uk_booking_resource` (`booking_id`,`resource_id`)                      
+16 booking_resource                 UNIQUE KEY `uk_tenant_code` (`tenant_id`,`resource_code`)                          
+17 booking_resource_link            UNIQUE KEY `uk_res_svc` (`resource_id`,`service_item_id`)                          
+18 booking_waitlist                 UNIQUE KEY `uk_tenant_waitlist` (`tenant_id`,`waitlist_no`)                        
+19 commission_record                UNIQUE KEY `uk_comm_source_item` (`source_type`,`source_item_id`)                  
+20 commission_reversal              UNIQUE KEY `uk_tenant_reversal` (`tenant_id`,`reversal_no`)                        
+21 commission_rule_version          UNIQUE KEY `uk_rule_version` (`rule_id`,`version_no`)                              
+22 commission_salary                UNIQUE KEY `uk_comm_salary_employee_month` (`tenant_id`,`store_id`,`employee_id`,`s
+                                    alary_month`)                                                                      
+23 commission_settlement            UNIQUE KEY `uk_settlement_no` (`settlement_no`)                                    
+24 commission_settlement_batch      UNIQUE KEY `uk_tenant_batch` (`tenant_id`,`batch_no`)                              
+25 commission_settlement_batch_item UNIQUE KEY `uk_batch_emp` (`batch_id`,`employee_id`)                               
+26 commission_settlement_record     UNIQUE KEY `uk_settlement_commission` (`settlement_id`,`commission_record_id`)     
+27 crm_complaint_ticket             UNIQUE KEY `uk_tenant_ticket` (`tenant_id`,`ticket_no`)                            
+28 crm_follow_up_plan               UNIQUE KEY `uk_tenant_code` (`tenant_id`,`plan_code`)                              
+29 crm_follow_up_task               UNIQUE KEY `uk_tenant_task` (`tenant_id`,`task_no`)                                
+30 crm_member                       UNIQUE KEY `uk_phone` (`phone`,`deleted`)                                          
+31 crm_member                       UNIQUE KEY `uk_member_no` (`member_no`,`deleted`)                                  
+32 crm_member_profile               UNIQUE KEY `uk_member` (`member_id`,`deleted`)                                     
+33 crm_member_store                 UNIQUE KEY `uk_member_store` (`member_id`,`store_id`)                              
+34 crm_member_tag                   UNIQUE KEY `uk_tag_name` (`tag_name`,`deleted`)                                    
+35 crm_member_tag_value             UNIQUE KEY `uk_member_tag` (`tenant_id`,`member_id`,`tag_code`)                    
+36 crm_package                      UNIQUE KEY `uk_code` (`code`,`deleted`)                                            
+37 crm_package_order                UNIQUE KEY `uk_order_no` (`order_no`,`deleted`)                                    
+38 crm_review_template              UNIQUE KEY `uk_tenant_code` (`tenant_id`,`template_code`)                          
+39 crm_tenant                       UNIQUE KEY `uk_tenant_code` (`tenant_code`)                                        
+40 crm_wallet                       UNIQUE KEY `uk_member_tenant` (`member_id`,`tenant_id`)                            
+41 marketing_touch_task             UNIQUE KEY `uk_tenant_task` (`tenant_id`,`task_no`)                                
+42 mem_level                        UNIQUE KEY `level_code` (`level_code`)                                             
+43 member_invite_code               UNIQUE KEY `uk_invite_code` (`invite_code`)                                        
+44 member_lifecycle_log             UNIQUE KEY `uk_rule_member_date` (`rule_id`,`member_id`,`trigger_date`,`deleted`)  
+45 member_lifecycle_rule            UNIQUE KEY `uk_tenant_rule_code` (`tenant_id`,`rule_code`,`deleted`)               
+46 mh_consent_sign_link             UNIQUE KEY `token` (`token`)                                                       
+47 mh_consent_signature             UNIQUE KEY `uk_signature_id` (`signature_id`)                                      
+48 mh_consent_template              UNIQUE KEY `uk_tenant_code` (`tenant_id`,`template_code`,`version`)                
+49 mh_drug_device                   UNIQUE KEY `uk_tenant_code` (`tenant_id`,`item_code`)                              
+50 mh_drug_device_batch             UNIQUE KEY `uk_drug_batch` (`drug_device_id`,`batch_no`)                           
+51 mh_visual_archive                UNIQUE KEY `uk_tenant_code` (`tenant_id`,`archive_code`)                           
+52 mkt_brand                        UNIQUE KEY `uk_tenant_code` (`tenant_id`,`brand_code`)                             
+53 mkt_channel_config               UNIQUE KEY `uk_tenant_type_brand` (`tenant_id`,`channel_type`,`brand_id`,`deleted`)
+54 mkt_channel_template             UNIQUE KEY `uk_tenant_code` (`tenant_id`,`template_code`)                          
+55 mkt_coupon                       UNIQUE KEY `uk_tenant_code` (`tenant_id`,`coupon_code`)                            
+56 mkt_coupon_batch                 UNIQUE KEY `uk_tenant_batch` (`tenant_id`,`batch_no`)                              
+57 mkt_dynamic_pricing_rule         UNIQUE KEY `uk_tenant_code` (`tenant_id`,`rule_code`)                              
+58 mkt_journey                      UNIQUE KEY `uk_tenant_code` (`tenant_id`,`journey_code`)                           
+59 mkt_journey_trigger              UNIQUE KEY `uk_tenant_code` (`tenant_id`,`trigger_code`,`deleted`)                 
+60 mkt_promotion                    UNIQUE KEY `uk_tenant_code` (`tenant_id`,`promotion_code`)                         
+61 mkt_segment                      UNIQUE KEY `uk_tenant_code` (`tenant_id`,`segment_code`)                           
+62 pay_dcep_channel                 UNIQUE KEY `uk_tenant_code` (`tenant_id`,`channel_code`)                           
+63 pay_dcep_order                   UNIQUE KEY `uk_tenant_dcep_no` (`tenant_id`,`dcep_order_no`)                       
+64 pay_dcep_order                   UNIQUE KEY `uk_biz_order` (`biz_order_id`)                                         
+65 pos_employee                     UNIQUE KEY `employee_code` (`employee_code`)                                       
+66 pos_employee                     UNIQUE KEY `phone` (`phone`)                                                       
+67 pos_order                        UNIQUE KEY `order_no` (`order_no`)                                                 
+68 pos_payment                      UNIQUE KEY `payment_no` (`payment_no`)                                             
+69 pos_store                        UNIQUE KEY `store_code` (`store_code`)                                             
+70 pricing_experiment               UNIQUE KEY `uk_tenant_exp_key` (`tenant_id`,`exp_key`,`deleted`)                   
+71 report_export_task               UNIQUE KEY `uk_tenant_task` (`tenant_id`,`task_no`)                                
+72 report_metric_caliber            UNIQUE KEY `uk_metric_version` (`metric_key`,`version`)                            
+73 stock_check                      UNIQUE KEY `check_no` (`check_no`)                                                 
+74 stock_product                    UNIQUE KEY `product_code` (`product_code`)                                         
+75 sys_permission                   UNIQUE KEY `permission_code` (`permission_code`)                                   
+76 sys_role                         UNIQUE KEY `role_code` (`role_code`)                                               
+77 sys_user                         UNIQUE KEY `username` (`username`)                                                 
+
+

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meiyetec.mapper.CouponGrantMapper">
+
+    <select id="selectMemberCoupons" resultType="com.meiyetec.entity.CouponGrant">
+        SELECT g.*, c.name AS couponName
+        FROM market_coupon_grant g
+        LEFT JOIN market_coupon c ON g.coupon_id = c.id
+        WHERE g.member_id = #{memberId}
+        <if test="status != null">
+          AND g.status = #{status}
+        </if>
+        ORDER BY g.created_at DESC
+    </select>
+
+    <select id="selectMemberCouponsByTenant" resultType="com.meiyetec.entity.CouponGrant">
+        SELECT g.*, c.name AS couponName
+        FROM market_coupon_grant g
+        LEFT JOIN market_coupon c ON g.coupon_id = c.id
+        WHERE g.member_id = #{memberId} AND g.tenant_id = #{tenantId}
+        <if test="status != null">
+          AND g.status = #{status}
+        </if>
+        ORDER BY g.created_at DESC
+    </select>
+
+    <select id="countUsed" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM market_coupon_grant
+        WHERE coupon_id = #{couponId} AND status = 2
+    </select>
+
+    <select id="countGranted" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM market_coupon_grant
+        WHERE coupon_id = #{couponId}
+    </select>
+
+    <!--
+        B-4 · 原子发放优惠券。
+
+        原子性保证：
+        1. NOT EXISTS(member, coupon)：每人限领 perLimit 在 INSERT 前由调用方检查，
+           此处用 NOT EXISTS 防重复发放（幂等兜底）。
+        2. totalCount 子查询：总量超发保护，INSERT WHERE 条件内检查。
+
+        受影响行数：
+          mySQL > 0 → 插入成功
+          mySQL = 0 AND row exists → 该会员已有记录（幂等命中）
+          mySQL = 0 AND no row → 总量已满（coupon 已发完）
+
+        注意：每人限领 perLimit 检查仍在 Controller 层先做（返回友好错误码），
+        此处的 NOT EXISTS 是幂等兜底。
+    -->
+    <insert id="atomicGrantCoupon">
+        INSERT INTO market_coupon_grant
+            (coupon_id, member_id, tenant_id, code, status, source, expire_time)
+        SELECT
+            #{couponId},
+            #{memberId},
+            #{tenantId},
+            #{code},
+            1,
+            #{source},
+            #{expireTime}
+        FROM DUAL
+        WHERE NOT EXISTS (
+            SELECT 1 FROM market_coupon_grant
+            WHERE coupon_id = #{couponId}
+              AND member_id = #{memberId}
+              AND tenant_id = #{tenantId}
+              AND status != 3
+        )
+          AND (
+            SELECT COUNT(*)
+            FROM market_coupon_grant
+            WHERE coupon_id = #{couponId}
+              AND tenant_id = #{tenantId}
+              AND status != 3
+          ) &lt; (
+            SELECT total_count
+            FROM market_coupon
+            WHERE id = #{couponId}
+          )
+    </insert>
+
+<!--
+        B-5 · 原子核销优惠券（CAS version + status 双重守卫）。
+
+        守卫条件：
+        1. id = #{grantId}              — 目标 grant 存在
+        2. status = 1                   — 必须处于"未使用"状态
+        3. expire_time > NOW()          — 未过期（数据库时间）
+        4. version = #{version}         — 乐观锁版本号匹配
+
+        返回值：
+        1 = 核销成功（status 变为 2，version + 1）
+        0 = CAS 失败（status 已变更 / 已过期 / version 已变更）
+    -->
+    <update id="casUseCoupon">
+        UPDATE market_coupon_grant
+        SET status = 2,
+            order_id = #{orderId},
+            used_at = CURRENT_TIMESTAMP,
+            version = version + 1
+        WHERE id = #{grantId}
+          AND status = 1
+          AND expire_time &gt; NOW()
+          AND version = #{version}
+    </update>
+
+    <!--
+        P0-MONEY-005: 优惠券发放改条件 UPDATE，防止并发超发。
+
+        原子性保证：
+        1. market_coupon 子查询：检查总量未满（total_count > 已发放数）
+        2. market_coupon_grant 子查询（每人限领）：per_limit=0 表示不限；
+           否则检查该会员已领数 < per_limit
+
+        受影响行数：
+          1 = UPDATE 成功（issued_count +1）
+          0 = 条件不满足（总量满 或 每人已达限领上限）
+    -->
+    <update id="atomicGrant">
+        UPDATE market_coupon c
+        JOIN (
+            SELECT id FROM market_coupon
+            WHERE id = #{couponId}
+              AND status = 1
+              AND (start_time IS NULL OR start_time &lt;= NOW())
+              AND (end_time IS NULL OR end_time &gt;= NOW())
+              AND total_count > (
+                  SELECT COUNT(*) FROM market_coupon_grant
+                  WHERE coupon_id = #{couponId} AND deleted = 0
+              )
+              AND (
+                  per_limit IS NULL OR per_limit = 0
+                  OR (
+                      SELECT COUNT(*) FROM market_coupon_grant
+                      WHERE coupon_id = #{couponId}
+                        AND member_id = #{memberId}
+                        AND deleted = 0
+                  ) &lt; per_limit
+              )
+            LIMIT 1
+        ) sub ON c.id = sub.id
+        SET c.issued_count = c.issued_count + 1
+        WHERE c.id = #{couponId}
+    </update>
+
+</mapper>

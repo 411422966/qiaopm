@@ -1,0 +1,11 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+marker
+f136_init
+total_logs
+2957
+recent_min_logs
+0
+today_logs
+1488
+id	channel_type	channel_name	rate_limit_per_min	rate_limit_per_day
+13	SMS	5B-rate-test-low	3	5

@@ -1,0 +1,2 @@
+﻿{"code":200,"message":"鎿嶄綔鎴愬姛","data":[{"channelType":"SMS","sent":490,"converted":3,"reach":1472}],"traceId":"2aacb5c090c94b06a5902a024d331ee3","timestamp":"2026-09-16 02:44:23"}
+HTTP 200

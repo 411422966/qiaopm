@@ -1,0 +1,19 @@
+﻿=== F139: 6 活跃调用点 grep（marketActivityMapper / activityMapper / MarketActivityMapper）===
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\MarketActivityServiceImpl.java:10  import com.meiyetec.mapper.MarketActivityMapper;
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\MarketActivityServiceImpl.java:28  private MarketActivityMapper activityMapper;
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\MarketActivityServiceImpl.java:43  IPage<MarketActivity> result = activityMapper.selectPage(page, q);
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\MarketActivityServiceImpl.java:73  long total = activityMapper.selectCount(q);
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\MarketActivityServiceImpl.java:75  long active = activityMapper.selectCount(q);
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\MarketActivityServiceImpl.java:110  activityMapper.insert(a);
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\MarketActivityServiceImpl.java:122  activityMapper.updateById(a);
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\MarketActivityServiceImpl.java:128  activityMapper.deleteById(id);
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\MarketActivityServiceImpl.java:140  activityMapper.updateById(a);
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\MarketActivityServiceImpl.java:169  activityMapper.insert(copy);
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\MarketActivityServiceImpl.java:181  MarketActivity a = activityMapper.selectById(id);
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\MarketActivityServiceImpl.java:224  MarketActivity a = activityMapper.selectById(id);
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\BusinessPolicyDispatchServiceImpl.java:47  private final MarketActivityMapper marketActivityMapper;
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\BusinessPolicyDispatchServiceImpl.java:264  MarketActivity src = marketActivityMapper.selectById(d.getSourceId());
+D:\QiaoPM\backend\src\main\java\com\meiyetec\service\impl\BusinessPolicyDispatchServiceImpl.java:277  marketActivityMapper.insert(clone);
+D:\QiaoPM\backend\src\main\java\com\meiyetec\controller\MktEffectController.java:15  import com.meiyetec.mapper.MarketActivityMapper;
+D:\QiaoPM\backend\src\main\java\com\meiyetec\controller\MktEffectController.java:49  private final MarketActivityMapper activityMapper;        // 旧 market_activity
+D:\QiaoPM\backend\src\main\java\com\meiyetec\controller\MktEffectController.java:72  long totalActivities = activityMapper.selectCount(actW);

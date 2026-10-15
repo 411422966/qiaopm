@@ -1,0 +1,5 @@
+﻿mysql: [Warning] Using a password on the command line interface can be insecure.
+id	status	last_sync_at	updated_at
+2	ACTIVE	2026-09-12 23:13:08	2026-09-12 23:13:08
+sync_log_total
+0

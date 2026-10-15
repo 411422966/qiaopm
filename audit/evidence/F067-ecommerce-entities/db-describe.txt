@@ -1,0 +1,77 @@
+﻿=== F067 Ecommerce 实体 DESCRIBE ===
+
+--- ecommerce_order ---
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+tenant_id	bigint	YES		0	
+platform	varchar(64)	YES		NULL	
+external_order_id	varchar(64)	YES		NULL	
+local_order_id	bigint	YES		NULL	
+order_no	varchar(64)	YES		NULL	
+buyer_name	varchar(128)	YES		NULL	
+buyer_phone	varchar(32)	YES		NULL	
+amount	decimal(18,2)	YES		NULL	
+shipping_fee	decimal(18,2)	YES		NULL	
+total_amount	decimal(18,2)	YES		NULL	
+status	varchar(32)	YES		NULL	
+address	varchar(500)	YES		NULL	
+tracking_no	varchar(64)	YES		NULL	
+shipping_status	varchar(32)	YES		NULL	
+items_json	text	YES		NULL	
+raw_payload	text	YES		NULL	
+order_time	datetime	YES		NULL	
+created_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+updated_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+---
+---
+Tables_in_meiyetec (ecommerce_order)
+ecommerce_order
+---
+---
+row_count
+0
+
+--- ecommerce_product ---
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+tenant_id	bigint	YES		0	
+platform	varchar(64)	YES		NULL	
+external_product_id	varchar(64)	YES		NULL	
+local_product_id	bigint	YES		NULL	
+product_name	varchar(255)	YES		NULL	
+sku	varchar(64)	YES		NULL	
+price	decimal(18,2)	YES		NULL	
+stock	int	YES		NULL	
+status	varchar(32)	YES		NULL	
+last_sync_at	datetime	YES		NULL	
+created_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+updated_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+---
+---
+Tables_in_meiyetec (ecommerce_product)
+ecommerce_product
+---
+---
+row_count
+0
+
+--- ecommerce_sync_log ---
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+tenant_id	bigint	YES	MUL	NULL	
+platform	varchar(64)	YES		NULL	
+sync_type	varchar(32)	YES		NULL	
+success_count	int	YES		0	
+fail_count	int	YES		0	
+duration_ms	int	YES		NULL	
+status	varchar(32)	YES		NULL	
+error_message	varchar(500)	YES		NULL	
+created_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+---
+---
+Tables_in_meiyetec (ecommerce_sync_log)
+ecommerce_sync_log
+---
+---
+row_count
+0

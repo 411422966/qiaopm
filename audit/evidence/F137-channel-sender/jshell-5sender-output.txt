@@ -1,0 +1,29 @@
+=== F137 单元测试 ===
+[SMS render] in : 您好 ${customerName}，您的预约时间为 ${bookingDate}，单号 ${bookingNo}。
+[SMS render] out: 您好 张三，您的预约时间为 2026-09-16，单号 BK-5B-001。
+[SMS render] expect customerName=张三; actual=true
+[SMS render] expect bookingDate=2026-09-16; actual=true
+
+[IN_APP] healthCheck 走 SELECT 1 FROM member_message LIMIT 1（不依赖 sender.channelType）
+[IN_APP] 真实链路需 Spring 上下文（mapper 注入），5B 仅验证算法路径 + channelType 一致
+
+[EMAIL] 凭据缺失 → demo 模式 (log.info '[EMAIL-DEMO]')
+[EMAIL] 真实链路需 spring.mail.host + 租户 SMTP config — 5B UNVERIFIED（沿用 EXT-19 D10）
+
+[MINI_PROGRAM] 凭据缺失 → demo 模式 (log.info '[MP-DEMO]')
+[MINI_PROGRAM] 真实链路需 appId/appSecret — 5B UNVERIFIED
+
+[WECHAT_OA] 凭据缺失 → demo 模式 (log.info '[MP-OA-DEMO]')
+[WECHAT_OA] 真实链路需 appId/appSecret — 5B UNVERIFIED
+
+=== I039 N12 别名漂移 (5 sender vs DB) ===
+Sender channelType: [SMS, EMAIL, IN_APP, MINI_PROGRAM, WECHAT_OFFICIAL_ACCOUNT]
+DB channel_type   : [IN_APP, MINI_PROGRAM, MP, PUSH, SMS]
+Sender-only (DB 无配置): [EMAIL, WECHAT_OFFICIAL_ACCOUNT] → 调用方传这些值返回 sender，但 DB 无数据
+DB-only (Sender 未注册): [MP, PUSH] → 调用方传这些值 → getSender 返 null → I061 NPE
+Common (一致)        : [SMS, IN_APP, MINI_PROGRAM]
+
+=== F137 结论 ===
+SMS 算法链路: VERIFIED (render 单元测试通过)
+IN_APP 算法链路: VERIFIED (healthCheck SQL 已读 member_message，Phase 5A F118 evidence)
+EMAIL / MINI_PROGRAM / WECHAT_OFFICIAL_ACCOUNT 真实链路: UNVERIFIED (凭据缺失，demo 降级)

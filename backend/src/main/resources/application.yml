@@ -1,0 +1,330 @@
+spring:
+  application:
+    name: meiyetec-api
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3307/meiyetec?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_bin&serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:root123456}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # ============================================================
+  # Flyway 数据库迁移（启动期自动 apply db/migration/V*.sql）
+  # baseline-on-migrate: true → 已存在 schema 的库自动 baseline（不破坏既有表）
+  # baseline-version: 0 → 把当前 DB 状态标记为 version 0，之后从 V1 开始 apply
+  # encoding: UTF-8 → 显式声明 SQL 文件编码（避免依赖 JVM defaultCharset=GBK）
+  # ============================================================
+  flyway:
+    # 2026-10-15 I010 修复（Gate 3 批次 2.1）：V1 加 UTF-8 BOM + spring.flyway.encoding=UTF-8 + JVM -Dfile.encoding=UTF-8
+    # 关闭 Flyway 的临时方案已移除（见 audit/issues/I010-flyway-v1-encoding.md）
+    # 生产部署务必保留 encoding: UTF-8 + JVM -Dfile.encoding=UTF-8 双保险
+    enabled: ${FLYWAY_ENABLED:true}
+    locations: classpath:db/migration
+    encoding: UTF-8                  # 显式声明 SQL 文件编码，绕开 Windows GBK defaultCharset
+    # 2026-10-15 I010 fix follow-up：V1 文件本身是 GBK mojibake，UTF-8 解码后 COMMENT 单引号不闭合，
+    # apply 会报 SQL syntax error。必须 baseline-version ≥ V1.version=1 让 V1 当作"已 apply"跳过。
+    # 长期方案：审计结束后重建干净的 V1（CREATE TABLE IF NOT EXISTS 全保留 + 注释/默认值全用 ASCII），
+    # 再回 baseline-version: 0 让 V1 真正生效——见 audit/issues/I010-baseline-version-conflict.md
+    baseline-on-migrate: true
+    baseline-version: 2
+    baseline-description: "pre-flyway schema (legacy init_*/migrate_* scripts, manually applied; V1 file is mojibake GBK, must skip via baseline-version>V1.version)"
+    validate-on-migrate: true
+    table: flyway_schema_history
+    clean-disabled: true    # 禁止 flyway clean（防误删全库）
+    placeholder-replacement: false
+
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      database: 0
+      timeout: 3000ms
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.meiyetec.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+# ====================================================================
+# Kiosk 告警 / 运营阈值配置（EXT-P2）
+# ====================================================================
+kiosk:
+  alert:
+    enabled:              ${KIOSK_ALERT_ENABLED:true}
+    info-minutes:         ${KIOSK_ALERT_INFO_MIN:5}
+    warn-minutes:         ${KIOSK_ALERT_WARN_MIN:15}
+    critical-minutes:     ${KIOSK_ALERT_CRITICAL_MIN:30}
+    scan-interval-ms:     ${KIOSK_ALERT_SCAN_MS:60000}
+    push-enabled:         ${KIOSK_ALERT_PUSH_ENABLED:true}
+    push-channel:         ${KIOSK_ALERT_PUSH_CHANNEL:IN_APP}
+    cooldown-minutes:     ${KIOSK_ALERT_COOLDOWN_MIN:30}
+    daily-target-default: ${KIOSK_DAILY_TARGET_DEFAULT:80}
+  enabled: true
+
+# JWT 配置
+# 【重要】生产环境必须设置环境变量 JWT_SECRET
+# - 未设置时使用 DEFAULT_DEV_SECRET（仅限本地开发，不要用于生产！）
+# - 启动时会校验密钥强度：长度 < 32 字节 或 命中已知弱值模式 → 启动失败
+# - 本仓库 application.yml 已写入一个 64 字节 base64 随机密钥（dev 用）
+# - 生产请通过环境变量 JWT_SECRET 覆盖
+jwt:
+  secret: ${JWT_SECRET:ZHUb4jGjny2mnb3LACH0hJ99eDhrJC/mVPLMjOKKsvTXeKu/b1TLEhf4jrxUZXKRPnx7vtdYsEBFNY4/1xNLHA==}
+  expiration: ${JWT_EXPIRATION:86400000}  # 24小时，单位ms
+
+# P0-MONEY-001：DCEP 环境配置
+# - dev    : Mock 模式（默认），允许 mockPrepay + MOCK- 前缀签名（开发/演示用）
+# - prod   : 严格生产模式，禁止 Mock 行为，必须对接真实银行 SDK
+# - sandbox: 沙箱模式（暂未实现，等价于 prod + 待对接）
+# 生产部署务必改为 prod，否则会触发 Mock 行为拦截（fail-safe）
+app:
+  dcep:
+    mode: ${APP_DCEP_MODE:dev}
+    # =========================================================================
+    # AI 视觉推理 Provider 配置（M17 视觉档案）
+    # =========================================================================
+    # 优先级规则（由 CvModelClient 按序尝试）：
+    #   1. 如果配置了 secret-id/secret-key → 走腾讯云（TC3-HMAC-SHA256 签名）
+    #   2. 否则如果配置了 access-key-id/access-key-secret → 走阿里云（HMAC-SHA1 签名）
+    #   3. 否则如果配置了非 localhost 的 endpoint → 走本地推理服务
+    #   4. 否则全部走 Mock（isConfigured() = false）
+    #
+    # ⚠️ 凭证不得写死在 YAML 文件中。生产务必从环境变量注入：
+    #    export APP_DCEP_AI_TENCENT_SECRET_ID=AKIDxxx
+    #    export APP_DCEP_AI_TENCENT_SECRET_KEY=xxxxxxxx
+    #    export APP_DCEP_AI_ALIYUN_ACCESS_KEY_ID=xxxxx
+    #    export APP_DCEP_AI_ALIYUN_ACCESS_KEY_SECRET=xxxxx
+    #    export APP_DCEP_AI_LOCAL_ENDPOINT=http://your-gpu-server:8081/infer
+    # =========================================================================
+    ai:
+      tencent:
+        # 腾讯云 SecretId（从 https://console.cloud.tencent.com/cam/capi 获取）
+        secret-id: ${APP_DCEP_AI_TENCENT_SECRET_ID:}
+        # 腾讯云 SecretKey
+        secret-key: ${APP_DCEP_AI_TENCENT_SECRET_KEY:}
+        # 腾讯云 AppId（数字，如 125xxxxxxx）
+        app-id: ${APP_DCEP_AI_TENCENT_APP_ID:}
+        # 地域（默认 ap-guangzhou）
+        region: ${APP_DCEP_AI_TENCENT_REGION:ap-guangzhou}
+      aliyun:
+        # 阿里云 AccessKeyId（从 https://ram.console.aliyun.com/manage/ak 获取）
+        access-key-id: ${APP_DCEP_AI_ALIYUN_ACCESS_KEY_ID:}
+        # 阿里云 AccessKeySecret
+        access-key-secret: ${APP_DCEP_AI_ALIYUN_ACCESS_KEY_SECRET:}
+        # 地域（默认 cn-shanghai）
+        region-id: ${APP_DCEP_AI_ALIYUN_REGION_ID:cn-shanghai}
+      local:
+        # 本地推理服务地址（TensorFlow Serving / TorchServe / ONNX Runtime）
+        # 设置为非默认值（如 http://192.168.1.100:8081/infer）即可激活
+        # 注意：设为 http://localhost:8081/infer 等同于未配置（走 Mock）
+        endpoint: ${APP_DCEP_AI_LOCAL_ENDPOINT:}
+        # 推理超时（毫秒），默认 5000
+        timeout-ms: ${APP_DCEP_AI_LOCAL_TIMEOUT_MS:5000}
+  id-generator:
+    worker-id: ${APP_ID_GENERATOR_WORKER_ID:0}
+    datacenter-id: ${APP_ID_GENERATOR_DATACENTER_ID:0}
+
+# AI-006：灰度发布 — 评估器后端
+# default: IN_MEMORY（本地缓存 + 5s 轮询实现多实例热加载，无需外部依赖）
+# 开启 LaunchDarkly：feature.launchdarkly.enabled=true 并设置 sdk-key
+#   - sdk-key 在 https://app.launchdarkly.com 申请（生产环境）
+#   - 启用后 LD SDK 通过 SSE 流接收 flag 变更，开关变更毫秒级生效
+feature:
+  launchdarkly:
+    enabled: false
+    # SDK Key（生产：从环境变量 LAUNCHDARKLY_SDK_KEY 注入，永不硬编码）
+    sdk-key: ${LAUNCHDARKLY_SDK_KEY:}
+    # true=使用 SSE 流订阅（推荐，毫秒级热更新）；false=轮询模式（poll-interval-ms 间隔）
+    streaming: true
+    # 启动阻塞等待首次 flag 拉取完成的时间（ms）。0=不等待（异步，后续请求短暂降级 DB）
+    init-timeout-ms: 5000
+    # 非 streaming 模式时的轮询间隔（ms）。streaming=true 时忽略。
+    poll-interval-ms: 30000
+    # Offline 模式：不连接 LD 服务，所有 evaluate 走 feature_flag DB fallback
+    # 用于：本地开发 / 无外网环境 / 迁移过渡期
+    offline: false
+  flag:
+    poll-interval-ms: 5000   # IN_MEMORY 模式：扫描 DB update_time 的轮询间隔
+
+# FISCAL-001：财税开票网关
+# default: mock（本地无凭据开发环境，所有接口走内存模拟，立即返回）
+# 生产或联调百望沙箱：fiscal.mode=baiwang + fiscal_config 表里 enabled=1
+fiscal:
+  mode: ${FISCAL_MODE:mock}
+  connect-timeout-ms: 5000
+  read-timeout-ms: 15000
+  retry-max: 2
+
+# EXT-15：CRM 同步排程
+# tick-interval-ms：调度器扫描频率（每 5 分钟过一遍所有集成，到期才真跑）
+# 每条集成的 syncWindowMinutes 决定自己的增量窗口（默认 30 分钟）
+crm:
+  sync:
+    tick-interval-ms: 300000   # 5 分钟
+
+# EXT-09：插件运行时（pf4j）
+# plugins-root：插件 jar 存放根目录，扫描 layout: ${plugins-root}/{pluginCode}/{version}/*.jar
+#               默认相对路径 ./plugins（生产建议改为绝对路径或外挂卷）
+# enabled：是否启用插件运行时；false 时 PluginRuntimeService 暴露 REST 但不实际 load 任何 jar
+# auto-load-on-startup：启动时自动 load + enable 所有已发现的插件
+plugin:
+  runtime:
+    enabled: ${PLUGIN_RUNTIME_ENABLED:true}
+    plugins-root: ${PLUGIN_PLUGINS_ROOT:./plugins}
+    auto-load-on-startup: ${PLUGIN_AUTOLOAD:true}
+
+# EXT-19：邮件渠道（SMTP）
+# host/port/username/password/from 由各租户在 mkt_channel_config.configJson 配置；
+# 以下 application.yml 配置仅作为 fallback（DevOps 全局默认）。
+#   spring.mail.host=smtp.example.com
+#   spring.mail.port=465
+#   spring.mail.username=noreply@example.com
+#   spring.mail.password=********
+#   spring.mail.properties.mail.smtp.ssl.enable=true
+# fields：charset=UTF-8, MimeMessageHelper 支持 HTML
+mail:
+  default-charset: UTF-8
+  connection-timeout-ms: 5000
+  timeout-ms: 15000
+  write-timeout-ms: 15000
+
+# P2-16：BNPL 先买后付 — 接入 Klarna / Afterpay 真实 API
+# 未配置任何凭据时系统自动降级为 Mock 模式（保持当前行为不变）
+# 真实接入请在以下占位符填入平台提供的凭证
+bnpl:
+  klarna:
+    base-url: ${KLARNA_BASE_URL:}          # 生产: https://api.klarna.com（EU）或 https://api-na.klarna.com（US）
+    client-id: ${KLARNA_CLIENT_ID:}
+    client-secret: ${KLARNA_CLIENT_SECRET:}
+    merchant-id: ${KLARNA_MERCHANT_ID:}
+    test-mode: ${KLARNA_TEST_MODE:true}    # 生产改为 false
+  afterpay:
+    base-url: ${AFTERPAY_BASE_URL:}        # 生产: https://api.afterpay.com
+    merchant-id: ${AFTERPAY_MERCHANT_ID:}
+    secret-key: ${AFTERPAY_SECRET_KEY:}
+    public-key: ${AFTERPAY_PUBLIC_KEY:}    # 用于 webhook RSA 验签
+    test-mode: ${AFTERPAY_TEST_MODE:true}  # 生产改为 false
+
+# EXT-P0-1：国内支付（微信支付 V3 / 支付宝 V4 / 银联云闪付）
+# 沙箱模式（默认）：凭据未配置 → 自动走 mock 链路
+# 生产模式：填入真实凭据 → 走真实 SDK
+# 生产凭据必须通过环境变量注入，禁止写死在 YAML
+app-cn-pay:
+  # sandbox / production
+  env-mode: ${APP_CN_PAY_ENV_MODE:sandbox}
+  notify-url: ${APP_CN_PAY_NOTIFY_URL:https://dev.meiyetec.com/domestic/webhook}
+  wechat:
+    app-id: ${APP_CN_PAY_WECHAT_APP_ID:wx0000000000000000}
+    mch-id: ${APP_CN_PAY_WECHAT_MCH_ID:PLACEHOLDER_MCH_ID}
+    api-v3-key: ${APP_CN_PAY_WECHAT_API_V3_KEY:PLACEHOLDER_API_V3_KEY_32_BYTES_LONG_PAD}
+    private-key-path: ${APP_CN_PAY_WECHAT_KEY_PATH:classpath:keys/wechat/apiclient_key.pem}
+    cert-serial-no: ${APP_CN_PAY_WECHAT_CERT_SERIAL:PLACEHOLDER_CERT_SERIAL}
+    cert-path: ${APP_CN_PAY_WECHAT_CERT_PATH:classpath:keys/wechat/apiclient_cert.pem}
+  alipay:
+    app-id: ${APP_CN_PAY_ALIPAY_APP_ID:2021000000000000}
+    private-key: ${APP_CN_PAY_ALIPAY_PRIVATE_KEY:PLACEHOLDER_PRIVATE_KEY}
+    alipay-public-key: ${APP_CN_PAY_ALIPAY_PUBLIC_KEY:PLACEHOLDER_PUBLIC_KEY}
+    sign-type: ${APP_CN_PAY_ALIPAY_SIGN_TYPE:RSA2}
+    gateway: ${APP_CN_PAY_ALIPAY_GATEWAY:https://openapi.alipaydev.com/gateway.do}
+  union:
+    enabled: ${APP_CN_PAY_UNION_ENABLED:false}
+    mer-id: ${APP_CN_PAY_UNION_MER_ID:}
+    sign-cert-path: ${APP_CN_PAY_UNION_SIGN_CERT:}
+    sign-cert-pwd: ${APP_CN_PAY_UNION_SIGN_PWD:}
+    encrypt-cert-path: ${APP_CN_PAY_UNION_ENCRYPT_CERT:}
+    middle-cert-path: ${APP_CN_PAY_UNION_MIDDLE_CERT:}
+    root-cert-path: ${APP_CN_PAY_UNION_ROOT_CERT:}
+
+# IOT-006：物联网设备联调 — HiveMQ MQTT 5 客户端
+# 未配置 broker-uri 时 MqttClientService 不激活（@ConditionalOnProperty），
+# 设备联动仍可走 HTTP 模式（DeviceCommandDispatcher → HttpDeviceAdapter）
+# 真实接入：在 HiveMQ Cloud（https://cloud.hivemq.com）创建集群，
+#          填入 broker host/port/credentials，并确保设备固件配置了对应的 MQTT Topic
+iot:
+  mqtt:
+    enabled: ${IOT_MQTT_ENABLED:false}
+    host: ${IOT_MQTT_HOST:127.0.0.1}           # HiveMQ broker host
+    port: ${IOT_MQTT_PORT:1883}                # HiveMQ broker port
+    client-id: ${IOT_MQTT_CLIENT_ID:}           # 后端 client ID（留空则自动生成）
+    username: ${IOT_MQTT_USERNAME:}
+    password: ${IOT_MQTT_PASSWORD:}
+    connect-timeout-ms: 5000
+    keep-alive-seconds: 30
+    # 上行 Topic 格式：devices/{tenantId}/{deviceCode}/ack（设备遥测上报）
+    inbound-topic-pattern: "devices/+/+/ack"
+    # 状态 Topic 格式：devices/{tenantId}/{deviceCode}/status
+    status-topic-pattern: "devices/+/+/status"
+  # 设备型号 → 协议适配器映射（协议路由自动按 deviceType 匹配，无需手动配置）
+  # 已知型号：
+  #   massage_chair  → MassageChairAdapter（荣泰/奥佳华/傲胜）
+  #   skin_analyzer  → SkinAnalyzerAdapter（VISIA/智能美容镜）
+  #   smart_lock     → MqttDeviceAdapter（通用门锁）
+  #   led_lamp       → MqttDeviceAdapter（通用 LED）
+  #   mqtt / http    → 各自通用适配器
+  device-type-mapping:
+    massage_chair: massage_chair
+    skin_analyzer: skin_analyzer
+    smart_lock: mqtt
+    led_lamp: mqtt
+    massage_bed: massage_chair
+    smart_mirror: skin_analyzer
+
+# ====================================================================
+# 监控基础设施（批次 1.4-A：actuator + Prometheus）
+# ====================================================================
+# 暴露端点：
+#   /actuator/health      - 健康检查（K8s liveness / readiness 探针、docker healthcheck）
+#   /actuator/info        - 应用元信息（git commit / build time，需 spring-boot-maven-plugin 配置）
+#   /actuator/prometheus  - Prometheus 抓取格式 metrics
+#   其他端点（metrics / env / configprops / beans 等）默认不暴露，避免泄露敏感配置
+#
+# P0-B 阶段会部署 Prometheus server 抓取 /actuator/prometheus
+# P0-C 阶段会部署 AlertManager + Grafana
+# ====================================================================
+management:
+  endpoints:
+    web:
+      exposure:
+        # 三件套足够 P0-A；P1 按需增加 metrics, env, configprops
+        include: health,info,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      # dev: 详细（便于排查）；prod: never（详见 application-prod.yml 覆盖）
+      show-details: when-authorized
+      # 启用 K8s 风格的 liveness / readiness 探针（/actuator/health/liveness, /actuator/health/readiness）
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: meiyetec-api
+    distribution:
+      # 开启 http_server_requests 直方图（用于 P99 / 分布计算）
+      percentiles-histogram:
+        http.server.requests: true
+      # SLO 桶：100ms / 300ms / 500ms / 1s（Grafana heatmap 用）
+      slo:
+        http.server.requests: 100ms,300ms,500ms,1s
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+

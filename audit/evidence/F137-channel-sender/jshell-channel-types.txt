@@ -1,0 +1,26 @@
+﻿=== [1] SMS Sender ===
+channelType method exists: true
+render() result: Hi Alice, code=1234!
+render() edge case (${unknown} -> empty): '/'
+
+=== [2] EMAIL Sender ===
+channelType(): EMAIL
+
+=== [3] MINI_PROGRAM Sender ===
+channelType(): MINI_PROGRAM
+
+=== [4] WECHAT Official Account Sender ===
+channelType(): WECHAT_OFFICIAL_ACCOUNT
+Sender constants:
+  - WechatOfficialAccountSender.channelType() = WECHAT_OFFICIAL_ACCOUNT
+  - MiniProgramSender.channelType() = MINI_PROGRAM
+  - EmailSender.channelType() = EMAIL
+
+=== [5] IN_APP Sender ===
+channelType(): IN_APP
+
+=== [6] Interface sanity ===
+ChannelSender interface methods:
+  - public abstract boolean com.meiyetec.service.channel.ChannelSender.healthCheck()
+  - public abstract java.lang.String com.meiyetec.service.channel.ChannelSender.channelType()
+  - public abstract com.meiyetec.service.channel.ChannelSender$SendResult com.meiyetec.service.channel.ChannelSender.send(com.meiyetec.entity.MktChannelTemplate,java.lang.String,java.util.Map)

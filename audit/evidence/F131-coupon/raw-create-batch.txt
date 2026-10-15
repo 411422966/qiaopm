@@ -1,0 +1,33 @@
+﻿{
+    "code":  200,
+    "message":  "创建成功",
+    "data":  {
+                 "id":  3,
+                 "tenantId":  1,
+                 "storeId":  1,
+                 "batchNo":  "B1789496311154",
+                 "promotionId":  null,
+                 "couponName":  "5A-F131 ?????",
+                 "couponType":  "AMOUNT",
+                 "discountAmount":  50,
+                 "discountRate":  null,
+                 "minConsume":  200,
+                 "discountScope":  "ALL",
+                 "totalCount":  100,
+                 "issuedCount":  0,
+                 "usedCount":  0,
+                 "effectiveDays":  30,
+                 "fixedStartDate":  null,
+                 "fixedEndDate":  null,
+                 "grantType":  "GENERAL",
+                 "status":  1,
+                 "expireWarningDays":  3,
+                 "operatorId":  null,
+                 "operatorName":  null,
+                 "createTime":  "2026-09-16T02:18:31.1562405",
+                 "updateTime":  "2026-09-16T02:18:31.1562405",
+                 "deleted":  null
+             },
+    "traceId":  "2f34757ddd8b4b6db4932dd3e89cb3bd",
+    "timestamp":  "2026-09-16 02:18:31"
+}

@@ -1,0 +1,18 @@
+{
+  "locale": "ja-JP",
+  "scene": "BOOKING_CONFIRMATION",
+  "subject": "ご予約確認",
+  "sms": "${customerName}様、${serviceName} のご予約を承りました。日時は ${bookingDate} ${bookingTime}、予約番号は ${bookingNo} です。店舗：${storeName}。",
+  "miniProgram": {
+    "title": "ご予約確認",
+    "keyword1": "予約番号：${bookingNo}",
+    "keyword2": "サービス：${serviceName}",
+    "keyword3": "日時：${bookingDate} ${bookingTime}",
+    "keyword4": "店舗：${storeName}",
+    "keyword5": "お問い合わせ：${storePhone}"
+  },
+  "email": {
+    "subject": "ご予約確認 — 予約番号 ${bookingNo}",
+    "body": "${customerName} 様\n\n${serviceName} のご予約を承りましたので、ご確認をお願いいたします。\n\n【ご予約内容】\n予約番号：${bookingNo}\nサービス：${serviceName}\n日時：${bookingDate} ${bookingTime}\n店舗：${storeName}\nお問い合わせ：${storePhone}\n\n変更・キャンセルは 24 時間前までにご連絡ください。\n\nMeiye Beauty Tech"
+  }
+}

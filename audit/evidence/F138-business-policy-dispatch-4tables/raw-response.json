@@ -1,0 +1,15 @@
+﻿{
+    "expected_exception":  "org.springframework.jdbc.BadSqlGrammarException: Table \u0027meiyetec.mkt_dispatch\u0027 doesn\u0027t exist",
+    "request":  {
+                    "body":  "{\r\n    \"sourceVersion\":  \"v1\",\r\n    \"sourceId\":  1,\r\n    \"dispatchType\":  \"ACTIVITY\",\r\n    \"dispatchSubtype\":  \"ACTIVITY_5B_F138\",\r\n    \"targetType\":  \"ALL\",\r\n    \"title\":  \"F138-4tables-missing-evidence\",\r\n    \"remark\":  \"Phase 5B F138\"\r\n}",
+                    "method":  "POST",
+                    "url":  "http://localhost:8080/m12/dispatch",
+                    "headers":  {
+                                    "Authorization":  "Bearer admin-token-REDACTED"
+                                }
+                },
+    "traceId":  "00e729b8fec64115b9a7547caaab30ab",
+    "response_body_code":  500,
+    "response_message":  "数据库异常",
+    "response_code_http":  200
+}

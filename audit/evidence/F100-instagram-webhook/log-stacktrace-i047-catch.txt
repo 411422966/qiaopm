@@ -1,0 +1,31 @@
+﻿2026-09-14 22:17:26.179 [http-nio-8080-exec-10] INFO  c.m.service.IntlBookingService [traceId=aa1f2410520c41e0b4b17877e930bf5f] [tenant=] [order=] [pay=] [INSTAGRAM WEBHOOK] payload={entry=[{id=IG_PAGE_ID_001, time=1694700000000, messaging=[{sender={id=IGQVJ-test-12345}, recipient={id=IG_PAGE_ID_001}, timestamp=1694700000000, message={mid=m_001, text=Book facial tomorrow please}}]}]}
+2026-09-14 22:17:26.182 [http-nio-8080-exec-10] WARN  c.m.service.IntlBookingService [traceId=aa1f2410520c41e0b4b17877e930bf5f] [tenant=] [order=] [pay=] [INSTAGRAM WEBHOOK] parse failed: 
+### Error updating database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.overseas_booking' doesn't exist
+### The error may exist in com/meiyetec/mapper/OverseasBookingMapper.java (best guess)
+### The error may involve com.meiyetec.mapper.OverseasBookingMapper.insert-Inline
+### The error occurred while setting parameters
+### SQL: INSERT INTO overseas_booking  ( tenant_id, booking_no, source, external_id, customer_name,   customer_locale,   service_name,   booking_date, booking_time, notes, status,   raw_payload,   created_at, updated_at )  VALUES (  ?, ?, ?, ?, ?,   ?,   ?,   ?, ?, ?, ?,   ?,   ?, ?  )
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.overseas_booking' doesn't exist
+; bad SQL grammar []
+2026-09-14 22:18:27.958 [http-nio-8080-exec-2] ERROR c.m.exception.GlobalExceptionHandler [traceId=35abe9eeaf3d4b0997aaadd63592e6cc] [tenant=] [order=] [pay=] [DBError]
+org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.overseas_booking' doesn't exist
+### The error may exist in com/meiyetec/mapper/OverseasBookingMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  id,tenant_id,booking_no,source,external_id,customer_name,customer_phone,customer_email,customer_locale,mini_program_open_id,service_id,service_name,staff_id,store_id,booking_date,booking_time,notes,status,ip_address,user_agent,raw_payload,converted_member_id,converted_order_id,created_at,updated_at  FROM overseas_booking      WHERE  (tenant_id = ?) ORDER BY id DESC
+### Cause: java.sql.SQLSyntaxErrorException: Table 'meiyetec.overseas_booking' doesn't exist
+; bad SQL grammar []
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:246)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:73)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:92)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:439)
+	at jdk.proxy2/jdk.proxy2.$Proxy89.selectList(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.selectList(SqlSessionTemplate.java:224)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.executeForMany(MybatisMapperMethod.java:164)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:77)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:152)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)
+	at jdk.proxy2/jdk.proxy2.$Proxy444.selectList(Unknown Source)
+	at com.meiyetec.service.IntlBookingService.listBookings(IntlBookingService.java:198)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)

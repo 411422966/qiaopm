@@ -1,0 +1,72 @@
+=== F135 Phase 5B 閲嶅疄璇侊紙鐪熷疄 backend classpath via .bat锛夆€?鏃堕棿鎴?2026-09-16 22:12:54 ===
+
+--- STDOUT ---
+=== Probe F135 begin ===
+5 Sender + ChannelDispatcher class loadable: OK
+--- channelType() direct listing ---
+Sms.channelType()           = 'SMS'
+Email.channelType()         = 'EMAIL'
+InApp.channelType()         = 'IN_APP'
+MiniProgram.channelType()   = 'MINI_PROGRAM'
+WechatOA.channelType()      = 'WECHAT_OFFICIAL_ACCOUNT'
+
+--- valid channelType (5) ---
+
+--- invalid channelType (9) ---
+  getSender("UNKNOWN") EX: NullPointerException Cannot invoke "Object.getClass()" because "obj" is null
+  getSender("WECHAT_OA") EX: NullPointerException Cannot invoke "Object.getClass()" because "obj" is null
+  getSender("WECHAT") EX: NullPointerException Cannot invoke "Object.getClass()" because "obj" is null
+  getSender("wechat_mp") EX: NullPointerException Cannot invoke "Object.getClass()" because "obj" is null
+  getSender("") EX: NullPointerException Cannot invoke "Object.getClass()" because "obj" is null
+  getSender(null) EX: NullPointerException Cannot invoke "Object.getClass()" because "obj" is null
+  getSender("SMS_EXTRA") EX: NullPointerException Cannot invoke "Object.getClass()" because "obj" is null
+  getSender("sms") EX: NullPointerException Cannot invoke "Object.getClass()" because "obj" is null
+  getSender("sms ") EX: NullPointerException Cannot invoke "Object.getClass()" because "obj" is null
+
+--- I061 NPE risk simulated ---
+  NPE TRIGGERED -> java.lang.NullPointerException: Cannot invoke "Object.getClass()" because "REPL.$JShell$47.miss" is null
+=== ExitCode=0 ===
+
+--- STDERR ---
+错误:
+非法字符: '\ufeff'
+?// === F135 Phase 5B 閲嶅疄璇侊紙鐪熷疄 backend classpath via .bat锛夆?鏃堕棿鎴?2026-09-16 22:12:46 ===
+^
+错误:
+进行语法分析时已到达文件结尾
+?// === F135 Phase 5B 閲嶅疄璇侊紙鐪熷疄 backend classpath via .bat锛夆?鏃堕棿鎴?2026-09-16 22:12:46 ===
+ ^
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+异常错误 java.lang.NoClassDefFoundError：com/baomidou/mybatisplus/core/mapper/BaseMapper
+      at ClassLoader.defineClass1 (本机方法)
+      at ClassLoader.defineClass (ClassLoader.java:1027)
+      at SecureClassLoader.defineClass (SecureClassLoader.java:150)
+      at BuiltinClassLoader.defineClass (BuiltinClassLoader.java:862)
+      at BuiltinClassLoader.findClassOnClassPathOrNull (BuiltinClassLoader.java:760)
+      at BuiltinClassLoader.loadClassOrNull (BuiltinClassLoader.java:681)
+      at BuiltinClassLoader.loadClass (BuiltinClassLoader.java:639)
+      at ClassLoaders$AppClassLoader.loadClass (ClassLoaders.java:188)
+      at ClassLoader.loadClass (ClassLoader.java:580)
+      at ClassLoader.loadClass (ClassLoader.java:526)
+      at Class.forName0 (本机方法)
+      at Class.forName (Class.java:423)
+      at Class.forName (Class.java:414)
+      at (#23:1)
+原因: java.lang.ClassNotFoundException： com.baomidou.mybatisplus.core.mapper.BaseMapper
+      at BuiltinClassLoader.loadClass (BuiltinClassLoader.java:641)
+      at ClassLoaders$AppClassLoader.loadClass (ClassLoaders.java:188)
+      at ClassLoader.loadClass (ClassLoader.java:526)
+      ...
+异常错误 java.lang.NullPointerException：Cannot invoke "java.lang.reflect.Constructor.setAccessible(boolean)" because "REPL.$JShell$33.ctor2" is null
+      at (#24:1)
+异常错误 java.lang.NullPointerException：Cannot invoke "java.lang.reflect.Constructor.newInstance(Object[])" because "REPL.$JShell$33.ctor2" is null
+      at (#25:1)
+异常错误 java.lang.NullPointerException：Cannot invoke "Object.getClass()" because "obj" is null
+      at Method.invoke (Method.java:572)
+      at (#30:2)
+异常错误 java.lang.NullPointerException：Cannot invoke "Object.getClass()" because "obj" is null
+      at Method.invoke (Method.java:572)
+      at (#37:1)
+

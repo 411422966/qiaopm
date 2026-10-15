@@ -1,0 +1,15 @@
+[Unit]
+Description=Meiyetec backup timer (daily 02:00)
+Documentation=file:///opt/meiyetec/docs/runbook/backup-restore.md
+Requires=meiyetec-backup.service
+
+[Timer]
+# 每日 02:00:00 触发（业务低峰）
+OnCalendar=*-*-* 02:00:00
+# Persistent=true：系统宕机错过时间点后，开机自动补跑
+Persistent=true
+# 随机延迟 0-5min，避免多机同时打 MySQL
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

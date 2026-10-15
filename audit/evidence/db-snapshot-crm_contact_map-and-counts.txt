@@ -1,0 +1,5 @@
+﻿mysql: [Warning] Using a password on the command line interface can be insecure.
+cnt_crm_integration
+1
+cnt_crm_sync_log
+0

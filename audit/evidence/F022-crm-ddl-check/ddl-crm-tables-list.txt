@@ -1,0 +1,40 @@
+﻿mysql : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-310949c3-1f25-4a5d-9ef5-f2d54758fad5.ps1:79 字符: 1
++ mysql -h 127.0.0.1 -P 3307 -uroot -proot123456 --default-character-se ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Tables_in_meiyetec (crm%)
+crm_complaint_log
+crm_complaint_ticket
+crm_cross_store_redemption
+crm_cross_store_rule
+crm_follow_up_note
+crm_follow_up_plan
+crm_follow_up_task
+crm_follow_up_trigger_log
+crm_integration
+crm_ltv_snapshot
+crm_member
+crm_member_profile
+crm_member_store
+crm_member_tag
+crm_member_tag_rel
+crm_member_tag_value
+crm_package
+crm_package_order
+crm_package_redemption
+crm_recharge_audit
+crm_recharge_audit_log
+crm_review
+crm_review_template
+crm_rfm_snapshot
+crm_sync_log
+crm_tag_dictionary
+crm_tenant
+crm_wallet
+crm_wallet_drift_log
+crm_wallet_orphan_log
+crm_wallet_transaction
+crm_wallet_txn_orphan_log

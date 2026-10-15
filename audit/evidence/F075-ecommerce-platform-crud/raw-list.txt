@@ -1,0 +1,3 @@
+﻿
+=== F075 GET /ecommerce/platform/list ===
+code=500 dataCount=0

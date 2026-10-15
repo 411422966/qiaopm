@@ -1,0 +1,13 @@
+{
+  "endpoint": "GET /m12/dispatch/page",
+  "httpStatus": 200,
+  "body": {
+    "code": 500,
+    "message": "数据库异常",
+    "data": null,
+    "traceId": "b43a5aaa1fa14da6930da0e5bd56f484",
+    "timestamp": "2026-09-16 23:25:18"
+  },
+  "expectedVsActual": "Expected: TableNotFoundException → Result.error(500, 数据库异常). Actual: matches.",
+  "issue": "I063 — mkt_dispatch table MISSING"
+}

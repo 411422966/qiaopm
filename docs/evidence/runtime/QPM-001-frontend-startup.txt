@@ -1,0 +1,23 @@
+# Frontend Startup Evidence
+# QPM-001: Runtime Recovery
+
+## 启动信息
+
+| 字段 | 值 |
+|------|-----|
+| 启动命令 | `npm run dev` |
+| 启动目录 | D:\QiaoPM\frontend\meiyetec-web |
+| Vite 版本 | (from package.json) |
+| 监听端口 | 5173 |
+| 新进程 PID | 15564 |
+| 日志文件 | D:\QiaoPM\docs\evidence\runtime\frontend-startup.log |
+
+## HTTP 验证
+
+| 端点 | 方法 | 状态 |
+|------|------|------|
+| http://localhost:5173/ | GET | 200 ✅ |
+
+## 结论
+
+✅ **前端启动成功**

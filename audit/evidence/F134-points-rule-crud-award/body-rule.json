@@ -1,0 +1,9 @@
+{
+  "ruleName": "audit-test-points-rule",
+  "consumeRate": 1.50,
+  "rechargeMultiplier": 1.00,
+  "pointsToCash": 0.01,
+  "maxUsePercent": 30.00,
+  "enabled": 1,
+  "priority": 1
+}

@@ -1,0 +1,157 @@
+# ====================================================================
+# AlertManager 鍏ㄥ眬閰嶇疆
+# Gate 3 鎵规 1.4b 鈥?P0-B 鐩戞帶閲囬泦
+# AlertManager 鐗堟湰锛歷0.27.0
+# Gate 3 鎵规 2.2 鈥?P0-C 鍔?wechat-webhook 閫氶亾锛坈ritical 璧帮級+ default 鍏滃簳
+# ====================================================================
+
+global:
+  # SMTP 閰嶇疆锛堟湭鏉ュ惎鐢?email 鍛婅鏃跺～鍏ワ級
+  # smtp_smarthost: 'smtp.example.com:587'
+  # smtp_from: 'alertmanager@meiyetec.com'
+  # smtp_auth_username: 'alertmanager@meiyetec.com'
+  # smtp_auth_password: 'changeme'
+
+  # 浼佷笟寰俊鍘熺敓 API锛堟湭鏉ュ惎鐢紝鍙傝€?receivers 娈?wechat_configs 妯℃澘锛?
+  # wechat_api_url: 'https://qyapi.weixin.qq.com/cgi-bin/'
+
+  # ResolveTimeout锛氬憡璀﹁嚜鍔ㄦ仮澶嶇殑鍒ゅ畾鏃堕棿锛堥粯璁?5m锛?
+  resolve_timeout: 5m
+
+# ====================================================================
+# 璺敱閰嶇疆锛圓lertManager 鏍规嵁 labels 鍒嗗彂鍛婅锛?
+# ====================================================================
+route:
+  # 鏍硅矾鐢憋細鎵€鏈夊憡璀﹂鍏堣繘鍏ヨ繖閲?
+  # 鎵€鏈夊瓙璺敱蹇呴』鍖归厤锛屽惁鍒欐渶缁堣惤鍒?default receiver
+  group_by: ['alertname', 'service', 'tier']
+
+  # 鍛婅鍒嗙粍锛氱浉鍚?group_by 鐨勫憡璀﹁仛鍚堜负涓€涓€氱煡
+  group_wait: 30s
+  # 鍒嗙粍鍐呭憡璀﹀彂閫侀棿闅旓紙宸叉湁閫氱煡鍚庯紝澶氫箙鍙戜竴娆℃洿鏂帮級
+  group_interval: 5m
+  # 鐩稿悓鍛婅鎭㈠鍚庡涔呭仠姝㈠彂閫侊紙鐩稿悓鍐呭鐨勫憡璀﹂潤榛樺涔咃級
+  repeat_interval: 4h
+
+  # 鏍硅矾鐢遍粯璁ゆ帴鏀惰€咃紙鍏滃簳锛夈€傚瓙璺敱 match:{} 涔熶細钀藉埌杩欓噷銆?
+  receiver: 'default'
+
+  # 瀛愯矾鐢憋紙鎸?severity 鍒嗗彂锛?
+  routes:
+    # -------------------------------------------------------------------------
+    # Critical 鈥?鍚屾椂鎵?wechat-webhook锛堜紒涓氬井淇￠€氶亾锛? 鏍?default 鍏滃簳
+    # 鍙岄噸淇濋櫓锛氫笟鍔″憡璀︿笉浠呯暀 webhook 鏃ュ織锛屼篃璧颁紒涓氬井淇＄兢鏈哄櫒浜洪€氶亾
+    # -------------------------------------------------------------------------
+    - match:
+        severity: critical
+      receiver: 'wechat-webhook'
+      # critical 绔嬪嵆閫氱煡锛堜笉绛?group_wait锛?
+      group_wait: 0s
+      # continue=true 璁╂牴 default 涔熷鐞嗭紙鍏滃簳鍙屽彂锛?
+      continue: true
+
+    # -------------------------------------------------------------------------
+    # Warning 鈥?webhook-log锛堜繚鐣?Gate 3 鎵规 1.4b 琛屼负锛?
+    # -------------------------------------------------------------------------
+    - match:
+        severity: warning
+      receiver: 'webhook-log'
+      # warning 鍛婅绛?30s 鑱氬悎鍐嶉€氱煡锛堝噺灏戝櫔闊筹級
+      group_wait: 30s
+      continue: false
+
+    # -------------------------------------------------------------------------
+    # 鍏滃簳锛堟棤 severity 鏍囩 鎴?鏈尮閰?severity锛夆€?default
+    # -------------------------------------------------------------------------
+    - match: {}
+      receiver: 'default'
+      continue: false
+
+# ====================================================================
+# 鎺ユ敹鑰呭畾涔?
+# ====================================================================
+receivers:
+  # -------------------------------------------------------------------------
+  # webhook-log锛氭墦鍗板埌鏃ュ織锛圙ate 3 鎵规 1.4b 鏃㈡湁锛岀敤浜庢湰鍦版帓鏌ワ級
+  # -------------------------------------------------------------------------
+  - name: 'webhook-log'
+    webhook_configs:
+      - url: 'http://localhost:9095/alerts'
+        send_resolved: true
+        # AlertManager v0.27.0 涓嶅湪 http_config 鏆撮湶 timeout 瀛楁
+        # 浣跨敤榛樿 10s銆傜敓浜у彲鑰冭檻鍙嶅悜浠ｇ悊灞傚姞瓒呮椂锛坣ginx proxy_read_timeout锛?
+
+  # -------------------------------------------------------------------------
+  # wechat-webhook锛氫紒涓氬井淇＄兢鏈哄櫒浜洪€氶亾锛圙ate 3 鎵规 2.2 鏂板锛?
+  # URL 閫氳繃 env_file 娉ㄥ叆锛坕nfra/alertmanager/alertmanager.env锛夛紝
+  # 缂哄€兼椂 AM 鍚姩澶辫触 fail-fast锛堥伩鍏嶅彂鍒伴敊鐨?URL锛?
+  # 鈿狅笍 AlertManager v0.27.0 閰嶇疆鏂囦欢 env 鏇挎崲鍙瘑鍒?${VAR} 绠€鍗曡娉?
+  #    涓嶆敮鎸?bash 椋庢牸 ${VAR:-default}锛堜細琚?url.Parse 鎶ャ€宑olon in first path segment銆嶏級
+  # 鈿狅笍 褰撳墠 AlertManager 鍘熺敓 webhook 鍙戠殑 JSON 鈮?浼佷笟寰俊缇ゆ満鍣ㄤ汉瑕佹眰鐨勬牸寮?
+  #    鐢熶骇鐜闇€鍦?webhook URL 鍚庢帴 format adapter锛堣瑙?infra/alertmanager/README.md锛?
+  # -------------------------------------------------------------------------
+  - name: 'wechat-webhook'
+    webhook_configs:
+      - url: '__WECHAT_WEBHOOK_URL__'
+        send_resolved: true
+
+  # -------------------------------------------------------------------------
+  # default锛氬厹搴曟帴鏀惰€咃紙鍚?webhook-log 璺緞锛屼綔涓?match:{} 鍑哄彛锛?
+  # -------------------------------------------------------------------------
+  - name: 'default'
+    webhook_configs:
+      - url: 'http://localhost:9095/alerts'
+        send_resolved: true
+
+  # -------------------------------------------------------------------------
+  # 浼佷笟寰俊鍘熺敓 wechat_configs 妯℃澘锛堝閫夋柟妗?鈥?鑷缓搴旂敤閫氶亾锛?
+  # 閰嶇疆姝ラ锛?
+  # 1. 鍦ㄤ紒涓氬井淇″悗鍙板垱寤鸿嚜寤哄簲鐢紝鑾峰彇 agent_id 鍜?secret
+  # 2. 鑾峰彇浼佷笟鐨?corp_id / chat_id / user_id
+  # 3. 鍙栨秷涓嬮潰鐨?wechat_configs 娉ㄩ噴骞跺～鍏ュ疄闄呭€?
+  # 鈿狅笍 姝ゆ柟妗堥渶瑕佷紒涓氬井淇°€岃嚜寤哄簲鐢ㄣ€嶆潈闄愶紙涓嶆槸缇ゆ満鍣ㄤ汉锛?
+  # 鈿狅笍 涓?wechat-webhook (webhook_configs) 鏄袱濂楁柟妗堬紝涓嶈鍚屾椂鍚敤
+  # -------------------------------------------------------------------------
+  # - name: 'wechat-app'
+  #   wechat_configs:
+  #     - api_url: 'https://qyapi.weixin.qq.com/cgi-bin/'
+  #       corp_id: 'YOUR_CORP_ID'
+  #       agent_id: 'YOUR_AGENT_ID'
+  #       secret: 'YOUR_SECRET'
+  #       to_user: '@all'
+  #       message: |
+  #         銆恵{ .Status | toUpper }}銆憑{ .GroupLabels.alertname }}
+  #         鏈嶅姟锛歿{ .GroupLabels.service }}
+  #         灞傜骇锛歿{ .GroupLabels.tier }}
+  #         {{ range .Alerts }}
+  #         ---
+  #         {{ .Annotations.summary }}
+  #         {{ .Annotations.description }}
+  #         {{ end }}
+
+  # -------------------------------------------------------------------------
+  # email-placeholder锛堟湭鏉ュ惎鐢級
+  # -------------------------------------------------------------------------
+  # - name: 'email-placeholder'
+  #   email_configs:
+  #     - to: 'oncall@meiyetec.com'
+  #       headers:
+  #         subject: '銆恵{ .Status | toUpper }}銆憑{ .GroupLabels.alertname }}'
+  #       send_resolved: true
+
+# ====================================================================
+# 鎶戝埗瑙勫垯锛圛nhibit Rules锛?
+# 褰?critical 鍛婅瀛樺湪鏃讹紝鎶戝埗鍚?service 鐨?warning 鍛婅锛堝噺灏戝櫔闊筹級
+# 鍓嶆彁锛歝ritical 鍜?warning 鍛婅蹇呴』鏈夌浉鍚岀殑 group_by 鏍囩
+# ====================================================================
+inhibit_rules:
+  # 褰撳悓 service + tier 鐨?severity=critical 鍛婅瑙﹀彂鏃?
+  # 鎶戝埗鍚?service + tier 鐨?severity=warning 鍛婅
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    # 鎶戝埗鑼冨洿锛歴ervice + tier 鐩稿悓鎵嶆姂鍒?
+    equal: ['service', 'tier']
+    # 濡傛灉 critical 鍜?warning 鐨?alertname 涔熺浉鍚屽垯涓嶆姂鍒讹紙璁╁悓鍚嶅憡璀﹂兘鍙戯級
+    # 娉ㄦ剰锛氳繖閲?equal 鍙寘鍚?service + tier锛屼笉鍚?alertname

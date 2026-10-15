@@ -1,0 +1,2 @@
+﻿{"code":200,"message":"鍒涘缓鎴愬姛","data":{"id":5,"tenantId":1,"ruleName":"audit-5A-F134","consumeRate":1.5,"rechargeMultiplier":2.0,"promotionMultiplier":1.00,"pointsToCash":0.01,"maxUsePercent":30.00,"enabled":1,"priority":10,"effectiveDate":null,"expiryDate":null,"operatorId":null,"operatorName":null,"createTime":"2026-09-16T02:54:33.3416606","updateTime":"2026-09-16T02:54:33.3416606","deleted":null},"traceId":"0e8cd533d639437b85f5b592106140ed","timestamp":"2026-09-16 02:54:33"}
+HTTP 200

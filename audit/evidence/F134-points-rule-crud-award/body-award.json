@@ -1,0 +1,6 @@
+{
+  "memberId": 1,
+  "amount": 100,
+  "sourceType": "MANUAL",
+  "remark": "audit-test-award"
+}

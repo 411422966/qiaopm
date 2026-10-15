@@ -1,0 +1,57 @@
+﻿=== F066 ecommerce_platform ===
+mysql.exe : ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to yo
+ur MySQL server version for the right syntax to use near 'separator' at line 1
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-a543d9c6-e19c-42b5-a9d9-77b51ab266e0.ps1:87 字符: 1
++ & $mysql -h 127.0.0.1 -P 3307 -uroot --default-character-set=utf8mb4  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR 1064 (420...ator' at line 1:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+tenant_id	bigint	YES		0	
+platform	varchar(64)	YES		NULL	
+shop_name	varchar(255)	YES		NULL	
+shop_id	varchar(64)	YES		NULL	
+app_key	varchar(255)	YES		NULL	
+app_secret	varchar(255)	YES		NULL	
+access_token	varchar(500)	YES		NULL	
+token_expire_at	datetime	YES		NULL	
+webhook_url	varchar(500)	YES		NULL	
+webhook_secret	varchar(255)	YES		NULL	
+api_base_url	varchar(255)	YES		NULL	
+sync_products	tinyint	YES		0	
+sync_orders	tinyint	YES		0	
+sync_inventory	tinyint	YES		0	
+last_sync_at	datetime	YES		NULL	
+status	varchar(16)	YES		ACTIVE	
+error_message	varchar(500)	YES		NULL	
+created_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+updated_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+
+=== F066 EXT-22 三列检查 ===
+
+=== F066 EXT-22 三列精准查询 (INFORMATION_SCHEMA) ===
+
+=== F066 所有列名 ===
+COLUMN_NAME
+id
+tenant_id
+platform
+shop_name
+shop_id
+app_key
+app_secret
+access_token
+token_expire_at
+webhook_url
+webhook_secret
+api_base_url
+sync_products
+sync_orders
+sync_inventory
+last_sync_at
+status
+error_message
+created_at
+updated_at

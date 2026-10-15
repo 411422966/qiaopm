@@ -1,0 +1,33 @@
+﻿=== F080 DB snapshot EXT-22 缺失字段 grep ===
+
+--- snapshot 文件 ---
+D:\QiaoPM\audit\evidence\db-snapshot-crm_contact_map-and-counts.txt
+D:\QiaoPM\audit\evidence\db-snapshot-crm_integration.txt
+D:\QiaoPM\audit\evidence\db-snapshot-crm_sync_log.txt
+
+--- db-snapshot-crm_contact_map-and-counts.txt ---
+  google_maps_config : 0
+  google_maps_geocode_log : 0
+  ecommerce_platform : 0
+  enable_place_details : 0
+  app_id : 0
+  kdt_id : 0
+  sign_secret : 0
+
+--- db-snapshot-crm_integration.txt ---
+  google_maps_config : 0
+  google_maps_geocode_log : 0
+  ecommerce_platform : 0
+  enable_place_details : 0
+  app_id : 1
+  kdt_id : 0
+  sign_secret : 0
+
+--- db-snapshot-crm_sync_log.txt ---
+  google_maps_config : 0
+  google_maps_geocode_log : 0
+  ecommerce_platform : 0
+  enable_place_details : 0
+  app_id : 0
+  kdt_id : 0
+  sign_secret : 0

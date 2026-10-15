@@ -1,0 +1,216 @@
+-- P3 批次：插件市场 / 财税直连 / CRM 集成 / 电商集成
+
+-- 0022 插件市场
+CREATE TABLE IF NOT EXISTS `plugin_market` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `plugin_code` VARCHAR(64) NOT NULL,
+  `plugin_name` VARCHAR(128) NOT NULL,
+  `category` VARCHAR(32) DEFAULT 'BUSINESS' COMMENT 'BUSINESS/MARKETING/PAYMENT/INTEGRATION/ANALYTICS/INDUSTRY',
+  `version` VARCHAR(32) DEFAULT '1.0.0',
+  `vendor` VARCHAR(64) DEFAULT 'OFFICIAL',
+  `short_desc` VARCHAR(255) DEFAULT NULL,
+  `description` TEXT,
+  `icon_url` VARCHAR(255) DEFAULT NULL,
+  `tags` VARCHAR(255) DEFAULT NULL,
+  `price` DECIMAL(10,2) DEFAULT 0,
+  `billing_type` VARCHAR(16) DEFAULT 'FREE' COMMENT 'FREE/ONE_TIME/MONTHLY/YEARLY',
+  `install_count` INT DEFAULT 0,
+  `rating` DECIMAL(3,2) DEFAULT 5.0,
+  `review_count` INT DEFAULT 0,
+  `is_official` TINYINT DEFAULT 0,
+  `is_featured` TINYINT DEFAULT 0,
+  `homepage` VARCHAR(255) DEFAULT NULL,
+  `tarball_url` VARCHAR(500) DEFAULT NULL,
+  `config_json` TEXT,
+  `permissions` VARCHAR(1000) DEFAULT NULL,
+  `events` VARCHAR(500) DEFAULT NULL,
+  `status` VARCHAR(16) DEFAULT 'AVAILABLE' COMMENT 'AVAILABLE/BETA/DEPRECATED',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `uk_code` (`tenant_id`, `plugin_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='插件市场';
+
+CREATE TABLE IF NOT EXISTS `plugin_install` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `plugin_id` BIGINT NOT NULL,
+  `plugin_code` VARCHAR(64) DEFAULT NULL,
+  `version` VARCHAR(32) DEFAULT NULL,
+  `installed_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `expire_at` DATETIME DEFAULT NULL,
+  `config_json` TEXT,
+  `enabled` TINYINT DEFAULT 1,
+  `install_status` VARCHAR(16) DEFAULT 'ACTIVE' COMMENT 'ACTIVE/PAUSED/UNINSTALLED/ERROR',
+  `error_message` VARCHAR(500) DEFAULT NULL,
+  `last_used_at` DATETIME DEFAULT NULL,
+  `use_count` BIGINT DEFAULT 0,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `uk_plugin` (`tenant_id`, `plugin_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='插件安装';
+
+CREATE TABLE IF NOT EXISTS `plugin_review` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `plugin_id` BIGINT NOT NULL,
+  `member_id` BIGINT DEFAULT NULL,
+  `rating` INT DEFAULT 5,
+  `title` VARCHAR(128) DEFAULT NULL,
+  `content` TEXT,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_plugin` (`plugin_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='插件评价';
+
+-- 0023 财税直连
+CREATE TABLE IF NOT EXISTS `fiscal_invoice` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `invoice_no` VARCHAR(64) NOT NULL,
+  `invoice_type` VARCHAR(16) DEFAULT 'NORMAL' COMMENT 'NORMAL/SPECIAL/ELEC',
+  `buyer_name` VARCHAR(128) DEFAULT NULL,
+  `buyer_tax_no` VARCHAR(64) DEFAULT NULL,
+  `buyer_address` VARCHAR(255) DEFAULT NULL,
+  `buyer_phone` VARCHAR(20) DEFAULT NULL,
+  `buyer_email` VARCHAR(128) DEFAULT NULL,
+  `buyer_bank` VARCHAR(128) DEFAULT NULL,
+  `buyer_account` VARCHAR(64) DEFAULT NULL,
+  `amount` DECIMAL(10,2) DEFAULT 0,
+  `tax_amount` DECIMAL(10,2) DEFAULT 0,
+  `total_amount` DECIMAL(10,2) DEFAULT 0,
+  `tax_rate` DECIMAL(5,2) DEFAULT 0,
+  `invoice_status` VARCHAR(16) DEFAULT 'PENDING' COMMENT 'PENDING/ISSUING/SUCCEEDED/FAILED/REFUNDED',
+  `invoice_url` VARCHAR(500) DEFAULT NULL,
+  `pdf_url` VARCHAR(500) DEFAULT NULL,
+  `fiscal_no` VARCHAR(64) DEFAULT NULL,
+  `order_id` BIGINT DEFAULT NULL,
+  `channel` VARCHAR(32) DEFAULT 'BAIWANG' COMMENT 'BAIWANG/LIANLU/AIOPEN/CUSTOM',
+  `error_message` VARCHAR(500) DEFAULT NULL,
+  `issued_at` DATETIME DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `uk_no` (`tenant_id`, `invoice_no`),
+  INDEX `idx_status` (`invoice_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='发票';
+
+-- 0024 CRM 集成
+CREATE TABLE IF NOT EXISTS `crm_integration` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `platform` VARCHAR(32) DEFAULT 'HUBSPOT' COMMENT 'HUBSPOT/SALESFORCE/ZOHO/PIPEDRIVE/CUSTOM',
+  `app_id` VARCHAR(128) DEFAULT NULL,
+  `client_id` VARCHAR(255) DEFAULT NULL,
+  `client_secret` VARCHAR(255) DEFAULT NULL,
+  `access_token` VARCHAR(500) DEFAULT NULL,
+  `refresh_token` VARCHAR(500) DEFAULT NULL,
+  `token_expire_at` DATETIME DEFAULT NULL,
+  `api_base_url` VARCHAR(255) DEFAULT NULL,
+  `portal_id` VARCHAR(64) DEFAULT NULL,
+  `sync_direction` VARCHAR(16) DEFAULT 'BIDIRECTIONAL' COMMENT 'PULL/PUSH/BIDIRECTIONAL',
+  `sync_members` TINYINT DEFAULT 1,
+  `sync_orders` TINYINT DEFAULT 1,
+  `sync_contacts` TINYINT DEFAULT 1,
+  `sync_deals` TINYINT DEFAULT 1,
+  `auto_sync` TINYINT DEFAULT 0,
+  `last_sync_at` DATETIME DEFAULT NULL,
+  `status` VARCHAR(16) DEFAULT 'ACTIVE' COMMENT 'ACTIVE/PAUSED/ERROR',
+  `error_message` VARCHAR(500) DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `uk_platform` (`tenant_id`, `platform`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='CRM 集成';
+
+CREATE TABLE IF NOT EXISTS `crm_sync_log` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `platform` VARCHAR(32) DEFAULT NULL,
+  `sync_type` VARCHAR(32) DEFAULT NULL COMMENT 'MEMBER/ORDER/CONTACT/DEAL',
+  `direction` VARCHAR(16) DEFAULT 'PULL' COMMENT 'PULL/PUSH',
+  `success_count` INT DEFAULT 0,
+  `fail_count` INT DEFAULT 0,
+  `skipped_count` INT DEFAULT 0,
+  `error_message` VARCHAR(500) DEFAULT NULL,
+  `duration_ms` INT DEFAULT 0,
+  `status` VARCHAR(16) DEFAULT 'SUCCESS' COMMENT 'SUCCESS/FAILED/PARTIAL',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_platform_time` (`platform`, `created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='CRM 同步日志';
+
+-- 0025 电商集成
+CREATE TABLE IF NOT EXISTS `ecommerce_platform` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `platform` VARCHAR(32) DEFAULT 'WEIDIAN' COMMENT 'WEIDIAN/YOUZAN/SHOPIFY/WOO',
+  `shop_name` VARCHAR(128) DEFAULT NULL,
+  `shop_id` VARCHAR(64) DEFAULT NULL,
+  `app_key` VARCHAR(255) DEFAULT NULL,
+  `app_secret` VARCHAR(255) DEFAULT NULL,
+  `access_token` VARCHAR(500) DEFAULT NULL,
+  `token_expire_at` DATETIME DEFAULT NULL,
+  `webhook_url` VARCHAR(500) DEFAULT NULL,
+  `webhook_secret` VARCHAR(255) DEFAULT NULL,
+  `api_base_url` VARCHAR(255) DEFAULT NULL,
+  `sync_products` TINYINT DEFAULT 1,
+  `sync_orders` TINYINT DEFAULT 1,
+  `sync_inventory` TINYINT DEFAULT 1,
+  `last_sync_at` DATETIME DEFAULT NULL,
+  `status` VARCHAR(16) DEFAULT 'ACTIVE' COMMENT 'ACTIVE/PAUSED/ERROR',
+  `error_message` VARCHAR(500) DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `uk_platform` (`tenant_id`, `platform`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='电商平台';
+
+CREATE TABLE IF NOT EXISTS `ecommerce_product` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `platform` VARCHAR(32) DEFAULT NULL,
+  `external_product_id` VARCHAR(128) DEFAULT NULL,
+  `local_product_id` BIGINT DEFAULT NULL,
+  `product_name` VARCHAR(255) DEFAULT NULL,
+  `sku` VARCHAR(128) DEFAULT NULL,
+  `price` DECIMAL(10,2) DEFAULT 0,
+  `stock` INT DEFAULT 0,
+  `status` VARCHAR(16) DEFAULT 'ACTIVE',
+  `last_sync_at` DATETIME DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX `idx_platform` (`platform`, `external_product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='电商商品';
+
+CREATE TABLE IF NOT EXISTS `ecommerce_order` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `platform` VARCHAR(32) DEFAULT NULL,
+  `external_order_id` VARCHAR(128) DEFAULT NULL,
+  `local_order_id` BIGINT DEFAULT NULL,
+  `order_no` VARCHAR(64) DEFAULT NULL,
+  `buyer_name` VARCHAR(64) DEFAULT NULL,
+  `buyer_phone` VARCHAR(20) DEFAULT NULL,
+  `amount` DECIMAL(10,2) DEFAULT 0,
+  `shipping_fee` DECIMAL(10,2) DEFAULT 0,
+  `total_amount` DECIMAL(10,2) DEFAULT 0,
+  `status` VARCHAR(16) DEFAULT 'PENDING',
+  `address` VARCHAR(500) DEFAULT NULL,
+  `tracking_no` VARCHAR(64) DEFAULT NULL,
+  `shipping_status` VARCHAR(16) DEFAULT 'PENDING',
+  `items_json` TEXT,
+  `raw_payload` TEXT,
+  `order_time` DATETIME DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX `idx_platform` (`platform`, `external_order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='电商订单';
+
+CREATE TABLE IF NOT EXISTS `ecommerce_sync_log` (
+  `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+  `tenant_id` BIGINT NOT NULL,
+  `platform` VARCHAR(32) DEFAULT NULL,
+  `sync_type` VARCHAR(32) DEFAULT NULL,
+  `success_count` INT DEFAULT 0,
+  `fail_count` INT DEFAULT 0,
+  `duration_ms` INT DEFAULT 0,
+  `status` VARCHAR(16) DEFAULT 'SUCCESS',
+  `error_message` VARCHAR(500) DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='电商同步日志';

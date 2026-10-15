@@ -1,0 +1,30 @@
+﻿{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "results":  [
+                                 {
+                                     "healthy":  false,
+                                     "channelType":  "EMAIL"
+                                 },
+                                 {
+                                     "healthy":  false,
+                                     "channelType":  "IN_APP"
+                                 },
+                                 {
+                                     "healthy":  false,
+                                     "channelType":  "MINI_PROGRAM"
+                                 },
+                                 {
+                                     "healthy":  false,
+                                     "channelType":  "SMS"
+                                 },
+                                 {
+                                     "healthy":  false,
+                                     "channelType":  "WECHAT_OFFICIAL_ACCOUNT"
+                                 }
+                             ]
+             },
+    "traceId":  "68ff5ab2001a4b7997c65346f1d2eb24",
+    "timestamp":  "2026-09-16 01:48:47"
+}

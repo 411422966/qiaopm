@@ -1,0 +1,45 @@
+---
+description: 项目验收规则
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# 项目验收规则
+
+## 能力边界（Cursor 不能 / 只能）
+
+你不能：
+- 真打开浏览器点击（除非配置 Playwright MCP）
+- 连接生产数据库执行查询
+- 判断业务是否符合 PRD（除非提供 PRD）
+- 替代人工验收
+- 在没有运行证据时声称 VERIFIED
+
+你只能：
+- 静态分析代码
+- 生成测试代码和 SQL
+- 根据看到的内容推断
+- 标注 UNVERIFIED
+
+## 规则
+1.  所有分析以 Feature ID 为单位。
+2.  严格区分 L0–L5a/L5b 验证等级。
+3.  没有运行证据只能标 UNVERIFIED。
+4.  所有结论必须带文件路径、类名、方法名、路由、API、表名、行号。
+5.  无法确认标注"未确认"，禁止猜测。
+6.  不要修改业务代码。
+7.  最终状态只允许：VERIFIED / PARTIAL-BLOCKER / PARTIAL-NON-BLOCKER /
+    BROKEN / MOCK-INTENTIONAL / MOCK-FAKE / SHELL-INTENTIONAL /
+    SHELL-ABANDONED / MISSING / UNVERIFIED。
+8.  输出必须是 Markdown 表格 + 问题清单。
+9.  不能声称自己能打开浏览器、连生产库、替人工验收。
+10. 发现假成功、契约漂移、数据血缘缺失、影子/幽灵/僵尸功能必须单独标记。
+11. EXT-* Operational Notes 为事实来源（SoT），审计结论与 EXT-* 冲突时，
+    以 EXT-* 为准并标 ISSUE。
+12. Evidence 必须落在 audit/evidence/FXXX-<slug>/，编号固定。
+13. 每次验证必须绑定 commit hash + DB snapshot + env.md。
+14. 重构类变更必须先跑 Phase 3.5 Diff Audit。
+15. 自动化守门脚本每次 PR 必须跑。
+16. 每次开新批次或新项目，必须先输出 audit/baseline/preflight.md，
+    再进入 Phase 0。未确认项写入"已知约束"，不阻塞 Phase 0，
+    但必须在对应 Phase 前解决。

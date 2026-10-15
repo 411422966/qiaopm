@@ -1,0 +1,13 @@
+﻿=== DESCRIBE market_activity (11 cols - 5B 实证) ===
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+store_id	bigint	YES	MUL	NULL	
+tenant_id	bigint	YES	MUL	NULL	
+name	varchar(100)	YES		NULL	
+type	int	YES		NULL	
+rule_config	text	YES		NULL	
+start_time	datetime	YES		NULL	
+end_time	datetime	YES		NULL	
+status	int	YES	MUL	1	
+created_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+updated_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED on update CURRENT_TIMESTAMP

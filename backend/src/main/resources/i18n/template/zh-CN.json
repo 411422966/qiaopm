@@ -1,0 +1,18 @@
+{
+  "locale": "zh-CN",
+  "scene": "BOOKING_CONFIRMATION",
+  "subject": "您的预约已确认",
+  "sms": "尊敬的 ${customerName}，您预约的 ${serviceName} 已确认。时间：${bookingDate} ${bookingTime}。预约号：${bookingNo}。门店：${storeName}。",
+  "miniProgram": {
+    "title": "预约确认通知",
+    "keyword1": "预约号：${bookingNo}",
+    "keyword2": "服务项目：${serviceName}",
+    "keyword3": "预约时间：${bookingDate} ${bookingTime}",
+    "keyword4": "门店：${storeName}",
+    "keyword5": "联系电话：${storePhone}"
+  },
+  "email": {
+    "subject": "您的预约已确认 — 预约号 ${bookingNo}",
+    "body": "尊敬的 ${customerName}，您好！\n\n您预约的 ${serviceName} 已成功确认。\n\n【预约详情】\n预约号：${bookingNo}\n服务项目：${serviceName}\n预约时间：${bookingDate} ${bookingTime}\n门店：${storeName}\n联系电话：${storePhone}\n\n如需改期或取消，请提前 24 小时联系我们。期待您的光临！\n\n美业科技"
+  }
+}

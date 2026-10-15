@@ -1,0 +1,271 @@
+# ====================================================================
+# API 层告警规则
+# Gate 3 批次 1.4b — P0-B 监控采集
+# 评估周期：1m（继承 prometheus.yml evaluation_interval）
+# ====================================================================
+
+groups:
+  - name: meiyetec-api-availability
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------------------
+      # 容器重启过多（反映频繁 OOM / CrashLoopBackOff）
+      # ---------------------------------------------------------------------------
+      - alert: ContainerRestartsHigh
+        expr: |
+          increase(kube_pod_container_status_restarts_total{
+            pod=~"meiyetec-api.*",
+            namespace=~".*"
+          }[10m]) > 3
+        for: 0m
+        labels:
+          severity: warning
+          service: meiyetec-api
+          tier: backend
+        annotations:
+          summary: "容器 10 分钟内重启超过 3 次"
+          description: |
+            meiyetec-api 容器 10 分钟内已重启 {{ $value | printf "%.0f" }} 次。
+            可能原因：OOMKilled / CrashLoopBackOff / 依赖服务不可达。
+            建议：检查 pod events / logs，以及 JVM heap 和 memory limit。
+
+      # ---------------------------------------------------------------------------
+      # 容器不可用（Up = 0）
+      # ---------------------------------------------------------------------------
+      - alert: ContainerDown
+        expr: |
+          up{job="meiyetec-api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: meiyetec-api
+          tier: backend
+        annotations:
+          summary: "meiyetec-api 不可用"
+          description: |
+            meiyetec-api 在 1 分钟内持续不可达（up == 0）。
+            立即检查容器状态：kubectl get pods / docker compose ps。
+
+  - name: meiyetec-api-http
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------------------
+      # HTTP 5xx 错误率（服务内部错误 / 下游故障）
+      # ---------------------------------------------------------------------------
+      - alert: HttpServerErrorRateHigh
+        expr: |
+          (
+            sum(rate(http_server_requests_seconds_count{
+              job="meiyetec-api",
+              status=~"5.."
+            }[5m]))
+            /
+            sum(rate(http_server_requests_seconds_count{
+              job="meiyetec-api"
+            }[5m]))
+          ) * 100 > 1
+        for: 5m
+        labels:
+          severity: critical
+          service: meiyetec-api
+          tier: backend
+        annotations:
+          summary: "HTTP 5xx 错误率超过 1%（持续 5 分钟）"
+          description: |
+            当前 5xx 错误率：{{ $value | printf "%.2f" }}%。
+            排查方向：
+            1. 查看 /actuator/health 详情
+            2. 检查下游 MySQL / Redis 连接
+            3. 查看业务日志关键词 ERROR / Exception
+
+      # ---------------------------------------------------------------------------
+      # HTTP 4xx 错误率（客户端异常高，可能被攻击或配置错误）
+      # ---------------------------------------------------------------------------
+      - alert: HttpClientErrorRateHigh
+        expr: |
+          (
+            sum(rate(http_server_requests_seconds_count{
+              job="meiyetec-api",
+              status=~"4.."
+            }[5m]))
+            /
+            sum(rate(http_server_requests_seconds_count{
+              job="meiyetec-api"
+            }[5m]))
+          ) * 100 > 10
+        for: 5m
+        labels:
+          severity: warning
+          service: meiyetec-api
+          tier: backend
+        annotations:
+          summary: "HTTP 4xx 错误率超过 10%（持续 5 分钟）"
+          description: |
+            当前 4xx 错误率：{{ $value | printf "%.2f" }}%。
+            可能原因：前端传参错误 / 鉴权 token 过期 / 恶意爬虫 / DDoS。
+
+      # ---------------------------------------------------------------------------
+      # HTTP P99 延迟（用户体验可感知卡顿）
+      # ---------------------------------------------------------------------------
+      - alert: HttpServerLatencyP99High
+        expr: |
+          histogram_quantile(
+            0.99,
+            sum(rate(http_server_requests_seconds_bucket{
+              job="meiyetec-api",
+              uri!="/actuator/prometheus"
+            }[5m])) by (le, uri)
+          ) * 1000 > 3000
+        for: 5m
+        labels:
+          severity: warning
+          service: meiyetec-api
+          tier: backend
+        annotations:
+          summary: "HTTP P99 延迟超过 3 秒（持续 5 分钟）"
+          description: |
+            URI {{ $labels.uri }} 的 P99 延迟：{{ $value | printf "%.0f" }}ms。
+            排查方向：慢查询 / N+1 / 连接池耗尽 / 外部 API 超时。
+
+  - name: meiyetec-api-jvm
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------------------
+      # JVM Heap 使用率（接近 OOM 风险）
+      # ---------------------------------------------------------------------------
+      - alert: JvmHeapUsageHigh
+        expr: |
+          (
+            jvm_memory_used_bytes{job="meiyetec-api", area="heap"}
+            /
+            jvm_memory_max_bytes{job="meiyetec-api", area="heap"}
+          ) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: meiyetec-api
+          tier: backend
+        annotations:
+          summary: "JVM Heap 使用率超过 80%（持续 5 分钟）"
+          description: |
+            Heap 使用率：{{ $value | printf "%.1f" }}%。
+            若持续上升，可能引发 OOMKilled。建议检查 GC 频率和堆外泄漏。
+
+      # ---------------------------------------------------------------------------
+      # JVM Heap 使用率 > 90%（接近熔断）
+      # ---------------------------------------------------------------------------
+      - alert: JvmHeapUsageCritical
+        expr: |
+          (
+            jvm_memory_used_bytes{job="meiyetec-api", area="heap"}
+            /
+            jvm_memory_max_bytes{job="meiyetec-api", area="heap"}
+          ) * 100 > 90
+        for: 2m
+        labels:
+          severity: critical
+          service: meiyetec-api
+          tier: backend
+        annotations:
+          summary: "JVM Heap 使用率超过 90%（持续 2 分钟）"
+          description: |
+            Heap 使用率：{{ $value | printf "%.1f" }}%。
+            高风险 OOM。请立即查看 GC 日志并检查内存泄漏。
+
+      # ---------------------------------------------------------------------------
+      # 线程死锁检测（JVM 线程状态）
+      # ---------------------------------------------------------------------------
+      - alert: JvmThreadDeadlock
+        expr: |
+          jvm_threads_states_threads{job="meiyetec-api", state="BLOCKED"} > 0
+        for: 1m
+        labels:
+          severity: critical
+          service: meiyetec-api
+          tier: backend
+        annotations:
+          summary: "JVM 检测到 BLOCKED 线程（疑似死锁或锁竞争）"
+          description: |
+            BLOCKED 线程数：{{ $value | printf "%.0f" }}。
+            立即 dump thread：jstack <pid>，查找持锁等待链。
+
+      # ---------------------------------------------------------------------------
+      # JVM Full GC 频率（正常应几乎为 0）
+      # ---------------------------------------------------------------------------
+      - alert: JvmFullGcRateHigh
+        expr: |
+          increase(jvm_gc_pause_seconds_count{job="meiyetec-api", action="full"}[5m]) > 3
+        for: 0m
+        labels:
+          severity: warning
+          service: meiyetec-api
+          tier: backend
+        annotations:
+          summary: "JVM 5 分钟内 Full GC 超过 3 次"
+          description: |
+            Full GC 次数：{{ $value | printf "%.0f" }}。
+            通常意味着 Heap 太小或内存泄漏。请检查 GC 日志和对象分配。
+
+      # ---------------------------------------------------------------------------
+      # JVM metaspace 使用率（类加载器泄漏）
+      # ---------------------------------------------------------------------------
+      - alert: JvmMetaspaceUsageHigh
+        expr: |
+          (
+            jvm_memory_used_bytes{job="meiyetec-api", id="Metaspace"}
+            /
+            jvm_memory_max_bytes{job="meiyetec-api", id="Metaspace"}
+          ) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: meiyetec-api
+          tier: backend
+        annotations:
+          summary: "JVM Metaspace 使用率超过 85%（持续 5 分钟）"
+          description: |
+            Metaspace 使用率：{{ $value | printf "%.1f" }}%。
+            可能是动态类加载导致（插件系统 / 热部署），Metaspace 泄漏无法通过 GC 回收。
+
+  - name: meiyetec-api-connection-pool
+    interval: 1m
+    rules:
+      # ---------------------------------------------------------------------------
+      # HikariCP 连接池耗尽
+      # ---------------------------------------------------------------------------
+      - alert: HikariPoolConnectionPoolExhausted
+        expr: |
+          hikaricp_connections_active{pool="HikariPool-ContactBook"} > 0
+          and
+          (
+            hikaricp_connections_idle{pool="HikariPool-ContactBook"} == 0
+            and
+            hikaricp_connections_pending{pool="HikariPool-ContactBook"} > 0
+          )
+        for: 2m
+        labels:
+          severity: warning
+          service: meiyetec-api
+          tier: backend
+        annotations:
+          summary: "HikariCP 连接池几乎耗尽"
+          description: |
+            Active: {{ $labels.active }} / Idle: {{ $labels.idle }} / Pending: {{ $labels.pending }}。
+            等待连接的请求会阻塞或超时。请检查慢查询和连接泄漏。
+
+      # ---------------------------------------------------------------------------
+      # 连接等待时间过长
+      # ---------------------------------------------------------------------------
+      - alert: HikariPoolConnectionWaitTimeHigh
+        expr: |
+          hikaricp_connections_timeout{pool="HikariPool-ContactBook"} > 0
+        for: 0m
+        labels:
+          severity: warning
+          service: meiyetec-api
+          tier: backend
+        annotations:
+          summary: "HikariCP 连接等待超时"
+          description: |
+            5 分钟内连接等待超时次数：{{ $value | printf "%.0f" }}。
+            请检查数据库 QPS 和慢查询，必要时扩容连接池（spring.datasource.hikari.maximum-pool-size）。

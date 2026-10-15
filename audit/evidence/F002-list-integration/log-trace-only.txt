@@ -1,0 +1,5 @@
+﻿
+2026-09-12 23:10:40.917 [http-nio-8080-exec-8] ERROR c.m.exception.GlobalExceptionHandler [traceId=f589a40454e8479c8b67
+8effb821827a] [tenant=] [order=] [pay=] [DBError]
+
+

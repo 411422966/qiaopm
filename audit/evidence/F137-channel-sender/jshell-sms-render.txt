@@ -1,0 +1,10 @@
+﻿=== SMS render normal ===
+亲爱的 张三，您的预约 BK-2026-001 已在 美业旗舰店 确认。
+=== SMS render null replace ===
+hello  world
+=== SMS render edge ===
+price: $100 (with literal $ and ${notclosing)
+=== SMS render no vars ===
+plain text no vars
+=== SMS render null template ===
+null

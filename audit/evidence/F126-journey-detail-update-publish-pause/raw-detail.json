@@ -1,0 +1,39 @@
+﻿{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "nodes":  [
+                               {
+                                   "nodeOrder":  1,
+                                   "nodeName":  "step1",
+                                   "templateCode":  "SMS_TPL_001",
+                                   "delayMinutes":  0
+                               }
+                           ],
+                 "journey":  {
+                                 "journeyName":  "5A-Journey-Updated",
+                                 "exitCount":  0,
+                                 "publishedAt":  "2026-09-16T01:54:12",
+                                 "description":  null,
+                                 "updateTime":  "2026-09-16T01:56:05",
+                                 "journeyCode":  "5A_J_001",
+                                 "completeCount":  1,
+                                 "operatorName":  "admin",
+                                 "nodesJson":  "[{\"nodeOrder\":1,\"nodeName\":\"step1\",\"templateCode\":\"SMS_TPL_001\",\"delayMinutes\":0}]",
+                                 "deleted":  0,
+                                 "journeyType":  "REENGAGEMENT",
+                                 "createTime":  "2026-09-16T01:50:20",
+                                 "edgesJson":  null,
+                                 "brandId":  null,
+                                 "triggerFilter":  null,
+                                 "tenantId":  1,
+                                 "triggerEvent":  null,
+                                 "id":  3,
+                                 "enterCount":  1,
+                                 "operatorId":  null,
+                                 "status":  3
+                             }
+             },
+    "traceId":  "57842292387d499fb77314f03dcc60f9",
+    "timestamp":  "2026-09-16 01:56:06"
+}

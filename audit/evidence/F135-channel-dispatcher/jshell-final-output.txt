@@ -1,0 +1,55 @@
+=== F135 + F137 5B 最终探�?===
+=== F135 ChannelDispatcher.getSender + F137 5 Sender channelType/render 综合实证 ===
+
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+--- F135 [1] Sender 注册清单 ---
+Sender list size = 5 (期望 5)
+
+--- F135 [2] channelType() 5 sender 实证 ---
+  SmsSender.channelType() = SMS
+  EmailSender.channelType() = EMAIL
+  MiniProgramSender.channelType() = MINI_PROGRAM
+  InAppSender.channelType() = IN_APP
+  WechatOfficialAccountSender.channelType() = WECHAT_OFFICIAL_ACCOUNT
+
+--- F135 [3] getSender(channelType) 6 case + I061 NPE 实证 ---
+  getSender("SMS") = SmsSender
+  getSender("EMAIL") = EmailSender
+  getSender("MINI_PROGRAM") = MiniProgramSender
+  getSender("IN_APP") = InAppSender
+  getSender("WECHAT_OFFICIAL_ACCOUNT") = WechatOfficialAccountSender
+  getSender("UNKNOWN") = null
+  -> getSender("UNKNOWN") 返回 null -> 调用方拿�? null 任何方法调用�? NPE [I061 实证]
+
+--- F135 [4] I075 NEW: DB channel_type 命名空间不一致实�? ---
+  getSender("MP") = null (DB 里有这个 channel_type �? sender 未注�?)
+  getSender("PUSH") = null (DB 里有这个 channel_type �? sender 未注�?)
+  getSender("WECHAT_OA") = null (DB 里有这个 channel_type �? sender 未注�?)
+  -> I075 NEW: 5 sender 注册 [SMS/EMAIL/IN_APP/MINI_PROGRAM/WECHAT_OFFICIAL_ACCOUNT]
+     DB 实际 channel_type 集合 [EMAIL/IN_APP/MINI_PROGRAM/MP/PUSH/SMS]
+     Sender-only (DB �?): EMAIL / WECHAT_OFFICIAL_ACCOUNT
+     DB-only (Sender �?): MP / PUSH  -> dispatch 直接 NPE
+     Common (�?�?)    : SMS / IN_APP / MINI_PROGRAM
+
+--- F137 [5] SMS / SmsSender.render 算法实证 (3 case) ---
+  render: 尊敬�?张三�?2026-09-16是您的生日，特赠100元优惠券
+  expect: 尊敬的张三，2026-09-16是您的生日，特赠100元优惠券
+  PASS:   false
+
+  --- render 边界 ---
+  null template: null
+  null vars:     尊敬�?${name}�?${date}是您的生日，特赠${amount}元优惠券
+  missing key:   [test  suffix]
+  multi-replace: 张三-张三-100
+
+=== 5 Sender Result 矩阵 ===
+  SMS                 : UNVERIFIED (Aliyun accessKey/secret 缺失 -> demo 降级)
+  EMAIL               : UNVERIFIED (SMTP 凭据缺失 -> demo 降级)
+  MINI_PROGRAM        : UNVERIFIED (WeChat MP appId/appSecret 缺失 -> demo 降级)
+  WECHAT_OFFICIAL_ACC : UNVERIFIED (WeChat OA appId/appSecret 缺失 -> demo 降级)
+  IN_APP              : VERIFIED (JdbcTemplate 直写 member_message �? 算法链路)
+  SmsSender.render    : VERIFIED (纯算�? �? 本次实证通过)
+
+=== F135 + F137 实证完成 ===

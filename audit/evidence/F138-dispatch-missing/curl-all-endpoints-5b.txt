@@ -1,0 +1,43 @@
+﻿# F138 4 tables MISSING curl verification (5B full 9 endpoints)
+
+Time: 2026-09-16 22:35 UTC+8
+Token: admin (re-logged in 22:34)
+Reference: I063 CRITICAL-P2
+
+--- [1/9] GET /m12/dispatch/page ---
+HTTP_CODE: 200 (wrapper)
+BODY: {"code":500,"message":"数据库异常","data":null,"traceId":"bc9fa8489bad413398cd45c6bedb1099","timestamp":"2026-09-16 22:34:36"}
+
+--- [2/9] GET /m12/dispatch/1 ---
+HTTP_CODE: 200 (wrapper)
+BODY: {"code":500,"message":"数据库异常","data":null,"traceId":"dd7a2855fd264cb88fb824c9dbfc86a3","timestamp":"2026-09-16 22:34:37"}
+
+--- [3/9] GET /m12/dispatch/1/targets ---
+HTTP_CODE: 200 (wrapper)
+BODY: {"code":500,"message":"数据库异常","data":null,"traceId":"53e661f6c7464429ae05c3b844935201","timestamp":"2026-09-16 22:34:37"}
+
+--- [4/9] GET /m12/dispatch/1/logs ---
+HTTP_CODE: 200 (wrapper)
+BODY: {"code":500,"message":"数据库异常","data":null,"traceId":"f8c09ad7cb454eaa991d929307a02644","timestamp":"2026-09-16 22:34:37"}
+
+--- [5/9] GET /m12/dispatch/stats ---
+HTTP_CODE: 200 (wrapper)
+BODY: {"code":500,"message":"数据库异常","data":null,"traceId":"7d9f2cbb2a6c4e03a89f9c6b3c862289","timestamp":"2026-09-16 22:34:37"}
+
+--- [6/9] POST /m12/dispatch (create) ---
+HTTP_CODE: 400 (wrapper)
+BODY: {"code":400,"message":"请求参数错误: dispatchType 必须为 [PACKAGE, PRICING_RULE, COUPON, ACTIVITY, DISCOUNT] 之一","data":null,"traceId":"58c90c1af5e74a2ea15c76aea6cbe8c4","timestamp":"2026-09-16 22:34:37"}
+
+--- [7/9] POST /m12/dispatch/1/publish ---
+HTTP_CODE: 200 (wrapper)
+BODY: {"code":500,"message":"数据库异常","data":null,"traceId":"2d058a96aec84760aa19ed8a323c0b22","timestamp":"2026-09-16 22:34:37"}
+
+--- [8/9] POST /m12/dispatch/1/publish-async ---
+HTTP_CODE: 200 (wrapper)
+BODY: {"code":500,"message":"数据库异常","data":null,"traceId":"43312fca0890445d94c930566cc4ac3f","timestamp":"2026-09-16 22:34:38"}
+
+--- [9/9] POST /m12/dispatch/1/cancel ---
+HTTP_CODE: 200 (wrapper)
+BODY: {"code":500,"message":"数据库异常","data":null,"traceId":"44cccfe25b2c4c6bb71e5e76a65d384b","timestamp":"2026-09-16 22:34:38"}
+
+=== F138 9 endpoints complete (4 tables MISSING expected -> 500 with TableNotFoundException) ===

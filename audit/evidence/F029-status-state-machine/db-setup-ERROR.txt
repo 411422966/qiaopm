@@ -1,0 +1,11 @@
+﻿
+=== setup: set id=2 status=ERROR ===
+mysql.exe : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-06fdf3a8-8546-4762-bd3c-369c83f83734.ps1:79 字符: 331
++ ... oding utf8; & mysql -h 127.0.0.1 -P 3307 -uroot -proot123456 --defaul ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+id	status	error_message
+2	ERROR	manual test (audit)

@@ -1,0 +1,7 @@
+﻿mysql: [Warning] Using a password on the command line interface can be insecure.
+id	tenant_id	status	last_sync_at
+1	1	ACTIVE	NULL
+2	1	ACTIVE	2026-09-12 23:13:08
+3	2	ACTIVE	NULL
+sync_log_total
+0

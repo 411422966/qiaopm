@@ -1,0 +1,83 @@
+﻿=== F071 verifyWebhookSignature 单元测试 ===
+
+[Case 1] 正常签名
+  signSecret = signSecret_test_2026
+  rawBody    = {"msg_id":"test-001","status":"TRADE_ORDER_STATE_UPDATE","order_no":"TEST-001"}
+  signature  = 9369374fac8507a989b788991784da2a
+  expected   = true  (target=true)  PASS
+
+[Case 2] 篡改 body (TEST-001 → ATTACK-001)
+  rawBody    = {"msg_id":"test-001","status":"TRADE_ORDER_STATE_UPDATE","order_no":"ATTACK-001"}
+  signature  = 9369374fac8507a989b788991784da2a
+  expected   = false  (target=false) PASS
+
+[Case 3] 篡改 signature (最后一字符翻转)
+  tampered  = 9369374fac8507a989b788991784da2b
+  expected   = false  (target=false) PASS
+
+[Case 4] 大写 signature (equalsIgnoreCase 防御)
+  upperSig  = 9369374FAC8507A989B788991784DA2A
+  expected   = true  (target=true)  PASS
+
+[Case 5] signSecret=null (边界)
+  expected   = false  (target=false) PASS
+
+[Case 6] signature=null (边界)
+  expected   = false  (target=false) PASS
+
+[Case 7] rawBody=null vs rawBody="" (等价性)
+  sigEmpty   = dcbce15f21a0642bfe2752599c267a64
+  rawBody=null   → true
+  rawBody=""     → true
+  expected   = PASS  (target=true & 等价)
+
+=== 汇总 ===
+PASS = 7 / 7
+
+=== jshell 二次验证 (在 jshell 里调 main + 静态方法) ===
+jshell.exe : 错误:
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-44c5bf51-684d-4a49-8505-f9574a6475b0.ps1:106 字符: 6
++ "@ | & $jshell --class-path $work - 2>&1 | Out-File -Append "$work\js ...
++      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (错误::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+找不到符号
+  符号:   类 AuditVerifySig
+  位置: 类 
+AuditVerifySig sig = new AuditVerifySig();
+^------------^
+错误:
+找不到符号
+  符号:   类 AuditVerifySig
+  位置: 类 
+AuditVerifySig sig = new AuditVerifySig();
+                         ^------------^
+错误:
+找不到符号
+  符号:   变量 AuditVerifySig
+  位置: 类 
+System.out.println("jshell: r1 = " + AuditVerifySig.verifyWebhookSignature("test123", "{\"id\":\"x\"}", AuditVerifySig.
+computeExpected("test123", "{\"id\":\"x\"}")));
+                                     ^------------^
+错误:
+找不到符号
+  符号:   变量 AuditVerifySig
+  位置: 类 
+System.out.println("jshell: r1 = " + AuditVerifySig.verifyWebhookSignature("test123", "{\"id\":\"x\"}", AuditVerifySig.
+computeExpected("test123", "{\"id\":\"x\"}")));
+                                                                                                        ^------------^
+错误:
+找不到符号
+  符号:   变量 AuditVerifySig
+  位置: 类 
+System.out.println("jshell: r2 = " + AuditVerifySig.verifyWebhookSignature("test123", "{\"id\":\"y\"}", AuditVerifySig.
+computeExpected("test123", "{\"id\":\"x\"}")));
+                                     ^------------^
+错误:
+找不到符号
+  符号:   变量 AuditVerifySig
+  位置: 类 
+System.out.println("jshell: r2 = " + AuditVerifySig.verifyWebhookSignature("test123", "{\"id\":\"y\"}", AuditVerifySig.
+computeExpected("test123", "{\"id\":\"x\"}")));
+                                                                                                        ^------------^

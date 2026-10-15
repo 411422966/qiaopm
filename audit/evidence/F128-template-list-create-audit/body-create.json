@@ -1,0 +1,9 @@
+{
+  "channelType": "SMS",
+  "scene": "BIRTHDAY",
+  "templateCode": "AUDIT_TPL_001",
+  "templateName": "audit-test-template",
+  "content": "Hi ${customerName}, 您的生日专属优惠已到",
+  "variables": "customerName",
+  "status": 0
+}

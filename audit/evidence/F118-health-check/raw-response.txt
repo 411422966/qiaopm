@@ -1,0 +1,2 @@
+﻿{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"results":[{"healthy":false,"channelType":"EMAIL"},{"healthy":false,"channelType":"IN_APP"},{"healthy":false,"channelType":"MINI_PROGRAM"},{"healthy":false,"channelType":"SMS"},{"healthy":false,"channelType":"WECHAT_OFFICIAL_ACCOUNT"}]},"traceId":"dc64a643aef541efa02572cf8ed777a0","timestamp":"2026-09-16 02:43:56"}
+HTTP 200

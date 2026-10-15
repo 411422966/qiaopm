@@ -1,0 +1,3 @@
+﻿
+=== F075 GET /ecommerce/platform/1/health ===
+code=500 healthy= stage= msg=

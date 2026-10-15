@@ -1,0 +1,48 @@
+﻿{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "nodes":  [
+                               {
+                                   "id":  "n1",
+                                   "type":  "start"
+                               },
+                               {
+                                   "id":  "n2",
+                                   "type":  "sms",
+                                   "templateId":  1
+                               }
+                           ],
+                 "journey":  {
+                                 "journeyName":  "5A F124 ??????",
+                                 "exitCount":  0,
+                                 "publishedAt":  null,
+                                 "description":  "Phase 5A F124 ??",
+                                 "updateTime":  "2026-09-16T02:14:26",
+                                 "journeyCode":  "5A-F124-J1",
+                                 "completeCount":  0,
+                                 "operatorName":  "admin",
+                                 "nodesJson":  "[{\"id\":\"n1\",\"type\":\"start\"},{\"id\":\"n2\",\"type\":\"sms\",\"templateId\":1}]",
+                                 "deleted":  0,
+                                 "journeyType":  "MARKETING",
+                                 "createTime":  "2026-09-16T02:14:26",
+                                 "edgesJson":  "[{\"from\":\"n1\",\"to\":\"n2\"}]",
+                                 "brandId":  null,
+                                 "triggerFilter":  null,
+                                 "tenantId":  1,
+                                 "triggerEvent":  "NEW_MEMBER",
+                                 "id":  4,
+                                 "enterCount":  0,
+                                 "operatorId":  null,
+                                 "status":  1
+                             },
+                 "edges":  [
+                               {
+                                   "from":  "n1",
+                                   "to":  "n2"
+                               }
+                           ]
+             },
+    "traceId":  "deaa3e87db5246e9a7fb17db10d7e7c3",
+    "timestamp":  "2026-09-16 02:16:47"
+}

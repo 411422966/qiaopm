@@ -1,0 +1,129 @@
+---
+description: EXT-19（多语言预约确认 + i18n + SMTP + 微信订阅消息）操作注意与生产就绪检查清单
+alwaysApply: false
+globs: backend/src/main/java/com/meiyetec/booking/**,backend/src/main/java/com/meiyetec/service/channel/EmailSender.java,backend/src/main/java/com/meiyetec/service/channel/MiniProgramSender.java,backend/src/main/java/com/meiyetec/service/IntlBookingService.java,backend/src/main/java/com/meiyetec/entity/OverseasBooking.java,backend/src/main/resources/i18n/template/**
+---
+
+# EXT-19 Operational Notes（多语言预约确认）
+
+## 0. Critical Constraints（关键约束 — 改之前必读）
+
+1. **WeChat 模板 ID 是占位符**
+   - `BookingConfirmationService.MP_TEMPLATE_ID = "BOOKING_CONFIRMATION"` 是**占位常量**。
+   - **真实使用前必须**：在微信公众平台注册订阅消息模板 → 替换该常量 → 检查 `MP_VARIABLES_JSON` 里 keyword1..N 的变量顺序是否匹配官方模板。
+   - 不替换就上线 = 微信 API 返回 40037（template id invalid）。
+
+2. **EmailSender mismatch 降级 demo**
+   - 租户 `mkt_channel_config.configJson` 的 `smtpHost / username` 与全局 `spring.mail.*` 不一致时**降级 demo 模式**（不连错邮，避免跨租户串发）。
+   - 联调 / 灰度时务必观察日志关键词 `[EMAIL] tenant SMTP host/user mismatch with global config; demo mode`，确认走的是真实链路。
+
+3. **CONFIRMED 自动触发 sendConfirmation（行为变更）**
+   - `IntlBookingService.updateStatus` 在状态迁移 `非 CONFIRMED → CONFIRMED` 时**自动调用** `confirmationService.sendConfirmation(b)`。
+   - 默认开启，可通过请求体 `{"status":"CONFIRMED", "autoSend": false}` 关闭。
+   - 发送异常**不会回滚**状态变更（已在 try/catch 内），仅写入 `confirmationError` 字段。
+   - 响应结构变化：`data` 从单个 `OverseasBooking` 改为 `{ booking, confirmation?, confirmationError? }`。
+   - **前端配合**：状态确认按钮文案需明确「确认即发送通知」，避免用户无感被自动触达。
+
+4. **StoreLookupService 字段映射**
+   - 当前查 `pos_store.store_name` + `contact_phone`（JdbcTemplate 直查）。
+   - 5 分钟本地缓存（`ConcurrentHashMap<storeId, CacheEntry>`），避免推送风暴触发 N+1。
+   - 查不到时回落到占位常量 `美业旗舰店 / 400-888-8888`。
+   - 如生产表有 `service_hotline / hotline_phone` 等更合适字段，需调整 `StoreLookupService.lookup()` 的 SQL。
+
+5. **SQL 迁移兼容**
+   - `migrate_ext_19_mini_program_openid.sql` 用了 `ADD COLUMN IF NOT EXISTS`（**MySQL 8.0.29+**）。
+   - 旧版本 MySQL（< 8.0.29）需先 `SHOW COLUMNS FROM overseas_booking LIKE 'mini_program_open_id'` 检查再 ALTER。
+   - 同步检查 `overseas_booking` 表是否存在（脚本含 `CREATE TABLE IF NOT EXISTS` 兜底）。
+
+## 1. Touchpoints（涉及的文件清单）
+
+后端核心：
+- `backend/src/main/java/com/meiyetec/entity/OverseasBooking.java` — `miniProgramOpenId` 字段
+- `backend/src/main/java/com/meiyetec/booking/BookingConfirmationService.java` — `sendConfirmation(booking)` 核心入口
+- `backend/src/main/java/com/meiyetec/booking/BookingConfirmationTemplate.java` — 渲染后模板 DTO
+- `backend/src/main/java/com/meiyetec/booking/BookingConfirmationTemplateResolver.java` — i18n 加载 + locale 回退
+- `backend/src/main/java/com/meiyetec/booking/BookingConfirmationResult.java` — 多渠道聚合结果
+- `backend/src/main/java/com/meiyetec/booking/StoreLookupService.java` — `pos_store` 查询 + 缓存
+
+渠道实现：
+- `backend/src/main/java/com/meiyetec/service/channel/SmsSender.java` — 阿里云短信
+- `backend/src/main/java/com/meiyetec/service/channel/EmailSender.java` — **JavaMailSender 真实 SMTP**
+- `backend/src/main/java/com/meiyetec/service/channel/MiniProgramSender.java` — 微信订阅消息
+- `backend/src/main/java/com/meiyetec/service/channel/InAppSender.java` — 站内信（database）
+- `backend/src/main/java/com/meiyetec/service/channel/WechatOfficialAccountSender.java` — 公众号
+
+业务入口：
+- `backend/src/main/java/com/meiyetec/service/IntlBookingService.java` — 自动触发点
+
+资源：
+- `backend/src/main/resources/i18n/template/zh-CN.json` — 简体中文
+- `backend/src/main/resources/i18n/template/zh-TW.json` — 繁体中文
+- `backend/src/main/resources/i18n/template/en-US.json` — 英文
+- `backend/src/main/resources/i18n/template/ja-JP.json` — 日文
+- `backend/src/main/resources/i18n/template/ko-KR.json` — 韩文
+- `backend/src/main/resources/i18n/template/fr-FR.json` — 法文
+
+SQL：
+- `backend/src/main/resources/db/sql/migrate_ext_19_mini_program_openid.sql`
+
+测试：
+- `backend/src/test/java/com/meiyetec/booking/BookingConfirmationServiceTest.java`
+- `backend/src/test/java/com/meiyetec/booking/BookingConfirmationTemplateResolverTest.java`
+- `backend/src/test/java/com/meiyetec/service/channel/EmailSenderTest.java`
+
+## 2. Re-confirmation Checklist（生产部署前必查）
+
+联调 / 灰度 / 上线前对照勾选：
+
+- [ ] WeChat 订阅消息模板已在公众号后台注册 → `MP_TEMPLATE_ID` 已替换
+- [ ] `MP_VARIABLES_JSON` 的变量顺序与官方模板的 keyword1..N 顺序一致
+- [ ] SMTP 凭据通过环境变量 / `mkt_channel_config.configJson` 注入（**不要写进 YAML**）
+- [ ] 前端状态确认按钮文案标注「确认即发送通知」
+- [ ] `autoSend=false` 在手动确认场景验证通过（不触发自动发送）
+- [ ] `pos_store` 字段对齐（`store_name` + `contact_phone`，或生产实际字段）
+- [ ] MySQL 版本 ≥ 8.0.29（或 `ALTER` 前 `SHOW COLUMNS` 检查）
+- [ ] 6 个 locale JSON 在生产 classpath 下存在（启动期 `warmup()` 不报错）
+- [ ] 联调日志中 `EmailSender` 走真实链路（无 `mismatch with global config`）
+- [ ] `BookingConfirmationService.sendConfirmation` 任一渠道失败 → `overallSuccess=false` 正确上报
+
+## 3. Endpoints
+
+新增 / 变更：
+
+```
+POST /intl-booking/{id}/send-confirmation    # 手动触发（独立于状态变更）
+POST /intl-booking/{id}/status               # 状态变更（autoSend 默认 true）
+GET  /intl-booking/{id}/confirmation-template # 模板预览（保持兼容）
+GET  /intl-booking/list                       # 海外预约列表
+POST /intl-booking/webhook/google             # Google webhook
+POST /intl-booking/webhook/instagram          # Instagram webhook
+```
+
+## 4. Channel Routing Rules
+
+| booking 字段 | 渠道 | 备注 |
+|---|---|---|
+| `customerPhone` 非空 | SMS | 阿里云；`SmsSender` |
+| `customerEmail` 非空 | EMAIL | JavaMailSender；`EmailSender` |
+| `miniProgramOpenId` 非空 | MINI_PROGRAM | 微信订阅消息；`MiniProgramSender` |
+| 任一渠道无对应 receiver | skipped | errorMsg 含 "skipped" 标记 |
+
+任一渠道 success=true → `BookingConfirmationResult.overallSuccess=true`。
+
+## 5. 占位符变量
+
+所有 `i18n/template/*.json` 共享同一套占位符（`SmsSender.render` 实现 `${var}` → vars[var] 替换）：
+
+| 占位符 | 来源 | 备注 |
+|---|---|---|
+| `${customerName}` | booking.customerName | 必填 |
+| `${customerPhone}` | booking.customerPhone | 必填（SMS） |
+| `${customerEmail}` | booking.customerEmail | 必填（EMAIL） |
+| `${serviceName}` | booking.serviceName | 必填 |
+| `${bookingDate}` | booking.bookingDate | LocalDate → `yyyy-MM-dd` |
+| `${bookingTime}` | booking.bookingTime | String "HH:mm" |
+| `${bookingNo}` | booking.bookingNo | 必填 |
+| `${storeName}` | pos_store.store_name | 查不到 → `美业旗舰店` |
+| `${storePhone}` | pos_store.contact_phone | 查不到 → `400-888-8888` |
+
+新增 locale：直接新建 `i18n/template/{locale}.json` 即可，resolver 启动期自动识别。

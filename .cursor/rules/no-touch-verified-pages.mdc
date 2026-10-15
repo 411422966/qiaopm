@@ -1,0 +1,24 @@
+---
+description: 三页面验证完成后，未经确认禁止再改
+alwaysApply: true
+---
+
+# 用户已验证通过的页面（禁止主动修改）
+
+以下 3 个页面的功能已由用户在浏览器中实测通过，**不再有任何错误**：
+
+- `/dashboard`（首页）
+- `/mh/visual`（视觉档案）
+- `/mh/consent`（合规记录）
+
+## 硬性规则
+
+1. 在用户**明确确认**之前，不得对上述 3 个路由的页面（含 `frontend/meiyetec-web/src/views/dashboard/**`、`frontend/meiyetec-web/src/views/mh/visual.vue`、`frontend/meiyetec-web/src/views/mh/consent.vue`）以及为它们提供数据的后端接口做任何"修复/优化/重构/微调"。
+2. 即使发现疑似 Bug、风格不一致、dead code、可优化点，也**只列出问题 + 等待用户回复**，不得自行动手。
+3. 任何代码改动（含新增 endpoint、调整 SQL、加 silent 标记、改文案）都必须先问 → 用户答复 → 才动手。
+4. 如果用户的请求看起来会触及以上文件，先停下来询问确认。
+
+## 例外
+
+- 用户明确说"修 X"且 X 指向这 3 个页面 → 可以动手。
+- 用户明确说"还原/回退"对它们的某次修改 → 可以动手。

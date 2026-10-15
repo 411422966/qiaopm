@@ -1,0 +1,122 @@
+﻿{
+    "list":  {
+                 "code":  200,
+                 "message":  "操作成功",
+                 "data":  [
+                              {
+                                  "variables":  "name,orderNo",
+                                  "subject":  "评价邀请",
+                                  "channelType":  "MINI_PROGRAM",
+                                  "templateCode":  "TPL-MP-EVAL",
+                                  "content":  "请对本次服务进行评价",
+                                  "enabled":  1,
+                                  "scene":  "EVALUATION",
+                                  "templateName":  "评价邀请",
+                                  "linkUrl":  null,
+                                  "auditStatus":  2,
+                                  "linkType":  "MINI",
+                                  "id":  3,
+                                  "externalTemplateId":  "mp-eval-001"
+                              },
+                              {
+                                  "variables":  "customerName",
+                                  "subject":  null,
+                                  "channelType":  "SMS",
+                                  "templateCode":  "AUDIT_TPL_001",
+                                  "content":  "Hi ${customerName}, 您的生日专属优惠已到",
+                                  "enabled":  1,
+                                  "scene":  "BIRTHDAY",
+                                  "templateName":  "audit-test-template",
+                                  "linkUrl":  null,
+                                  "auditStatus":  2,
+                                  "linkType":  "MINI",
+                                  "id":  5,
+                                  "externalTemplateId":  null
+                              },
+                              {
+                                  "variables":  "name,date,amount",
+                                  "subject":  "生日祝福",
+                                  "channelType":  "SMS",
+                                  "templateCode":  "TPL-SMS-BIRTHDAY",
+                                  "content":  "尊敬的${name}，${date}是您的生日，美业科技祝您生日快乐，特赠送${amount}元优惠券！",
+                                  "enabled":  1,
+                                  "scene":  "BIRTHDAY",
+                                  "templateName":  "生日祝福短信",
+                                  "linkUrl":  null,
+                                  "auditStatus":  2,
+                                  "linkType":  "MINI",
+                                  "id":  1,
+                                  "externalTemplateId":  "aliyun-birthday-001"
+                              },
+                              {
+                                  "variables":  "name,date",
+                                  "subject":  "到期提醒",
+                                  "channelType":  "SMS",
+                                  "templateCode":  "TPL-SMS-EXPIRE",
+                                  "content":  "尊敬的${name}，您的套餐将于${date}到期，请及时预约使用。",
+                                  "enabled":  1,
+                                  "scene":  "EXPIRE",
+                                  "templateName":  "套餐到期提醒",
+                                  "linkUrl":  null,
+                                  "auditStatus":  2,
+                                  "linkType":  "MINI",
+                                  "id":  2,
+                                  "externalTemplateId":  "aliyun-expire-001"
+                              },
+                              {
+                                  "variables":  "name,date,campaign,discount",
+                                  "subject":  "活动邀请",
+                                  "channelType":  "SMS",
+                                  "templateCode":  "TPL-SMS-MARKETING",
+                                  "content":  "尊敬的${name}，${date}美业科技举办${campaign}活动，${discount}元体验等您来！",
+                                  "enabled":  1,
+                                  "scene":  "MARKETING",
+                                  "templateName":  "活动营销",
+                                  "linkUrl":  null,
+                                  "auditStatus":  2,
+                                  "linkType":  "MINI",
+                                  "id":  4,
+                                  "externalTemplateId":  "aliyun-mkt-001"
+                              }
+                          ],
+                 "traceId":  "ff3e359c9b4e4c9d9176990cd98b0259",
+                 "timestamp":  "2026-09-16 01:49:11"
+             },
+    "create":  {
+                   "code":  200,
+                   "message":  "已创建",
+                   "data":  {
+                                "id":  6,
+                                "tenantId":  1,
+                                "brandId":  null,
+                                "channelType":  "SMS",
+                                "channelConfigId":  null,
+                                "templateCode":  "5A_TPL_001",
+                                "templateName":  "5A-TestTpl",
+                                "externalTemplateId":  null,
+                                "scene":  "BOOKING",
+                                "subject":  null,
+                                "content":  "Test",
+                                "variables":  null,
+                                "linkUrl":  null,
+                                "linkType":  "MINI",
+                                "auditStatus":  1,
+                                "auditRemark":  null,
+                                "enabled":  1,
+                                "operatorId":  null,
+                                "operatorName":  null,
+                                "createTime":  "2026-09-16T01:49:11.86695",
+                                "updateTime":  "2026-09-16T01:49:11.86695",
+                                "deleted":  null
+                            },
+                   "traceId":  "83e7ccb7f3b94f1ebd569ef42d943224",
+                   "timestamp":  "2026-09-16 01:49:11"
+               },
+    "audit":  {
+                  "code":  400,
+                  "message":  "请求参数错误: auditStatus 必填",
+                  "data":  null,
+                  "traceId":  "d03137661c0e4ef297f39b9957428004",
+                  "timestamp":  "2026-09-16 01:49:11"
+              }
+}

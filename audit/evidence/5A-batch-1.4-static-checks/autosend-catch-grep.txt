@@ -1,0 +1,82 @@
+IntlBookingService.updateStatus autoSend 静态分析 — Phase 5A.5 实证 (I047)
+
+> 创建时间：2026-09-14 20:40 (UTC+8)
+> 文件：backend/src/main/java/com/meiyetec/service/IntlBookingService.java
+> 验证目标：updateStatus 中 autoSend try/catch 吞异常模式 + 默认 autoSend=true 触发 (I047)
+> 关联：I048 rollbackFor 缺失 (I009 模式)
+
+--- RAW CONTENT (L186-210) ---
+    @PostMapping("/{id}/status")
+    @Transactional
+    public Result<Map<String, Object>> updateStatus(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        OverseasBooking b = bookingMapper.selectById(id);
+        if (b == null) return Result.error(BizCode.NOT_FOUND, "预约不存在");
+        String status = (String) body.get("status");
+        if (status == null) return Result.error(BizCode.BAD_REQUEST, "status 必填");
+        String oldStatus = b.getStatus();
+        b.setStatus(status);
+        if ("CONFIRMED".equals(status)) {
+            b.setNotes((b.getNotes() == null ? "" : b.getNotes()) + "\n[confirmed] " + LocalDateTime.now());
+        }
+        if ("CANCELLED".equals(status)) {
+            b.setNotes((b.getNotes() == null ? "" : b.getNotes()) + "\n[cancelled] " + LocalDateTime.now());
+        }
+        bookingMapper.updateById(b);
+
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("booking", b);
+
+        // EXT-19（后续优化 3）：状态从非 CONFIRMED → CONFIRMED 时自动触发多语言确认发送
+        // 默认开启；body.autoSend=false 可关闭
+        Boolean autoSend = body.get("autoSend") == null ? Boolean.TRUE
+                : Boolean.valueOf(body.get("autoSend").toString());
+        if (autoSend && "CONFIRMED".equals(status) && !"CONFIRMED".equals(oldStatus)) {
+            try {
+                BookingConfirmationResult r = confirmationService.sendConfirmation(b);
+                data.put("confirmation", r);
+                log.info("[INTL-BOOKING] auto-send on CONFIRM: bookingId={} overallSuccess={} locale={} (fallback={}) channels={}",
+                        id, r.isOverallSuccess(), r.getResolvedLocale(), r.getUsedFallback(),
+                        r.getChannelResults().keySet());
+            } catch (Exception e) {
+                log.warn("[INTL-BOOKING] auto-send failed (status 仍成功): {}", e.getMessage());
+                data.put("confirmationError", e.getMessage());
+            }
+        }
+        return Result.success("已更新状态", data);
+    }
+
+--- 关键行分析 (I047) ---
+- L189: bookingMapper.updateById(b);  ← status 变更已成功持久化
+- L195-196: Boolean autoSend = body.get("autoSend") == null ? Boolean.TRUE : Boolean.valueOf(body.get("autoSend").toString());
+             ← 默认值 true（body 没传 autoSend 时启用）
+- L197: if (autoSend && "CONFIRMED".equals(status) && !"CONFIRMED".equals(oldStatus)) {
+        ← 触发条件：autoSend=true + status=CONFIRMED + 旧状态非 CONFIRMED
+- L198-203: try { ... sendConfirmation(b) ... } ← 关键 try 块
+- L203-206: catch (Exception e) {
+                log.warn("[INTL-BOOKING] auto-send failed (status 仍成功): {}", e.getMessage());
+                data.put("confirmationError", e.getMessage());
+            }
+            ← catch Exception 吞所有异常；不重新抛出
+            ← 仅写 log warn + confirmationError 字段
+            ← booking status 已成功持久化（catch 在 updateById 之后）
+
+--- I047 实证（catch 吞异常模式 — I008 同模式）---
+✅ PASS — autoSend 异常不回滚状态变更
+- 行为变更说明：
+  * updateById(b) 在 L189 已成功（COMMITTED by transaction）
+  * sendConfirmation 在 L199 调用；任何抛出的 Exception 在 L203 被 catch
+  * catch 块不 throw；仅 log.warn + 写 confirmationError
+  * status 变更**不回滚**（booking 状态已变更）
+- 与 SoT §0.3 完全一致："发送异常不会回滚状态变更（已在 try/catch 内），仅写入 confirmationError 字段"
+- I047 模式：与 Batch 1.1 I008 catch 吞异常同模式
+
+--- I048 关联 (@Transactional 未指定 rollbackFor) ---
+- L187: @Transactional  ← 默认 rollbackFor 仅 RuntimeException
+- I048 模式：与 Batch 1.1 I009 rollbackFor 缺失同模式
+- D26 决策：I048 暂缓（I009 模式对齐）
+
+--- VERDICT ---
+✅ PASS — I047 实证成功 + I048 关联确认
+- F096 影响：IntlBookingService.updateStatus PARTIAL-NON-BLOCKER（I047 + I048）
+- 决策：D26 I047/I048 暂缓（沿用 I008/I009 模式；Post-Audit 整改）
+- 前端配合：F111 Frontend Shadow (I040/I041) — autoSend=false UI 缺失 + 按钮文案无"确认即发送通知"

@@ -1,0 +1,1 @@
+﻿root_cause_5b: All endpoints hit SELECT/INSERT on missing mkt_dispatch / mkt_dispatch_target tables

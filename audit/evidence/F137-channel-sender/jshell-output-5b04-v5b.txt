@@ -1,0 +1,49 @@
+=== F137 Phase 5B v5b锛堢湡瀹?backend classpath锛夆€?鏃堕棿鎴?2026-09-16 22:23:54 ===
+
+--- STDOUT ---
+=== F137 Probe v5b begin ===
+=== F137 5 Sender 鍗曞厓娴嬭瘯 (v5b) ===
+[step 0] 5 Sender class loadable: OK
+
+--- [1/5] SMS / SmsSender.render 绠楁硶 ---
+render(template,vars) = [Dear ZhangSan, 2026-09-16 birthday bonus 100 yuan]
+EXPECT                 = [Dear ZhangSan, 2026-09-16 birthday bonus 100 yuan]
+MATCH                  = true
+
+--- render 杈圭晫 ---
+  null template    : null
+  null vars        : Dear ${name}, ${date} birthday bonus ${amount} yuan
+  missing key      : [test  suffix]
+  multi-replace    : ZhangSan-ZhangSan-100
+
+--- [2/5] EMAIL ---
+  email.channelType() = EMAIL
+  MATCH 'EMAIL'       = true
+
+--- [3/5] IN_APP ---
+  inApp.channelType() = IN_APP
+  MATCH 'IN_APP'      = true
+
+--- [4/5] MINI_PROGRAM ---
+  mp.channelType()     = MINI_PROGRAM
+  MATCH 'MINI_PROGRAM' = true
+
+--- [5/5] WECHAT_OFFICIAL_ACCOUNT ---
+  oa.channelType()                       = WECHAT_OFFICIAL_ACCOUNT
+  MATCH 'WECHAT_OFFICIAL_ACCOUNT'        = true
+  NOT 'WECHAT_OA'                        = true
+
+=== Sender 鍑嵁渚濊禆鐭╅樀 ===
+  SMS                 : UNVERIFIED (Aliyun creds 缂哄け -> demo fallback)
+  EMAIL               : UNVERIFIED (SMTP creds 缂哄け -> demo fallback)
+  MINI_PROGRAM        : UNVERIFIED (WeChat MP creds 缂哄け -> demo fallback)
+  WECHAT_OFFICIAL_ACC : UNVERIFIED (WeChat OA creds 缂哄け -> demo fallback)
+  IN_APP              : VERIFIED (JdbcTemplate 鐩村啓 member_message)
+  SmsSender.render    : VERIFIED (pure algorithm 鈥?this run confirms)
+=== ExitCode=0 ===
+
+--- STDERR ---
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+

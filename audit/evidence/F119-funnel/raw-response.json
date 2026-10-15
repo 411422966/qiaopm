@@ -1,0 +1,15 @@
+﻿{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "convertRate":  0.2,
+                 "read":  491,
+                 "sentRate":  100.0,
+                 "converted":  1,
+                 "reach":  491,
+                 "sent":  491,
+                 "readRate":  100.0
+             },
+    "traceId":  "9ac5550e7ca040c9a26c59c5da02d34d",
+    "timestamp":  "2026-09-16 01:48:47"
+}

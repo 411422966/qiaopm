@@ -1,0 +1,16 @@
+MySQL DESCRIBE overseas_booking — Phase 5A.1 实证 (I038 MISSING)
+
+> 创建时间：2026-09-14 20:40 (UTC+8)
+> 执行命令：mysql -h 127.0.0.1 -P 3307 -u root -proot123456 -e "DESCRIBE overseas_booking" --default-character-set=utf8mb4 meiyetec
+> 预期结果：Table 'meiyetec.overseas_booking' doesn't exist (I038 MISSING 实证)
+
+--- RAW OUTPUT ---
+mysql : mysql: [Warning] Using a password on the command line interface can be insecure.
+ERROR 1146 (42S02) at line 1: Table 'meiyetec.overseas_booking' doesn't exist
+
+--- VERDICT ---
+✅ PASS — I038 MISSING 实证成功
+- 状态：Table 不存在（Error 1146 / 42S02）
+- 决策：D21 不跑迁移（沿用 I002/I017/I029 模式；Post-Audit 统一跑）
+- 影响：F081（OverseasBooking entity）/ F082（overseas_booking DDL）维持 MISSING
+- DDL 文件存在：backend/src/main/resources/db/sql/migrate_ext_19_mini_program_openid.sql:9-36 (CREATE TABLE IF NOT EXISTS + ALTER ADD COLUMN IF NOT EXISTS)

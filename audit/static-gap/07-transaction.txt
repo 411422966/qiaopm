@@ -1,0 +1,34 @@
+﻿========================================
+Static Gap Audit -- 07 Transaction Boundary Scan
+========================================
+Execution Time: 2026-10-09 00:02:29
+Scan Backend: D:\QiaoPM\backend\src\main\java
+Total Hits: 13
+
+Pattern Descriptions:
+- Transactional-no-rollbackFor: Default only rolls back RuntimeException, Checked Exceptions do not trigger rollback
+- Transactional-private-method: @Transactional on private method - Spring AOP does not intercept private methods
+- Transactional-catch-swallow: catch block eats exception - transaction will not rollback
+
+Hits:
+
+
+No File                                                                           Line Pattern                      Sni
+                                                                                                                    ppe
+                                                                                                                    t  
+-- ----                                                                           ---- -------                      ---
+ 1 backend\src\main\java\com\meiyetec\controller\PosController.java                474 Transactional-no-rollbackFor // 
+ 2 backend\src\main\java\com\meiyetec\mapper\PosOrderMapper.java                    16 Transactional-no-rollbackFor * <
+ 3 backend\src\main\java\com\meiyetec\service\AiEnhanceService.java                174 Transactional-catch-swallow  @Tr
+ 4 backend\src\main\java\com\meiyetec\service\EcommerceService.java                124 Transactional-catch-swallow  @Tr
+ 5 backend\src\main\java\com\meiyetec\service\EcommerceService.java                233 Transactional-catch-swallow  @Tr
+ 6 backend\src\main\java\com\meiyetec\service\IndustryService.java                  88 Transactional-catch-swallow  @Tr
+ 7 backend\src\main\java\com\meiyetec\service\LbsDispatchService.java              102 Transactional-catch-swallow  @Tr
+ 8 backend\src\main\java\com\meiyetec\service\PosRefundService.java                341 Transactional-no-rollbackFor // 
+ 9 backend\src\main\java\com\meiyetec\service\PosRefundService.java                637 Transactional-no-rollbackFor // 
+10 backend\src\main\java\com\meiyetec\service\TraceService.java                     52 Transactional-catch-swallow  @Tr
+11 backend\src\main\java\com\meiyetec\service\impl\ItemPreferenceServiceImpl.java   45 Transactional-catch-swallow  @Tr
+12 backend\src\main\java\com\meiyetec\service\impl\SubscriptionServiceImpl.java     29 Transactional-no-rollbackFor * H
+13 backend\src\main\java\com\meiyetec\service\impl\WalletServiceImpl.java           77 Transactional-no-rollbackFor * <
+
+

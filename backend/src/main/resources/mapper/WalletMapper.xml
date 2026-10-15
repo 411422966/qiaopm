@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meiyetec.mapper.WalletMapper">
+
+    <!-- 原子更新余额：CAS（balance + delta >= 0）+ 乐观锁 version -->
+    <update id="updateBalance">
+        UPDATE crm_wallet
+        SET balance = balance + #{delta},
+            total_recharge = total_recharge + #{rechargeDelta},
+            total_consume  = total_consume  + #{consumeDelta},
+            version = version + 1,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE member_id = #{memberId}
+          AND version = #{version}
+          AND balance + #{delta} >= 0
+    </update>
+
+    <insert id="insertIfAbsent">
+        INSERT INTO crm_wallet(member_id, tenant_id, balance, total_recharge, total_consume, frozen_amount, version)
+        SELECT #{memberId}, #{tenantId}, 0, 0, 0, 0, 0
+        WHERE NOT EXISTS (SELECT 1 FROM crm_wallet WHERE member_id = #{memberId})
+    </insert>
+
+    <!-- P0-TEST-001: 悲观锁，用于高并发场景下避免纯乐观 CAS 活锁 -->
+    <select id="selectByMemberIdForUpdate" resultType="com.meiyetec.entity.Wallet">
+        SELECT id, member_id, balance, total_recharge, total_consume, frozen_amount, version, updated_at
+        FROM crm_wallet
+        WHERE member_id = #{memberId}
+          AND deleted = 0
+        FOR UPDATE
+    </select>
+
+    <!-- P0-M05: 冻结金额单调变化（CAS + version）
+         freezeDelta: 冻结为 +amount，解冻为 -amount
+         - 冻结：frozen_amount += amount，余额不变
+         - 解冻：frozen_amount -= amount，且必须 >= 0
+         - 任何方向：CAS version 必须匹配 -->
+    <update id="updateFrozenAmount">
+        UPDATE crm_wallet
+        SET frozen_amount = frozen_amount + #{freezeDelta},
+            version = version + 1,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE member_id = #{memberId}
+          AND version = #{version}
+          AND frozen_amount + #{freezeDelta} >= 0
+    </update>
+
+</mapper>

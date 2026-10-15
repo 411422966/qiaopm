@@ -1,0 +1,14 @@
+mysql.exe : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 D:\QiaoPM\tmp-5b-f136-deleted-cfg.ps1:4 字符: 13
++ $mysqlOut = & mysql -h 127.0.0.1 -P 3307 -u root -proot123456 --defau ...
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+id	brand_id	channel_type	rate_limit_per_min	rate_limit_per_day	status	deleted
+1	1	SMS	30	2000	1	1
+6	NULL	SMS	60	5000	1	1
+8	NULL	SMS	60	5000	1	1
+13	NULL	SMS	3	5	1	0
+test
+1

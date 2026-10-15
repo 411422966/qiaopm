@@ -1,0 +1,18 @@
+﻿=== F136: 限流检查 — marketing_touch_log 统计 + mkt_channel_config rateLimit ===
+--- marketing_touch_task id=2 (5A-T3) ---
+2	1	SMS	6	489	489	0
+
+--- marketing_touch_log 按 channel_type 统计 ---
+MINI_PROGRAM	489	0	100
+SMS	3446	0	1977
+
+--- mkt_channel_config rate_limit 字段 ---
+2	MINI_PROGRAM	100	5000
+3	MP	50	3000
+4	IN_APP	1000	99999
+10	PUSH	60	5000
+13	SMS	3	5
+
+--- 限流判定（实际值 vs 阈值）---
+逻辑：per_min >= rate_limit_per_min → 限流（false）
+逻辑：per_day >= rate_limit_per_day → 限流（false）
