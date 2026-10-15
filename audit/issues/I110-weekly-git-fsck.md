@@ -5,7 +5,7 @@
 
 ## 动作
 - 每周执行：git fsck --full
-- 输出追加到 audit/logs/git-fsck-YYYYMMDD.txt
+- 本地留档到 audit/evidence/git-fsck/YYYYMMDD.txt（不入库）
 - 出现 missing/broken 立即升级
 
 ## 状态

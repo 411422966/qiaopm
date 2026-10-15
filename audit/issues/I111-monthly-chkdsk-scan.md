@@ -5,7 +5,7 @@
 
 ## 动作
 - 每月执行：chkdsk D: /scan
-- 记录输出到 audit/logs/chkdsk-YYYYMMDD.txt
+- 本地留档到 audit/evidence/chkdsk/YYYYMMDD.txt（不入库）
 - 有错误先备份，再评估 /spotfix
 
 ## 状态
