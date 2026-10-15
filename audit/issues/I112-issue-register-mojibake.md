@@ -49,3 +49,13 @@
 - 原因：.NET ReadAllBytes 不认 PowerShell 的 cd，相对路径读取失败，$b 保留了旧值
 - 用绝对路径重读 preflight.md：UTF-8 解码正常，非损坏
 - 最终结论：I112 范围仅 issue-register.md 单文件
+
+## 第二次更正（2026-10-16）
+- 上一节「preflight 未损坏」为误判，作废
+- 真实原因：上一轮 ReadAllBytes 相对路径报错，$b 保留了旧会话变量，非 preflight 内容
+- 用绝对路径 D:\QiaoPM\audit\baseline\preflight.md 重读：
+  - .NET UTF8.GetString 仍为乱码（锛圥hase 等）
+  - 0x3F count = 409
+- 最终定性：I112 范围为 2 个文件
+  - issue-register.md：11.27%，不可逆
+  - preflight.md：1.90%，混合（mojibake 可逆 + 409 个 0x3F 不可逆）
