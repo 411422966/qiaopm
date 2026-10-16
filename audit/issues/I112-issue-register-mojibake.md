@@ -59,3 +59,12 @@
 - 最终定性：I112 范围为 2 个文件
   - issue-register.md：11.27%，不可逆
   - preflight.md：1.90%，混合（mojibake 可逆 + 409 个 0x3F 不可逆）
+
+## 处置完成（2026-10-16）
+- 旧 register 归档为 issue-register.md.corrupted-20261016
+- 新 register 从 I*.md 单文件自动提取重建，42 条 issue 全部收录
+- 状态列为启发式匹配，需人工校准（以各文件为准）
+- 触发脚本排查：已并入 I114（NTFS 受害者，非脚本 bug）
+
+## 状态
+已处置（重建完成）
