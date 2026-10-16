@@ -14,3 +14,11 @@
 
 ## 状态
 待办
+
+## 处置完成（2026-10-16）
+- backend/compile_impls.ps1:14 `-Encoding ascii` → `-Encoding utf8`
+- 全仓库扫描：仅此一处，无其他命中
+- 新增守门脚本 audit/scripts/09-check-git-objects.ps1，并入 I110 每周巡检
+
+## 状态
+已修复
