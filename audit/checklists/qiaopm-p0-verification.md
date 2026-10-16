@@ -22,31 +22,27 @@
 
 ## 1. P0-01 多租户 / 门店隔离
 
-### 核验点
-- [ ] `TenantContextHolder.get()` 在 JwtInterceptor 后正确写入并 finally clear
-- [ ] `DataScopeInterceptor` 对白名单外所有路径生效
-- [ ] 数据库层 `tenant_id` 索引存在
-- [ ] Service 层查询显式带 `tenant_id` 条件
-- [ ] 跨租户 API 返回 403 TENANT_DENIED
-- [ ] 跨门店 API 返回 403 STORE_DENIED
-
-### 待核验清单（50 个不含 tenant 的 Controller）
-高风险抽取：
-- [ ] `DomesticPayController`
-- [ ] `DcepConfigController` / `DcepSmartContractController`
-- [ ] `CrmFollowUpPlanController` / `CrmFollowUpTaskController`
-- [ ] `MemberTagController` / `MemberInviteController` / `MemberLifecycleController`
-- [ ] `ResourceScheduleController` / `ResourceConflictLogController`
-- [ ] `PriceSensitivityController`
-- [ ] `SpaFallbackController`
+### 核验结果（2026-10-16）
+- ✅ `DataScopeInterceptor` 设计良好（Header/Query/JSON body 三来源提取）
+- ✅ `WebConfig` 中注册顺序正确（JwtInterceptor 先于 DataScopeInterceptor）
+- ✅ 数据库层 `idx_tenant` 索引存在（V1__init_baseline.sql 多处）
+- 🔴 **`DataScopeInterceptor` 仅覆盖 15 个路径前缀**，未覆盖：
+  `/domestic/**` `/dcep/**` `/overseas-payment/**` `/payment/**` `/bnpl/**` `/huabei/**`
+  `/ecommerce/**` `/plugin/**` `/marketplace/**` `/kiosk/**` `/invite/**`
+  `/customer-care/**` `/price-list/**` `/price-sensitivity/**` `/review-analysis/**`
+  `/dianping/**` `/lbs/**` 等
+- ⚠️ 之前「50 个不含 tenant 的 Controller」扫描结果不可靠（PosController 实际含 TenantContextHolder 20 次）
 
 ### 结论
 - [ ] 通过
-- [ ] 不通过
+- [x] **不通过** → 登记 I117
 - [ ] 待补
 
----
+### 证据
+- `WebConfig.addInterceptors` 输出（2026-10-16）
+- `DataScopeInterceptor` 白名单路径清单
 
+---
 ## 2. P0-02 权限（RBAC）
 
 ### 核验结果（2026-10-16）
