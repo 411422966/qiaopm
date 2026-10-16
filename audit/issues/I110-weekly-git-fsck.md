@@ -13,3 +13,8 @@
 
 ## 执行记录
 - 2026-10-16：git fsck --full，输出为空（仓库干净），无 missing/broken/dangling
+
+## 附加守门（2026-10-16）
+- 新增 `audit/scripts/09-check-git-objects.ps1`
+- 用途：检测 .git/objects 内非标准格式文件（I113/I114 防护）
+- 并入每周巡检，与 git fsck --full 一起跑
