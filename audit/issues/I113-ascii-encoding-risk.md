@@ -22,3 +22,9 @@
 
 ## 状态
 已修复
+
+## 补充（2026-10-16）
+- compile_impls.ps1 / compile_pos008_v2.bat 属 backend 一次性编译脚本，
+  .gitignore 已 ignore（符合项目约定），修复仅在本地生效
+- 守门脚本 audit/scripts/09-check-git-objects.ps1 属长期资产，已 track
+- 顺带放开 audit/scripts 01~08 巡检脚本（原被 *.ps1 全局忽略误挡）
