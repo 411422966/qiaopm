@@ -91,21 +91,25 @@
 
 ## 4. P0-04 备份恢复
 
-### 核验点
-- [ ] 数据库每日自动备份
-- [ ] 备份文件异机存储
-- [ ] 恢复演练至少一次并记录
-- [ ] RPO ≤ 24h、RTO ≤ 4h 达标
-- [ ] Git 仓库远程同步（已做，I109）
-- [ ] 对象存储有备份策略
+### 核验结果（2026-10-16）
+- 备份脚本：`scripts/backup-db.sh`（RPO 1h，本地 7d / S3 30d / 归档 1y）
+- 恢复脚本：`scripts/restore-db.sh`（RTO 1h，--dry-run，反误操作）
+- 定时任务：`infra/systemd/meiyetec-backup.timer`（daily 02:00）
+- Runbook：`docs/runbook/backup-restore.md` 存在
+- 历史备份：`audit/baseline/pre-2.3-backup-20260920.sql` 等
+- **恢复演练证据：audit/evidence/ 下无** ❌
 
 ### 结论
 - [ ] 通过
 - [ ] 不通过
+- [x] **待补** → 登记 I116
 - [ ] 待补
 
----
+### 证据
+- 脚本扫描输出（2026-10-16）
+- 演练证据缺失（I116）
 
+---
 ## 状态
 
 待执行
