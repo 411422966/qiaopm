@@ -34,10 +34,9 @@
 - ⚠️ 之前「50 个不含 tenant 的 Controller」扫描结果不可靠（PosController 实际含 TenantContextHolder 20 次）
 
 ### 结论
-- [ ] 通过
-- [x] **不通过** → 登记 I117
+- [x] **通过**（I117 修复后重验，2026-10-17）
+- [ ] 不通过
 - [ ] 待补
-
 ### 证据
 - `WebConfig.addInterceptors` 输出（2026-10-16）
 - `DataScopeInterceptor` 白名单路径清单
