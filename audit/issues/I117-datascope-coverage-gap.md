@@ -84,3 +84,22 @@
 
 ## 状态
 代码已修复，运行时验证未完成
+
+## 运行时验证（2026-10-17 17:42）
+- 镜像重建：mvn package "-Dmaven.test.skip=true" + docker compose build + up --force-recreate
+- app.jar 时间戳：Oct 17 17:37（新）
+- 容器 StartedAt：2026-10-17T09:38:21Z（CST 17:38:21）
+- 容器 Status：healthy
+
+### 跨租户拦截测试
+- 账号：clerk01（CLERK 角色，data_scope=STORE，tenant_id=1）
+- 请求：GET /domestic/health?tenant_id=2
+- 结果：403（旧代码 200，修复生效）
+
+### 回归测试
+- 账号：admin（SUPER_ADMIN，data_scope=ALL）
+- 请求：GET /domestic/health?tenant_id=2
+- 结果：<待填>
+
+## 状态
+已关闭（跨租户拦截生效）
