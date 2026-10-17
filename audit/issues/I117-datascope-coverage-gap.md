@@ -39,3 +39,15 @@
 
 ## 状态
 待办
+
+## 修复（2026-10-17）
+- WebConfig.addInterceptors 中 DataScopeInterceptor 从「15 个前缀白名单」改为 /** + excludePathPatterns
+- 排除项：认证 / 静态 / 错误页 / actuator / Webhook（与 JwtInterceptor 对齐）
+- 覆盖新增：/domestic /dcep /overseas-payment /payment /bnpl /huabei /ecommerce
+  /plugin /marketplace /kiosk /invite /customer-care /price-list /price-sensitivity
+  /review-analysis /dianping /lbs 等全部路径
+- 编译验证：mvn -q -o compile -DskipTests EXIT=0
+- 运行时验证：待服务重启后执行跨租户访问测试
+
+## 状态
+已修复（编译通过，运行时验证待补）
