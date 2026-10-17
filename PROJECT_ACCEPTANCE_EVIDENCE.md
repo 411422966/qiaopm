@@ -1,3 +1,43 @@
+> ⚠️ **结论更正（2026-10-18，reality-check 发现）**
+>
+> 本文件的 **🟢 READY TO CLOSE** 结论**已撤回，不成立**。原文保留仅作历史证据，不得作为验收依据。
+>
+> **撤销依据（均有代码/DB 证据）**
+>
+> | 编号 | 问题 | 证据 |
+> |---|---|---|
+> | I118 | 132 张表的 DDL 缺失，实体/Mapper/Controller 完整 | information_schema 实测 282 张表 vs db/sql 声称 397 张唯一表；GET /material/substitute/list → HTTP 200 + body {"code":500,"message":"数据库异常"}，API 日志：Table 'meiyetec.biz_material_substitute' doesn't exist |
+> | I118 | 12 个 Controller 无条件暴露（无 @ConditionalOnProperty / @Profile / @Deprecated） | CommissionCondition / CommissionSimulation / CommissionTier / ExpiryHandleLog / MaterialConsumptionLog / MaterialSubstitute / ResourceConflictLog / ResourceUtilization / ServiceMaterialDeductLog / ServiceMaterialGroup / ServiceMaterialRule / StockShortageLog |
+> | I115 | @RequirePermission 覆盖率 10.2%（Controller 14/137），方法级 7.4%（139/1885） | 全仓库扫描，2026-10-16 |
+> | I117 | DataScopeInterceptor 原仅覆盖 15 个路径前缀，支付/数字货币/电商等高风险域无跨租户保护（已修复，2026-10-17） | WebConfig.addInterceptors 变更；运行时验证：clerk01 跨租户 → 403，admin → 200 |
+> | I116 | 备份恢复演练证据缺失，RTO ≤ 1h 未实测 | audit/evidence/ 下无恢复演练记录 |
+>
+> **已核实的事实修正**
+>
+> | 指标 | 本文件/旧文档声称 | 实测 |
+> |---|---|---|
+> | endpoint 总数 | 970（Cursor 报告）/ 1885（宽松口径） | **988**（严格行首注解，Controller 内） |
+> | Controller 数 | 30（CURRENT_STATE.md） | **135** |
+> | Service 数 | 85+（CURRENT_STATE.md） | **310** |
+> | Entity 数 | 100+（CURRENT_STATE.md） | **445** |
+> | 前端 typescript | ~6.0.2（被质疑不存在） | **6.0.3，已安装**（node_modules 核实） |
+> | 前端 vite | ^8.2.0（被质疑不存在） | **8.2.0，已安装** |
+> | DB 真实表数 | 未声明 | **282** |
+>
+> **详细核验报告**
+> - `audit/reports/reality-check-round1.md`（资产盘点 + 34 条矛盾清单）
+> - `audit/issues/I118-missing-ddl-132-tables.md`（132 张表缺失，含铁证）
+> - `audit/issues/I115-permission-coverage-gap.md`（权限覆盖率）
+> - `audit/issues/I117-datascope-coverage-gap.md`（多租户，已修复）
+> - `audit/issues/I116-backup-drill-evidence-gap.md`（备份演练缺失）
+>
+> **后续动作**
+> - I118 处置方向待定：补 DDL / 下线 Controller / 加开关（三选一）
+> - reality-check 第 2 轮：全量 Controller → 表贯通性扫描（等 I118 方向确定后执行）
+> - reality-check 第 3 轮：前端路由/API/E2E 真实性核验
+> - **在 I118、I115、I116 全部闭环前，本文件不得作为验收依据**
+
+---
 # QiaoPM 项目验收证据包（RC9 Final Closure）
 
 | 属性 | 值 |
