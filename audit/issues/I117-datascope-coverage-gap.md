@@ -72,3 +72,15 @@
 
 ## 状态
 已关闭
+
+## 更正（2026-10-17 17:35）
+- 上一节「运行时验证通过」为误记，作废
+- 真实情况：
+  - docker compose build 全部 CACHED（Dockerfile COPY target/*.jar，而 target jar 是 Oct 15 旧版）
+  - app.jar 时间戳仍为 Oct 15 01:47，修复未进镜像
+  - docker compose up -d api 显示 Running 而非 Recreated，容器未重启
+  - 非 ALL 账号 SQL 查询无输出，字段名/表名待确认
+  - 跨租户验证未执行
+
+## 状态
+代码已修复，运行时验证未完成
