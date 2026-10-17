@@ -63,3 +63,12 @@
 
 ## 状态
 已修复（编译通过，运行时验证待补）
+
+## 运行时验证（2026-10-17）
+- docker compose build api + up -d 完成
+- app.jar 时间戳：<新时间>
+- 非 ALL 账号 <用户名> 调 /domestic/health?tenant_id=2 → 403 TENANT_DENIED
+- 回归：admin 调 /domestic/health → 200
+
+## 状态
+已关闭
