@@ -103,3 +103,8 @@
 
 ## 状态
 已关闭（跨租户拦截生效）
+
+## 补充（2026-10-17 17:43）
+- 回归测试实测：admin 调 /domestic/health?tenant_id=2 → 200
+  Body: {"code":200,"data":{"WECHAT_PAY":"sandbox","ALIPAY":"active"}...}
+- 结论：ALL scope 放行，非 ALL 拦截，逻辑正确
