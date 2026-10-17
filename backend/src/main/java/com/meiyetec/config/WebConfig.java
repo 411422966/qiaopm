@@ -49,24 +49,31 @@ public class WebConfig implements WebMvcConfigurer {
                         "/actuator/**"
                 );
 
-        // 数据范围拦截：仅对业务接口生效
+        // 数据范围拦截：全路径 + 排除清单（I117 修复：原白名单策略漏覆盖支付/数字货币/电商等高风险域）
+        // 排除项与 JwtInterceptor 对齐：认证、静态、错误页、监控、Webhook（外部回调无用户上下文）
         registry.addInterceptor(dataScopeInterceptor)
-                .addPathPatterns(
-                        "/member/**",
-                        "/wallet/**",
-                        "/packages/**",
-                        "/booking/**",
-                        "/pos/**",
-                        "/stock/**",
-                        "/commission/**",
-                        "/market/**",
-                        "/report/**",
-                        "/employee/**",
-                        "/store/**",
-                        "/room/**",
-                        "/category/**",
-                        "/sys/**",
-                        "/crm/**"
+                .addPathPatterns("/**")
+                .excludePathPatterns(
+                        "/auth/login",
+                        "/auth/logout",
+                        "/auth/refresh",
+                        "/api/auth/login",
+                        "/api/auth/logout",
+                        "/api/auth/refresh",
+                        "/static/**",
+                        "/api/static/**",
+                        "/error",
+                        "/actuator/**",
+                        "/webhook/**",
+                        "/overseas-payment/webhook/**",
+                        "/ecommerce/webhook/**",
+                        "/pos/webhook/**",
+                        "/payment/webhook/**",
+                        "/booking/webhook/**",
+                        "/platform/webhook/**",
+                        "/intl-booking/webhook/**",
+                        "/bnpl/webhook/**",
+                        "/domestic/webhook/**"
                 );
     }
 
