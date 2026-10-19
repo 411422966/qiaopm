@@ -57,3 +57,12 @@ cloud_* / dr_* / monitor_* / platform_* / wx_* / wms_* / iot_* / lbs_* / open_* 
 
 ## 状态
 待办
+
+## 止血完成（2026-10-19）
+- 12 个 Controller 加 @ConditionalOnProperty(name="feature.legacy-missing-ddl.enabled", havingValue="true", matchIfMissing=false)
+- application.yml 合并到已有 feature: 节点，新增 legacy-missing-ddl.enabled: false
+- 编译 PKG_EXIT=0，镜像重建，容器 healthy，启动成功
+- 验证：8 个路径返回 404（原 500），核心接口待验证
+
+## 状态
+已止血（待补 DDL 或下线 Controller 后彻底关闭）
