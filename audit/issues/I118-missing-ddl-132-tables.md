@@ -70,3 +70,8 @@ cloud_* / dr_* / monitor_* / platform_* / wx_* / wms_* / iot_* / lbs_* / open_* 
 ## 补充（2026-10-19 验证）
 - 核心接口回归：/member/list → 200，/booking/list → 200（未误伤）
 - 8 个止血路径：全部 404（原 200 + code:500）
+
+## 下次开工（2026-10-19 23:50）
+- 优先排查：10+ 张 jdbcTemplate 引用的表对应哪些 Controller（无开关保护）
+- 次优先：97 张基础设施表分类
+- 建议清醒时做，避免误判
