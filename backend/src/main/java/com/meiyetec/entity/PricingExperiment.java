@@ -66,8 +66,10 @@ public class PricingExperiment {
     /** 流量分配：控制组总占比（0.0~1.0），剩余给变异组 */
     private BigDecimal controlTrafficRatio;
     /** 控制组内 A:B 分配比例（默认 1:1） */
+    @TableField("control_ab_ratio")
     private BigDecimal controlABRatio;
     /** 变异组内 C:D 分配比例（默认 1:1） */
+    @TableField("variant_cd_ratio")
     private BigDecimal variantCDRatio;
 
     // ---- 适用条件----
