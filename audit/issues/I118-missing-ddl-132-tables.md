@@ -75,3 +75,17 @@ cloud_* / dr_* / monitor_* / platform_* / wx_* / wms_* / iot_* / lbs_* / open_* 
 - 优先排查：10+ 张 jdbcTemplate 引用的表对应哪些 Controller（无开关保护）
 - 次优先：97 张基础设施表分类
 - 建议清醒时做，避免误判
+
+## jdbcTemplate 引用表核查（2026-10-19 23:55）
+- 7 个 Service（CareFormula / ChurnPrediction / ReviewAnalysis / OrgHierarchy / BizTreatmentStep / P1Remaining / P2Features）
+- 全仓库扫描结果：
+  - 6 个零引用（无 Controller、无 Service、无 Scheduled、无 EventListener）
+  - OrgHierarchyService 仅出现在 RbacContextLoader.java:64 的注释中，无实际调用
+- 结论：这 7 个 Service 及其 jdbcTemplate 引用的 10+ 张表均为死代码，**不会触发 500**
+- 影响：I118 的「10+ 张 jdbcTemplate 引用」风险等级从 P0 降为 P2（死代码清理）
+- 待办调整：
+  - 原 P0「补 DDL」→ 降为 P2「清理死代码」
+  - 剩余 P0 仍为 97 张基础设施表的 Controller 暴露排查
+
+## 状态
+已止血（12 Controller 关闭），jdbcTemplate 风险已排除，待 97 张表排查
