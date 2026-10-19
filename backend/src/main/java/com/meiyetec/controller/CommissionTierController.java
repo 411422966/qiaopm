@@ -5,10 +5,12 @@ import com.meiyetec.entity.CommissionTier;
 import com.meiyetec.service.CommissionTierService;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@ConditionalOnProperty(name = "feature.legacy-missing-ddl.enabled", havingValue = "true", matchIfMissing = false)
 @RestController
 @RequestMapping("/commission/tier")
 @RequiredArgsConstructor

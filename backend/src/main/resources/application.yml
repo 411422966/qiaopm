@@ -148,6 +148,8 @@ app:
 #   - sdk-key 在 https://app.launchdarkly.com 申请（生产环境）
 #   - 启用后 LD SDK 通过 SSE 流接收 flag 变更，开关变更毫秒级生效
 feature:
+  legacy-missing-ddl:
+    enabled: false
   launchdarkly:
     enabled: false
     # SDK Key（生产：从环境变量 LAUNCHDARKLY_SDK_KEY 注入，永不硬编码）
@@ -327,4 +329,3 @@ management:
     metrics:
       export:
         enabled: true
-

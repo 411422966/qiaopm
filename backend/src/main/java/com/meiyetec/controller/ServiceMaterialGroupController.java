@@ -9,11 +9,13 @@ import com.meiyetec.security.TenantContextHolder;
 import com.meiyetec.service.ServiceMaterialGroupService;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@ConditionalOnProperty(name = "feature.legacy-missing-ddl.enabled", havingValue = "true", matchIfMissing = false)
 @RestController
 @RequestMapping("/material/group")
 @RequiredArgsConstructor

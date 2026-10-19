@@ -5,6 +5,7 @@ import com.meiyetec.entity.ResourceUtilization;
 import com.meiyetec.service.ResourceUtilizationService;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import java.util.Map;
  * <p>技师利用率 = 实际服务时长 / 班表工作时长 × 100% (PRD 目标 > 75%)<br>
  * 房间占用率 = 已完成服务时长 / 营业时长 × 100% (PRD 目标 > 80%)
  */
+@ConditionalOnProperty(name = "feature.legacy-missing-ddl.enabled", havingValue = "true", matchIfMissing = false)
 @RestController
 @RequestMapping("/resource/utilization")
 @RequiredArgsConstructor

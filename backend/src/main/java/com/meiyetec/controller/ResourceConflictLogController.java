@@ -5,6 +5,7 @@ import com.meiyetec.entity.ResourceConflictLog;
 import com.meiyetec.service.ResourceConflictLogService;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@ConditionalOnProperty(name = "feature.legacy-missing-ddl.enabled", havingValue = "true", matchIfMissing = false)
 @RestController
 @RequestMapping("/resource/conflict")
 @RequiredArgsConstructor
