@@ -66,3 +66,7 @@ cloud_* / dr_* / monitor_* / platform_* / wx_* / wms_* / iot_* / lbs_* / open_* 
 
 ## 状态
 已止血（待补 DDL 或下线 Controller 后彻底关闭）
+
+## 补充（2026-10-19 验证）
+- 核心接口回归：/member/list → 200，/booking/list → 200（未误伤）
+- 8 个止血路径：全部 404（原 200 + code:500）
