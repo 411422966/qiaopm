@@ -489,3 +489,6 @@ audit/scripts/_*.json
 # audit 巡检脚本（数字前缀为长期资产，非临时）
 !audit/scripts/[0-9][0-9]-*.ps1
 !audit/scripts/[0-9][0-9][0-9]-*.ps1
+
+# 数据库迁移前备份（一次性快照，不入库）
+audit/baseline/*-backup-*.sql
