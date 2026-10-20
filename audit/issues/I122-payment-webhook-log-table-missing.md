@@ -36,3 +36,16 @@
 
 ## 状态
 待办
+
+## 更正（2026-10-21，撤回 P0 诊断）
+- 上节「payment_webhook_log 表不存在」为误判
+- 真实情况：
+  - 表名是 `biz_payment_webhook_log`（带 biz_ 前缀，与 init_overseas_payment.sql:98 一致）
+  - Entity `@TableName("biz_payment_webhook_log")` 匹配
+  - Mapper `@Select("SELECT * FROM biz_payment_webhook_log ...")` 匹配
+  - 误判原因：验证时用 `SHOW INDEX FROM payment_webhook_log`（漏 biz_ 前缀）报 1146，误以为表缺失
+- 结论：I122 不成立，支付回调链路代码和表完整
+- 幂等逻辑（验签→解析→查eventId→处理）设计合理，可正常工作
+
+## 状态
+已关闭（误报）
