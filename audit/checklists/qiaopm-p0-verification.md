@@ -71,19 +71,21 @@
 | 退款幂等 | ✅ | `PosRefundController` 用 `idem.execute("pos.refund", ...)` |
 | 退款事务 | ✅ | `PosRefundService` 11 处 `@Transactional` |
 | 对账事务 | ✅ | `ReconciliationService` 2 处 `@Transactional` |
-| 订单状态机 | ⚠️ | 注释明确 `1进行中 2已支付 3已退款 4已撤销`，但 Integer 硬编码（可维护性 P2） |
-| 支付回调幂等 | ⚠️ | Service 层逻辑完整（验签→解析→查重→处理），但 `payment_webhook_log` 表不存在 → **I122 P0** |
-| `pos_payment.payment_no` 唯一索引 | ✅ | `NON_UNIQUE=0` |
-| `payment_transaction_log.out_trade_no` | ⚠️ | 非唯一索引（`NON_UNIQUE=1`），依赖代码层幂等 |
+| 支付回调幂等 | ✅ | `PaymentWebhookLogServiceImpl`：验签 → 解析 eventId → 按 `gateway_event_id` 查重 → 处理 |
+| 回调幂等 DB 兜底 | ✅ | `biz_payment_webhook_log.uk_event_id` 唯一索引（NON_UNIQUE=0） |
+| `pos_payment.payment_no` 唯一索引 | ✅ | NON_UNIQUE=0 |
+| 订单状态机 | ⚠️ | 注释明确 `1进行中 2已支付 3已退款 4已撤销`，Integer 硬编码（可维护性 P2，不影响正确性） |
+| `payment_transaction_log.out_trade_no` | ⚠️ | 非唯一索引（NON_UNIQUE=1），该表为交易日志性质，依赖代码层幂等（P2 观察项） |
 
 ### 结论
-- [ ] 通过
-- [x] **不通过** → 登记 I122（payment_webhook_log 表缺失）
+- [x] **通过**（2026-10-21，I122 撤回为误报后重验）
+- [ ] 不通过
 - [ ] 待补
 
 ### 证据
 - 实体/Service 扫描（2026-10-21）
-- DB 索引查询（pos_payment / payment_transaction_log / payment_webhook_log）
+- DB 表结构 / 索引查询（biz_payment_webhook_log / pos_payment / payment_transaction_log）
+- Mapper SQL 核对（PaymentWebhookLogMapper.findByEventId）
 
 ---
 ## 4. P0-04 备份恢复
