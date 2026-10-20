@@ -120,3 +120,28 @@ booking_waitlist_score_config, booking_waitlist_score_log, mkt_effect_snapshot
 
 ## 状态
 待处置：4 直接暴露 Controller + 2 ALIVE Service（共 6 个目标）
+
+## 第二批止血完成（2026-10-20）
+- 4 个 Controller 加 @ConditionalOnProperty 默认关闭：
+  - MultiAccountSplitController（m02_split_rule 缺失，日志铁证 Table doesn't exist）
+  - InviteController（m09_invite_campaign 缺失）
+  - MemberInviteController（同 InviteService，表缺失）
+  - BizTreatmentReportController（treatment_report 缺失）
+- 编译 EXIT=0，镜像重建，容器 healthy，启动 23.152s
+- 验证：4 个路径全部 404（原 200 + code:500）
+- 回归：/member/list 和 /booking/list 均 200
+
+## 累计止血
+- 第一批（2026-10-19）：12 个 Controller
+- 第二批（2026-10-20）：4 个 Controller
+- 合计：16 个 Controller 默认关闭
+
+## 剩余待办
+- 25 个 DEAD Service 对应的 70+ 张表 → 归入死代码清理（P2）
+- 4 张无 Entity 死表（booking_waitlist_score_config/log、mkt_effect_snapshot）→ 清理（P2）
+- 3 个探活 200 但表缺失的 Controller（IotDeviceLink / BusinessPolicyDispatch / YouzanWebhook）→ 表可能存在或有 fallback，暂不处理
+- I119：TechnicianLevelServiceImpl 写错表名（待修）
+- I121：GrayReleaseService 命名与职责不符（待修）
+
+## 状态
+已止血（16/16 目标完成），I118 P0 部分闭环
