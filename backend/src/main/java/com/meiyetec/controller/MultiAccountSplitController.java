@@ -14,6 +14,7 @@ import com.meiyetec.service.impl.MultiAccountSplitServiceImpl;
 import com.meiyetec.security.TenantContextHolder;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,7 @@ import java.util.Map;
  * <p>自动触发：OrderPaidEventListener 调用 splitOrderAsync，
  * 在事务 AFTER_COMMIT 后写分账记录（幂等，不重复）。
  */
+@ConditionalOnProperty(name = "feature.legacy-missing-ddl.enabled", havingValue = "true", matchIfMissing = false)
 @RestController
 @RequestMapping("/m02/split")
 @RequiredArgsConstructor

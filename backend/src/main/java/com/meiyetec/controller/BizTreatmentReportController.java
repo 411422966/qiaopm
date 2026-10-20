@@ -6,6 +6,7 @@ import com.meiyetec.security.TenantContextHolder;
 import com.meiyetec.service.TreatmentReportService;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,7 @@ import java.util.Map;
  *
  * <p>租户隔离：从 {@link TenantContextHolder} 取 tenantId，未登录兜底 0L — 与 {@code BizTreatmentService.currentTenantId()} 行为一致。
  */
+@ConditionalOnProperty(name = "feature.legacy-missing-ddl.enabled", havingValue = "true", matchIfMissing = false)
 @RestController
 @RequestMapping("/biz/treatment/report")
 @RequiredArgsConstructor
