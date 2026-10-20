@@ -1,4 +1,4 @@
-﻿# I120 — Entity 字段与 DB 字段命名漂移（MyBatis-Plus 驼峰转换不一致）
+# I120 — Entity 字段与 DB 字段命名漂移（MyBatis-Plus 驼峰转换不一致）
 
 ## 现象
 MyBatis-Plus 默认将 Java 字段驼峰转下划线时，**连续大写字母会拆成单字母 + 下划线**：
@@ -57,7 +57,10 @@ MyBatis-Plus 默认将 Java 字段驼峰转下划线时，**连续大写字母�
 - GrayReleaseService 是 @RestController + @RequestMapping("/gray")，伪装成 Service 的 Controller
 - 暴露接口：/gray/flag/* /gray/experiment/* /gray/ab-test/*
 - ab_experiment 表 7 个字段已补齐
-- 接口探活结果：<待填>
+- 接口探活结果（2026-10-20）：
+- GET /gray/flag/list → 200（正常，空数组）
+- GET /gray/flag/mode → 200（正常，IN_MEMORY 模式）
+- GET /gray/experiment/stats → HTTP 200 + body {"code":500,"message":"系统繁忙"}，日志无 Unknown column，另有异常待查
 
 ## 状态
 已修复（字段补齐，接口可访问）
