@@ -151,8 +151,8 @@ public class TechnicianLevelServiceImpl extends ServiceImpl<TechnicianLevelMappe
         String nextLevelName = (String) evaluation.get("nextLevelName");
 
         int updated = jdbc.update(
-                "UPDATE sys_user SET employee_level = ? WHERE id = ?",
-                nextLevelCode, employeeId);
+                "UPDATE pos_employee SET employee_level = ? WHERE id = ?",
+                nextLevelId, employeeId);
         if (updated == 0) {
             throw new RuntimeException("员工等级更新失败");
         }
