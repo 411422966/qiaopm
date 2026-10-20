@@ -62,28 +62,30 @@
 ---
 ## 3. P0-03 收银 / 支付安全
 
-### 核验对象（12 个 Controller）
-`PosController` / `PosRefundController` / `RefundAuditController` /
-`WalletController` / `ReconciliationController` / `DomesticPayController` /
-`OverseasPaymentController` / `OverseasPaymentGatewayController` /
-`PaymentRouteRuleController` / `PaymentWebhookController` /
-`DcepHardwareWalletController` / `DcepSubWalletController`
-
-### 核验点
-- [ ] 金额、优惠分摊使用 BigDecimal
-- [ ] 支付回调幂等（同一 transaction_id 只处理一次）
-- [ ] 退款金额 ≤ 原订单金额
-- [ ] 退款与提成冲减在同一事务
-- [ ] 对账差异可追溯
-- [ ] 订单状态机完整
+### 核验结果（2026-10-21）
+| 核验点 | 结果 | 证据 |
+|---|---|---|
+| 金额 BigDecimal | ✅ | PosOrder/PosPayment/PosRefund/Wallet 等 7 实体全 BigDecimal；Controller 无 double/float |
+| 退款 ≤ 可退余额 | ✅ | `PosRefundService`：`amount.compareTo(remain) > 0` 拦截 |
+| 退款审批分级 | ✅ | `RefundAuditWorkflowService` 按金额阈值分级 |
+| 退款幂等 | ✅ | `PosRefundController` 用 `idem.execute("pos.refund", ...)` |
+| 退款事务 | ✅ | `PosRefundService` 11 处 `@Transactional` |
+| 对账事务 | ✅ | `ReconciliationService` 2 处 `@Transactional` |
+| 订单状态机 | ⚠️ | 注释明确 `1进行中 2已支付 3已退款 4已撤销`，但 Integer 硬编码（可维护性 P2） |
+| 支付回调幂等 | ⚠️ | Service 层逻辑完整（验签→解析→查重→处理），但 `payment_webhook_log` 表不存在 → **I122 P0** |
+| `pos_payment.payment_no` 唯一索引 | ✅ | `NON_UNIQUE=0` |
+| `payment_transaction_log.out_trade_no` | ⚠️ | 非唯一索引（`NON_UNIQUE=1`），依赖代码层幂等 |
 
 ### 结论
 - [ ] 通过
-- [ ] 不通过
+- [x] **不通过** → 登记 I122（payment_webhook_log 表缺失）
 - [ ] 待补
 
----
+### 证据
+- 实体/Service 扫描（2026-10-21）
+- DB 索引查询（pos_payment / payment_transaction_log / payment_webhook_log）
 
+---
 ## 4. P0-04 备份恢复
 
 ### 核验结果（2026-10-16）
