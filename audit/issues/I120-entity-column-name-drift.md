@@ -43,3 +43,21 @@ MyBatis-Plus 默认将 Java 字段驼峰转下划线时，**连续大写字母�
 
 ## 状态
 已关闭（无需修复，死代码归入 I118）
+
+## 更正（2026-10-20，撤回上节错误结论）
+- 上节「AbExperiment 零引用、死代码」判断错误
+- 实际：GrayReleaseService 大量引用 AbExperiment（20+ 处），且方法带 @RequestBody / @PathVariable
+- 已执行 ALTER TABLE ab_experiment 补 7 个字段（pricing_exp_id / chi_square / chi_p_value / chi_df / chi_updated_at / conclusion / best_variant），EXIT=0
+- 备份：audit/baseline/ab_experiment-backup-20261020.sql（5036 字节）
+
+## 状态
+已修复（DB 字段补齐），待验证 GrayReleaseService 是否暴露为 Controller
+
+## 验证（2026-10-20）
+- GrayReleaseService 是 @RestController + @RequestMapping("/gray")，伪装成 Service 的 Controller
+- 暴露接口：/gray/flag/* /gray/experiment/* /gray/ab-test/*
+- ab_experiment 表 7 个字段已补齐
+- 接口探活结果：<待填>
+
+## 状态
+已修复（字段补齐，接口可访问）
