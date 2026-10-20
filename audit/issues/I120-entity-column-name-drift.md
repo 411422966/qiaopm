@@ -64,3 +64,13 @@ MyBatis-Plus 默认将 Java 字段驼峰转下划线时，**连续大写字母�
 
 ## 状态
 已修复（字段补齐，接口可访问）
+
+## 最终关闭（2026-10-20）
+- /gray/experiment/stats 的 code:500 根因：调用时未传 key 参数（代码签名 @RequestParam String key），非 DB 字段问题
+- 日志证据：MissingServletRequestParameterException: Required request parameter 'key' is not present
+- 修正调用方式：GET /gray/experiment/stats?key=<exp_key> → 200
+- ab_experiment 7 个字段已补齐，/gray/flag/list 和 /gray/flag/mode 均 200
+- 结论：I120 完全修复
+
+## 状态
+已关闭
