@@ -89,3 +89,34 @@ cloud_* / dr_* / monitor_* / platform_* / wx_* / wms_* / iot_* / lbs_* / open_* 
 
 ## 状态
 已止血（12 Controller 关闭），jdbcTemplate 风险已排除，待 97 张表排查
+
+## 97 张基础设施表排查结果（2026-10-20）
+- 剩余 101 张表（排除 41 已处理）
+- 其中 1 个是 SQL regex 残留 `IF`，实际 100 张
+
+### 直接暴露的 Controller（4 个，P0 需处置）
+| Controller | 表 | 路由 |
+|---|---|---|
+| IotDeviceLinkController | iot_device_link_log | /iot/device/link |
+| MultiAccountSplitController | m02_split_record / m02_split_record_detail / m02_split_rule | /m02/split |
+| BusinessPolicyDispatchController | m12_dispatch_log | /m12/dispatch |
+| YouzanWebhookController | webhook_msg_log | /webhook/youzan |
+
+### INDIRECT Service（27 个，其中 ALIVE 2 个、DEAD 25 个）
+**ALIVE（需处置）：**
+| Service | 表 | 引用 Controller |
+|---|---|---|
+| InviteService | m09_invite_campaign / m09_invite_code / m09_invite_record / m09_invite_reward_log | InviteController, MemberInviteController |
+| TreatmentReportService | treatment_report | BizTreatmentReportController |
+
+**DEAD（死代码，归入清理清单，25 个）：**
+ChurnPredictionService, CloudNativeService, CrossPlatformService, CrossWarehouseService, DcepConfigServiceImpl, DeviceManagementService, DisasterRecoveryService, DrillExerciseService, EventSourcingService, FiscalConfigServiceImpl, FrontendTemplateService, I18nService, LbsDispatchService, MicroserviceDecomposeService, MobileApiService, MonitorAlertService, MultiDeviceSyncService, OpenPlatformEnhanceService, P1RemainingService, P2FeaturesService, P3EcosystemService, PushNotificationService, SecurityComplianceService, SlaReportService, ThirdPartyIntegrationService
+
+对应死表 70+ 张（cloud_* / dr_* / monitor_* / open_* / platform_* / wms_* / wx_* / sync_* / sla_* / i18n_* 等）
+
+### 死代码表（4 张，无 Entity 引用）
+booking_waitlist_score_config, booking_waitlist_score_log, mkt_effect_snapshot
+（IF 是 regex 残留，需修脚本）
+
+## 状态
+待处置：4 直接暴露 Controller + 2 ALIVE Service（共 6 个目标）
