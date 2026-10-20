@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * AI-006：Feature Flag 评估器抽象
  *
- * <p>统一 {@link com.meiyetec.service.GrayReleaseService} 的评估逻辑，
+ * <p>统一 {@link com.meiyetec.controller.GrayReleaseController} 的评估逻辑，
  * 屏蔽底层 In-Memory / LaunchDarkly 的差异。默认走内存版（无外部依赖）；
  * 设置 {@code feature.launchdarkly.enabled=true} 后自动切换到 LaunchDarkly。
  *

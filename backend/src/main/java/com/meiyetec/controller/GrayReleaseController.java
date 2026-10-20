@@ -1,5 +1,7 @@
-package com.meiyetec.service;
+package com.meiyetec.controller;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import com.meiyetec.util.GrayReleaseHasher;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.entity.AbAssignment;
 import com.meiyetec.entity.AbExperiment;
@@ -44,10 +46,11 @@ import java.util.*;
  * </ul>
  */
 @Slf4j
+@ConditionalOnProperty(name = "feature.legacy-missing-ddl.enabled", havingValue = "true", matchIfMissing = false)
 @RestController
 @RequestMapping("/gray")
 @RequiredArgsConstructor
-public class GrayReleaseService {
+public class GrayReleaseController {
 
     private final FeatureFlagMapper flagMapper;
     private final AbExperimentMapper expMapper;
@@ -235,7 +238,7 @@ public class GrayReleaseService {
     private String pickVariant(String variants, String seed) {
         if (variants == null || variants.isEmpty()) return "control";
         String[] parts = variants.split(",");
-        long hash = stableHash(seed);
+        long hash = GrayReleaseHasher.stableHash(seed);
         return parts[Math.floorMod(hash, parts.length)].split(":")[0];
     }
 
@@ -531,14 +534,4 @@ public class GrayReleaseService {
     // 工具
     // ====================================================================
 
-    public static long stableHash(String s) {
-        try {
-            byte[] b = MessageDigest.getInstance("SHA-256").digest(s.getBytes(StandardCharsets.UTF_8));
-            long h = 0;
-            for (int i = 0; i < 8; i++) h = (h << 8) | (b[i] & 0xFF);
-            return h;
-        } catch (Exception e) {
-            return s.hashCode();
-        }
-    }
 }

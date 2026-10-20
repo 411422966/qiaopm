@@ -1,5 +1,7 @@
 package com.meiyetec.service;
 
+import com.meiyetec.util.GrayReleaseHasher;
+
 import com.meiyetec.service.CloudNativeService.TokenBucket;
 import org.junit.jupiter.api.Test;
 
@@ -198,15 +200,15 @@ class P26CloudNativeStressGraySecurityTest {
 
     @Test
     void stableHash_sameInput() {
-        long h1 = GrayReleaseService.stableHash("flag1:1001");
-        long h2 = GrayReleaseService.stableHash("flag1:1001");
+        long h1 = GrayReleaseHasher.stableHash("flag1:1001");
+        long h2 = GrayReleaseHasher.stableHash("flag1:1001");
         assertEquals(h1, h2);
     }
 
     @Test
     void stableHash_differentInput() {
-        long h1 = GrayReleaseService.stableHash("a");
-        long h2 = GrayReleaseService.stableHash("b");
+        long h1 = GrayReleaseHasher.stableHash("a");
+        long h2 = GrayReleaseHasher.stableHash("b");
         assertNotEquals(h1, h2);
     }
 
@@ -215,7 +217,7 @@ class P26CloudNativeStressGraySecurityTest {
         // 简单均匀性测试：1000 个 userId，hash 后 0~99 应有约 10 个每个
         Map<Integer, Integer> bins = new HashMap<>();
         for (long uid = 1; uid <= 1000; uid++) {
-            long h = GrayReleaseService.stableHash("flag:" + uid);
+            long h = GrayReleaseHasher.stableHash("flag:" + uid);
             int bin = (int) (Math.abs(h) % 100);
             bins.merge(bin, 1, Integer::sum);
         }
