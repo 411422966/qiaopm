@@ -25,3 +25,21 @@ MyBatis-Plus 默认将 Java 字段驼峰转下划线时，**连续大写字母�
 
 ## 状态
 待办
+
+## 扫描结果（2026-10-20）
+- 静态扫描命中 13 个字段，其中：
+  - 12 个 PricingExperiment.groupXName 为误报（DB 字段匹配 MyBatis-Plus 转换）
+  - 1 个 AbExperiment.chiPValue 需核实（ab_experiment 表无 chi* 字段）
+- 14 个高频接口探活：无 Unknown column 错误（未触发 AB 实验接口）
+- 结论：I120 范围收敛为 AbExperiment.chiPValue 及相关 chi 字段
+
+## 最终结论（2026-10-20）
+- 静态扫描 13 个命中：
+  - 12 个 PricingExperiment.groupXName 为误报（MyBatis-Plus 转换正确）
+  - 1 个 AbExperiment.chiPValue 属实（ab_experiment 表缺 7 个字段）
+- 但 AbExperiment 零引用（无 Controller、无 Service 直接调用）→ 死代码
+- 运行时探活 14 个高频接口：无 Unknown column
+- 结论：I120 无需修复代码。AbExperiment 死代码归入 I118 清理清单
+
+## 状态
+已关闭（无需修复，死代码归入 I118）
