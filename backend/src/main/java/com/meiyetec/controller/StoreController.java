@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.dto.PageQueryDTO;
@@ -26,11 +27,13 @@ public class StoreController {
     private final StoreService storeService;
 
     @GetMapping("/list")
+    @RequirePermission("store:list")
     public Result<List<Store>> list() {
         return Result.success(storeService.list());
     }
 
     @PostMapping("/page")
+    @RequirePermission("store:list")
     public Result<PageResult<Store>> page(@RequestBody PageQueryDTO query) {
         Page<Store> page = new Page<>(query.getPageNum(), query.getPageSize());
         LambdaQueryWrapper<Store> wrapper = new LambdaQueryWrapper<>();
@@ -47,6 +50,7 @@ public class StoreController {
     }
 
     @GetMapping("/stats")
+    @RequirePermission("store:list")
     public Result<Map<String, Object>> stats() {
         List<Store> all = storeService.list();
         Map<String, Object> stats = new HashMap<>();
@@ -57,11 +61,13 @@ public class StoreController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("store:list")
     public Result<Store> getById(@PathVariable Long id) {
         return Result.success(storeService.getById(id));
     }
 
     @PostMapping
+    @RequirePermission("store:edit")
     public Result<Void> create(@Valid @RequestBody StoreDTO dto) {
         Store store = new Store();
         org.springframework.beans.BeanUtils.copyProperties(dto, store);
@@ -70,6 +76,7 @@ public class StoreController {
     }
 
     @PutMapping
+    @RequirePermission("store:edit")
     public Result<Void> update(@Valid @RequestBody StoreDTO dto) {
         Store store = new Store();
         org.springframework.beans.BeanUtils.copyProperties(dto, store);
@@ -78,10 +85,10 @@ public class StoreController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("store:edit")
     public Result<Void> delete(@PathVariable Long id) {
         storeService.removeById(id);
         return Result.success("删除成功", null);
     }
 }
-
 

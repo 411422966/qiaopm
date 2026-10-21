@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -45,6 +46,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/list")
+    @RequirePermission("employee:list")
     public Result<List<Employee>> list(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) String position) {
@@ -65,6 +67,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/page")
+    @RequirePermission("employee:list")
     public Result<PageResult<Employee>> page(@RequestBody PageQueryDTO query) {
         Long tid = tenantId();
         if (tid == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -90,6 +93,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/stats")
+    @RequirePermission("employee:list")
     public Result<Map<String, Object>> stats() {
         Long tid = tenantId();
         if (tid == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -103,6 +107,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("employee:list")
     public Result<Employee> getById(@PathVariable Long id) {
         Long tid = tenantId();
         if (tid == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -112,6 +117,7 @@ public class EmployeeController {
     }
 
     @PostMapping
+    @RequirePermission("employee:add")
     public Result<Void> create(@Valid @RequestBody EmployeeDTO dto) {
         Long tid = tenantId();
         if (tid == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -126,6 +132,7 @@ public class EmployeeController {
     }
 
     @PutMapping
+    @RequirePermission("employee:edit")
     public Result<Void> update(@Valid @RequestBody EmployeeDTO dto) {
         Long tid = tenantId();
         if (tid == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -143,6 +150,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("employee:delete")
     public Result<Void> delete(@PathVariable Long id) {
         Long tid = tenantId();
         if (tid == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -153,6 +161,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/{id:\\d+}/reset-password")
+    @RequirePermission("employee:reset-password")
     public Result<Void> resetPassword(@PathVariable Long id, @RequestBody Map<String, String> body) {
         Long tid = tenantId();
         if (tid == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");

@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.entity.Room;
 import com.meiyetec.service.RoomService;
@@ -22,6 +23,7 @@ public class RoomController {
     private final RoomService roomService;
 
     @GetMapping("/list")
+    @RequirePermission("room:list")
     public Result<List<Room>> list(@RequestParam(required = false) Integer status) {
         LambdaQueryWrapper<Room> qw = new LambdaQueryWrapper<>();
         if (status != null) qw.eq(Room::getStatus, status);
@@ -30,11 +32,13 @@ public class RoomController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("room:list")
     public Result<Room> get(@PathVariable Long id) {
         return Result.success(roomService.getById(id));
     }
 
     @PostMapping
+    @RequirePermission("room:edit")
     public Result<Room> create(@RequestBody Room r) {
         if (r.getRoomName() == null || r.getRoomName().isEmpty()) {
             return Result.error("房间名称必填");
@@ -44,6 +48,7 @@ public class RoomController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("room:edit")
     public Result<Room> update(@PathVariable Long id, @RequestBody Room r) {
         r.setId(id);
         roomService.updateById(r);
@@ -51,10 +56,10 @@ public class RoomController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("room:edit")
     public Result<Void> delete(@PathVariable Long id) {
         roomService.removeById(id);
         return Result.success("删除成功", null);
     }
 }
-
 

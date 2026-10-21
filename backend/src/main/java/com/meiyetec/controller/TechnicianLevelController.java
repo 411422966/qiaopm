@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
@@ -24,6 +25,7 @@ public class TechnicianLevelController {
     private final TechnicianLevelService technicianLevelService;
 
     @GetMapping("/list")
+    @RequirePermission("employee:level")
     public Result<List<TechnicianLevel>> list() {
         LambdaQueryWrapper<TechnicianLevel> wrapper = new LambdaQueryWrapper<>();
         wrapper.orderByAsc(TechnicianLevel::getSortOrder);
@@ -31,6 +33,7 @@ public class TechnicianLevelController {
     }
 
     @PostMapping("/page")
+    @RequirePermission("employee:level")
     public Result<PageResult<TechnicianLevel>> page(@RequestBody Map<String, Object> params) {
         int pageNum = getInt(params, "pageNum", 1);
         int pageSize = getInt(params, "pageSize", 20);
@@ -50,22 +53,26 @@ public class TechnicianLevelController {
     }
 
     @GetMapping("/active")
+    @RequirePermission("employee:level")
     public Result<List<TechnicianLevel>> activeList() {
         return Result.success(technicianLevelService.getActiveLevels());
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("employee:level")
     public Result<TechnicianLevel> getById(@PathVariable Long id) {
         return Result.success(technicianLevelService.getById(id));
     }
 
     @PostMapping
+    @RequirePermission("employee:level:edit")
     public Result<Void> create(@Valid @RequestBody TechnicianLevel level) {
         technicianLevelService.save(level);
         return Result.success("创建成功", null);
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("employee:level:edit")
     public Result<Void> update(@PathVariable Long id, @Valid @RequestBody TechnicianLevel level) {
         level.setId(id);
         technicianLevelService.updateById(level);
@@ -73,12 +80,14 @@ public class TechnicianLevelController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("employee:level:edit")
     public Result<Void> delete(@PathVariable Long id) {
         technicianLevelService.removeById(id);
         return Result.success("删除成功", null);
     }
 
     @PutMapping("/{id:\\d+}/status")
+    @RequirePermission("employee:level:edit")
     public Result<Void> toggleStatus(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         Integer status = Integer.valueOf(params.get("status").toString());
         technicianLevelService.toggleStatus(id, status);
@@ -86,6 +95,7 @@ public class TechnicianLevelController {
     }
 
     @GetMapping("/statistics")
+    @RequirePermission("employee:level")
     public Result<Map<String, Object>> statistics() {
         Map<String, Object> result = new HashMap<>();
         result.put("levelDistribution", technicianLevelService.countEmployeesByLevel());
@@ -96,6 +106,7 @@ public class TechnicianLevelController {
      * M08 晋升评估：评估指定员工是否满足晋升到下一等级的条件
      */
     @GetMapping("/promote/evaluate")
+    @RequirePermission("employee:level:eval")
     public Result<Map<String, Object>> evaluatePromotion(@RequestParam Long employeeId) {
         return Result.success(technicianLevelService.evaluatePromotion(employeeId));
     }
@@ -104,6 +115,7 @@ public class TechnicianLevelController {
      * M08 执行晋升：将员工晋升到下一等级，并联动重算提成
      */
     @PostMapping("/promote")
+    @RequirePermission("employee:level:promote")
     public Result<Map<String, Object>> promote(@RequestBody Map<String, Object> body) {
         Long employeeId = ((Number) body.get("employeeId")).longValue();
         Long operatorId = body.get("operatorId") == null ? null : ((Number) body.get("operatorId")).longValue();

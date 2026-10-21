@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.AttendanceConfig;
@@ -22,12 +23,14 @@ public class AttendanceConfigController {
     private Long tid() { Long t = TenantContextHolder.get().getTenantId(); return t == null ? 1L : t; }
 
     @GetMapping("/active")
+    @RequirePermission("attendance:config:list")
     public Result<AttendanceConfig> getActiveConfig(@RequestParam(required = false) Long storeId) {
         AttendanceConfig config = attendanceConfigService.getActiveConfig(tid(), storeId);
         return Result.success(config);
     }
 
     @GetMapping("/list")
+    @RequirePermission("attendance:config:list")
     public Result<List<AttendanceConfig>> list(@RequestParam(required = false) Long storeId) {
         Long t = tid();
         LambdaQueryWrapper<AttendanceConfig> wrapper = new LambdaQueryWrapper<>();
@@ -40,6 +43,7 @@ public class AttendanceConfigController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("attendance:config:list")
     public Result<AttendanceConfig> getById(@PathVariable Long id) {
         AttendanceConfig c = attendanceConfigService.getById(id);
         if (c == null || !tid().equals(c.getTenantId())) return Result.error(BizCode.NOT_FOUND, "配置不存在");
@@ -47,6 +51,7 @@ public class AttendanceConfigController {
     }
 
     @PostMapping
+    @RequirePermission("attendance:config:edit")
     public Result<AttendanceConfig> create(@RequestBody AttendanceConfig config) {
         config.setId(null);
         config.setTenantId(tid());
@@ -55,6 +60,7 @@ public class AttendanceConfigController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("attendance:config:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody AttendanceConfig config) {
         AttendanceConfig exist = attendanceConfigService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "配置不存在");
@@ -65,6 +71,7 @@ public class AttendanceConfigController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("attendance:config:edit")
     public Result<Void> delete(@PathVariable Long id) {
         AttendanceConfig exist = attendanceConfigService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "配置不存在");

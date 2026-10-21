@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.LeaveRequest;
 import com.meiyetec.exception.BizCode;
@@ -24,6 +25,7 @@ public class LeaveRequestController {
     private Long tid() { Long t = TenantContextHolder.get().getTenantId(); return t == null ? 1L : t; }
 
     @PostMapping
+    @RequirePermission("attendance:leave:submit")
     public Result<LeaveRequest> submit(@RequestBody Map<String, Object> params) {
         Long employeeId = getLong(params, "employeeId");
         String leaveType = (String) params.get("leaveType");
@@ -38,6 +40,7 @@ public class LeaveRequestController {
     }
 
     @PutMapping("/{id:\\d+}/approve")
+    @RequirePermission("attendance:leave:approve")
     public Result<LeaveRequest> approve(
             @PathVariable Long id,
             @RequestBody Map<String, Object> params) {
@@ -49,6 +52,7 @@ public class LeaveRequestController {
     }
 
     @PutMapping("/{id:\\d+}/cancel")
+    @RequirePermission("attendance:leave:approve")
     public Result<Void> cancel(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         Long employeeId = getLong(params, "employeeId");
         leaveRequestService.cancel(tid(), id, employeeId);
@@ -56,6 +60,7 @@ public class LeaveRequestController {
     }
 
     @GetMapping("/list")
+    @RequirePermission("attendance:leave:list")
     public Result<List<Map<String, Object>>> list(
             @RequestParam(required = false) Long employeeId,
             @RequestParam(required = false) Long storeId,
@@ -67,18 +72,21 @@ public class LeaveRequestController {
     }
 
     @GetMapping("/my")
+    @RequirePermission("attendance:leave:list")
     public Result<List<LeaveRequest>> myList(@RequestParam Long employeeId) {
         List<LeaveRequest> requests = leaveRequestService.getByEmployee(tid(), employeeId);
         return Result.success(requests);
     }
 
     @GetMapping("/pending-count")
+    @RequirePermission("attendance:leave:list")
     public Result<Integer> pendingCount(@RequestParam Long storeId) {
         int count = leaveRequestService.getPendingCount(tid(), storeId);
         return Result.success(count);
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("attendance:leave:list")
     public Result<LeaveRequest> getById(@PathVariable Long id) {
         LeaveRequest r = leaveRequestService.getById(id);
         if (r == null || !tid().equals(r.getTenantId())) return Result.error(BizCode.NOT_FOUND, "请假申请不存在");

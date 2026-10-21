@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -40,6 +41,7 @@ public class ScheduleController {
 
     /** 全量列表（按技师 + 日期） */
     @GetMapping("/list")
+    @RequirePermission("schedule:list")
     public Result<?> list(
             @RequestParam(required = false) Long employeeId,
             @RequestParam(required = false) String startDate,
@@ -57,6 +59,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/page")
+    @RequirePermission("schedule:list")
     public Result<Map<String, Object>> page(
             @RequestParam(defaultValue = "1") long current,
             @RequestParam(defaultValue = "20") long size,
@@ -82,6 +85,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("schedule:list")
     public Result<EmployeeSchedule> get(@PathVariable Long id) {
         Long tid = tenantId();
         if (tid == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -92,6 +96,7 @@ public class ScheduleController {
 
     /** 新增排班（已存在则报错） */
     @PostMapping
+    @RequirePermission("schedule:edit")
     public Result<EmployeeSchedule> create(@RequestBody EmployeeSchedule s) {
         Long tid = tenantId();
         if (tid == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -110,6 +115,7 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("schedule:edit")
     public Result<EmployeeSchedule> update(@PathVariable Long id, @RequestBody EmployeeSchedule s) {
         Long tid = tenantId();
         if (tid == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -122,6 +128,7 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("schedule:edit")
     public Result<Void> delete(@PathVariable Long id) {
         Long tid = tenantId();
         if (tid == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");

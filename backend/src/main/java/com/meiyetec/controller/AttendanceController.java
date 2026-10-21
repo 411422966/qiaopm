@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
@@ -28,6 +29,7 @@ public class AttendanceController {
     private Long tid() { Long t = TenantContextHolder.get().getTenantId(); return t == null ? 1L : t; }
 
     @PostMapping("/check-in")
+    @RequirePermission("attendance:check")
     public Result<AttendanceRecord> checkIn(@RequestBody Map<String, Object> params) {
         Long employeeId = getLong(params, "employeeId");
         String method = (String) params.getOrDefault("method", "app");
@@ -38,6 +40,7 @@ public class AttendanceController {
     }
 
     @PostMapping("/check-out")
+    @RequirePermission("attendance:check")
     public Result<AttendanceRecord> checkOut(@RequestBody Map<String, Object> params) {
         Long employeeId = getLong(params, "employeeId");
         String method = (String) params.getOrDefault("method", "app");
@@ -47,6 +50,7 @@ public class AttendanceController {
     }
 
     @GetMapping("/today")
+    @RequirePermission("attendance:list")
     public Result<Map<String, Object>> getTodayStatus(@RequestParam Long employeeId) {
         AttendanceRecord record = attendanceRecordService.getByEmployeeAndDate(tid(), employeeId, LocalDate.now());
         Map<String, Object> result = new HashMap<>();
@@ -63,6 +67,7 @@ public class AttendanceController {
     }
 
     @PostMapping("/page")
+    @RequirePermission("attendance:list")
     public Result<PageResult<AttendanceRecord>> page(@RequestBody Map<String, Object> params) {
         int pageNum = getInt(params, "pageNum", 1);
         int pageSize = getInt(params, "pageSize", 20);
@@ -86,6 +91,7 @@ public class AttendanceController {
     }
 
     @GetMapping("/records")
+    @RequirePermission("attendance:list")
     public Result<List<Map<String, Object>>> records(
             @RequestParam(required = false) Long employeeId,
             @RequestParam(required = false) Long storeId,
@@ -96,6 +102,7 @@ public class AttendanceController {
     }
 
     @GetMapping("/statistics")
+    @RequirePermission("attendance:stat")
     public Result<Map<String, Object>> statistics(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -105,6 +112,7 @@ public class AttendanceController {
     }
 
     @GetMapping("/monthly-report")
+    @RequirePermission("attendance:stat")
     public Result<Map<String, Object>> monthlyReport(
             @RequestParam Long employeeId,
             @RequestParam int year,
@@ -114,6 +122,7 @@ public class AttendanceController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("attendance:list")
     public Result<AttendanceRecord> getById(@PathVariable Long id) {
         AttendanceRecord r = attendanceRecordService.getById(id);
         if (r == null || !tid().equals(r.getTenantId())) return Result.error(BizCode.NOT_FOUND, "打卡记录不存在");
@@ -121,6 +130,7 @@ public class AttendanceController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("attendance:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody AttendanceRecord record) {
         AttendanceRecord exist = attendanceRecordService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "打卡记录不存在");
