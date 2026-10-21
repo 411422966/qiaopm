@@ -492,3 +492,6 @@ audit/scripts/_*.json
 
 # 数据库迁移前备份（一次性快照，不入库）
 audit/baseline/*-backup-*.sql
+
+# I116 演练 SQL 快照（10MB，本地留存，不入库）
+audit/evidence/*/full_backup.sql
