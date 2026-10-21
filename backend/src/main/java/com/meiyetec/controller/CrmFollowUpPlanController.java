@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.CrmFollowUpPlan;
@@ -21,6 +22,7 @@ public class CrmFollowUpPlanController {
     private final CrmFollowUpPlanService planService;
 
     @GetMapping("/page")
+    @RequirePermission("crm:care:follow:plan:list")
     public Result<Map<String, Object>> page(@RequestParam(defaultValue = "1") long pageNum,
                                             @RequestParam(defaultValue = "20") long pageSize) {
         Page<CrmFollowUpPlan> pg = planService.pagePlan(pageNum, pageSize);
@@ -31,21 +33,25 @@ public class CrmFollowUpPlanController {
     }
 
     @GetMapping("/stats")
+    @RequirePermission("crm:care:follow:plan:list")
     public Result<Map<String, Object>> stats() {
         return Result.success(planService.stats());
     }
 
     @GetMapping("/week-trend")
+    @RequirePermission("crm:care:follow:plan:list")
     public Result<List<Map<String, Object>>> weekTrend() {
         return Result.success(planService.weekTrend());
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:care:follow:plan:list")
     public Result<CrmFollowUpPlan> getById(@PathVariable Long id) {
         return Result.success(planService.getById(id));
     }
 
     @PostMapping
+    @RequirePermission("crm:follow-rule")
     public Result<Void> create(@RequestBody CrmFollowUpPlan plan) {
         if (plan.getEnabled() == null) plan.setEnabled(1);
         planService.save(plan);
@@ -53,6 +59,7 @@ public class CrmFollowUpPlanController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("crm:follow-rule")
     public Result<Void> update(@PathVariable Long id, @RequestBody CrmFollowUpPlan plan) {
         plan.setId(id);
         planService.updateById(plan);
@@ -60,12 +67,14 @@ public class CrmFollowUpPlanController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("crm:follow-rule")
     public Result<Void> delete(@PathVariable Long id) {
         planService.removeById(id);
         return Result.success("删除成功", null);
     }
 
     @PostMapping("/{id:\\d+}/enable")
+    @RequirePermission("crm:follow-rule")
     public Result<Void> enable(@PathVariable Long id) {
         CrmFollowUpPlan p = new CrmFollowUpPlan();
         p.setId(id);
@@ -75,6 +84,7 @@ public class CrmFollowUpPlanController {
     }
 
     @PostMapping("/{id:\\d+}/disable")
+    @RequirePermission("crm:follow-rule")
     public Result<Void> disable(@PathVariable Long id) {
         CrmFollowUpPlan p = new CrmFollowUpPlan();
         p.setId(id);
@@ -84,16 +94,19 @@ public class CrmFollowUpPlanController {
     }
 
     @PostMapping("/{id:\\d+}/trigger")
+    @RequirePermission("crm:follow-rule")
     public Result<Map<String, Object>> trigger(@PathVariable Long id) {
         return Result.success(planService.triggerPlan(id));
     }
 
     @GetMapping("/{id:\\d+}/preview-count")
+    @RequirePermission("crm:care:follow:plan:list")
     public Result<Map<String, Object>> preview(@PathVariable Long id) {
         return Result.success(planService.previewPlan(id));
     }
 
     @PostMapping("/demo-seed")
+    @RequirePermission("crm:follow-rule")
     public Result<Map<String, Object>> demoSeed() {
         int count = planService.seedDemo();
         Map<String, Object> data = new LinkedHashMap<>();

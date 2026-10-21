@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.entity.CrmReviewTemplate;
@@ -49,6 +50,7 @@ public class CrmReviewTemplateController {
     // 1. 分页列表
     // ===================================================================
     @GetMapping("/list")
+    @RequirePermission("crm:care:review:tpl:list")
     public Result<Map<String, Object>> list(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -77,6 +79,7 @@ public class CrmReviewTemplateController {
     // 2. 统计：总数 / 启用 / 平均延迟 / 触发事件分布 / 渠道分布
     // ===================================================================
     @GetMapping("/stats")
+    @RequirePermission("crm:care:review:tpl:list")
     public Result<Map<String, Object>> stats() {
         List<CrmReviewTemplate> all = all(null, null);
         long total = all.size();
@@ -114,6 +117,7 @@ public class CrmReviewTemplateController {
     // 3. 详情
     // ===================================================================
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:care:review:tpl:list")
     public Result<CrmReviewTemplate> get(@PathVariable Long id) {
         return Result.success(tplMapper.selectById(id));
     }
@@ -122,6 +126,7 @@ public class CrmReviewTemplateController {
     // 4. 保存（新增/更新）
     // ===================================================================
     @PostMapping
+    @RequirePermission("crm:care:review:tpl:edit")
     public Result<Map<String, Object>> save(@RequestBody CrmReviewTemplate tpl) {
         if (tpl.getTenantId() == null) tpl.setTenantId(tid());
         if (tpl.getEnabled() == null) tpl.setEnabled(1);
@@ -137,6 +142,7 @@ public class CrmReviewTemplateController {
     // 5. 启停
     // ===================================================================
     @PostMapping("/{id:\\d+}/toggle")
+    @RequirePermission("crm:care:review:tpl:edit")
     public Result<Void> toggle(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         CrmReviewTemplate t = tplMapper.selectById(id);
         if (t == null) return Result.success(null);
@@ -150,6 +156,7 @@ public class CrmReviewTemplateController {
     // 6. 删除
     // ===================================================================
     @PostMapping("/{id:\\d+}/delete")
+    @RequirePermission("crm:care:review:tpl:edit")
     public Result<Void> remove(@PathVariable Long id) {
         CrmReviewTemplate t = tplMapper.selectById(id);
         if (t != null) { t.setDeleted(1); tplMapper.updateById(t); }
@@ -160,6 +167,7 @@ public class CrmReviewTemplateController {
     // 7. 克隆：基于 id 复制一份新模板，code 加 -COPY-<时间戳>
     // ===================================================================
     @PostMapping("/{id:\\d+}/clone")
+    @RequirePermission("crm:care:review:tpl:edit")
     public Result<Map<String, Object>> clone(@PathVariable Long id) {
         CrmReviewTemplate src = tplMapper.selectById(id);
         if (src == null) return Result.success(new HashMap<>());
@@ -188,6 +196,7 @@ public class CrmReviewTemplateController {
     // 8. 模拟推送：返回触达渠道 + 延迟 + 模拟触发时间
     // ===================================================================
     @PostMapping("/{id:\\d+}/simulate")
+    @RequirePermission("crm:care:review:tpl:edit")
     public Result<Map<String, Object>> simulate(@PathVariable Long id) {
         CrmReviewTemplate t = tplMapper.selectById(id);
         if (t == null) return Result.success(new HashMap<>());
@@ -209,6 +218,7 @@ public class CrmReviewTemplateController {
     // 9. demo-seed：灌入 5 条不同触发事件模板
     // ===================================================================
     @PostMapping("/demo-seed")
+    @RequirePermission("crm:care:review:tpl:edit")
     public Result<Map<String, Object>> demoSeed() {
         // 清旧
         tplMapper.delete(new LambdaQueryWrapper<CrmReviewTemplate>()

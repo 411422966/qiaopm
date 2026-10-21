@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.service.CrmCareOverviewService;
 import com.meiyetec.util.Result;
@@ -17,6 +18,7 @@ public class CrmCareOpsController {
     private final CrmCareOverviewService careOverviewService;
 
     @GetMapping("/overview")
+    @RequirePermission("crm:care:ops:view")
     public Result<Map<String, Object>> overview(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) Long ownerId) {

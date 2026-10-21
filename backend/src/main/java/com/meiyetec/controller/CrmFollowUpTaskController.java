@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.CrmFollowUpNote;
@@ -21,11 +22,13 @@ public class CrmFollowUpTaskController {
     private final CrmFollowUpTaskService taskService;
 
     @GetMapping("/pending-count")
+    @RequirePermission("crm:care:follow:task:list")
     public Result<Map<String, Object>> pendingCount() {
         return Result.success(taskService.pendingCount());
     }
 
     @GetMapping("/page")
+    @RequirePermission("crm:care:follow:task:list")
     public Result<Page<CrmFollowUpTask>> page(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -39,16 +42,19 @@ public class CrmFollowUpTaskController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:care:follow:task:list")
     public Result<CrmFollowUpTask> getById(@PathVariable Long id) {
         return Result.success(taskService.getById(id));
     }
 
     @PostMapping
+    @RequirePermission("crm:care:follow:task:edit")
     public Result<CrmFollowUpTask> save(@RequestBody CrmFollowUpTask task) {
         return Result.success(taskService.saveTask(task));
     }
 
     @PostMapping("/{id:\\d+}/assign")
+    @RequirePermission("crm:care:follow:task:edit")
     public Result<CrmFollowUpTask> assign(@PathVariable Long id,
                                           @RequestBody Map<String, Object> body) {
         Object ownerIdObj = body.get("ownerId");
@@ -59,11 +65,13 @@ public class CrmFollowUpTaskController {
     }
 
     @PostMapping("/{id:\\d+}/start")
+    @RequirePermission("crm:care:follow:task:edit")
     public Result<CrmFollowUpTask> start(@PathVariable Long id) {
         return Result.success(taskService.start(id));
     }
 
     @PostMapping("/{id:\\d+}/finish")
+    @RequirePermission("crm:care:follow:task:edit")
     public Result<CrmFollowUpTask> finish(@PathVariable Long id,
                                           @RequestBody Map<String, Object> body) {
         Object resultTypeObj = body.get("resultType");
@@ -76,6 +84,7 @@ public class CrmFollowUpTaskController {
     }
 
     @PostMapping("/{id:\\d+}/close")
+    @RequirePermission("crm:care:follow:task:edit")
     public Result<CrmFollowUpTask> close(@PathVariable Long id,
                                          @RequestBody(required = false) Map<String, Object> body) {
         String reason = body == null ? null : (String) body.getOrDefault("reason", "运营关闭");
@@ -83,26 +92,31 @@ public class CrmFollowUpTaskController {
     }
 
     @PostMapping("/{id:\\d+}/reopen")
+    @RequirePermission("crm:care:follow:task:edit")
     public Result<CrmFollowUpTask> reopen(@PathVariable Long id) {
         return Result.success(taskService.reopen(id));
     }
 
     @GetMapping("/{id:\\d+}/notes")
+    @RequirePermission("crm:care:follow:task:list")
     public Result<List<CrmFollowUpNote>> notes(@PathVariable Long id) {
         return Result.success(taskService.getNotes(id));
     }
 
     @GetMapping("/member/{memberId}/timeline")
+    @RequirePermission("crm:care:follow:task:list")
     public Result<List<Map<String, Object>>> timeline(@PathVariable Long memberId) {
         return Result.success(taskService.getMemberTimeline(memberId));
     }
 
     @GetMapping("/kanban/grouped")
+    @RequirePermission("crm:care:follow:task:list")
     public Result<Map<String, Object>> kanban(@RequestParam(required = false) Long storeId) {
         return Result.success(taskService.kanbanGrouped(storeId));
     }
 
     @PostMapping("/batch/assign")
+    @RequirePermission("crm:care:follow:task:edit")
     public Result<Map<String, Object>> batchAssign(@RequestBody Map<String, Object> body) {
         @SuppressWarnings("unchecked")
         List<Number> idsRaw = (List<Number>) body.get("ids");
@@ -115,6 +129,7 @@ public class CrmFollowUpTaskController {
     }
 
     @PostMapping("/batch/finish")
+    @RequirePermission("crm:care:follow:task:edit")
     public Result<Map<String, Object>> batchFinish(@RequestBody Map<String, Object> body) {
         @SuppressWarnings("unchecked")
         List<Number> idsRaw = (List<Number>) body.get("ids");
@@ -123,6 +138,7 @@ public class CrmFollowUpTaskController {
     }
 
     @PostMapping("/batch/close")
+    @RequirePermission("crm:care:follow:task:edit")
     public Result<Map<String, Object>> batchClose(@RequestBody Map<String, Object> body) {
         @SuppressWarnings("unchecked")
         List<Number> idsRaw = (List<Number>) body.get("ids");
@@ -131,6 +147,7 @@ public class CrmFollowUpTaskController {
     }
 
     @PostMapping("/demo-seed")
+    @RequirePermission("crm:care:follow:task:edit")
     public Result<Map<String, Object>> demoSeed() {
         int count = taskService.seedDemo();
         Map<String, Object> data = Map.of("insertedCount", count);

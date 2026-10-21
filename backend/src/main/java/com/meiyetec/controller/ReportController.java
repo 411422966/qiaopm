@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.entity.*;
@@ -67,6 +68,7 @@ public class ReportController {
     // ==================== 看板：KPI 总览（带同比） ====================
 
     @GetMapping("/dashboard/kpi")
+    @RequirePermission("report:dashboard")
     public Result<Map<String, Object>> dashboardKpi(@RequestParam(required = false) Long storeId) {
         Long t = tid();
         LocalDate today = LocalDate.now();
@@ -324,6 +326,7 @@ public class ReportController {
     // ==================== 营业日报 ====================
 
     @GetMapping("/biz/daily")
+    @RequirePermission("report:biz:list")
     public Result<List<Map<String, Object>>> bizDaily(@RequestParam(required = false) Long storeId,
                                                       @RequestParam(defaultValue = "30") int days) {
         if (days <= 0 || days > 365) days = 30;
@@ -405,6 +408,7 @@ public class ReportController {
      * </ul>
      */
     @GetMapping("/dashboard/consumables-variance")
+    @RequirePermission("report:dashboard")
     public Result<Map<String, Object>> consumablesVariance(
             @RequestParam(required = false) Long storeId,
             @RequestParam(defaultValue = "30") int days) {
@@ -552,6 +556,7 @@ public class ReportController {
      * 公式：月度库存周转 = 月度耗材出库金额 / 月末库存货值
      */
     @GetMapping("/dashboard/inventory-turnover-trend")
+    @RequirePermission("report:dashboard")
     public Result<List<Map<String, Object>>> inventoryTurnoverTrend(
             @RequestParam(required = false) Long storeId,
             @RequestParam(defaultValue = "12") int months) {
@@ -625,6 +630,7 @@ public class ReportController {
     // ==================== 营业月报 ====================
 
     @GetMapping("/biz/monthly")
+    @RequirePermission("report:biz:list")
     public Result<List<Map<String, Object>>> bizMonthly(@RequestParam(required = false) Long storeId,
                                                         @RequestParam(defaultValue = "12") int months) {
         if (months <= 0 || months > 60) months = 12;
@@ -669,6 +675,7 @@ public class ReportController {
     // ==================== 会员分析 ====================
 
     @GetMapping("/member/analysis")
+    @RequirePermission("report:biz:list")
     public Result<Map<String, Object>> memberAnalysis(@RequestParam(required = false) Long storeId) {
         Long t = tid();
         LambdaQueryWrapper<Member> mq = new LambdaQueryWrapper<>();
@@ -698,6 +705,7 @@ public class ReportController {
     // ==================== 员工绩效 ====================
 
     @GetMapping("/employee/performance")
+    @RequirePermission("report:biz:list")
     public Result<List<Map<String, Object>>> employeePerformance(@RequestParam(required = false) Long storeId,
                                                                   @RequestParam(defaultValue = "30") int days) {
         if (days <= 0 || days > 365) days = 30;
@@ -735,6 +743,7 @@ public class ReportController {
     // ==================== 销售汇总（按支付方式） ====================
 
     @GetMapping("/biz/payType")
+    @RequirePermission("report:biz:list")
     public Result<List<Map<String, Object>>> payTypeBreakdown(@RequestParam(required = false) Long storeId,
                                                                @RequestParam(defaultValue = "30") int days) {
         if (days <= 0 || days > 365) days = 30;
@@ -768,6 +777,7 @@ public class ReportController {
     // ==================== 报表配置 ====================
 
     @GetMapping("/config/list")
+    @RequirePermission("report:caliber")
     public Result<List<ReportConfig>> configList(@RequestParam(required = false) Long storeId,
                                                   @RequestParam(required = false) Long userId) {
         Long t = tid();
@@ -782,6 +792,7 @@ public class ReportController {
     }
 
     @PostMapping("/config")
+    @RequirePermission("report:caliber:edit")
     public Result<ReportConfig> saveConfig(@RequestBody ReportConfig cfg) {
         Long t = tid();
         cfg.setTenantId(t);
@@ -799,6 +810,7 @@ public class ReportController {
     }
 
     @DeleteMapping("/config/{id}")
+    @RequirePermission("report:caliber:edit")
     public Result<Void> deleteConfig(@PathVariable Long id) {
         Long t = tid();
         ReportConfig exist = configMapper.selectById(id);
@@ -810,6 +822,7 @@ public class ReportController {
     // ==================== 导出管理 ====================
 
     @GetMapping("/export/list")
+    @RequirePermission("report:export:list")
     public Result<?> exportList(@RequestParam(defaultValue = "1") int pageNum,
                                                            @RequestParam(defaultValue = "20") int pageSize,
                                                            @RequestParam(required = false) Integer type,
@@ -848,6 +861,7 @@ public class ReportController {
     }
 
     @PostMapping("/export/create")
+    @RequirePermission("report:export:add")
     public Result<ReportExportLog> createExport(@RequestBody Map<String, Object> body, HttpServletRequest request) {
         String name = String.valueOf(body.getOrDefault("name", "导出任务"));
         Integer type = Integer.valueOf(String.valueOf(body.getOrDefault("type", "1")));
@@ -900,6 +914,7 @@ public class ReportController {
     }
 
     @GetMapping("/export/download")
+    @RequirePermission("report:export:download")
     public void downloadExport(@RequestParam Long id, HttpServletResponse response) throws IOException {
         Long t = tid();
         ReportExportLog log = exportLogMapper.selectById(id);

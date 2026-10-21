@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.DetectionReport;
 import com.meiyetec.entity.DetectionSolution;
@@ -25,6 +26,7 @@ public class DetectionReportController {
     private Long tid() { Long t = TenantContextHolder.get().getTenantId(); return t == null ? 1L : t; }
 
     @GetMapping("/list")
+    @RequirePermission("crm:detection:report:list")
     public Result<List<DetectionReport>> list(
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) Long storeId,
@@ -34,6 +36,7 @@ public class DetectionReportController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:report:list")
     public Result<DetectionReport> getById(@PathVariable Long id) {
         DetectionReport r = detectionReportService.getById(id);
         if (r == null || !tid().equals(r.getTenantId())) return Result.error(BizCode.NOT_FOUND, "报告不存在");
@@ -41,6 +44,7 @@ public class DetectionReportController {
     }
 
     @PostMapping("/generate")
+    @RequirePermission("crm:detection:report:edit")
     public Result<DetectionReport> generate(@RequestBody Map<String, Object> params) {
         Long memberId = params.get("memberId") == null ? null : ((Number) params.get("memberId")).longValue();
         String reportType = (String) params.get("reportType");
@@ -49,6 +53,7 @@ public class DetectionReportController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:report:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody DetectionReport report) {
         DetectionReport exist = detectionReportService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "报告不存在");
@@ -59,6 +64,7 @@ public class DetectionReportController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:report:edit")
     public Result<Void> delete(@PathVariable Long id) {
         DetectionReport exist = detectionReportService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "报告不存在");
@@ -67,11 +73,13 @@ public class DetectionReportController {
     }
 
     @GetMapping("/statistics/type")
+    @RequirePermission("crm:detection:report:list")
     public Result<List<Map<String, Object>>> statsByType(@RequestParam(required = false) Long storeId) {
         return Result.success(detectionReportService.statisticsByType(tid(), storeId));
     }
 
     @GetMapping("/solution/match")
+    @RequirePermission("crm:detection:report:list")
     public Result<List<DetectionSolution>> matchSolution(
             @RequestParam(required = false) String applyType,
             @RequestParam(required = false) Integer score) {

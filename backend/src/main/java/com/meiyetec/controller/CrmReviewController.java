@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
@@ -50,6 +51,7 @@ public class CrmReviewController {
     // 1. stats（KPI + 7 日趋势 + 维度均值 + Top10 标签云）
     // ===================================================================
     @GetMapping("/stats")
+    @RequirePermission("crm:care:review:list")
     public Result<Map<String, Object>> stats() {
         Long tenantId = tid();
         List<CrmReview> all = listAll(tenantId);
@@ -143,6 +145,7 @@ public class CrmReviewController {
     // 2. 分页
     // ===================================================================
     @GetMapping("/page")
+    @RequirePermission("crm:care:review:list")
     public Result<Page<CrmReview>> page(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -177,6 +180,7 @@ public class CrmReviewController {
     // 3. 详情
     // ===================================================================
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:care:review:list")
     public Result<CrmReview> get(@PathVariable Long id) {
         return Result.success(reviewMapper.selectById(id));
     }
@@ -185,6 +189,7 @@ public class CrmReviewController {
     // 4. 新建 + 低评自动建投诉工单
     // ===================================================================
     @PostMapping
+    @RequirePermission("crm:care:review:edit")
     public Result<Map<String, Object>> create(@RequestBody CrmReview review) {
         if (review.getTenantId() == null) review.setTenantId(tid());
         if (review.getStatus() == null) review.setStatus(2);
@@ -226,6 +231,7 @@ public class CrmReviewController {
     }
 
     @PostMapping("/{id:\\d+}/reply")
+    @RequirePermission("crm:care:review:edit")
     public Result<Void> reply(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         CrmReview r = reviewMapper.selectById(id);
         if (r == null) return Result.success(null);
@@ -237,6 +243,7 @@ public class CrmReviewController {
     }
 
     @PostMapping("/{id:\\d+}/hide")
+    @RequirePermission("crm:care:review:edit")
     public Result<Void> hide(@PathVariable Long id) {
         CrmReview r = reviewMapper.selectById(id);
         if (r != null) { r.setStatus(3); reviewMapper.updateById(r); }
@@ -244,6 +251,7 @@ public class CrmReviewController {
     }
 
     @PostMapping("/{id:\\d+}/show")
+    @RequirePermission("crm:care:review:edit")
     public Result<Void> show(@PathVariable Long id) {
         CrmReview r = reviewMapper.selectById(id);
         if (r != null) { r.setStatus(2); reviewMapper.updateById(r); }
@@ -251,6 +259,7 @@ public class CrmReviewController {
     }
 
     @PostMapping("/{id:\\d+}/appeal")
+    @RequirePermission("crm:care:review:edit")
     public Result<Void> appeal(@PathVariable Long id, @RequestBody(required = false) Map<String, Object> body) {
         CrmReview r = reviewMapper.selectById(id);
         if (r == null) return Result.success(null);
@@ -261,6 +270,7 @@ public class CrmReviewController {
     }
 
     @PostMapping("/{id:\\d+}/audit")
+    @RequirePermission("crm:care:review:edit")
     public Result<Void> audit(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         Object v = body.get("status");
         CrmReview r = reviewMapper.selectById(id);
@@ -274,6 +284,7 @@ public class CrmReviewController {
     // 5. demo-seed：在 demo 租户下灌入 12 条评价（含 1-5 分 + 已隐藏）
     // ===================================================================
     @PostMapping("/demo-seed")
+    @RequirePermission("crm:care:review:edit")
     public Result<Map<String, Object>> demoSeed() {
         Long tenantId = tid();
         // 清空旧的 demo 数据
@@ -358,6 +369,7 @@ public class CrmReviewController {
     // 6. 导出 CSV（前端 a[download] 触发，返回 text/csv）
     // ===================================================================
     @GetMapping("/export")
+    @RequirePermission("crm:care:review:list")
     public Result<Map<String, Object>> export(@RequestParam(required = false) String keyword,
                                               @RequestParam(required = false) String sourceType,
                                               @RequestParam(required = false) Integer overallRating,
