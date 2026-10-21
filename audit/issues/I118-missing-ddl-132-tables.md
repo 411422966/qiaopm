@@ -145,3 +145,13 @@ booking_waitlist_score_config, booking_waitlist_score_log, mkt_effect_snapshot
 
 ## 状态
 已止血（16/16 目标完成），I118 P0 部分闭环
+
+## 第 4g-3 批扫描新发现的 7 个死代码 Controller（2026-10-21）
+以下 Controller 依赖表在 DB 不存在，属 I118 同类问题，需在 I118 死代码清理时一并处理：
+- BusinessPolicyDispatchController（缺 m12_dispatch_log）
+- CrossStoreInventoryController（缺 wms_stock_transfer）
+- DcepConfigModeController（缺 dcep_config）
+- FiscalConfigController（缺 fiscal_config）
+- ItemPreferenceController（缺 crm_member_item_preference）
+- LtvChurnController（缺 crm_churn_prediction）
+- QualityImprovementController（缺 crm_service_improvement, crm_service_improvement_log）
