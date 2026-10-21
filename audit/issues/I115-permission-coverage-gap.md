@@ -66,3 +66,20 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1 批已完成，第 2/3/4 批待办
+
+## 第 2 批完成（2026-10-21）
+- 3 个 Controller 共 26 个端点补 @RequirePermission：
+  - MemberController（补 7，原 9 → 16）：member:order:list / profile / batch / export / import / list
+  - BookingController（14）：booking:add / list / available / edit / checkin / complete / detail / update / delete / stat / export / calendar / schedule:list
+  - MemberInviteController（5）：mkt:invite:list / edit
+- DB 新增 12 个权限码（INSERT IGNORE 幂等）
+- 编译 EXIT=0
+
+### 第 2 批覆盖率
+- @RequirePermission 命中：234（第1批 208 → 第2批 +26）
+- Controller 覆盖：24 / 138（第1批 22 → 第2批 +2）
+- 方法覆盖：234 / 1002 = 23.4%（第1批 20.8% → 第2批 +2.6 pp）
+- 累计提升（相对基线 7.4%）：+16.0 pp
+
+## 状态
+第 1、2 批完成，第 3/4 批待办
