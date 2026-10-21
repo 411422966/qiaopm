@@ -90,23 +90,24 @@
 ---
 ## 4. P0-04 备份恢复
 
-### 核验结果（2026-10-16）
-- 备份脚本：`scripts/backup-db.sh`（RPO 1h，本地 7d / S3 30d / 归档 1y）
-- 恢复脚本：`scripts/restore-db.sh`（RTO 1h，--dry-run，反误操作）
-- 定时任务：`infra/systemd/meiyetec-backup.timer`（daily 02:00）
-- Runbook：`docs/runbook/backup-restore.md` 存在
-- 历史备份：`audit/baseline/pre-2.3-backup-20260920.sql` 等
-- **恢复演练证据：audit/evidence/ 下无** ❌
+### 核验结果（2026-10-22）
+| 核验点 | 结果 | 证据 |
+|---|---|---|
+| 备份脚本 | ✅ | `scripts/backup-db.sh`（RPO 1h，本地 7d / S3 30d / 归档 1y） |
+| 恢复脚本 | ✅ | `scripts/restore-db.sh`（RTO 1h 目标，`--dry-run`，反误操作） |
+| **恢复能力（实测）** | ✅ | 演练：RTO **41.2 秒**（目标 60 分钟），282/282 表，数据 100% CHECKSUM 一致 |
+| 演练证据 | ✅ | `audit/evidence/i116-backup-drill-20261022/` |
+| **备份自动化** | ❌ | `backup-db.sh` 从未运行，aws cli 未装，备份目录不存在，systemd timer 未部署 → **I123** |
 
 ### 结论
 - [ ] 通过
-- [ ] 不通过
-- [x] **待补** → 登记 I116
+- [x] **部分通过**（恢复能力验证 ✅ / 备份自动化未部署 ❌ → I123）
 - [ ] 待补
 
 ### 证据
-- 脚本扫描输出（2026-10-16）
-- 演练证据缺失（I116）
+- 演练记录：`audit/issues/I116-backup-drill-evidence-gap.md`
+- 演练证据：`audit/evidence/i116-backup-drill-20261022/full_backup.sql`（10.3 MB）
+- 备份自动化缺口：`audit/issues/I123-backup-automation-not-deployed.md`
 
 ---
 ## 状态
