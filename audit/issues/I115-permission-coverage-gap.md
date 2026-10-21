@@ -176,3 +176,21 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1、2、3、4a、4b、4c 批完成，第 4d~4g 批待办
+
+## 第 4d 批完成（2026-10-21，库存/耗材）
+- 2 个 Controller 共 36 个端点补 @RequirePermission：
+  - StockController（补 27，原 13 → 40）：stock:product:list/add/edit/delete / stock:stat / stock:alert / stock:check / stock:record / stock:consumption / stock:export
+  - MaterialPackageController（9）：material:package:list/edit
+- DB 新增 6 个权限码，复用 9 个现有 stock:* 权限码
+- 编译 EXIT=0
+- 跳过：MaterialConsumptionLogController / MaterialSubstituteController / StockShortageLogController（I118 已关闭）
+- StockDualVerifyController 已全覆盖（6/6），无需处理
+
+### 第 4d 批覆盖率
+- @RequirePermission 命中：536（第4c批 500 → 第4d批 +36）
+- Controller 覆盖：60 / 138（第4c批 59 → 第4d批 +1）
+- 方法覆盖：536 / 1002 = 53.5%（第4c批 49.9% → 第4d批 +3.6 pp）
+- 累计提升（相对基线 7.4%）：+46.1 pp
+
+## 状态
+第 1、2、3、4a、4b、4c、4d 批完成，第 4e~4g 批待办
