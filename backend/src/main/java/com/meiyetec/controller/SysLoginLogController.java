@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -27,6 +28,7 @@ public class SysLoginLogController {
     private SysLoginLogService service;
 
     @GetMapping("/page")
+    @RequirePermission("sys:login-log:list")
     public Result<IPage<SysLoginLog>> page(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "20") Integer pageSize,
@@ -40,22 +42,26 @@ public class SysLoginLogController {
     }
 
     @GetMapping("/stats")
+    @RequirePermission("sys:login-log:list")
     public Result<Map<String, Object>> stats(@RequestParam(defaultValue = "30") Integer days) {
         return Result.success(service.stats(days));
     }
 
     @GetMapping("/trend")
+    @RequirePermission("sys:login-log:list")
     public Result<List<Map<String, Object>>> trend(@RequestParam(defaultValue = "7") Integer days) {
         return Result.success(service.trend(days));
     }
 
     @GetMapping("/anomaly")
+    @RequirePermission("sys:login-log:list")
     public Result<Map<String, Object>> anomaly(@RequestParam(defaultValue = "7") Integer days,
                                                @RequestParam(defaultValue = "5") Integer top) {
         return Result.success(service.anomaly(days, top));
     }
 
     @GetMapping("/search")
+    @RequirePermission("sys:login-log:list")
     public Result<IPage<SysLoginLog>> search(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) Integer status,
@@ -67,11 +73,13 @@ public class SysLoginLogController {
     }
 
     @DeleteMapping("/{id}")
+    @RequirePermission("sys:login-log:clear")
     public Result<Boolean> delete(@PathVariable Long id) {
         return Result.success(service.removeById(id));
     }
 
     @PostMapping("/clear")
+    @RequirePermission("sys:login-log:clear")
     public Result<Integer> clear(@RequestParam(defaultValue = "30") Integer days) {
         if (days == null || days <= 0) return Result.success(0);
         int n = service.clearBeforeDays(days);
@@ -79,6 +87,7 @@ public class SysLoginLogController {
     }
 
     @GetMapping("/export")
+    @RequirePermission("sys:login-log:export")
     public void export(
             @RequestParam(required = false) String username,
             @RequestParam(required = false) Integer status,

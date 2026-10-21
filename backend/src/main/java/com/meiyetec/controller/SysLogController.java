@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -34,6 +35,7 @@ public class SysLogController {
     private final SysLogService service;
 
     @GetMapping("/page")
+    @RequirePermission("sys:log:list")
     public Result<Page<SysLog>> page(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "20") Integer pageSize,
@@ -67,6 +69,7 @@ public class SysLogController {
     }
 
     @GetMapping("/export")
+    @RequirePermission("sys:log:export")
     public void export(
             @RequestParam(required = false) String module,
             @RequestParam(required = false) String action,
@@ -185,6 +188,7 @@ public class SysLogController {
     }
 
     @DeleteMapping("/{id}")
+    @RequirePermission("sys:log:clear")
     public Result<Void> delete(@PathVariable Long id) {
         service.removeById(id);
         return Result.success("删除成功", null);
@@ -195,6 +199,7 @@ public class SysLogController {
      * 请求体：{ "days": 30 }
      */
     @DeleteMapping("/clear")
+    @RequirePermission("sys:log:clear")
     public Result<Integer> clear(@RequestBody(required = false) ClearBody body) {
         int days = body == null ? 30 : (body.days == null ? 30 : body.days);
         if (days < 1) return Result.error("days 必须 >= 1");
@@ -207,11 +212,13 @@ public class SysLogController {
     }
 
     @GetMapping("/stats")
+    @RequirePermission("sys:log:list")
     public Result<SysLogStatsVO> stats() {
         return Result.success(service.stats());
     }
 
     @GetMapping("/trend")
+    @RequirePermission("sys:log:list")
     public Result<List<TrendPointVO>> trend(@RequestParam(defaultValue = "7") Integer days) {
         return Result.success(service.trend(days));
     }
@@ -220,6 +227,7 @@ public class SysLogController {
      * 异常 TopN：失败最多的 IP / URL
      */
     @GetMapping("/anomaly")
+    @RequirePermission("sys:log:list")
     public Result<SysLogAnomalyVO> anomaly(
             @RequestParam(defaultValue = "7") Integer days,
             @RequestParam(defaultValue = "5") Integer top) {
@@ -230,6 +238,7 @@ public class SysLogController {
      * 下拉枚举：模块 / 操作（默认 + DB DISTINCT 合并）
      */
     @GetMapping("/enums")
+    @RequirePermission("sys:log:list")
     public Result<SysLogEnumsVO> enums(@RequestParam(defaultValue = "30") Integer defaultClearDays) {
         return Result.success(service.enums(defaultClearDays));
     }
@@ -238,6 +247,7 @@ public class SysLogController {
      * 上下文：同一用户时间窗口 ±N 分钟
      */
     @GetMapping("/context")
+    @RequirePermission("sys:log:list")
     public Result<List<SysLog>> context(
             @RequestParam Long id,
             @RequestParam(defaultValue = "10") Integer minutes,
@@ -251,6 +261,7 @@ public class SysLogController {
      * 全文搜索：按关键字（描述 / URL / IP / 用户 / 错误信息）AND 过滤项
      */
     @GetMapping("/search")
+    @RequirePermission("sys:log:list")
     public Result<IPage<SysLog>> search(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) String module,

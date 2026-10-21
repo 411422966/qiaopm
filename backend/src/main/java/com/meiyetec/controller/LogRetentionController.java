@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.service.SysConfigService;
 import com.meiyetec.util.Result;
@@ -26,6 +27,7 @@ public class LogRetentionController {
     private final SysConfigService configService;
 
     @GetMapping
+    @RequirePermission("sys:log-retention:list")
     public Result<Map<String, Object>> get() {
         Map<String, Object> r = new HashMap<>();
         r.put("key", CONFIG_KEY);
@@ -36,6 +38,7 @@ public class LogRetentionController {
     }
 
     @PutMapping
+    @RequirePermission("sys:log-retention:edit")
     public Result<Void> update(@Valid @RequestBody RetentionDTO dto) {
         configService.putInt(CONFIG_KEY, dto.getDays(), DESCRIPTION);
         return Result.success("保存成功，下次清理生效", null);
