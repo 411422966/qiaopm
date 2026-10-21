@@ -154,3 +154,25 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1、2、3、4a、4b 批完成，第 4c~4g 批待办
+
+## 第 4c 批完成（2026-10-21，门店/员工/房间/排班）
+- 8 个 Controller 共 59 个端点补 @RequirePermission：
+  - AttendanceConfigController（6）：attendance:config:list/edit
+  - AttendanceController（9）：attendance:check/list/stat/edit
+  - EmployeeController（8）：employee:list/add/edit/delete/reset-password
+  - LeaveRequestController（7）：attendance:leave:submit/approve/list
+  - RoomController（5）：room:list/edit
+  - ScheduleController（6）：schedule:list/edit
+  - StoreController（7）：store:list/edit
+  - TechnicianLevelController（11）：employee:level / level:edit / level:eval / level:promote
+- DB 新增 17 个权限码，复用 10 个现有 employee:* 权限码
+- 编译 EXIT=0
+
+### 第 4c 批覆盖率
+- @RequirePermission 命中：500（第4b批 441 → 第4c批 +59）
+- Controller 覆盖：59 / 138（第4b批 51 → 第4c批 +8）
+- 方法覆盖：500 / 1002 = 49.9%（第4b批 44.0% → 第4c批 +5.9 pp）
+- 累计提升（相对基线 7.4%）：+42.5 pp
+
+## 状态
+第 1、2、3、4a、4b、4c 批完成，第 4d~4g 批待办
