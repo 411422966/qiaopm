@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.dto.CategoryDTO;
 import com.meiyetec.entity.Category;
 import com.meiyetec.annotation.SysOpLog;
@@ -20,11 +21,13 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/list")
+    @RequirePermission("category:list")
     public Result<List<Category>> list() {
         return Result.success(categoryService.list());
     }
 
     @GetMapping("/tree")
+    @RequirePermission("category:list")
     public Result<List<Category>> tree() {
         List<Category> all = categoryService.list();
         List<Category> tree = buildTree(all);
@@ -32,6 +35,7 @@ public class CategoryController {
     }
 
     @PostMapping("/sort")
+    @RequirePermission("category:edit")
     public Result<Void> sort(@RequestBody List<Long> ids) {
         for (int i = 0; i < ids.size(); i++) {
             Category c = categoryService.getById(ids.get(i));
@@ -44,11 +48,13 @@ public class CategoryController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("category:list")
     public Result<Category> getById(@PathVariable Long id) {
         return Result.success(categoryService.getById(id));
     }
 
     @PostMapping
+    @RequirePermission("category:edit")
     public Result<Void> create(@Valid @RequestBody CategoryDTO dto) {
         Category category = new Category();
         org.springframework.beans.BeanUtils.copyProperties(dto, category);
@@ -57,6 +63,7 @@ public class CategoryController {
     }
 
     @PutMapping
+    @RequirePermission("category:edit")
     public Result<Void> update(@Valid @RequestBody CategoryDTO dto) {
         Category category = new Category();
         org.springframework.beans.BeanUtils.copyProperties(dto, category);
@@ -65,6 +72,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("category:edit")
     public Result<Void> delete(@PathVariable Long id) {
         categoryService.removeById(id);
         return Result.success("删除成功", null);
@@ -84,5 +92,4 @@ public class CategoryController {
                 .toList();
     }
 }
-
 

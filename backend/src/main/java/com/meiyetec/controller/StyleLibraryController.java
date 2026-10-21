@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.StyleLibrary;
 import com.meiyetec.service.StyleLibraryService;
@@ -20,6 +21,7 @@ public class StyleLibraryController {
     private final StyleLibraryService styleLibraryService;
 
     @GetMapping("/list")
+    @RequirePermission("style:library:list")
     public Result<List<StyleLibrary>> list(
             @RequestParam(required = false) String styleType,
             @RequestParam(required = false) String styleTag,
@@ -37,22 +39,26 @@ public class StyleLibraryController {
     }
 
     @GetMapping("/hot")
+    @RequirePermission("style:library:list")
     public Result<List<StyleLibrary>> hot() {
         return Result.success(styleLibraryService.findHotStyles());
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("style:library:list")
     public Result<StyleLibrary> getById(@PathVariable Long id) {
         return Result.success(styleLibraryService.getById(id));
     }
 
     @PostMapping
+    @RequirePermission("style:library:edit")
     public Result<Void> create(@RequestBody StyleLibrary style) {
         styleLibraryService.save(style);
         return Result.success("创建成功", null);
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("style:library:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody StyleLibrary style) {
         style.setId(id);
         styleLibraryService.updateById(style);
@@ -60,23 +66,27 @@ public class StyleLibraryController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("style:library:edit")
     public Result<Void> delete(@PathVariable Long id) {
         styleLibraryService.removeById(id);
         return Result.success("删除成功", null);
     }
 
     @GetMapping("/statistics/type")
+    @RequirePermission("style:library:list")
     public Result<List<Map<String, Object>>> statsByType(@RequestParam(required = false) Long storeId) {
         return Result.success(styleLibraryService.statisticsByType(storeId));
     }
 
     @PostMapping("/{id:\\d+}/view")
+    @RequirePermission("style:library:edit")
     public Result<Void> recordView(@PathVariable Long id) {
         styleLibraryService.recordView(id);
         return Result.success(null, null);
     }
 
     @PostMapping("/{id:\\d+}/like")
+    @RequirePermission("style:library:edit")
     public Result<Integer> toggleLike(@PathVariable Long id) {
         int likes = styleLibraryService.toggleLike(id);
         return Result.success(likes);
@@ -119,6 +129,7 @@ public class StyleLibraryController {
      * </pre>
      */
     @PostMapping("/quick-order")
+    @RequirePermission("style:library:edit")
     public Result<Map<String, Object>> quickOrder(@RequestBody Map<String, Object> body) {
         return Result.success(styleLibraryService.quickOrderFull(body));
     }
@@ -127,6 +138,7 @@ public class StyleLibraryController {
      * P2-12 IND-12：兼容旧版 /style/{id}/order 路径
      */
     @PostMapping("/{id:\\d+}/order")
+    @RequirePermission("style:library:edit")
     public Result<Map<String, Object>> quickOrderLegacy(
             @PathVariable Long id,
             @RequestBody Map<String, Object> body) {
@@ -135,6 +147,7 @@ public class StyleLibraryController {
     }
 
     @PostMapping("/init-default")
+    @RequirePermission("style:library:edit")
     public Result<Map<String, Object>> initDefault() {
         int created = styleLibraryService.initDefault();
         Map<String, Object> result = new HashMap<>();
@@ -144,6 +157,7 @@ public class StyleLibraryController {
     }
 
     @GetMapping("/recommend")
+    @RequirePermission("style:library:list")
     public Result<List<StyleLibrary>> recommend(
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) String styleType,

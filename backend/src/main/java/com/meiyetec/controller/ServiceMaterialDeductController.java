@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.service.ServiceMaterialDeductService;
 import com.meiyetec.util.Result;
@@ -17,6 +18,7 @@ public class ServiceMaterialDeductController {
     private final ServiceMaterialDeductService serviceMaterialDeductService;
 
     @PostMapping("/execute")
+    @RequirePermission("material:deduct:manage")
     public Result<ServiceMaterialDeductService.DeductResult> execute(
             @RequestBody ServiceMaterialDeductService.DeductContext context) {
         ServiceMaterialDeductService.DeductResult result = serviceMaterialDeductService.deductForService(context);
@@ -24,6 +26,7 @@ public class ServiceMaterialDeductController {
     }
 
     @PostMapping("/rollback")
+    @RequirePermission("material:deduct:manage")
     public Result<Void> rollback(@RequestBody Map<String, Object> params) {
         Long orderId = ((Number) params.get("orderId")).longValue();
         String reason = (String) params.get("reason");

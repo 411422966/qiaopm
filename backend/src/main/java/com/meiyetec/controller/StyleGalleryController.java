@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.entity.StyleGallery;
 import com.meiyetec.entity.StyleViewLog;
@@ -31,6 +32,7 @@ public class StyleGalleryController {
 
     @PostMapping
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("style:gallery:edit")
     public Result<StyleGallery> create(@RequestBody StyleGallery s) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (s.getStyleCode() == null || s.getStyleName() == null)
@@ -48,6 +50,7 @@ public class StyleGalleryController {
     }
 
     @GetMapping("/{id}")
+    @RequirePermission("style:gallery:list")
     public Result<StyleGallery> get(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         StyleGallery s = styleMapper.selectById(id);
@@ -59,6 +62,7 @@ public class StyleGalleryController {
     }
 
     @PostMapping("/{id}/view")
+    @RequirePermission("style:gallery:edit")
     public Result<Void> logView(@PathVariable Long id, @RequestBody(required = false) Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         StyleViewLog viewLog = new StyleViewLog();
@@ -74,12 +78,14 @@ public class StyleGalleryController {
     }
 
     @PostMapping("/{id}/like")
+    @RequirePermission("style:gallery:edit")
     public Result<Void> like(@PathVariable Long id) {
         jdbc.update("UPDATE style_gallery SET like_count = like_count + 1 WHERE id = ?", id);
         return Result.success("已点赞", null);
     }
 
     @GetMapping("/list")
+    @RequirePermission("style:gallery:list")
     public Result<List<StyleGallery>> list(@RequestParam(required = false) String category,
                                             @RequestParam(required = false) String tag,
                                             @RequestParam(defaultValue = "HOT") String sort) {
@@ -96,6 +102,7 @@ public class StyleGalleryController {
     }
 
     @PostMapping("/{id}/order")
+    @RequirePermission("style:gallery:edit")
     public Result<Map<String, Object>> quickOrder(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         StyleGallery s = styleMapper.selectById(id);
@@ -113,6 +120,7 @@ public class StyleGalleryController {
 
     @PostMapping("/init-default")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("style:gallery:edit")
     public Result<Map<String, Object>> initDefault() {
         Long tenantId = TenantContextHolder.get().getTenantId();
         List<Map<String, Object>> defaults = List.of(

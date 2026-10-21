@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.mapper.BizServiceItemMapper;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
@@ -21,26 +22,31 @@ public class BizServiceItemController {
     private com.meiyetec.service.BizServiceItemService bizService;
 
     @GetMapping
+    @RequirePermission("biz:service-item:list")
     public Result<?> list() {
         return bizService.itemPage(1, 100, null, null, null, null);
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("biz:service-item:list")
     public Result<?> detail(@PathVariable Long id) {
         return bizService.itemDetail(id);
     }
 
     @PostMapping
+    @RequirePermission("biz:service-item:edit")
     public Result<?> create(@RequestBody com.meiyetec.entity.BizServiceItem item) {
         return bizService.createItem(item);
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("biz:service-item:edit")
     public Result<?> update(@PathVariable Long id, @RequestBody com.meiyetec.entity.BizServiceItem item) {
         return bizService.updateItem(id, item);
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("biz:service-item:edit")
     public Result<?> delete(@PathVariable Long id) {
         return bizService.deleteItem(id);
     }

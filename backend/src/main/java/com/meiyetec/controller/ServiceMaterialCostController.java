@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.service.ServiceMaterialCostService;
 import com.meiyetec.util.Result;
@@ -18,11 +19,13 @@ public class ServiceMaterialCostController {
     private final ServiceMaterialCostService serviceMaterialCostService;
 
     @GetMapping("/analysis")
+    @RequirePermission("material:cost:list")
     public Result<List<Map<String, Object>>> analysis() {
         return Result.success(serviceMaterialCostService.getServiceCostAnalysis());
     }
 
     @GetMapping("/by-service/{serviceId}")
+    @RequirePermission("material:cost:list")
     public Result<Map<String, Object>> getServiceCost(@PathVariable Long serviceId) {
         return Result.success(serviceMaterialCostService.getServiceCost(serviceId));
     }

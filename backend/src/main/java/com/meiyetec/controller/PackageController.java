@@ -80,6 +80,7 @@ public class PackageController {
 
     // ==================== T05-09 套餐列表 ====================
     @GetMapping
+    @RequirePermission("package:list")
     public Result<PageResult<PackageItem>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "20") Integer pageSize,
@@ -106,6 +107,7 @@ public class PackageController {
 
     // ==================== T05-10 套餐详情 ====================
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("package:list")
     public Result<PackageItem> detail(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PackageItem p = packageItemService.getById(id);
@@ -123,6 +125,7 @@ public class PackageController {
     // ==================== T05-11 创建/更新套餐（M04 bundle 支持） ====================
     @PostMapping
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("package:add")
     public Result<PackageItem> save(@Valid @RequestBody PackageSaveDTO dto) {
         // T07-D1：从 TenantContextHolder 取租户；缺失则拒绝，禁止 fallback 到默认租户 1L
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -194,6 +197,7 @@ public class PackageController {
     // ==================== T05-12 购买套餐 ====================
     @PostMapping("/purchase")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("package:purchase")
     public Result<Map<String, Object>> purchase(@Valid @RequestBody PackagePurchaseDTO dto) {
         // T07-D1：从 TenantContextHolder 取租户；缺失则拒绝，禁止 fallback 到默认租户 1L
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -355,6 +359,7 @@ public class PackageController {
 
     // ==================== T05-14 会员套餐查询 ====================
     @GetMapping("/member/{memberId}")
+    @RequirePermission("package:list")
     public Result<PageResult<PackageOrder>> memberPackages(
             @PathVariable Long memberId,
             @RequestParam(defaultValue = "1") Integer pageNum,
@@ -752,6 +757,7 @@ public class PackageController {
 
     // ==================== 单笔订单核销记录 ====================
     @GetMapping("/order/{orderId}/redemptions")
+    @RequirePermission("package:list")
     public Result<PageResult<PackageRedemption>> redemptions(
             @PathVariable Long orderId,
             @RequestParam(defaultValue = "1") Integer pageNum,
@@ -781,6 +787,7 @@ public class PackageController {
 
     // ==================== 会员全部核销记录 ====================
     @GetMapping("/redemption/member/{memberId}")
+    @RequirePermission("package:list")
     public Result<PageResult<PackageRedemption>> memberRedemptions(
             @PathVariable Long memberId,
             @RequestParam(defaultValue = "1") Integer pageNum,
@@ -812,6 +819,7 @@ public class PackageController {
     // ==================== 续期（顺延 N 天） ====================
     @PostMapping("/order/{orderId}/extend")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("package:edit")
     public Result<PackageOrder> extend(@PathVariable Long orderId,
                                        @RequestParam(defaultValue = "30") Integer days) {
         PackageOrder order = orderService.getById(orderId);
@@ -834,6 +842,7 @@ public class PackageController {
 
     // ==================== 套餐列表汇总统计 ====================
     @GetMapping("/stats")
+    @RequirePermission("package:list")
     public Result<Map<String, Object>> stats() {
         Long tenantId = TenantContextHolder.get().getTenantId();
         LambdaQueryWrapper<PackageItem> itemWrapper = new LambdaQueryWrapper<>();
@@ -865,6 +874,7 @@ public class PackageController {
     // ==================== M05-二期 #6 套餐退款（按剩余次数比例折现退钱包） ====================
     @PostMapping("/order/{orderId}/refund")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("package:refund")
     public Result<Map<String, Object>> refund(@PathVariable Long orderId,
                                               @RequestParam(required = false) BigDecimal amount,
                                               @RequestParam(defaultValue = "1") Long operatorId) {
@@ -1125,6 +1135,7 @@ public class PackageController {
      */
     @PostMapping("/upgrade")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("package:edit")
     public Result<Map<String, Object>> upgrade(@Valid @RequestBody PackageUpgradeDTO dto) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (tenantId == null) {
@@ -1274,6 +1285,7 @@ public class PackageController {
     // ==================== M05-二期 #8 套餐拆分核销（一次操作多员工次） ====================
     @PostMapping("/redeem-split")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("package:redeem")
     public Result<Map<String, Object>> redeemSplit(@Valid @RequestBody PackageSplitRedeemDTO dto) {
         // T07-D1：从 TenantContextHolder 取租户；缺失则拒绝，禁止 fallback 到默认租户 1L
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -1369,6 +1381,7 @@ public class PackageController {
     // ==================== 逻辑删除套餐 ====================
     @DeleteMapping("/{id:\\d+}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("package:delete")
     public Result<Void> delete(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PackageItem p = packageItemService.getById(id);
@@ -1426,6 +1439,7 @@ public class PackageController {
 
     // ==================== M05-附 最近订单/核销 ====================
     @GetMapping("/orders/recent")
+    @RequirePermission("package:list")
     public Result<PageResult<PackageOrder>> recentOrders(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -1444,6 +1458,7 @@ public class PackageController {
     }
 
     @GetMapping("/redemptions/recent")
+    @RequirePermission("package:list")
     public Result<PageResult<PackageRedemption>> recentRedemptions(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize) {
@@ -1465,6 +1480,7 @@ public class PackageController {
     }
 
     @GetMapping("/members/recent-with-orders")
+    @RequirePermission("package:list")
     public Result<List<Map<String, Object>>> recentMembersWithOrders(
             @RequestParam(defaultValue = "8") Integer limit) {
         // 取最近有订单的会员
@@ -1491,6 +1507,5 @@ public class PackageController {
         return Result.success(new ArrayList<>(uniq.values()));
     }
 }
-
 
 

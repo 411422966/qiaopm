@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
@@ -35,6 +36,7 @@ public class ServiceMaterialController {
     }
 
     @GetMapping("/by-service/{serviceId}")
+    @RequirePermission("material:binding:list")
     public Result<List<Map<String, Object>>> findByServiceId(@PathVariable Long serviceId) {
         Long tid = currentTenantIdOrReject();
         List<Map<String, Object>> rows = mapper.listBomByService(serviceId);
@@ -45,6 +47,7 @@ public class ServiceMaterialController {
     }
 
     @PostMapping("/page")
+    @RequirePermission("material:binding:list")
     public Result<PageResult<BizServiceMaterial>> page(@RequestBody Map<String, Object> params) {
         Long tid = currentTenantIdOrReject();
         int pageNum = (int) params.getOrDefault("pageNum", 1);
@@ -63,6 +66,7 @@ public class ServiceMaterialController {
 
     @PostMapping
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("material:binding:edit")
     public Result<BizServiceMaterial> create(@RequestBody BizServiceMaterial material) {
         Long tid = currentTenantIdOrReject();
         if (material.getServiceId() == null) {
@@ -102,6 +106,7 @@ public class ServiceMaterialController {
 
     @PutMapping("/{id:\\d+}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("material:binding:edit")
     public Result<BizServiceMaterial> update(@PathVariable Long id, @RequestBody BizServiceMaterial material) {
         Long tid = currentTenantIdOrReject();
         BizServiceMaterial old = mapper.selectById(id);
@@ -125,6 +130,7 @@ public class ServiceMaterialController {
 
     @DeleteMapping("/{id:\\d+}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("material:binding:edit")
     public Result<Void> delete(@PathVariable Long id) {
         Long tid = currentTenantIdOrReject();
         BizServiceMaterial old = mapper.selectById(id);
