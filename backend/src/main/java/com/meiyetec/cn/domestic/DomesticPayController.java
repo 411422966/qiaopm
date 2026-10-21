@@ -1,5 +1,6 @@
 package com.meiyetec.cn.domestic;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.util.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class DomesticPayController {
     // 1. 统一下单
     // ============================================================
     @PostMapping("/pay/prepay")
+    @RequirePermission("domestic-payment:prepay")
     public Result<DomesticPayResponse<DomesticPayChannelAdapter.PrepayResult>> prepay(
             @RequestParam String channel,
             @RequestBody DomesticPayChannelAdapter.PrepayRequest request) {
@@ -68,6 +70,7 @@ public class DomesticPayController {
     // 2. 订单查询
     // ============================================================
     @PostMapping("/pay/query")
+    @RequirePermission("domestic-payment:query")
     public Result<DomesticPayResponse<DomesticPayChannelAdapter.QueryResult>> query(
             @RequestParam String channel,
             @RequestParam String outOrderNo) {
@@ -83,6 +86,7 @@ public class DomesticPayController {
     // 3. 退款
     // ============================================================
     @PostMapping("/pay/refund")
+    @RequirePermission("domestic-payment:refund")
     public Result<DomesticPayResponse<DomesticPayChannelAdapter.RefundResult>> refund(
             @RequestParam String channel,
             @RequestBody DomesticPayChannelAdapter.RefundRequest request) {
@@ -96,6 +100,7 @@ public class DomesticPayController {
     // 4. 关闭订单
     // ============================================================
     @PostMapping("/pay/close")
+    @RequirePermission("domestic-payment:close")
     public Result<DomesticPayResponse<DomesticPayChannelAdapter.CloseResult>> close(
             @RequestParam String channel,
             @RequestParam String outOrderNo) {
@@ -163,6 +168,7 @@ public class DomesticPayController {
     // 6. 健康检查（动态读取已注册通道）
     // ============================================================
     @GetMapping("/health")
+    @RequirePermission("domestic-payment:health")
     public Result<Map<String, Object>> health() {
         Map<String, Object> adapters = new HashMap<>();
         for (String code : channelRouter.listChannels()) {
