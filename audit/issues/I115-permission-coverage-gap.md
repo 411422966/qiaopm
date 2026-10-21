@@ -303,3 +303,33 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1~4g-2 批 + 4g-3 第一批完成，4g-3 第二批待办
+
+## 第 4g-3b 批完成（2026-10-21，关怀检测类）
+- 10 个 Controller 共 67 个端点补 @RequirePermission：
+  - CareRecipeController（9）：crm:care:recipe:list/edit
+  - CareSuggestionEngineController（4）：crm:care:suggestion:engine:view/edit
+  - CareSuggestionLogController（6）：crm:care:suggestion:log:list/edit
+  - CareSuggestionRuleController（6）：crm:care:suggestion:rule:list/edit
+  - CareSuggestionTemplateController（5）：crm:care:suggestion:tpl:list/edit
+  - ComplaintTicketController（13）：crm:care:complaint:list/edit/handle
+  - DetectionSolutionController（5）：crm:detection:solution:list/edit
+  - HairDetectionController（7）：crm:detection:hair:list/edit
+  - NailDetectionController（7）：crm:detection:nail:list/edit
+  - SkinDetectionController（7）：crm:detection:skin:list/edit
+- 依赖表 16 张全部存在（真业务，无死代码）
+- DB 新增 21 个权限码
+- 编译 EXIT=0
+
+### 第 4g-3b 批覆盖率
+- @RequirePermission 命中：692（第4g-3批第一批 625 → 第4g-3b批 +67）
+- Controller 覆盖：84 / 138（第4g-3批第一批 74 → 第4g-3b批 +10）
+- 方法覆盖：692 / 1002 = 69.1%（第4g-3批第一批 62.4% → 第4g-3b批 +6.7 pp）
+- 累计提升（相对基线 7.4%）：+61.7 pp
+
+## 待办：第 4g-3c/4g-3d 批
+剩余 26 个 LIVE Controller：
+- CRM 会员类（~10 个）：Cohort / CrossStore / MemberLevel / MemberLifecycle / MemberMessage / MemberStylePreference / MemberTag / LevelBenefit / LevelEvaluation / Blockchain
+- DCEP/IoT 类 + 其他（~16 个）：DcepContractExecutionLog / DcepOfflineTransaction / DcepSmartContract / IotDeviceAlert / IotDeviceData / IotTriggerRule / PricingExperiment / Rbac / ResourceMatchRule / ResourceSchedule / SpaSceneMode / Subscription / MhConsentH5 / CareSuggestionEngine 剩余 / 等
+
+## 状态
+第 1~4g-3b 批完成，4g-3c/4g-3d 批待办
