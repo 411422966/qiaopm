@@ -44,3 +44,21 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 待办
+
+## 第 1 批完成（2026-10-21）
+- 8 个 Controller 共 69 个端点补 @RequirePermission：
+  - PosController（15）：pos:service:list / pos:order:add / pay / refund / void / list / stat
+  - OverseasPaymentController（6）：overseas-payment:list / create / refund / stat
+  - OverseasPaymentGatewayController（6）：overseas-payment:gateway:*
+  - PaymentRouteRuleController（5）：overseas-payment:route:*
+  - DcepHardwareWalletController（15）：dcep:wallet:list / activate / recharge / manage
+  - DcepSubWalletController（12）：dcep:sub-wallet:list / add / edit / manage / transfer
+  - DcepMerchantQualificationController（5）：dcep:qualification:list / edit / submit
+  - DcepConfigController（5）：sys:dcep:list / edit / test
+- DB 新增 28 个权限码（sys_permission，INSERT IGNORE 幂等）
+- 编译 EXIT=0
+- 覆盖率：<待填>
+- 待办：给 BOSS / MANAGER / CLERK / OPERATOR 角色分配对应权限（sys_role_permission），否则这些角色调上述接口会 403
+
+## 状态
+第 1 批已完成，第 2/3/4 批待办
