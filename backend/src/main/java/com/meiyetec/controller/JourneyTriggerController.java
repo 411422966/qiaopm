@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.JourneyTriggerLog;
@@ -28,6 +29,7 @@ public class JourneyTriggerController {
     private final JourneyTriggerService triggerService;
 
     @GetMapping("/page")
+    @RequirePermission("mkt:journey:trigger:list")
     public Result<Page<JourneyTriggerRule>> page(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -39,6 +41,7 @@ public class JourneyTriggerController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("mkt:journey:trigger:list")
     public Result<JourneyTriggerRule> getById(@PathVariable Long id) {
         JourneyTriggerRule r = triggerService.getById(id);
         if (r == null) return Result.error(BizCode.NOT_FOUND, "触发器不存在");
@@ -49,28 +52,33 @@ public class JourneyTriggerController {
     }
 
     @PostMapping
+    @RequirePermission("mkt:journey:trigger:edit")
     public Result<JourneyTriggerRule> create(@RequestBody JourneyTriggerRule rule) {
         rule.setId(null);
         return triggerService.save(rule);
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("mkt:journey:trigger:edit")
     public Result<JourneyTriggerRule> update(@PathVariable Long id, @RequestBody JourneyTriggerRule rule) {
         rule.setId(id);
         return triggerService.save(rule);
     }
 
     @PostMapping("/{id:\\d+}/toggle")
+    @RequirePermission("mkt:journey:trigger:edit")
     public Result<Void> toggle(@PathVariable Long id, @RequestParam(defaultValue = "true") boolean enable) {
         return triggerService.toggle(id, enable);
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("mkt:journey:trigger:edit")
     public Result<Void> delete(@PathVariable Long id) {
         return triggerService.delete(id);
     }
 
     @GetMapping("/{id:\\d+}/logs")
+    @RequirePermission("mkt:journey:trigger:list")
     public Result<List<JourneyTriggerLog>> logs(
             @PathVariable Long id,
             @RequestParam(required = false) String status,
@@ -79,11 +87,13 @@ public class JourneyTriggerController {
     }
 
     @PostMapping("/{id:\\d+}/run")
+    @RequirePermission("mkt:journey:trigger:edit")
     public Result<Map<String, Object>> triggerRule(@PathVariable Long id) {
         return triggerService.triggerRule(id);
     }
 
     @GetMapping("/stats")
+    @RequirePermission("mkt:journey:trigger:list")
     public Result<Map<String, Object>> stats(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {

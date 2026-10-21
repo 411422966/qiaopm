@@ -53,6 +53,7 @@ public class MktCouponController {
     // ==================== 批次 ====================
 
     @PostMapping("/batch/page")
+    @RequirePermission("mkt:coupon")
     public Result<PageResult<MktCouponBatch>> batchPage(@RequestBody Map<String, Object> params) {
         Long t = tid();
         int pageNum = (int) params.getOrDefault("pageNum", 1);
@@ -74,6 +75,7 @@ public class MktCouponController {
 
     @PostMapping("/batch")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mkt:coupon")
     public Result<MktCouponBatch> createBatch(@RequestBody MktCouponBatch batch) {
         Long t = tid();
         if (batch.getCouponName() == null || batch.getCouponName().isEmpty()) {
@@ -102,6 +104,7 @@ public class MktCouponController {
 
     @PostMapping("/batch/{id}/publish")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mkt:coupon")
     public Result<MktCouponBatch> publish(@PathVariable Long id) {
         Long t = tid();
         MktCouponBatch old = batchMapper.selectById(id);
@@ -122,6 +125,7 @@ public class MktCouponController {
 
     @PostMapping("/batch/{id}/end")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mkt:coupon")
     public Result<MktCouponBatch> endBatch(@PathVariable Long id) {
         Long t = tid();
         MktCouponBatch old = batchMapper.selectById(id);
@@ -138,6 +142,7 @@ public class MktCouponController {
 
     @PostMapping("/batch/{id}/grant")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mkt:coupon")
     public Result<Map<String, Object>> grantBatch(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         Long t = tid();
         MktCouponBatch batch = batchMapper.selectById(id);
@@ -231,6 +236,7 @@ public class MktCouponController {
     // ==================== 过期扫描 ====================
 
     @PostMapping("/expire-sweep")
+    @RequirePermission("mkt:coupon")
     public Result<Map<String, Object>> expireSweep() {
         Long t = tid();
         LocalDateTime sweepStart = LocalDateTime.now();
@@ -267,6 +273,7 @@ public class MktCouponController {
     // ==================== 模板列表（与 /market/coupon/page 同语义，但走 /mkt 命名）====================
 
     @GetMapping("/page")
+    @RequirePermission("mkt:coupon")
     public Result<PageResult<MktCoupon>> couponPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -296,6 +303,7 @@ public class MktCouponController {
     // ==================== 导出 ====================
 
     @GetMapping("/export")
+    @RequirePermission("mkt:coupon")
     public Result<List<Map<String, Object>>> export(
             @RequestParam(required = false) Integer status) {
         Long t = tid();

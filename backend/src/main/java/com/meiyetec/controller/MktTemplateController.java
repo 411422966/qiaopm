@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.MktChannelTemplate;
 import com.meiyetec.security.TenantContextHolder;
@@ -30,6 +31,7 @@ public class MktTemplateController {
     private final MarketingAutomationService marketingAutomationService;
 
     @GetMapping("/list")
+    @RequirePermission("mkt:template:list")
     public Result<List<Map<String, Object>>> list(
             @RequestParam(required = false) String channelType,
             @RequestParam(required = false) String scene) {
@@ -37,11 +39,13 @@ public class MktTemplateController {
     }
 
     @PostMapping
+    @RequirePermission("mkt:template:edit")
     public Result<MktChannelTemplate> create(@RequestBody MktChannelTemplate t) {
         return marketingAutomationService.createTemplate(t);
     }
 
     @PutMapping("/{id}/audit")
+    @RequirePermission("mkt:template:edit")
     public Result<Void> audit(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         return marketingAutomationService.auditTemplate(id, body);
     }

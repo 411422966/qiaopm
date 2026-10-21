@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
@@ -41,6 +42,7 @@ public class PointGoodsController {
     }
 
     @GetMapping("/page")
+    @RequirePermission("market:point:list")
     public Result<PageResult<PointGoods>> page(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -57,6 +59,7 @@ public class PointGoodsController {
     }
 
     @GetMapping("/list")
+    @RequirePermission("market:point:list")
     public Result<List<PointGoods>> list(@RequestParam(required = false) String keyword) {
         Long t = tid();
         LambdaQueryWrapper<PointGoods> w = new LambdaQueryWrapper<>();
@@ -68,6 +71,7 @@ public class PointGoodsController {
 
     @PostMapping
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("market:point:add")
     public Result<PointGoods> create(@RequestBody PointGoods g) {
         Long t = tid();
         if (g.getName() == null || g.getName().isEmpty()) return Result.error(BizCode.BAD_REQUEST, "name 必填");
@@ -86,6 +90,7 @@ public class PointGoodsController {
 
     @PutMapping("/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("market:point:edit")
     public Result<PointGoods> update(@PathVariable Long id, @RequestBody PointGoods g) {
         Long t = tid();
         PointGoods old = goodsMapper.selectById(id);
@@ -104,6 +109,7 @@ public class PointGoodsController {
 
     @DeleteMapping("/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("market:point:delete")
     public Result<Void> remove(@PathVariable Long id) {
         Long t = tid();
         PointGoods old = goodsMapper.selectById(id);
@@ -121,6 +127,7 @@ public class PointGoodsController {
      */
     @PostMapping("/{id}/redeem")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("market:point:edit")
     public Result<Map<String, Object>> redeem(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         Long t = tid();
         if (body == null || body.get("memberId") == null) return Result.error(BizCode.BAD_REQUEST, "memberId 必填");
@@ -152,6 +159,7 @@ public class PointGoodsController {
     }
 
     @GetMapping("/{id}")
+    @RequirePermission("market:point:list")
     public Result<PointGoods> detail(@PathVariable Long id) {
         Long t = tid();
         PointGoods g = goodsMapper.selectById(id);

@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.MarketingTouchTask;
@@ -35,6 +36,7 @@ public class MktTouchTaskController {
     private final MarketingAutomationService marketingAutomationService;
 
     @PostMapping("/page")
+    @RequirePermission("mkt:touch:task:list")
     public Result<Page<Map<String, Object>>> pagePost(@RequestBody Map<String, Object> params) {
         int pageNum = (int) params.getOrDefault("pageNum", 1);
         int pageSize = (int) params.getOrDefault("pageSize", 20);
@@ -45,6 +47,7 @@ public class MktTouchTaskController {
     }
 
     @GetMapping("/page")
+    @RequirePermission("mkt:touch:task:list")
     public Result<Page<Map<String, Object>>> pageGet(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -55,31 +58,37 @@ public class MktTouchTaskController {
     }
 
     @PostMapping
+    @RequirePermission("mkt:touch:task:edit")
     public Result<MarketingTouchTask> create(@RequestBody Map<String, Object> body) {
         return marketingAutomationService.createTask(body);
     }
 
     @PostMapping("/{id}/start")
+    @RequirePermission("mkt:touch:task:edit")
     public Result<Map<String, Object>> start(@PathVariable Long id) {
         return marketingAutomationService.startTask(id);
     }
 
     @PostMapping("/{id}/pause")
+    @RequirePermission("mkt:touch:task:edit")
     public Result<Void> pause(@PathVariable Long id) {
         return marketingAutomationService.pauseTask(id);
     }
 
     @PostMapping("/{id}/resume")
+    @RequirePermission("mkt:touch:task:edit")
     public Result<Void> resume(@PathVariable Long id) {
         return marketingAutomationService.resumeTask(id);
     }
 
     @PostMapping("/{id}/cancel")
+    @RequirePermission("mkt:touch:task:edit")
     public Result<Void> cancel(@PathVariable Long id) {
         return marketingAutomationService.cancelTask(id);
     }
 
     @GetMapping("/{id}/log")
+    @RequirePermission("mkt:touch:task:list")
     public Result<Page<Map<String, Object>>> log(
             @PathVariable Long id,
             @RequestParam(defaultValue = "1") int pageNum,

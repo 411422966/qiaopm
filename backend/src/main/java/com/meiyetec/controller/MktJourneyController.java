@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.MktJourney;
@@ -36,11 +37,13 @@ public class MktJourneyController {
     private final MarketingAutomationService marketingAutomationService;
 
     @PostMapping
+    @RequirePermission("mkt:journey:edit")
     public Result<MktJourney> create(@RequestBody Map<String, Object> body) {
         return marketingAutomationService.createJourney(body);
     }
 
     @PostMapping("/page")
+    @RequirePermission("mkt:journey:list")
     public Result<Page<Map<String, Object>>> pagePost(@RequestBody Map<String, Object> params) {
         int pageNum = (int) params.getOrDefault("pageNum", 1);
         int pageSize = (int) params.getOrDefault("pageSize", 20);
@@ -51,6 +54,7 @@ public class MktJourneyController {
     }
 
     @GetMapping("/page")
+    @RequirePermission("mkt:journey:list")
     public Result<Page<Map<String, Object>>> pageGet(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -61,31 +65,37 @@ public class MktJourneyController {
     }
 
     @GetMapping("/{id}")
+    @RequirePermission("mkt:journey:list")
     public Result<Map<String, Object>> detail(@PathVariable Long id) {
         return marketingAutomationService.journeyDetail(id);
     }
 
     @PutMapping("/{id}")
+    @RequirePermission("mkt:journey:edit")
     public Result<MktJourney> update(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         return marketingAutomationService.updateJourney(id, body);
     }
 
     @PostMapping("/{id}/publish")
+    @RequirePermission("mkt:journey:edit")
     public Result<Void> publish(@PathVariable Long id) {
         return marketingAutomationService.publishJourney(id);
     }
 
     @PostMapping("/{id}/pause")
+    @RequirePermission("mkt:journey:edit")
     public Result<Void> pause(@PathVariable Long id) {
         return marketingAutomationService.pauseJourney(id);
     }
 
     @PostMapping("/{id}/enter")
+    @RequirePermission("mkt:journey:edit")
     public Result<Map<String, Object>> enter(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         return marketingAutomationService.enterJourney(id, body);
     }
 
     @PostMapping("/instance/{instanceId}/next")
+    @RequirePermission("mkt:journey:edit")
     public Result<Map<String, Object>> nextNode(@PathVariable Long instanceId) {
         return marketingAutomationService.nextNode(instanceId);
     }

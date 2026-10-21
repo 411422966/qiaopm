@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
@@ -45,6 +46,7 @@ public class MktPromotionController {
     }
 
     @GetMapping("/page")
+    @RequirePermission("mkt:promotion")
     public Result<PageResult<MktPromotion>> page(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -65,6 +67,7 @@ public class MktPromotionController {
     }
 
     @GetMapping({"/", ""})
+    @RequirePermission("mkt:promotion")
     public Result<List<MktPromotion>> list(@RequestParam(required = false) Integer status) {
         Long t = tid();
         LambdaQueryWrapper<MktPromotion> w = new LambdaQueryWrapper<>();
@@ -75,6 +78,7 @@ public class MktPromotionController {
 
     @PostMapping
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mkt:promotion")
     public Result<MktPromotion> create(@RequestBody MktPromotion p) {
         Long t = tid();
         if (p.getPromotionName() == null || p.getPromotionName().isEmpty()) {
@@ -95,6 +99,7 @@ public class MktPromotionController {
 
     @PutMapping("/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mkt:promotion")
     public Result<MktPromotion> update(@PathVariable Long id, @RequestBody MktPromotion p) {
         Long t = tid();
         MktPromotion old = promotionMapper.selectById(id);
@@ -128,6 +133,7 @@ public class MktPromotionController {
 
     @DeleteMapping("/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mkt:promotion")
     public Result<Void> delete(@PathVariable Long id) {
         Long t = tid();
         MktPromotion old = promotionMapper.selectById(id);
@@ -140,6 +146,7 @@ public class MktPromotionController {
      * 导出 CSV
      */
     @GetMapping("/export")
+    @RequirePermission("mkt:promotion")
     public ResponseEntity<byte[]> exportCsv(@RequestParam(required = false) String keyword,
                                             @RequestParam(required = false) String promotionType,
                                             @RequestParam(required = false) Integer status) {

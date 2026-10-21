@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.MarketActivity;
@@ -62,6 +63,7 @@ public class MktEffectController {
     }
 
     @GetMapping("/snapshot")
+    @RequirePermission("mkt:effect:view")
     public Result<Map<String, Object>> snapshot(@RequestParam(required = false) String startDate,
                                                 @RequestParam(required = false) String endDate) {
         Long t = tid();
@@ -174,6 +176,7 @@ public class MktEffectController {
      */
     @PostMapping("/snapshot/save")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mkt:effect:edit")
     public Result<Map<String, Object>> saveSnapshot() {
         // 快照即为调用 snapshot 的结果，将其 print 入日志（真实业务可写 mkt_effect_snapshot 表）
         Map<String, Object> snap = snapshot(null, null).getData();

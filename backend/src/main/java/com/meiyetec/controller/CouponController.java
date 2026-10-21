@@ -51,6 +51,7 @@ public class CouponController {
     }
 
     @GetMapping("/page")
+    @RequirePermission("market:coupon:list")
     public Result<PageResult<Map<String, Object>>> couponPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "10") int pageSize,
@@ -89,6 +90,7 @@ public class CouponController {
     }
 
     @GetMapping("/{id}")
+    @RequirePermission("market:coupon:list")
     public Result<Map<String, Object>> getCoupon(@PathVariable Long id) {
         Long t = tid();
         Coupon c = couponMapper.selectById(id);
@@ -114,6 +116,7 @@ public class CouponController {
 
     @PostMapping
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("market:coupon:add")
     public Result<Coupon> createCoupon(@RequestBody Map<String, Object> params) {
         Long t = tid();
         if (params.get("name") == null || params.get("name").toString().isBlank()) {
@@ -148,6 +151,7 @@ public class CouponController {
 
     @PutMapping("/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("market:coupon:edit")
     public Result<Coupon> updateCoupon(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         Long t = tid();
         Coupon c = couponMapper.selectById(id);
@@ -171,6 +175,7 @@ public class CouponController {
 
     @DeleteMapping("/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("market:coupon:delete")
     public Result<Void> deleteCoupon(@PathVariable Long id) {
         Long t = tid();
         Coupon c = couponMapper.selectById(id);
@@ -188,6 +193,7 @@ public class CouponController {
     }
 
     @GetMapping("/member/{memberId}")
+    @RequirePermission("market:coupon:list")
     public Result<PageResult<Map<String, Object>>> memberCoupons(
             @PathVariable Long memberId,
             @RequestParam(required = false) Integer status,
@@ -223,6 +229,7 @@ public class CouponController {
 
     @PostMapping("/grant")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("market:coupon:add")
     public Result<Map<String, Object>> grantCoupon(
             @RequestParam Long couponId,
             @RequestParam Long memberId,
@@ -275,6 +282,7 @@ public class CouponController {
 
     @PostMapping("/batch-grant-by-level")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("market:coupon:add")
     public Result<Integer> batchGrantByLevel(@RequestBody Map<String, Object> params) {
         Long t = tid();
         Long couponId = ((Number) params.get("couponId")).longValue();
@@ -330,6 +338,7 @@ public class CouponController {
 
     @PostMapping("/use")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("market:coupon:edit")
     public Result<Map<String, Object>> useCoupon(
             @RequestParam Long grantId,
             @RequestParam(required = false) Long orderId) {
@@ -364,6 +373,7 @@ public class CouponController {
     }
 
     @GetMapping("/member/{memberId}/count")
+    @RequirePermission("market:coupon:list")
     public Result<Integer> memberCouponCount(@PathVariable Long memberId) {
         Long t = tid();
         LambdaQueryWrapper<CouponGrant> q = new LambdaQueryWrapper<>();

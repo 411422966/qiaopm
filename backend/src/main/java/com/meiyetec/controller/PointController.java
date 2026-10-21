@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.exception.BizCode;
 import com.meiyetec.security.TenantContextHolder;
@@ -31,12 +32,14 @@ public class PointController {
     }
 
     @GetMapping("/{memberId}")
+    @RequirePermission("market:point:list")
     public Result<Map<String, Object>> getMemberPoints(@PathVariable Long memberId) {
         // 即使未传 tenant 上下文，service 也会兜底
         return Result.success(pointService.getMemberPoints(memberId));
     }
 
     @GetMapping("/{memberId}/records")
+    @RequirePermission("market:point:list")
     public Result<Map<String, Object>> getPointRecords(
             @PathVariable Long memberId,
             @RequestParam(defaultValue = "1") int pageNum,
@@ -45,6 +48,7 @@ public class PointController {
     }
 
     @PostMapping("/add")
+    @RequirePermission("market:point:add")
     public Result<Long> addPoints(@RequestBody Map<String, Object> params) {
         // tid() 让 TenantContextHolder 初始化
         tid();
@@ -62,6 +66,7 @@ public class PointController {
     }
 
     @PostMapping("/consume")
+    @RequirePermission("market:point:edit")
     public Result<Void> consumePoints(@RequestBody Map<String, Object> params) {
         tid();
         if (params.get("memberId") == null) return Result.error(BizCode.BAD_REQUEST, "memberId 必填");

@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.MktChannelConfig;
 import com.meiyetec.exception.BizCode;
@@ -42,26 +43,31 @@ public class MktChannelController {
     }
 
     @GetMapping("/list")
+    @RequirePermission("mkt:channel:list")
     public Result<List<Map<String, Object>>> list() {
         return marketingAutomationService.channelList();
     }
 
     @PostMapping
+    @RequirePermission("mkt:channel:edit")
     public Result<MktChannelConfig> create(@RequestBody MktChannelConfig c) {
         return marketingAutomationService.createChannel(c);
     }
 
     @PutMapping("/{id}")
+    @RequirePermission("mkt:channel:edit")
     public Result<MktChannelConfig> update(@PathVariable Long id, @RequestBody MktChannelConfig c) {
         return marketingAutomationService.updateChannel(id, c);
     }
 
     @DeleteMapping("/{id}")
+    @RequirePermission("mkt:channel:edit")
     public Result<Void> delete(@PathVariable Long id) {
         return marketingAutomationService.deleteChannel(id);
     }
 
     @PostMapping("/health-check")
+    @RequirePermission("mkt:channel:list")
     public Result<Map<String, Object>> healthCheck() {
         return channelDispatcher.healthCheckAll();
     }

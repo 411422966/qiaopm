@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.security.TenantContextHolder;
 import com.meiyetec.service.MarketingAutomationService;
@@ -31,6 +32,7 @@ public class MktConversionController {
     private final MarketingAutomationService marketingAutomationService;
 
     @GetMapping("/funnel")
+    @RequirePermission("mkt:conversion:view")
     public Result<Map<String, Object>> funnel(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate) {
@@ -38,16 +40,19 @@ public class MktConversionController {
     }
 
     @GetMapping("/roi")
+    @RequirePermission("mkt:conversion:view")
     public Result<Map<String, Object>> roi(@RequestParam(required = false) Long taskId) {
         return marketingAutomationService.conversionRoi(taskId);
     }
 
     @GetMapping("/by-channel")
+    @RequirePermission("mkt:conversion:view")
     public Result<List<Map<String, Object>>> byChannel() {
         return marketingAutomationService.byChannel();
     }
 
     @PostMapping("/track")
+    @RequirePermission("mkt:conversion:track")
     public Result<Void> track(@RequestBody Map<String, Object> body) {
         return marketingAutomationService.trackConversion(body);
     }
@@ -56,6 +61,7 @@ public class MktConversionController {
      * 标记已读 — 注意：前端使用 `id` 作为触达 log id（非 task id）
      */
     @PostMapping("/mark-read")
+    @RequirePermission("mkt:conversion:track")
     public Result<Void> markRead(@RequestBody Map<String, Object> body) {
         Long id = body.get("id") == null ? null : ((Number) body.get("id")).longValue();
         if (id == null) {

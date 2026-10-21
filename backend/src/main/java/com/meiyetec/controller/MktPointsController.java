@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.MktPointsRule;
@@ -42,6 +43,7 @@ public class MktPointsController {
     }
 
     @GetMapping("/rule/list")
+    @RequirePermission("mkt:points")
     public Result<List<MktPointsRule>> list() {
         Long t = tid();
         LambdaQueryWrapper<MktPointsRule> w = new LambdaQueryWrapper<>();
@@ -51,6 +53,7 @@ public class MktPointsController {
 
     @PostMapping("/rule")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mkt:points")
     public Result<MktPointsRule> create(@RequestBody MktPointsRule rule) {
         Long t = tid();
         if (rule.getRuleName() == null || rule.getRuleName().isEmpty()) {
@@ -70,6 +73,7 @@ public class MktPointsController {
 
     @PutMapping("/rule/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mkt:points")
     public Result<MktPointsRule> update(@PathVariable Long id, @RequestBody MktPointsRule rule) {
         Long t = tid();
         MktPointsRule old = ruleMapper.selectById(id);
@@ -98,6 +102,7 @@ public class MktPointsController {
      */
     @PostMapping("/award")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mkt:points")
     public Result<Map<String, Object>> award(@RequestBody Map<String, Object> body) {
         Long t = tid();
         if (body.get("memberId") == null) return Result.error(BizCode.BAD_REQUEST, "memberId 必填");
