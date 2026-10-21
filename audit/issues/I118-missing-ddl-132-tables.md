@@ -155,3 +155,7 @@ booking_waitlist_score_config, booking_waitlist_score_log, mkt_effect_snapshot
 - ItemPreferenceController（缺 crm_member_item_preference）
 - LtvChurnController（缺 crm_churn_prediction）
 - QualityImprovementController（缺 crm_service_improvement, crm_service_improvement_log）
+
+## 第 4g-3d 批扫描补记（2026-10-21）
+- 8 个 DEAD Controller 与之前记录一致，额外发现：
+  - YouzanWebhookController（依赖 webhook_msg_log 死表）— 之前误判为 webhook 不加权限，实际依赖死表，应归入 I118 清理
