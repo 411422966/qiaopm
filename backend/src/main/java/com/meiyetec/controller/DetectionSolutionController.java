@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.DetectionSolution;
 import com.meiyetec.exception.BizCode;
@@ -21,6 +22,7 @@ public class DetectionSolutionController {
     private Long tid() { Long t = TenantContextHolder.get().getTenantId(); return t == null ? 1L : t; }
 
     @GetMapping("/list")
+    @RequirePermission("crm:detection:solution:list")
     public Result<List<DetectionSolution>> list(
             @RequestParam(required = false) String applyType,
             @RequestParam(required = false) Integer status) {
@@ -28,6 +30,7 @@ public class DetectionSolutionController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:solution:list")
     public Result<DetectionSolution> getById(@PathVariable Long id) {
         DetectionSolution s = detectionSolutionService.getById(id);
         if (s == null || !tid().equals(s.getTenantId())) return Result.error(BizCode.NOT_FOUND, "方案不存在");
@@ -35,6 +38,7 @@ public class DetectionSolutionController {
     }
 
     @PostMapping
+    @RequirePermission("crm:detection:solution:edit")
     public Result<DetectionSolution> create(@RequestBody DetectionSolution solution) {
         solution.setId(null);
         solution.setTenantId(tid());
@@ -43,6 +47,7 @@ public class DetectionSolutionController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:solution:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody DetectionSolution solution) {
         DetectionSolution exist = detectionSolutionService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "方案不存在");
@@ -53,6 +58,7 @@ public class DetectionSolutionController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:solution:edit")
     public Result<Void> delete(@PathVariable Long id) {
         DetectionSolution exist = detectionSolutionService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "方案不存在");

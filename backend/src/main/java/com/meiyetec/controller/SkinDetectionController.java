@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.SkinDetection;
 import com.meiyetec.exception.BizCode;
@@ -22,6 +23,7 @@ public class SkinDetectionController {
     private Long tid() { Long t = TenantContextHolder.get().getTenantId(); return t == null ? 1L : t; }
 
     @GetMapping("/list")
+    @RequirePermission("crm:detection:skin:list")
     public Result<List<SkinDetection>> list(
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) Long storeId,
@@ -30,6 +32,7 @@ public class SkinDetectionController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:skin:list")
     public Result<SkinDetection> getById(@PathVariable Long id) {
         SkinDetection s = skinDetectionService.getById(id);
         if (s == null || !tid().equals(s.getTenantId())) return Result.error(BizCode.NOT_FOUND, "检测记录不存在");
@@ -37,11 +40,13 @@ public class SkinDetectionController {
     }
 
     @GetMapping("/latest/{memberId}")
+    @RequirePermission("crm:detection:skin:list")
     public Result<SkinDetection> getLatest(@PathVariable Long memberId) {
         return Result.success(skinDetectionService.findLatestByMember(tid(), memberId));
     }
 
     @PostMapping
+    @RequirePermission("crm:detection:skin:edit")
     public Result<SkinDetection> create(@RequestBody SkinDetection detection) {
         if (detection.getDetectionNo() == null) {
             detection.setDetectionNo("SK" + System.currentTimeMillis());
@@ -53,6 +58,7 @@ public class SkinDetectionController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:skin:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody SkinDetection detection) {
         SkinDetection exist = skinDetectionService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "检测记录不存在");
@@ -63,6 +69,7 @@ public class SkinDetectionController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:skin:edit")
     public Result<Void> delete(@PathVariable Long id) {
         SkinDetection exist = skinDetectionService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "检测记录不存在");
@@ -71,6 +78,7 @@ public class SkinDetectionController {
     }
 
     @GetMapping("/statistics/type")
+    @RequirePermission("crm:detection:skin:list")
     public Result<List<Map<String, Object>>> statsByType(@RequestParam(required = false) Long storeId) {
         return Result.success(skinDetectionService.statisticsByType(tid(), storeId));
     }

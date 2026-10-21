@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.CareSuggestionLog;
 import com.meiyetec.exception.BizCode;
@@ -22,6 +23,7 @@ public class CareSuggestionLogController {
     private Long tid() { Long t = TenantContextHolder.get().getTenantId(); return t == null ? 1L : t; }
 
     @GetMapping("/list")
+    @RequirePermission("crm:care:suggestion:log:list")
     public Result<List<CareSuggestionLog>> list(
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) String status,
@@ -30,6 +32,7 @@ public class CareSuggestionLogController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:care:suggestion:log:list")
     public Result<CareSuggestionLog> getById(@PathVariable Long id) {
         CareSuggestionLog l = careSuggestionLogService.getById(id);
         if (l == null || !tid().equals(l.getTenantId())) return Result.error(BizCode.NOT_FOUND, "日志不存在");
@@ -37,24 +40,28 @@ public class CareSuggestionLogController {
     }
 
     @PutMapping("/{id:\\d+}/status")
+    @RequirePermission("crm:care:suggestion:log:edit")
     public Result<Void> updateStatus(@PathVariable Long id, @RequestBody Map<String, String> params) {
         careSuggestionLogService.updateStatus(id, params.get("status"));
         return Result.success("更新成功", null);
     }
 
     @PutMapping("/{id:\\d+}/accept")
+    @RequirePermission("crm:care:suggestion:log:edit")
     public Result<Void> accept(@PathVariable Long id) {
         careSuggestionLogService.markAccepted(id);
         return Result.success("已采纳", null);
     }
 
     @PutMapping("/{id:\\d+}/view")
+    @RequirePermission("crm:care:suggestion:log:edit")
     public Result<Void> view(@PathVariable Long id) {
         careSuggestionLogService.markViewed(id);
         return Result.success("已查看", null);
     }
 
     @PutMapping("/{id:\\d+}/reject")
+    @RequirePermission("crm:care:suggestion:log:edit")
     public Result<Void> reject(@PathVariable Long id) {
         careSuggestionLogService.markRejected(id);
         return Result.success("已拒绝", null);

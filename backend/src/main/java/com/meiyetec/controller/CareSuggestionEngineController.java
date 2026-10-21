@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.CareSuggestionLog;
 import com.meiyetec.entity.MemberSkinProfile;
@@ -24,6 +25,7 @@ public class CareSuggestionEngineController {
     private final MemberSkinProfileService memberSkinProfileService;
 
     @PostMapping("/generate/{memberId}")
+    @RequirePermission("crm:care:suggestion:engine:edit")
     public Result<List<CareSuggestionLog>> generate(@PathVariable Long memberId,
                                                     @RequestBody(required = false) Map<String, Object> params) {
         Long operatorId = params == null || params.get("operatorId") == null
@@ -36,6 +38,7 @@ public class CareSuggestionEngineController {
     }
 
     @PostMapping("/generate-batch")
+    @RequirePermission("crm:care:suggestion:engine:edit")
     public Result<Map<String, Object>> generateBatch(@RequestBody Map<String, Object> params) {
         @SuppressWarnings("unchecked")
         List<Number> memberIds = (List<Number>) params.get("memberIds");
@@ -53,11 +56,13 @@ public class CareSuggestionEngineController {
     }
 
     @GetMapping("/skin-profile/{memberId}")
+    @RequirePermission("crm:care:suggestion:engine:view")
     public Result<MemberSkinProfile> getSkinProfile(@PathVariable Long memberId) {
         return Result.success(memberSkinProfileService.getLatestByMember(memberId));
     }
 
     @PostMapping("/skin-profile")
+    @RequirePermission("crm:care:suggestion:engine:edit")
     public Result<Void> saveSkinProfile(@RequestBody MemberSkinProfile profile) {
         memberSkinProfileService.saveOrUpdate(profile);
         return Result.success("保存成功", null);

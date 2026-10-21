@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.entity.ComplaintCategory;
@@ -55,6 +56,7 @@ public class ComplaintTicketController {
     }
 
     @GetMapping("/stats")
+    @RequirePermission("crm:care:complaint:list")
     public Result<Map<String, Object>> stats() {
         Long tenantId = effTenant();
         Map<String, Object> data = new LinkedHashMap<>();
@@ -85,6 +87,7 @@ public class ComplaintTicketController {
     }
 
     @GetMapping("/page")
+    @RequirePermission("crm:care:complaint:list")
     public Result<Page<Map<String, Object>>> page(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -154,6 +157,7 @@ public class ComplaintTicketController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:care:complaint:list")
     public Result<Map<String, Object>> detail(@PathVariable Long id) {
         Long tenantId = effTenant();
         Map<String, Object> t = jdbc.queryForList(
@@ -177,6 +181,7 @@ public class ComplaintTicketController {
 
     @PostMapping
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:care:complaint:edit")
     public Result<CrmComplaintTicket> create(@RequestBody Map<String, Object> body) {
         Long tenantId = effTenant();
         String complaintType = (String) body.get("complaintType");
@@ -229,6 +234,7 @@ public class ComplaintTicketController {
 
     @PostMapping("/{id}/assign")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:care:complaint:handle")
     public Result<Void> assign(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         CrmComplaintTicket t = ticketMapper.selectById(id);
         if (t == null) return Result.error(BizCode.NOT_FOUND, "工单不存在", null);
@@ -256,6 +262,7 @@ public class ComplaintTicketController {
 
     @PostMapping("/{id}/process")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:care:complaint:handle")
     public Result<Void> process(@PathVariable Long id) {
         CrmComplaintTicket t = ticketMapper.selectById(id);
         if (t == null) return Result.error(BizCode.NOT_FOUND, "工单不存在", null);
@@ -276,6 +283,7 @@ public class ComplaintTicketController {
 
     @PostMapping("/{id}/resolve")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:care:complaint:handle")
     public Result<Void> resolve(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         CrmComplaintTicket t = ticketMapper.selectById(id);
         if (t == null) return Result.error(BizCode.NOT_FOUND, "工单不存在", null);
@@ -303,6 +311,7 @@ public class ComplaintTicketController {
 
     @PostMapping("/{id}/close")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:care:complaint:handle")
     public Result<Void> close(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         CrmComplaintTicket t = ticketMapper.selectById(id);
         if (t == null) return Result.error(BizCode.NOT_FOUND, "工单不存在", null);
@@ -328,6 +337,7 @@ public class ComplaintTicketController {
 
     @PostMapping("/{id}/escalate")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:care:complaint:handle")
     public Result<Void> escalate(@PathVariable Long id) {
         CrmComplaintTicket t = ticketMapper.selectById(id);
         if (t == null) return Result.error(BizCode.NOT_FOUND, "工单不存在", null);
@@ -349,6 +359,7 @@ public class ComplaintTicketController {
 
     @PostMapping("/satisfaction")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:care:complaint:edit")
     public Result<ComplaintSatisfaction> satisfaction(@RequestBody ComplaintSatisfaction s) {
         if (s.getTicketId() == null) return Result.error(BizCode.BAD_REQUEST, "ticketId 必填");
         if (s.getRating() == null) return Result.error(BizCode.BAD_REQUEST, "rating 必填");
@@ -378,6 +389,7 @@ public class ComplaintTicketController {
 
     @PostMapping("/demo-seed")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:care:complaint:edit")
     public Result<Map<String, Object>> demoSeed() {
         Long tenantId = effTenant();
         String[][] samples = {
@@ -467,6 +479,7 @@ public class ComplaintTicketController {
     }
 
     @GetMapping("/category/list")
+    @RequirePermission("crm:care:complaint:list")
     public Result<List<ComplaintCategory>> listCategory() {
         Long tenantId = effTenant();
         return Result.success(categoryMapper.selectList(
@@ -477,6 +490,7 @@ public class ComplaintTicketController {
     }
 
     @GetMapping("/sla/list")
+    @RequirePermission("crm:care:complaint:list")
     public Result<List<ComplaintSlaPolicy>> listSla() {
         Long tenantId = effTenant();
         return Result.success(slaPolicyMapper.selectList(

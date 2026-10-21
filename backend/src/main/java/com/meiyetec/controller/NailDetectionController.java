@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.NailDetection;
 import com.meiyetec.exception.BizCode;
@@ -22,6 +23,7 @@ public class NailDetectionController {
     private Long tid() { Long t = TenantContextHolder.get().getTenantId(); return t == null ? 1L : t; }
 
     @GetMapping("/list")
+    @RequirePermission("crm:detection:nail:list")
     public Result<List<NailDetection>> list(
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) Long storeId,
@@ -30,6 +32,7 @@ public class NailDetectionController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:nail:list")
     public Result<NailDetection> getById(@PathVariable Long id) {
         NailDetection n = nailDetectionService.getById(id);
         if (n == null || !tid().equals(n.getTenantId())) return Result.error(BizCode.NOT_FOUND, "检测记录不存在");
@@ -37,11 +40,13 @@ public class NailDetectionController {
     }
 
     @GetMapping("/latest/{memberId}")
+    @RequirePermission("crm:detection:nail:list")
     public Result<NailDetection> getLatest(@PathVariable Long memberId) {
         return Result.success(nailDetectionService.findLatestByMember(tid(), memberId));
     }
 
     @PostMapping
+    @RequirePermission("crm:detection:nail:edit")
     public Result<NailDetection> create(@RequestBody NailDetection detection) {
         if (detection.getDetectionNo() == null) {
             detection.setDetectionNo("NL" + System.currentTimeMillis());
@@ -53,6 +58,7 @@ public class NailDetectionController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:nail:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody NailDetection detection) {
         NailDetection exist = nailDetectionService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "检测记录不存在");
@@ -63,6 +69,7 @@ public class NailDetectionController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:nail:edit")
     public Result<Void> delete(@PathVariable Long id) {
         NailDetection exist = nailDetectionService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "检测记录不存在");
@@ -71,6 +78,7 @@ public class NailDetectionController {
     }
 
     @GetMapping("/statistics/type")
+    @RequirePermission("crm:detection:nail:list")
     public Result<List<Map<String, Object>>> statsByType(@RequestParam(required = false) Long storeId) {
         return Result.success(nailDetectionService.statisticsByType(tid(), storeId));
     }

@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.CareSuggestionTemplate;
 import com.meiyetec.exception.BizCode;
@@ -21,6 +22,7 @@ public class CareSuggestionTemplateController {
     private Long tid() { Long t = TenantContextHolder.get().getTenantId(); return t == null ? 1L : t; }
 
     @GetMapping("/list")
+    @RequirePermission("crm:care:suggestion:tpl:list")
     public Result<List<CareSuggestionTemplate>> list(
             @RequestParam(required = false) String templateType,
             @RequestParam(required = false) Integer status) {
@@ -28,6 +30,7 @@ public class CareSuggestionTemplateController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:care:suggestion:tpl:list")
     public Result<CareSuggestionTemplate> getById(@PathVariable Long id) {
         CareSuggestionTemplate t = careSuggestionTemplateService.getById(id);
         if (t == null || !tid().equals(t.getTenantId())) return Result.error(BizCode.NOT_FOUND, "模板不存在");
@@ -35,6 +38,7 @@ public class CareSuggestionTemplateController {
     }
 
     @PostMapping
+    @RequirePermission("crm:care:suggestion:tpl:edit")
     public Result<CareSuggestionTemplate> create(@RequestBody CareSuggestionTemplate template) {
         template.setId(null);
         template.setTenantId(tid());
@@ -43,6 +47,7 @@ public class CareSuggestionTemplateController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("crm:care:suggestion:tpl:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody CareSuggestionTemplate template) {
         CareSuggestionTemplate exist = careSuggestionTemplateService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "模板不存在");
@@ -53,6 +58,7 @@ public class CareSuggestionTemplateController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("crm:care:suggestion:tpl:edit")
     public Result<Void> delete(@PathVariable Long id) {
         CareSuggestionTemplate exist = careSuggestionTemplateService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "模板不存在");

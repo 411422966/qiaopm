@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.entity.CareRecipe;
 import com.meiyetec.entity.CareRecipeItem;
@@ -66,6 +67,7 @@ public class CareRecipeController {
 
     @PostMapping("/recipe")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:care:recipe:edit")
     public Result<CareRecipe> createRecipe(@RequestBody CareRecipe r) {
         Long tenantId = tid();
         if (r.getRecipeCode() == null || r.getRecipeName() == null)
@@ -88,6 +90,7 @@ public class CareRecipeController {
 
     @PostMapping("/recipe/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:care:recipe:edit")
     public Result<CareRecipe> updateRecipe(@PathVariable Long id, @RequestBody CareRecipe r) {
         Long tenantId = tid();
         CareRecipe exist = recipeMapper.selectById(id);
@@ -100,6 +103,7 @@ public class CareRecipeController {
     }
 
     @GetMapping("/recipe/list")
+    @RequirePermission("crm:care:recipe:list")
     public Result<List<CareRecipe>> listRecipes(@RequestParam(required = false) String skinType,
                                                 @RequestParam(required = false) String concern) {
         Long tenantId = tid();
@@ -113,6 +117,7 @@ public class CareRecipeController {
     }
 
     @GetMapping("/recipe/{id}")
+    @RequirePermission("crm:care:recipe:list")
     public Result<Map<String, Object>> getRecipe(@PathVariable Long id) {
         Long tenantId = tid();
         CareRecipe r = recipeMapper.selectById(id);
@@ -130,6 +135,7 @@ public class CareRecipeController {
     }
 
     @PostMapping("/recipe/{id}/item")
+    @RequirePermission("crm:care:recipe:edit")
     public Result<CareRecipeItem> addItem(@PathVariable Long id, @RequestBody CareRecipeItem item) {
         Long tenantId = tid();
         CareRecipe exist = recipeMapper.selectById(id);
@@ -145,6 +151,7 @@ public class CareRecipeController {
 
     @PostMapping("/recipe/init-default")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:care:recipe:edit")
     public Result<Map<String, Object>> initDefaultRecipes() {
         Long tenantId = tid();
         List<Map<String, Object>> defaults = List.of(
@@ -249,6 +256,7 @@ public class CareRecipeController {
 
     @PostMapping("/assessment")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:care:recipe:edit")
     public Result<Map<String, Object>> submitAssessment(@RequestBody Map<String, Object> body) {
         Long tenantId = tid();
         Long memberId = body.get("memberId") == null ? null : ((Number) body.get("memberId")).longValue();
@@ -356,6 +364,7 @@ public class CareRecipeController {
     }
 
     @GetMapping("/assessment/by-member/{memberId}")
+    @RequirePermission("crm:care:recipe:list")
     public Result<List<CareSkinAssessment>> historyByMember(@PathVariable Long memberId) {
         Long tenantId = tid();
         return Result.success(assessmentMapper.selectList(new LambdaQueryWrapper<CareSkinAssessment>()
@@ -369,6 +378,7 @@ public class CareRecipeController {
     // ====================================================================
 
     @PostMapping("/recommend")
+    @RequirePermission("crm:care:recipe:list")
     public Result<List<CareRecipe>> recommend(@RequestBody Map<String, Object> body) {
         Long tenantId = tid();
         CareSkinAssessment fake = new CareSkinAssessment();

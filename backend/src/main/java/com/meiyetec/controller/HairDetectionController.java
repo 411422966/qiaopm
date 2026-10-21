@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.HairDetection;
 import com.meiyetec.exception.BizCode;
@@ -22,6 +23,7 @@ public class HairDetectionController {
     private Long tid() { Long t = TenantContextHolder.get().getTenantId(); return t == null ? 1L : t; }
 
     @GetMapping("/list")
+    @RequirePermission("crm:detection:hair:list")
     public Result<List<HairDetection>> list(
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) Long storeId,
@@ -30,6 +32,7 @@ public class HairDetectionController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:hair:list")
     public Result<HairDetection> getById(@PathVariable Long id) {
         HairDetection h = hairDetectionService.getById(id);
         if (h == null || !tid().equals(h.getTenantId())) return Result.error(BizCode.NOT_FOUND, "检测记录不存在");
@@ -37,11 +40,13 @@ public class HairDetectionController {
     }
 
     @GetMapping("/latest/{memberId}")
+    @RequirePermission("crm:detection:hair:list")
     public Result<HairDetection> getLatest(@PathVariable Long memberId) {
         return Result.success(hairDetectionService.findLatestByMember(tid(), memberId));
     }
 
     @PostMapping
+    @RequirePermission("crm:detection:hair:edit")
     public Result<HairDetection> create(@RequestBody HairDetection detection) {
         if (detection.getDetectionNo() == null) {
             detection.setDetectionNo("HR" + System.currentTimeMillis());
@@ -53,6 +58,7 @@ public class HairDetectionController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:hair:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody HairDetection detection) {
         HairDetection exist = hairDetectionService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "检测记录不存在");
@@ -63,6 +69,7 @@ public class HairDetectionController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("crm:detection:hair:edit")
     public Result<Void> delete(@PathVariable Long id) {
         HairDetection exist = hairDetectionService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "检测记录不存在");
@@ -71,6 +78,7 @@ public class HairDetectionController {
     }
 
     @GetMapping("/statistics/type")
+    @RequirePermission("crm:detection:hair:list")
     public Result<List<Map<String, Object>>> statsByType(@RequestParam(required = false) Long storeId) {
         return Result.success(hairDetectionService.statisticsByType(tid(), storeId));
     }

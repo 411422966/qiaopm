@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.CareSuggestionRule;
 import com.meiyetec.exception.BizCode;
@@ -21,16 +22,19 @@ public class CareSuggestionRuleController {
     private Long tid() { Long t = TenantContextHolder.get().getTenantId(); return t == null ? 1L : t; }
 
     @GetMapping("/list")
+    @RequirePermission("crm:care:suggestion:rule:list")
     public Result<List<CareSuggestionRule>> list() {
         return Result.success(careSuggestionRuleService.getAllWithTemplate());
     }
 
     @GetMapping("/active")
+    @RequirePermission("crm:care:suggestion:rule:list")
     public Result<List<CareSuggestionRule>> activeList() {
         return Result.success(careSuggestionRuleService.getActiveRules());
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("crm:care:suggestion:rule:list")
     public Result<CareSuggestionRule> getById(@PathVariable Long id) {
         CareSuggestionRule r = careSuggestionRuleService.getById(id);
         if (r == null || !tid().equals(r.getTenantId())) return Result.error(BizCode.NOT_FOUND, "规则不存在");
@@ -38,6 +42,7 @@ public class CareSuggestionRuleController {
     }
 
     @PostMapping
+    @RequirePermission("crm:care:suggestion:rule:edit")
     public Result<CareSuggestionRule> create(@RequestBody CareSuggestionRule rule) {
         rule.setId(null);
         rule.setTenantId(tid());
@@ -46,6 +51,7 @@ public class CareSuggestionRuleController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("crm:care:suggestion:rule:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody CareSuggestionRule rule) {
         CareSuggestionRule exist = careSuggestionRuleService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "规则不存在");
@@ -56,6 +62,7 @@ public class CareSuggestionRuleController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("crm:care:suggestion:rule:edit")
     public Result<Void> delete(@PathVariable Long id) {
         CareSuggestionRule exist = careSuggestionRuleService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "规则不存在");
