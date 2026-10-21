@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.MemberInviteReward;
 import com.meiyetec.service.MemberInviteService;
 import com.meiyetec.util.Result;
@@ -29,21 +30,25 @@ public class MemberInviteController {
     private final MemberInviteService service;
 
     @GetMapping("/code")
+    @RequirePermission("mkt:invite:list")
     public Result<Map<String, Object>> myCode(@RequestParam Long memberId) {
         return service.myInviteCode(memberId);
     }
 
     @GetMapping("/my-invites")
+    @RequirePermission("mkt:invite:list")
     public Result<List<Map<String, Object>>> myInvites(@RequestParam Long memberId) {
         return service.myInvites(memberId);
     }
 
     @GetMapping("/rewards")
+    @RequirePermission("mkt:invite:list")
     public Result<Map<String, Object>> myRewards(@RequestParam Long memberId) {
         return service.myRewardSummary(memberId);
     }
 
     @PostMapping("/bind")
+    @RequirePermission("mkt:invite:edit")
     public Result<MemberInviteReward> bind(@RequestBody Map<String, Object> body) {
         String inviteCode = (String) body.get("inviteCode");
         Long inviteeId = body.get("inviteeId") == null ? null : ((Number) body.get("inviteeId")).longValue();
@@ -56,6 +61,7 @@ public class MemberInviteController {
     }
 
     @PostMapping("/first-order")
+    @RequirePermission("mkt:invite:edit")
     public Result<Void> onFirstOrder(@RequestBody Map<String, Object> body) {
         Long inviteeId = body.get("inviteeId") == null ? null : ((Number) body.get("inviteeId")).longValue();
         Long orderId = body.get("orderId") == null ? null : ((Number) body.get("orderId")).longValue();

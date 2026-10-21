@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -58,6 +59,7 @@ public class BookingController {
 
     /** T06-09 创建预约（POST /booking） */
     @PostMapping
+    @RequirePermission("booking:add")
     public Result<Booking> create(@RequestBody Booking b) {
         // T07-D2：Controller 强制从 TenantContextHolder 取租户并注入，Service 不再兜底
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -98,6 +100,7 @@ public class BookingController {
 
     /** T06-10 预约列表（GET /booking/page）支持分页+多条件 */
     @GetMapping("/page")
+    @RequirePermission("booking:list")
     public Result<Map<String, Object>> page(
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) Long employeeId,
@@ -128,6 +131,7 @@ public class BookingController {
 
     /** 列表（不分页，全量）T06-10 简化版 */
     @GetMapping("/list")
+    @RequirePermission("booking:list")
     public Result<List<Booking>> list(@RequestParam(required = false) Integer status) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         LambdaQueryWrapper<Booking> qw = new LambdaQueryWrapper<>();
@@ -144,6 +148,7 @@ public class BookingController {
      * <p>返回格式：{@code ["09:00~09:30", "09:30~10:00", ...]}。
      */
     @GetMapping("/available")
+    @RequirePermission("booking:available")
     public Result<List<String>> available(
             @RequestParam Long employeeId,
             @RequestParam String date) {
@@ -203,6 +208,7 @@ public class BookingController {
 
     /** T06-12 改变预约状态（PUT /booking/{id}/status）—— 确认/取消/爽约 */
     @PutMapping("/{id:\\d+}/status")
+    @RequirePermission("booking:edit")
     public Result<Booking> changeStatus(
             @PathVariable Long id,
             @RequestParam Integer status,
@@ -232,6 +238,7 @@ public class BookingController {
 
     /** T06-13 签到（POST /booking/{id}/checkin） */
     @PostMapping("/{id:\\d+}/checkin")
+    @RequirePermission("booking:checkin")
     public Result<Booking> checkin(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Booking b = bookingService.getById(id);
@@ -249,6 +256,7 @@ public class BookingController {
     /** T06-14 完成（POST /booking/{id}/complete） */
     @PostMapping("/{id:\\d+}/complete")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("booking:complete")
     public Result<Booking> complete(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Booking b = bookingService.getById(id);
@@ -265,6 +273,7 @@ public class BookingController {
 
     /** 详情 */
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("booking:detail")
     public Result<Booking> detail(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Booking b = bookingService.getById(id);
@@ -278,6 +287,7 @@ public class BookingController {
     /** P0-BOOKING-004：编辑预约（PUT /booking/{id}） */
     @PutMapping("/{id:\\d+}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("booking:update")
     public Result<Booking> update(@PathVariable Long id, @RequestBody Booking body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Booking old = bookingService.getById(id);
@@ -353,6 +363,7 @@ public class BookingController {
 
     /** 删除（仅待确认/已取消能删） */
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("booking:delete")
     public Result<Void> delete(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Booking b = bookingService.getById(id);
@@ -369,6 +380,7 @@ public class BookingController {
 
     /** 首页统计：今日预约数 + 到店率 */
     @GetMapping("/stats")
+    @RequirePermission("booking:stat")
     public Result<Map<String, Object>> stats() {
         Long tenantId = TenantContextHolder.get().getTenantId();
         LocalDate today = LocalDate.now();
@@ -411,6 +423,7 @@ public class BookingController {
 
     /** 导出 CSV（GET /booking/export） —— 直接流式输出 .csv，UTF-8 BOM 兼容 Excel */
     @GetMapping("/export")
+    @RequirePermission("booking:export")
     public void export(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
@@ -476,6 +489,7 @@ public class BookingController {
 
     /** 日历视图（GET /booking/calendar）：按月返回每天的预约统计 */
     @GetMapping("/calendar")
+    @RequirePermission("booking:calendar")
     public Result<Map<String, Object>> calendar(
             @RequestParam(required = false) String yearMonth) {
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -520,6 +534,7 @@ public class BookingController {
 
     /** 技师排班表（GET /booking/schedule）：返回指定日期范围内所有技师的排班 + 预约占用情况 */
     @GetMapping("/schedule")
+    @RequirePermission("booking:schedule:list")
     public Result<Map<String, Object>> schedule(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate) {
@@ -594,6 +609,5 @@ public class BookingController {
         return Result.success(data);
     }
 }
-
 
 

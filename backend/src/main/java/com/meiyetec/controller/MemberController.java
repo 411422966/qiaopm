@@ -315,6 +315,7 @@ public class MemberController {
      * @param pageSize 每页条数（默认 10，最大 100）
      */
     @GetMapping("/{id:\\d+}/orders")
+    @RequirePermission("member:order:list")
     public Result<PageResult<PosOrder>> memberOrders(
             @PathVariable Long id,
             @RequestParam(required = false, defaultValue = "1") Integer pageNum,
@@ -338,6 +339,7 @@ public class MemberController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("member:list")
     public Result<Map<String, Object>> getById(@PathVariable Long id) {
         Member member = requireMember(id);
         if (member == null) return Result.error("会员不存在或无权访问");
@@ -431,6 +433,7 @@ public class MemberController {
     }
 
     @PostMapping("/{id:\\d+}/profile")
+    @RequirePermission("member:profile")
     public Result<Void> saveProfile(@PathVariable Long id, @RequestBody MemberProfile profile) {
         Member m = requireMember(id);
         if (m == null) return Result.error("会员不存在或无权访问");
@@ -493,6 +496,7 @@ public class MemberController {
     }
 
     @PostMapping("/batch/operation")
+    @RequirePermission("member:batch")
     public Result<Map<String, Object>> batchOperation(@RequestBody Map<String, Object> body) {
         Long tid = tenantId();
         List<Long> ids = ((List<?>) body.get("memberIds")).stream()
@@ -528,6 +532,7 @@ public class MemberController {
     }
 
     @GetMapping("/export")
+    @RequirePermission("member:export")
     public void export(@RequestParam(required = false) String keyword,
                        @RequestParam(required = false) Integer status,
                        @RequestParam(required = false) Long storeId,
@@ -586,6 +591,7 @@ public class MemberController {
     }
 
     @PostMapping("/import")
+    @RequirePermission("member:import")
     public Result<Map<String, Object>> importCsv(@RequestParam("file") MultipartFile file) throws IOException {
         Long tid = tenantId();
         Map<String, Object> result = new HashMap<>();
@@ -645,6 +651,7 @@ public class MemberController {
     }
 
     @GetMapping("/{id:\\d+}/tabs")
+    @RequirePermission("member:list")
     public Result<Map<String, Object>> tabs(@PathVariable Long id) {
         Member m = requireMember(id);
         if (m == null) return Result.error("会员不存在或无权访问");
