@@ -68,6 +68,7 @@ public class StockController {
     // ==================== 商品（耗材）===================
 
     @GetMapping("/products/page")
+    @RequirePermission("stock:product:list")
     public Result<Page<StockProduct>> productPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -90,6 +91,7 @@ public class StockController {
     }
 
     @GetMapping("/products/list")
+    @RequirePermission("stock:product:list")
     public Result<List<StockProduct>> productList(@RequestParam(required = false) Long storeId,
                                                   @RequestParam(required = false) Integer status) {
         Long tid = tenantId();
@@ -102,6 +104,7 @@ public class StockController {
     }
 
     @GetMapping("/products/{id}")
+    @RequirePermission("stock:product:list")
     public Result<StockProduct> productDetail(@PathVariable Long id) {
         Long tid = tenantId();
         StockProduct p = productMapper.selectById(id);
@@ -110,6 +113,7 @@ public class StockController {
     }
 
     @PostMapping("/products")
+    @RequirePermission("stock:product:add")
     public Result<StockProduct> createProduct(@RequestBody StockProduct p) {
         // T07-D1：从 TenantContextHolder 取租户；缺失则拒绝，禁止 fallback 到默认租户 1L
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -151,6 +155,7 @@ public class StockController {
     }
 
     @PutMapping("/products/{id}")
+    @RequirePermission("stock:product:edit")
     public Result<StockProduct> updateProduct(@PathVariable Long id, @RequestBody StockProduct p) {
         Long tid = tenantId();
         StockProduct old = productMapper.selectById(id);
@@ -163,6 +168,7 @@ public class StockController {
     }
 
     @DeleteMapping("/products/{id}")
+    @RequirePermission("stock:product:delete")
     public Result<Void> deleteProduct(@PathVariable Long id) {
         Long tid = tenantId();
         StockProduct p = productMapper.selectById(id);
@@ -288,6 +294,7 @@ public class StockController {
      * 商品导入模板（CSV，含占位说明）
      */
     @GetMapping("/products/import-template")
+    @RequirePermission("stock:product:import")
     public ResponseEntity<byte[]> importTemplate() throws Exception {
         StringBuilder sb = new StringBuilder();
         sb.append("# 商品导入模板 · 必填：productCode,productName；可选：category,spec,unit,costPrice,salePrice,minStock,maxStock,enableBatch,status,remark\n");
@@ -308,6 +315,7 @@ public class StockController {
     // ==================== 库存查询 ====================
 
     @GetMapping("/inventory/page")
+    @RequirePermission("stock:stat")
     public Result<Page<Map<String, Object>>> inventoryPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -435,6 +443,7 @@ public class StockController {
     }
 
     @GetMapping("/inventory/alerts")
+    @RequirePermission("stock:alert")
     public Result<List<Map<String, Object>>> alerts(@RequestParam(required = false) Long storeId) {
         Long tid = tenantId();
         StringBuilder sql = new StringBuilder(
@@ -751,6 +760,7 @@ public class StockController {
     }
 
     @GetMapping("/check/page")
+    @RequirePermission("stock:check")
     public Result<Page<Map<String, Object>>> checkPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -843,6 +853,7 @@ public class StockController {
     }
 
     @GetMapping("/check/stats")
+    @RequirePermission("stock:stat")
     public Result<Map<String, Object>> checkStats(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) String dateFrom,
@@ -889,6 +900,7 @@ public class StockController {
     }
 
     @GetMapping("/check/export")
+    @RequirePermission("stock:export")
     public ResponseEntity<byte[]> exportCheck(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) Integer status,
@@ -994,6 +1006,7 @@ public class StockController {
 
     // 盘点详情（含明细）
     @GetMapping("/check/{id:\\d+}")
+    @RequirePermission("stock:check")
     public Result<Map<String, Object>> checkDetail(@PathVariable Long id) {
         Long tid = tenantId();
         StockCheck check = checkMapper.selectById(id);
@@ -1135,6 +1148,7 @@ public class StockController {
     // ==================== 出入库记录流水 ====================
 
     @GetMapping("/record/page")
+    @RequirePermission("stock:record")
     public Result<Page<Map<String, Object>>> recordPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -1268,6 +1282,7 @@ public class StockController {
     }
 
     @GetMapping("/consumption/page")
+    @RequirePermission("stock:consumption")
     public Result<Map<String, Object>> consumptionPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -1345,6 +1360,7 @@ public class StockController {
     }
 
     @GetMapping("/consumption/order/{orderId}")
+    @RequirePermission("stock:consumption")
     public Result<List<Map<String, Object>>> consumptionByOrder(@PathVariable Long orderId) {
         Long tid = tenantId();
         String sql =
@@ -1374,6 +1390,7 @@ public class StockController {
      * R2.0-D：服务的 BOM（为前端"服务→耗材"展示用）
      */
     @GetMapping("/consumption/bom/{serviceId}")
+    @RequirePermission("stock:consumption")
     public Result<List<Map<String, Object>>> bomByService(@PathVariable Long serviceId) {
         return Result.success(Keys.camel(bomMapper.listBomByService(serviceId)));
     }
@@ -1382,6 +1399,7 @@ public class StockController {
      * R2.0-D：今日/近 30 天消耗汇总（消耗闭环的关键指标）
      */
     @GetMapping("/consumption/overview")
+    @RequirePermission("stock:consumption")
     public Result<Map<String, Object>> consumptionOverview(
             @RequestParam(required = false) Long storeId,
             @RequestParam(defaultValue = "30") int days) {
@@ -1406,6 +1424,7 @@ public class StockController {
      * R2.0-D：商品 BOM（哪些服务用到了该耗材）
      */
     @GetMapping("/consumption/bom-product/{productId}")
+    @RequirePermission("stock:consumption")
     public Result<List<Map<String, Object>>> bomByProduct(@PathVariable Long productId) {
         String sql = "SELECT m.id, m.service_id, m.quantity, m.unit, m.is_required, " +
                 "       s.service_code, s.service_name " +
@@ -1419,6 +1438,7 @@ public class StockController {
      * R2.0-D：消耗记录 CSV 导出（含订单 / 服务 / 客户 / 商品 / 批次 / 数量 / 成本）
      */
     @GetMapping("/consumption/export")
+    @RequirePermission("stock:export")
     public ResponseEntity<byte[]> exportConsumption(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) Long productId,
@@ -1492,6 +1512,7 @@ public class StockController {
     // ==================== 批次追溯 ====================
 
     @GetMapping("/trace/{productId}")
+    @RequirePermission("stock:record")
     public Result<Map<String, Object>> trace(@PathVariable Long productId) {
         Long tid = tenantId();
         StockProduct p = productMapper.selectById(productId);
@@ -1514,6 +1535,7 @@ public class StockController {
     // ==================== 库存预警（按 alertType 维度的分页接口）====================
 
     @GetMapping("/alert/page")
+    @RequirePermission("stock:alert")
     public Result<Page<Map<String, Object>>> alertPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -1594,6 +1616,7 @@ public class StockController {
     }
 
     @GetMapping("/alert/stats")
+    @RequirePermission("stock:alert")
     public Result<Map<String, Object>> alertStats(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Long storeId) {        Long tid = tenantId();
@@ -1852,6 +1875,7 @@ public class StockController {
     // ==================== 导出 Excel（CSV 兼容） ====================
 
     @GetMapping("/inventory/export")
+    @RequirePermission("stock:export")
     public ResponseEntity<byte[]> exportInventory(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) String keyword,
@@ -1966,6 +1990,7 @@ public class StockController {
      * 总览统计（卡片 + 分类占比）
      */
     @GetMapping("/stats")
+    @RequirePermission("stock:stat")
     public Result<Map<String, Object>> stats(@RequestParam(required = false) Long storeId) {
         Long tid = tenantId();
         // 1. 商品/库存概览
@@ -2040,6 +2065,7 @@ public class StockController {
      * 月度消耗趋势（近 N 个月）
      */
     @GetMapping("/stats/trend")
+    @RequirePermission("stock:stat")
     public Result<List<Map<String, Object>>> statsTrend(
             @RequestParam(defaultValue = "6") int months,
             @RequestParam(required = false) Long storeId) {
@@ -2081,6 +2107,7 @@ public class StockController {
      * 消耗排行 TOP N（按金额或数量）
      */
     @GetMapping("/stats/ranking")
+    @RequirePermission("stock:stat")
     public Result<List<Map<String, Object>>> statsRanking(
             @RequestParam(defaultValue = "amount") String type,
             @RequestParam(defaultValue = "10") int limit,
@@ -2119,4 +2146,3 @@ public class StockController {
      */
 
 }
-
