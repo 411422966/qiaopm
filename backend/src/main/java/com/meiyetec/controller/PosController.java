@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -92,6 +93,7 @@ public class PosController {
     // ==================== Service endpoints ====================
 
     @GetMapping("/services/list")
+    @RequirePermission("pos:service:list")
     public Result<List<BizService>> serviceList(@RequestParam(required = false) Long storeId,
                                                 @RequestParam(required = false) Long categoryId) {
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -105,6 +107,7 @@ public class PosController {
     }
 
     @GetMapping("/services/{id:\\d+}")
+    @RequirePermission("pos:service:list")
     public Result<BizService> serviceDetail(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         BizService svc = serviceMapper.selectById(id);
@@ -117,6 +120,7 @@ public class PosController {
     // ==================== Order endpoints ====================
 
     @PostMapping("/orders")
+    @RequirePermission("pos:order:add")
     public Result<PosOrder> createOrder(@RequestBody PosOrderCreateDTO dto,
                                          HttpServletRequest request) {
         // T07-D1：从 TenantContextHolder 取租户；缺失则拒绝，禁止 fallback
@@ -174,6 +178,7 @@ public class PosController {
     }
 
     @PostMapping("/orders/{id:\\d+}/items")
+    @RequirePermission("pos:order:add")
     public Result<PosOrder> addItem(@PathVariable Long id, @RequestBody PosOrderCreateDTO.ItemDTO itemDto) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder order = orderMapper.selectById(id);
@@ -272,6 +277,7 @@ public class PosController {
     }
 
     @DeleteMapping("/orders/{id:\\d+}/items/{itemId:\\d+}")
+    @RequirePermission("pos:order:add")
     public Result<PosOrder> removeItem(@PathVariable Long id, @PathVariable Long itemId) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder order = orderMapper.selectById(id);
@@ -285,6 +291,7 @@ public class PosController {
     }
 
     @PostMapping("/orders/{id:\\d+}/discount")
+    @RequirePermission("pos:order:add")
     public Result<PosOrder> applyDiscount(@PathVariable Long id,
                                           @RequestBody Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -325,6 +332,7 @@ public class PosController {
      * @param amount    订单金额（用于最低金额条件匹配，可选）
      */
     @GetMapping("/experiment/quote")
+    @RequirePermission("pos:order:list")
     public Result<Map<String, Object>> experimentQuote(
             @RequestParam Long memberId,
             @RequestParam(required = false) Long projectId,
@@ -370,6 +378,7 @@ public class PosController {
      * <p>幂等：同 orderId + memberId 只允许一次（用 remark 标记防重）
      */
     @PostMapping("/orders/{id:\\d+}/points-discount")
+    @RequirePermission("pos:order:add")
     public Result<Map<String, Object>> applyPointsDiscount(
             @PathVariable Long id,
             @RequestBody Map<String, Object> body) {
@@ -460,6 +469,7 @@ public class PosController {
 
     @PostMapping("/orders/{id:\\d+}/pay")
     @org.springframework.transaction.annotation.Transactional(rollbackFor = Exception.class)
+    @RequirePermission("pos:order:pay")
     public Result<Map<String, Object>> pay(@PathVariable Long id, @RequestBody PosPayDTO payDto) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder order = orderMapper.selectById(id);
@@ -833,6 +843,7 @@ public class PosController {
 
     @PostMapping("/orders/{id:\\d+}/refund")
     @org.springframework.transaction.annotation.Transactional(rollbackFor = Exception.class)
+    @RequirePermission("pos:order:refund")
     public Result<PosOrder> refund(@PathVariable Long id,
                                     @RequestBody Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -894,6 +905,7 @@ public class PosController {
     }
 
     @PostMapping("/orders/{id:\\d+}/void")
+    @RequirePermission("pos:order:void")
     public Result<PosOrder> voidOrder(@PathVariable Long id, @RequestBody(required = false) Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder order = orderMapper.selectById(id);
@@ -909,6 +921,7 @@ public class PosController {
     }
 
     @GetMapping("/orders/{id:\\d+}")
+    @RequirePermission("pos:order:list")
     public Result<PosOrder> orderDetail(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder o = loadOrderFull(id);
@@ -919,6 +932,7 @@ public class PosController {
     }
 
     @PostMapping("/orders/page")
+    @RequirePermission("pos:order:list")
     public Result<PageResult<PosOrder>> orderPage(@RequestBody PageQueryDTO query) {
         Page<PosOrder> page = new Page<>(query.getPageNum(), query.getPageSize());
         // 性能护栏：单次最多查 200 单，超过就截断（避免一次拉 1 万单把内存打爆）
@@ -1001,6 +1015,7 @@ public class PosController {
     }
 
     @GetMapping("/orders/today")
+    @RequirePermission("pos:order:list")
     public Result<List<PosOrder>> todayOrders(@RequestParam(required = false) Long storeId) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         LocalDate today = LocalDate.now();
@@ -1014,6 +1029,7 @@ public class PosController {
     }
 
     @GetMapping("/orders/stats")
+    @RequirePermission("pos:order:stat")
     public Result<Map<String, Object>> stats(@RequestParam(required = false) Long storeId) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         LocalDate today = LocalDate.now();
@@ -1104,4 +1120,3 @@ public class PosController {
         return original + " || " + add;
     }
 }
-

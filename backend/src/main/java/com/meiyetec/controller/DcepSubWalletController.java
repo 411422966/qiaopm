@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.DcepSubWallet;
 import com.meiyetec.entity.DcepSubWalletLedger;
 import com.meiyetec.exception.BizCode;
@@ -25,6 +26,7 @@ public class DcepSubWalletController {
     // ============================================================
 
     @GetMapping("/list")
+    @RequirePermission("dcep:sub-wallet:list")
     public Result<List<DcepSubWallet>> list(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) Long parentWalletId,
@@ -35,6 +37,7 @@ public class DcepSubWalletController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("dcep:sub-wallet:list")
     public Result<DcepSubWallet> getById(@PathVariable Long id) {
         DcepSubWallet w = subWalletService.getById(id);
         if (w == null) return Result.error(BizCode.NOT_FOUND, "子钱包不存在");
@@ -45,6 +48,7 @@ public class DcepSubWalletController {
     }
 
     @GetMapping("/by-code/{code}")
+    @RequirePermission("dcep:sub-wallet:list")
     public Result<DcepSubWallet> getByCode(@PathVariable String code) {
         DcepSubWallet w = subWalletService.findByCode(code);
         if (w == null) return Result.error(BizCode.NOT_FOUND, "子钱包不存在");
@@ -52,6 +56,7 @@ public class DcepSubWalletController {
     }
 
     @GetMapping("/{id:\\d+}/stats")
+    @RequirePermission("dcep:sub-wallet:list")
     public Result<Map<String, Object>> stats(@PathVariable Long id) {
         return Result.success(subWalletService.getStats(id));
     }
@@ -61,6 +66,7 @@ public class DcepSubWalletController {
     // ============================================================
 
     @PostMapping("/create")
+    @RequirePermission("dcep:sub-wallet:add")
     public Result<DcepSubWallet> create(@RequestBody Map<String, Object> params) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (tenantId == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -93,6 +99,7 @@ public class DcepSubWalletController {
     }
 
     @PutMapping("/{id:\\d+}/config")
+    @RequirePermission("dcep:sub-wallet:edit")
     public Result<DcepSubWallet> updateConfig(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         BigDecimal maxBalance = params.get("maxBalance") == null ? null
                 : new BigDecimal(params.get("maxBalance").toString());
@@ -117,17 +124,20 @@ public class DcepSubWalletController {
     }
 
     @PostMapping("/{id:\\d+}/freeze")
+    @RequirePermission("dcep:sub-wallet:manage")
     public Result<DcepSubWallet> freeze(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         String reason = (String) params.getOrDefault("reason", "运营冻结");
         return Result.success("已冻结", subWalletService.freeze(id, reason));
     }
 
     @PostMapping("/{id:\\d+}/unfreeze")
+    @RequirePermission("dcep:sub-wallet:manage")
     public Result<DcepSubWallet> unfreeze(@PathVariable Long id) {
         return Result.success("已解冻", subWalletService.unfreeze(id));
     }
 
     @PostMapping("/{id:\\d+}/close")
+    @RequirePermission("dcep:sub-wallet:manage")
     public Result<DcepSubWallet> close(@PathVariable Long id) {
         return Result.success("子钱包已关闭", subWalletService.close(id));
     }
@@ -137,6 +147,7 @@ public class DcepSubWalletController {
     // ============================================================
 
     @PostMapping("/transfer")
+    @RequirePermission("dcep:sub-wallet:transfer")
     public Result<Map<String, DcepSubWalletLedger>> transfer(@RequestBody Map<String, Object> params) {
         Long fromId = ((Number) params.get("fromId")).longValue();
         Long toId = ((Number) params.get("toId")).longValue();
@@ -157,6 +168,7 @@ public class DcepSubWalletController {
     // ============================================================
 
     @GetMapping("/{id:\\d+}/ledger")
+    @RequirePermission("dcep:sub-wallet:list")
     public Result<List<DcepSubWalletLedger>> ledger(
             @PathVariable Long id,
             @RequestParam(required = false) String txType,
@@ -171,6 +183,7 @@ public class DcepSubWalletController {
     // ============================================================
 
     @PostMapping("/sweep/{parentWalletId:\\d+}")
+    @RequirePermission("dcep:sub-wallet:manage")
     public Result<Integer> autoSweep(@PathVariable Long parentWalletId) {
         int count = subWalletService.autoSweep(parentWalletId);
         return Result.success("归集完成，共 " + count + " 笔", count);

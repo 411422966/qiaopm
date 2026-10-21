@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.OverseasPayment;
 import com.meiyetec.exception.BizCode;
@@ -27,6 +28,7 @@ public class OverseasPaymentController {
     }
 
     @GetMapping("/list")
+    @RequirePermission("overseas-payment:list")
     public Result<List<OverseasPayment>> list(
             @RequestParam(required = false) Long orderId,
             @RequestParam(required = false) Long memberId,
@@ -39,6 +41,7 @@ public class OverseasPaymentController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("overseas-payment:list")
     public Result<OverseasPayment> getById(@PathVariable Long id) {
         OverseasPayment p = overseasPaymentService.getById(id);
         if (p == null) return Result.error(BizCode.NOT_FOUND, "支付不存在");
@@ -49,6 +52,7 @@ public class OverseasPaymentController {
     }
 
     @PostMapping("/create")
+    @RequirePermission("overseas-payment:create")
     public Result<OverseasPayment> create(@RequestBody OverseasPayment payment) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (tenantId == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -67,6 +71,7 @@ public class OverseasPaymentController {
     }
 
     @PostMapping("/{id:\\d+}/refund")
+    @RequirePermission("overseas-payment:refund")
     public Result<OverseasPayment> refund(@PathVariable Long id,
                                           @RequestParam BigDecimal amount,
                                           @RequestParam(required = false) String reason) {
@@ -80,6 +85,7 @@ public class OverseasPaymentController {
     }
 
     @GetMapping("/statistics")
+    @RequirePermission("overseas-payment:stat")
     public Result<Map<String, Object>> statistics(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime) {
@@ -90,6 +96,7 @@ public class OverseasPaymentController {
     }
 
     @GetMapping("/select-gateway")
+    @RequirePermission("overseas-payment:list")
     public Result<String> selectGateway(
             @RequestParam String currency,
             @RequestParam(required = false) String countryCode,

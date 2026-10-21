@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.DcepMerchantQualification;
 import com.meiyetec.entity.DcepQualificationAttachment;
 import com.meiyetec.mapper.DcepQualificationAttachmentMapper;
@@ -25,6 +26,7 @@ public class DcepMerchantQualificationController {
     private final FileStorageService storage;
 
     @GetMapping("/current")
+    @RequirePermission("dcep:qualification:list")
     public Result<Map<String, Object>> current() {
         DcepMerchantQualification q = service.currentOrInit();
         Map<String, Object> view = new LinkedHashMap<>();
@@ -74,6 +76,7 @@ public class DcepMerchantQualificationController {
     }
 
     @PostMapping
+    @RequirePermission("dcep:qualification:edit")
     public Result<DcepMerchantQualification> save(@RequestBody DcepMerchantQualification body) {
         // 接收端不接收原始敏感号，前端用 mask 提交（如不需要二次确认保护即可在 service 层 decode）
         DcepMerchantQualification saved = serviceImpl.saveQualification(body);
@@ -86,6 +89,7 @@ public class DcepMerchantQualificationController {
      * @param materialType legal_id_front / legal_id_back / business_license / other
      */
     @PostMapping("/upload")
+    @RequirePermission("dcep:qualification:edit")
     public Result<Map<String, Object>> upload(
             @RequestParam(required = false) Long qualificationId,
             @RequestParam String materialType,
@@ -136,6 +140,7 @@ public class DcepMerchantQualificationController {
     }
 
     @DeleteMapping("/attachment/{id}")
+    @RequirePermission("dcep:qualification:edit")
     public Result<Void> deleteAttachment(@PathVariable Long id) {
         DcepMerchantQualification current = service.lambdaQuery().last("LIMIT 1").one();
         if (current != null && Integer.valueOf(1).equals(current.getAuditStatus())) {
@@ -151,6 +156,7 @@ public class DcepMerchantQualificationController {
 
     /** 提交审核（待提交→审核中） */
     @PostMapping("/submit")
+    @RequirePermission("dcep:qualification:submit")
     public Result<Void> submit() {
         DcepMerchantQualification q = service.lambdaQuery().last("LIMIT 1").one();
         if (q == null) return Result.error("请先填写并保存资质材料");

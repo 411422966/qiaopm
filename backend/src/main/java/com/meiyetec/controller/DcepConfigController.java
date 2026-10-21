@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.DcepConfig;
 import com.meiyetec.exception.BizCode;
 import com.meiyetec.exception.BusinessException;
@@ -65,6 +66,7 @@ public class DcepConfigController {
     }
 
     @GetMapping("/current")
+    @RequirePermission("sys:dcep:list")
     public Result<Map<String, Object>> current() {
         DcepConfig cfg = service.list().stream().findFirst().orElse(null);
         return Result.success(toView(cfg));
@@ -123,6 +125,7 @@ public class DcepConfigController {
     }
 
     @PostMapping
+    @RequirePermission("sys:dcep:edit")
     public Result<Void> save(@RequestBody DcepConfig cfg, HttpServletRequest request) {
         // 凭据掩码占位或空串（即"没改"）时跳过更新对应字段
         if (cfg.getApiKey() == null || cfg.getApiKey().isEmpty() || MASK.equals(cfg.getApiKey()))
@@ -154,6 +157,7 @@ public class DcepConfigController {
     }
 
     @PutMapping("/{id}")
+    @RequirePermission("sys:dcep:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody DcepConfig cfg) {
         cfg.setId(id);
         if (cfg.getApiKey() == null || cfg.getApiKey().isEmpty() || MASK.equals(cfg.getApiKey()))
@@ -167,6 +171,7 @@ public class DcepConfigController {
     }
 
     @PutMapping("/{id}/toggle/{enabled}")
+    @RequirePermission("sys:dcep:edit")
     public Result<Void> toggle(@PathVariable Long id, @PathVariable Integer enabled) {
         DcepConfig c = service.getById(id);
         if (c != null) {
@@ -184,6 +189,7 @@ public class DcepConfigController {
      * 真接入数研所时把 mockBody() 替换为 DCEP SDK 调用即可。
      */
     @PostMapping("/test")
+    @RequirePermission("sys:dcep:test")
     public Result<Map<String, Object>> test(@RequestBody(required = false) DcepConfig override) {
         long start = System.currentTimeMillis();
         DcepConfig cfg = service.list().stream().findFirst().orElse(null);

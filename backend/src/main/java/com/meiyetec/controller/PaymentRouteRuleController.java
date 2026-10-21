@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.PaymentRouteRule;
 import com.meiyetec.exception.BizCode;
@@ -20,6 +21,7 @@ public class PaymentRouteRuleController {
     private final PaymentRouteRuleService routeRuleService;
 
     @GetMapping("/list")
+    @RequirePermission("overseas-payment:route:list")
     public Result<List<PaymentRouteRule>> list() {
         Long tenantId = TenantContextHolder.get().getTenantId();
         return Result.success(routeRuleService.lambdaQuery()
@@ -28,6 +30,7 @@ public class PaymentRouteRuleController {
     }
 
     @GetMapping("/match")
+    @RequirePermission("overseas-payment:route:list")
     public Result<List<PaymentRouteRule>> match(
             @RequestParam(required = false) String currency,
             @RequestParam(required = false) String countryCode,
@@ -37,6 +40,7 @@ public class PaymentRouteRuleController {
     }
 
     @PostMapping
+    @RequirePermission("overseas-payment:route:add")
     public Result<Void> create(@RequestBody PaymentRouteRule rule) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (tenantId == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -46,6 +50,7 @@ public class PaymentRouteRuleController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("overseas-payment:route:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody PaymentRouteRule rule) {
         PaymentRouteRule existing = routeRuleService.getById(id);
         if (existing == null) return Result.error(BizCode.NOT_FOUND, "路由规则不存在");
@@ -59,6 +64,7 @@ public class PaymentRouteRuleController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("overseas-payment:route:delete")
     public Result<Void> delete(@PathVariable Long id) {
         PaymentRouteRule existing = routeRuleService.getById(id);
         if (existing == null) return Result.error(BizCode.NOT_FOUND, "路由规则不存在");

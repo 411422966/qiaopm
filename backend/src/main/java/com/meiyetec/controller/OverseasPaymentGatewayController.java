@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.OverseasPaymentGateway;
 import com.meiyetec.exception.BizCode;
@@ -21,6 +22,7 @@ public class OverseasPaymentGatewayController {
     private final OverseasPaymentGatewayService gatewayService;
 
     @GetMapping("/list")
+    @RequirePermission("overseas-payment:gateway:list")
     public Result<List<OverseasPaymentGateway>> list(
             @RequestParam(required = false) String gatewayCode,
             @RequestParam(required = false) Integer status,
@@ -30,6 +32,7 @@ public class OverseasPaymentGatewayController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("overseas-payment:gateway:list")
     public Result<OverseasPaymentGateway> getById(@PathVariable Long id) {
         OverseasPaymentGateway g = gatewayService.getById(id);
         if (g == null) return Result.error(BizCode.NOT_FOUND, "网关不存在");
@@ -40,6 +43,7 @@ public class OverseasPaymentGatewayController {
     }
 
     @PostMapping
+    @RequirePermission("overseas-payment:gateway:add")
     public Result<Void> create(@RequestBody OverseasPaymentGateway gateway) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (tenantId == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -49,6 +53,7 @@ public class OverseasPaymentGatewayController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("overseas-payment:gateway:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody OverseasPaymentGateway gateway) {
         OverseasPaymentGateway existing = gatewayService.getById(id);
         if (existing == null) return Result.error(BizCode.NOT_FOUND, "网关不存在");
@@ -62,6 +67,7 @@ public class OverseasPaymentGatewayController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("overseas-payment:gateway:delete")
     public Result<Void> delete(@PathVariable Long id) {
         OverseasPaymentGateway existing = gatewayService.getById(id);
         if (existing == null) return Result.error(BizCode.NOT_FOUND, "网关不存在");
@@ -73,6 +79,7 @@ public class OverseasPaymentGatewayController {
     }
 
     @PostMapping("/{id:\\d+}/health-check")
+    @RequirePermission("overseas-payment:gateway:edit")
     public Result<OverseasPaymentAdapter.HealthStatus> healthCheck(@PathVariable Long id) {
         OverseasPaymentGateway existing = gatewayService.getById(id);
         if (existing == null) return Result.error(BizCode.NOT_FOUND, "网关不存在");

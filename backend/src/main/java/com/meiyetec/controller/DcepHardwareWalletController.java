@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.DcepHardwareWallet;
 import com.meiyetec.exception.BizCode;
@@ -22,6 +23,7 @@ public class DcepHardwareWalletController {
     private final DcepHardwareWalletService walletService;
 
     @GetMapping("/list")
+    @RequirePermission("dcep:wallet:list")
     public Result<List<DcepHardwareWallet>> list(
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) String walletType,
@@ -31,6 +33,7 @@ public class DcepHardwareWalletController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("dcep:wallet:list")
     public Result<DcepHardwareWallet> getById(@PathVariable Long id) {
         DcepHardwareWallet w = walletService.getById(id);
         if (w == null) return Result.error(BizCode.NOT_FOUND, "钱包不存在");
@@ -41,6 +44,7 @@ public class DcepHardwareWalletController {
     }
 
     @GetMapping("/by-code/{code}")
+    @RequirePermission("dcep:wallet:list")
     public Result<DcepHardwareWallet> getByCode(@PathVariable String code) {
         DcepHardwareWallet w = walletService.findByCode(code);
         if (w == null) return Result.error(BizCode.NOT_FOUND, "钱包不存在");
@@ -51,6 +55,7 @@ public class DcepHardwareWalletController {
     }
 
     @PostMapping("/activate")
+    @RequirePermission("dcep:wallet:activate")
     public Result<DcepHardwareWallet> activate(@RequestBody Map<String, Object> params) {
         Long memberId = ((Number) params.get("memberId")).longValue();
         String walletType = (String) params.get("walletType");
@@ -63,6 +68,7 @@ public class DcepHardwareWalletController {
     }
 
     @PostMapping("/{id:\\d+}/recharge")
+    @RequirePermission("dcep:wallet:recharge")
     public Result<DcepHardwareWallet> recharge(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         DcepHardwareWallet existing = walletService.getById(id);
         if (existing == null) return Result.error(BizCode.NOT_FOUND, "钱包不存在");
@@ -79,6 +85,7 @@ public class DcepHardwareWalletController {
 
     /** 挂失 */
     @PostMapping("/{id:\\d+}/report-lost")
+    @RequirePermission("dcep:wallet:manage")
     public Result<DcepHardwareWallet> reportLost(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         String reason = (String) params.getOrDefault("reason", "用户主动挂失");
         return Result.success("挂失成功", walletService.reportLost(id, reason));
@@ -86,6 +93,7 @@ public class DcepHardwareWalletController {
 
     /** 解挂（需 PIN 验证） */
     @PostMapping("/{id:\\d+}/unfreeze-lost")
+    @RequirePermission("dcep:wallet:manage")
     public Result<DcepHardwareWallet> unfreezeLost(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         String pin = (String) params.get("pin");
         return Result.success("解挂成功", walletService.unfreezeLost(id, pin));
@@ -93,6 +101,7 @@ public class DcepHardwareWalletController {
 
     /** 冻结 */
     @PostMapping("/{id:\\d+}/freeze")
+    @RequirePermission("dcep:wallet:manage")
     public Result<DcepHardwareWallet> freeze(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         String reason = (String) params.getOrDefault("reason", "风控冻结");
         return Result.success("冻结成功", walletService.freeze(id, reason));
@@ -100,18 +109,21 @@ public class DcepHardwareWalletController {
 
     /** 解冻 */
     @PostMapping("/{id:\\d+}/unfreeze")
+    @RequirePermission("dcep:wallet:manage")
     public Result<DcepHardwareWallet> unfreeze(@PathVariable Long id) {
         return Result.success("解冻成功", walletService.unfreeze(id));
     }
 
     /** 销户 */
     @PostMapping("/{id:\\d+}/close")
+    @RequirePermission("dcep:wallet:manage")
     public Result<DcepHardwareWallet> closeAccount(@PathVariable Long id) {
         return Result.success("已销户", walletService.closeAccount(id));
     }
 
     /** 设置 PIN */
     @PostMapping("/{id:\\d+}/pin")
+    @RequirePermission("dcep:wallet:manage")
     public Result<Void> setPin(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         String pin = (String) params.get("pin");
         walletService.setPin(id, pin);
@@ -120,6 +132,7 @@ public class DcepHardwareWalletController {
 
     /** 验证 PIN */
     @PostMapping("/{id:\\d+}/pin/verify")
+    @RequirePermission("dcep:wallet:manage")
     public Result<Boolean> verifyPin(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         String pin = (String) params.get("pin");
         return Result.success(walletService.verifyPin(id, pin) ? "PIN 正确" : "PIN 错误",
@@ -128,6 +141,7 @@ public class DcepHardwareWalletController {
 
     /** 切换生物识别 */
     @PostMapping("/{id:\\d+}/biometric")
+    @RequirePermission("dcep:wallet:manage")
     public Result<DcepHardwareWallet> toggleBiometric(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         boolean enabled = (Boolean) params.getOrDefault("enabled", true);
         return Result.success(enabled ? "已启用生物识别" : "已关闭生物识别",
@@ -136,6 +150,7 @@ public class DcepHardwareWalletController {
 
     /** 限额校验 */
     @PostMapping("/{id:\\d+}/limit-check")
+    @RequirePermission("dcep:wallet:list")
     public Result<Map<String, Object>> checkLimit(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         BigDecimal amount = new BigDecimal(params.get("amount").toString());
         Map<String, Object> r = walletService.checkLimit(id, amount);
@@ -144,6 +159,7 @@ public class DcepHardwareWalletController {
 
     /** 密钥轮换 */
     @PostMapping("/{id:\\d+}/keys/rotate")
+    @RequirePermission("dcep:wallet:manage")
     public Result<Map<String, String>> rotateKeys(@PathVariable Long id) {
         return Result.success("密钥已轮换", walletService.rotateKeys(id));
     }
