@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.PluginInstall;
 import com.meiyetec.entity.PluginRuntimeState;
 import com.meiyetec.exception.BizCode;
@@ -65,18 +66,21 @@ public class PluginRuntimeController {
 
     /** 数据看板列表 */
     @GetMapping("/list")
+    @RequirePermission("plugin:runtime:list")
     public Result<List<PluginRuntimeInfo>> list() {
         return Result.success(runtime.listPlugins());
     }
 
     /** 摘要统计 */
     @GetMapping("/dashboard")
+    @RequirePermission("plugin:runtime:list")
     public Result<Map<String, Object>> dashboard() {
         return Result.success(runtime.dashboard());
     }
 
     /** 加载指定版本（不指定则取最大版本号目录） */
     @PostMapping("/{pluginCode}/load")
+    @RequirePermission("plugin:runtime:edit")
     public Result<PluginRuntimeInfo> load(@PathVariable String pluginCode,
                                           @RequestBody(required = false) Map<String, Object> body) {
         String version = body == null ? null
@@ -92,6 +96,7 @@ public class PluginRuntimeController {
 
     /** 启用 */
     @PostMapping("/{pluginCode}/enable")
+    @RequirePermission("plugin:runtime:edit")
     public Result<PluginRuntimeInfo> enable(@PathVariable String pluginCode) {
         PluginRuntimeInfo info = runtime.enablePlugin(pluginCode);
         if ("NOT_FOUND".equals(info.getState())) {
@@ -102,6 +107,7 @@ public class PluginRuntimeController {
 
     /** 停用 */
     @PostMapping("/{pluginCode}/disable")
+    @RequirePermission("plugin:runtime:edit")
     public Result<PluginRuntimeInfo> disable(@PathVariable String pluginCode) {
         PluginRuntimeInfo info = runtime.disablePlugin(pluginCode);
         if ("NOT_FOUND".equals(info.getState())) {
@@ -112,6 +118,7 @@ public class PluginRuntimeController {
 
     /** 卸载 */
     @PostMapping("/{pluginCode}/unload")
+    @RequirePermission("plugin:runtime:edit")
     public Result<PluginRuntimeInfo> unload(@PathVariable String pluginCode) {
         PluginRuntimeInfo info = runtime.unloadPlugin(pluginCode);
         if ("NOT_FOUND".equals(info.getState())) {
@@ -128,6 +135,7 @@ public class PluginRuntimeController {
      * 列出某租户已注册的插件（含平台级 + 该租户专属 enabled 标记）。
      */
     @GetMapping("/tenant/{tenantId}/list")
+    @RequirePermission("plugin:runtime:list")
     public Result<List<Map<String, Object>>> listTenant(@PathVariable Long tenantId) {
         Result<Void> deny = assertTenantAccess(tenantId);
         if (deny != null) return Result.error(deny.getCode(), deny.getMessage());
@@ -155,6 +163,7 @@ public class PluginRuntimeController {
 
     /** 租户级启用 */
     @PostMapping("/tenant/{tenantId}/{pluginCode}/enable")
+    @RequirePermission("plugin:runtime:tenant:edit")
     public Result<Map<String, Object>> enableForTenant(@PathVariable Long tenantId,
                                                       @PathVariable String pluginCode) {
         Result<Void> deny = assertTenantAccess(tenantId);
@@ -171,6 +180,7 @@ public class PluginRuntimeController {
 
     /** 租户级停用 */
     @PostMapping("/tenant/{tenantId}/{pluginCode}/disable")
+    @RequirePermission("plugin:runtime:tenant:edit")
     public Result<Map<String, Object>> disableForTenant(@PathVariable Long tenantId,
                                                        @PathVariable String pluginCode) {
         Result<Void> deny = assertTenantAccess(tenantId);
@@ -187,6 +197,7 @@ public class PluginRuntimeController {
 
     /** 持久化状态查询（跨重启可观测） */
     @GetMapping("/persisted")
+    @RequirePermission("plugin:runtime:list")
     public Result<List<PluginRuntimeState>> persisted(
             @RequestParam(required = false) Long tenantId) {
         if (tenantId != null) {
