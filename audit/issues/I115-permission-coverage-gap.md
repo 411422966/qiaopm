@@ -104,3 +104,30 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1、2、3 批完成，第 4 批待办（其余 ~107 个 Controller）
+
+## 第 4a 批完成（2026-10-21，营销）
+- 13 个 Controller 共 80 个端点补 @RequirePermission：
+  - CouponController（10）：market:coupon:list/add/edit/delete
+  - MktCouponController（8）：mkt:coupon
+  - MktPointsController（4）：mkt:points
+  - PointController（4）：market:point:list/add/edit
+  - PointGoodsController（7）：market:point:list/add/edit/delete
+  - MktPromotionController（6）：mkt:promotion
+  - JourneyTriggerController（9）：mkt:journey:trigger:list/edit
+  - MktJourneyController（9）：mkt:journey:list/edit
+  - MktChannelController（5）：mkt:channel:list/edit
+  - MktConversionController（5）：mkt:conversion:view/track
+  - MktEffectController（2）：mkt:effect:view/edit
+  - MktTemplateController（3）：mkt:template:list/edit
+  - MktTouchTaskController（8）：mkt:touch:task:list/edit
+- DB 新增 14 个权限码，复用 6 个现有权限码
+- 编译 EXIT=0
+
+### 第 4a 批覆盖率
+- @RequirePermission 命中：384（第3批 304 → 第4a批 +80）
+- Controller 覆盖：44 / 138（第3批 31 → 第4a批 +13）
+- 方法覆盖：384 / 1002 = 38.3%（第3批 30.3% → 第4a批 +8.0 pp）
+- 累计提升（相对基线 7.4%）：+30.9 pp
+
+## 状态
+第 1、2、3、4a 批完成，第 4b~4g 批待办
