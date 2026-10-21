@@ -228,3 +228,23 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1、2、3、4a~4f 批完成，第 4g 批待办
+
+## 第 4g-1 批完成（2026-10-21，系统/认证/日志/配置）
+- 5 个 Controller 共 37 个端点补 @RequirePermission：
+  - SysConfigController（7）：sys:config:list/edit
+  - SysLogController（10）：sys:log:list/clear/export
+  - SysLoginLogController（8）：sys:login-log:list/clear/export
+  - SysTenantController（10）：sys:tenant:list/add/edit/delete/freeze
+  - LogRetentionController（2）：sys:log-retention:list/edit
+- DB 新增 2 个权限码（LogRetention 专用），复用 14 个现有 sys:* 权限码
+- 编译 EXIT=0
+- 排除：AuthController（登录/登出/refresh/userinfo 公开接口），SysPermissionController（已全覆盖）
+
+### 第 4g-1 批覆盖率
+- @RequirePermission 命中：583（第4f批 546 → 第4g-1批 +37）
+- Controller 覆盖：65 / 138（第4f批 61 → 第4g-1批 +4）
+- 方法覆盖：583 / 1002 = 58.2%（第4f批 54.5% → 第4g-1批 +3.7 pp）
+- 累计提升（相对基线 7.4%）：+50.8 pp
+
+## 状态
+第 1、2、3、4a~4f、4g-1 批完成，第 4g-2/4g-3 批待办
