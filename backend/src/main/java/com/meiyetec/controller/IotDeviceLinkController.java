@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
@@ -61,6 +62,7 @@ public class IotDeviceLinkController {
     // ====================================================================
 
     @GetMapping("/page")
+    @RequirePermission("iot:link:list")
     public Result<Page<IotDeviceLink>> page(
             @RequestParam(defaultValue = "1") long current,
             @RequestParam(defaultValue = "20") long size,
@@ -80,6 +82,7 @@ public class IotDeviceLinkController {
     }
 
     @GetMapping("/list")
+    @RequirePermission("iot:link:list")
     public Result<List<IotDeviceLink>> list(
             @RequestParam(required = false) Long masterDeviceId,
             @RequestParam(required = false) Integer enabled) {
@@ -92,6 +95,7 @@ public class IotDeviceLinkController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("iot:link:list")
     public Result<IotDeviceLink> getById(@PathVariable Long id) {
         IotDeviceLink link = linkService.getById(id);
         if (link == null || !tid().equals(link.getTenantId())) {
@@ -101,6 +105,7 @@ public class IotDeviceLinkController {
     }
 
     @PostMapping
+    @RequirePermission("iot:link:edit")
     public Result<IotDeviceLink> create(@Valid @RequestBody IotDeviceLink link) {
         link.setId(null);
         link.setTenantId(tid());
@@ -111,6 +116,7 @@ public class IotDeviceLinkController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("iot:link:edit")
     public Result<Void> update(@PathVariable Long id, @Valid @RequestBody IotDeviceLink link) {
         IotDeviceLink exist = linkService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) {
@@ -123,6 +129,7 @@ public class IotDeviceLinkController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("iot:link:edit")
     public Result<Void> delete(@PathVariable Long id) {
         IotDeviceLink exist = linkService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) {
@@ -151,6 +158,7 @@ public class IotDeviceLinkController {
      * </pre>
      */
     @PostMapping("/execute")
+    @RequirePermission("iot:link:execute")
     public Result<IotDeviceLinkLog> execute(@RequestBody Map<String, Object> body) {
         Object linkIdObj = body.get("linkId");
         if (linkIdObj == null) {
@@ -177,6 +185,7 @@ public class IotDeviceLinkController {
      * </pre>
      */
     @PostMapping("/execute-batch")
+    @RequirePermission("iot:link:execute")
     public Result<List<IotDeviceLinkLog>> executeBatch(@RequestBody Map<String, Object> body) {
         Object midObj = body.get("masterDeviceId");
         if (midObj == null) {
@@ -196,6 +205,7 @@ public class IotDeviceLinkController {
     // ====================================================================
 
     @GetMapping("/log/page")
+    @RequirePermission("iot:link:list")
     public Result<Page<IotDeviceLinkLog>> logPage(
             @RequestParam(defaultValue = "1") long current,
             @RequestParam(defaultValue = "20") long size,
@@ -217,6 +227,7 @@ public class IotDeviceLinkController {
     }
 
     @GetMapping("/log/{id:\\d+}")
+    @RequirePermission("iot:link:list")
     public Result<IotDeviceLinkLog> logDetail(@PathVariable Long id) {
         IotDeviceLinkLog row = logMapper.selectById(id);
         if (row == null) return Result.error(BizCode.NOT_FOUND, "日志不存在");
