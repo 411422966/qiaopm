@@ -83,3 +83,24 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1、2 批完成，第 3/4 批待办
+
+## 第 3 批完成（2026-10-21）
+- 7 个 Controller 共 70 个端点补 @RequirePermission：
+  - CrmCareOpsController（1）：crm:care:ops:view
+  - CrmFollowUpPlanController（12）：crm:care:follow:plan:list / crm:follow-rule
+  - CrmFollowUpTaskController（16）：crm:care:follow:task:list / edit
+  - CrmReviewController（11）：crm:care:review:list / edit
+  - CrmReviewTemplateController（9）：crm:care:review:tpl:list / edit
+  - DetectionReportController（7）：crm:detection:report:list / edit
+  - ReportController（14）：report:dashboard / biz:list / caliber / export:*
+- DB 新增 11 个权限码（crm:care:* / crm:detection:* / report:caliber:edit），复用 7 个现有权限码
+- 编译 EXIT=0
+
+### 第 3 批覆盖率
+- @RequirePermission 命中：304（第2批 234 → 第3批 +70）
+- Controller 覆盖：31 / 138（第2批 24 → 第3批 +7）
+- 方法覆盖：304 / 1002 = 30.3%（第2批 23.4% → 第3批 +6.9 pp）
+- 累计提升（相对基线 7.4%）：+22.9 pp
+
+## 状态
+第 1、2、3 批完成，第 4 批待办（其余 ~107 个 Controller）
