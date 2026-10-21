@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.LevelEvaluation;
 import com.meiyetec.service.LevelEvaluationService;
@@ -19,6 +20,7 @@ public class LevelEvaluationController {
     private final LevelEvaluationService levelEvaluationService;
 
     @GetMapping("/list")
+    @RequirePermission("employee:level:eval")
     public Result<List<Map<String, Object>>> list(
             @RequestParam(required = false) Long employeeId,
             @RequestParam(required = false) Long storeId,
@@ -27,11 +29,13 @@ public class LevelEvaluationController {
     }
 
     @GetMapping("/by-employee/{employeeId}")
+    @RequirePermission("employee:level:eval")
     public Result<List<LevelEvaluation>> getByEmployee(@PathVariable Long employeeId) {
         return Result.success(levelEvaluationService.getByEmployeeId(employeeId));
     }
 
     @PostMapping("/auto/{employeeId}")
+    @RequirePermission("employee:level:eval")
     public Result<LevelEvaluation> autoEvaluate(@PathVariable Long employeeId, @RequestBody Map<String, Object> params) {
         Long operatorId = params.get("operatorId") == null ? null : Long.valueOf(params.get("operatorId").toString());
         String operatorName = (String) params.get("operatorName");
@@ -40,6 +44,7 @@ public class LevelEvaluationController {
     }
 
     @PostMapping("/adjust")
+    @RequirePermission("employee:level:promote")
     public Result<LevelEvaluation> adjustLevel(@RequestBody Map<String, Object> params) {
         Long employeeId = Long.valueOf(params.get("employeeId").toString());
         Long toLevelId = Long.valueOf(params.get("toLevelId").toString());
@@ -51,17 +56,20 @@ public class LevelEvaluationController {
     }
 
     @PutMapping("/{id:\\d+}/revert")
+    @RequirePermission("employee:level:promote")
     public Result<Void> revert(@PathVariable Long id) {
         levelEvaluationService.revert(id);
         return Result.success("撤销成功", null);
     }
 
     @GetMapping("/metrics/{employeeId}")
+    @RequirePermission("employee:level:eval")
     public Result<Map<String, Object>> getMetrics(@PathVariable Long employeeId) {
         return Result.success(levelEvaluationService.calculateEmployeeMetrics(employeeId));
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("employee:level:eval")
     public Result<LevelEvaluation> getById(@PathVariable Long id) {
         return Result.success(levelEvaluationService.getById(id));
     }

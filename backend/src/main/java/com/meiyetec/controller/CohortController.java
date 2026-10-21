@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.CohortDefinition;
@@ -49,6 +50,7 @@ public class CohortController {
     // ====================================================================
 
     @GetMapping("/definition/list")
+    @RequirePermission("crm:cohort:list")
     public Result<List<CohortDefinition>> listDefinitions() {
         Long t = tid();
         return Result.success(defMapper.selectList(new LambdaQueryWrapper<CohortDefinition>()
@@ -57,6 +59,7 @@ public class CohortController {
     }
 
     @GetMapping("/definition/{id}")
+    @RequirePermission("crm:cohort:list")
     public Result<CohortDefinition> getDefinition(@PathVariable Long id) {
         Long t = tid();
         CohortDefinition d = defMapper.selectById(id);
@@ -66,6 +69,7 @@ public class CohortController {
 
     @PostMapping("/definition")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:cohort:edit")
     public Result<CohortDefinition> createDefinition(@RequestBody CohortDefinition d) {
         Long t = tid();
         if (d.getCohortName() == null || d.getCohortName().isEmpty()) {
@@ -82,6 +86,7 @@ public class CohortController {
 
     @PostMapping("/definition/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:cohort:edit")
     public Result<CohortDefinition> updateDefinition(@PathVariable Long id, @RequestBody CohortDefinition patch) {
         Long t = tid();
         CohortDefinition old = defMapper.selectById(id);
@@ -97,6 +102,7 @@ public class CohortController {
 
     @DeleteMapping("/definition/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:cohort:edit")
     public Result<Void> deleteDefinition(@PathVariable Long id) {
         Long t = tid();
         CohortDefinition old = defMapper.selectById(id);
@@ -121,6 +127,7 @@ public class CohortController {
      */
     @PostMapping("/analyze/{cohortId}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:cohort:edit")
     public Result<Map<String, Object>> analyze(@PathVariable Long cohortId) {
         Long t = tid();
         CohortDefinition def = defMapper.selectById(cohortId);
@@ -212,6 +219,7 @@ public class CohortController {
     }
 
     @GetMapping("/result/{cohortId}")
+    @RequirePermission("crm:cohort:list")
     public Result<List<CohortResult>> listResults(@PathVariable Long cohortId) {
         Long t = tid();
         CohortDefinition d = defMapper.selectById(cohortId);
@@ -227,6 +235,7 @@ public class CohortController {
      * 队列分析总览（按队列聚合）
      */
     @GetMapping("/dashboard")
+    @RequirePermission("crm:cohort:list")
     public Result<Map<String, Object>> dashboard() {
         Long t = tid();
         List<CohortDefinition> defs = defMapper.selectList(new LambdaQueryWrapper<CohortDefinition>()

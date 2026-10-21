@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.entity.MemberMessage;
@@ -34,6 +35,7 @@ public class MemberMessageController {
      * 会员站内信分页列表
      */
     @GetMapping("/page")
+    @RequirePermission("member:message:list")
     public Result<PageResult<MemberMessage>> page(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -65,6 +67,7 @@ public class MemberMessageController {
      * 未读消息数量
      */
     @GetMapping("/unread-count")
+    @RequirePermission("member:message:list")
     public Result<Integer> unreadCount(@RequestParam Long memberId) {
         Long tid = tenantId();
         LambdaQueryWrapper<MemberMessage> q = new LambdaQueryWrapper<>();
@@ -81,6 +84,7 @@ public class MemberMessageController {
      * 标记已读
      */
     @PostMapping("/{id}/read")
+    @RequirePermission("member:message:edit")
     public Result<Void> markRead(@PathVariable Long id) {
         MemberMessage msg = messageMapper.selectById(id);
         if (msg == null) return Result.error("消息不存在");
@@ -98,6 +102,7 @@ public class MemberMessageController {
      * 标记全部已读
      */
     @PostMapping("/read-all")
+    @RequirePermission("member:message:edit")
     public Result<Integer> markAllRead(@RequestParam Long memberId) {
         Long tid = tenantId();
         StringBuilder sql = new StringBuilder("UPDATE member_message SET is_read=1, read_at=NOW() WHERE member_id=? AND is_read=0 AND deleted=0");
@@ -111,6 +116,7 @@ public class MemberMessageController {
      * 删除消息
      */
     @DeleteMapping("/{id}")
+    @RequirePermission("member:message:edit")
     public Result<Void> delete(@PathVariable Long id) {
         messageMapper.deleteById(id);
         return Result.success("已删除", null);

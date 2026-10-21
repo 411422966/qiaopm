@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.MemberLifecycleLog;
 import com.meiyetec.entity.MemberLifecycleRule;
 import com.meiyetec.service.MemberLifecycleService;
@@ -33,6 +34,7 @@ public class MemberLifecycleController {
     private final MemberLifecycleService service;
 
     @GetMapping("/dashboard")
+    @RequirePermission("member:lifecycle:view")
     public Result<Map<String, Object>> dashboard(
             @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate endDate) {
@@ -40,6 +42,7 @@ public class MemberLifecycleController {
     }
 
     @GetMapping("/funnel")
+    @RequirePermission("member:lifecycle:view")
     public Result<Map<String, Object>> funnel(
             @RequestParam(required = false) String ruleType,
             @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -48,6 +51,7 @@ public class MemberLifecycleController {
     }
 
     @GetMapping("/rule/page")
+    @RequirePermission("member:lifecycle:view")
     public Result<?> rulePage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -57,32 +61,38 @@ public class MemberLifecycleController {
     }
 
     @PostMapping("/rule")
+    @RequirePermission("member:lifecycle:edit")
     public Result<MemberLifecycleRule> saveRule(@RequestBody MemberLifecycleRule rule) {
         return service.saveRule(rule);
     }
 
     @PutMapping("/rule/{id}")
+    @RequirePermission("member:lifecycle:edit")
     public Result<MemberLifecycleRule> updateRule(@PathVariable Long id, @RequestBody MemberLifecycleRule rule) {
         rule.setId(id);
         return service.saveRule(rule);
     }
 
     @PostMapping("/rule/{id}/toggle")
+    @RequirePermission("member:lifecycle:edit")
     public Result<Void> toggleRule(@PathVariable Long id, @RequestParam Boolean enable) {
         return service.toggleRule(id, Boolean.TRUE.equals(enable));
     }
 
     @DeleteMapping("/rule/{id}")
+    @RequirePermission("member:lifecycle:edit")
     public Result<Void> deleteRule(@PathVariable Long id) {
         return service.deleteRule(id);
     }
 
     @PostMapping("/rule/init-default")
+    @RequirePermission("member:lifecycle:edit")
     public Result<Integer> initDefault() {
         return service.initDefaultRules();
     }
 
     @GetMapping("/log/page")
+    @RequirePermission("member:lifecycle:view")
     public Result<?> logPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -94,6 +104,7 @@ public class MemberLifecycleController {
     }
 
     @PostMapping("/trigger/{ruleId}")
+    @RequirePermission("member:lifecycle:edit")
     public Result<Map<String, Object>> trigger(@PathVariable Long ruleId) {
         return service.triggerRule(ruleId);
     }

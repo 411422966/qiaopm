@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.BlockchainRecord;
 import com.meiyetec.security.TenantContextHolder;
 import com.meiyetec.service.BlockchainBusinessService;
@@ -23,6 +24,7 @@ public class BlockchainController {
     private final BlockchainBusinessService blockchainService;
 
     @PostMapping("/record")
+    @RequirePermission("blockchain:record")
     public Result<BlockchainRecord> record(@RequestBody Map<String, Object> body) {
         String recordType = (String) body.get("recordType");
         Long bizId = body.get("bizId") == null ? null : ((Number) body.get("bizId")).longValue();
@@ -36,6 +38,7 @@ public class BlockchainController {
     }
 
     @PostMapping("/record/product")
+    @RequirePermission("blockchain:record")
     public Result<BlockchainRecord> recordProduct(@RequestBody Map<String, Object> body) {
         return Result.success("商品已上链", blockchainService.recordProduct(
                 numLong(body.get("productId")),
@@ -48,6 +51,7 @@ public class BlockchainController {
     }
 
     @PostMapping("/record/drug")
+    @RequirePermission("blockchain:record")
     public Result<BlockchainRecord> recordDrug(@RequestBody Map<String, Object> body) {
         return Result.success("药品已上链", blockchainService.recordDrug(
                 numLong(body.get("drugId")),
@@ -60,6 +64,7 @@ public class BlockchainController {
     }
 
     @PostMapping("/record/device")
+    @RequirePermission("blockchain:record")
     public Result<BlockchainRecord> recordDevice(@RequestBody Map<String, Object> body) {
         return Result.success("器械已上链", blockchainService.recordDevice(
                 numLong(body.get("deviceId")),
@@ -71,6 +76,7 @@ public class BlockchainController {
     }
 
     @PostMapping("/record/order")
+    @RequirePermission("blockchain:record")
     public Result<BlockchainRecord> recordOrder(@RequestBody Map<String, Object> body) {
         return Result.success("订单已上链", blockchainService.recordOrder(
                 numLong(body.get("orderId")),
@@ -81,6 +87,7 @@ public class BlockchainController {
     }
 
     @PostMapping("/record/consent")
+    @RequirePermission("blockchain:record")
     public Result<BlockchainRecord> recordConsent(@RequestBody Map<String, Object> body) {
         return Result.success("同意书已上链", blockchainService.recordConsent(
                 numLong(body.get("consentId")),
@@ -92,12 +99,14 @@ public class BlockchainController {
     }
 
     @GetMapping("/record/{bizId}")
+    @RequirePermission("blockchain:record")
     public Result<BlockchainRecord> getRecord(@RequestParam String recordType,
                                                @PathVariable Long bizId) {
         return Result.success(blockchainService.getRecord(recordType, bizId));
     }
 
     @GetMapping("/record/page")
+    @RequirePermission("blockchain:record")
     public Result<Map<String, Object>> recordPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -106,16 +115,19 @@ public class BlockchainController {
     }
 
     @GetMapping("/chain/verify")
+    @RequirePermission("blockchain:chain")
     public Result<Map<String, Object>> verifyChain(@RequestParam(required = false) String chainId) {
         return Result.success(blockchainService.verifyChain(chainId));
     }
 
     @GetMapping("/chain/info")
+    @RequirePermission("blockchain:chain")
     public Result<Map<String, Object>> chainInfo(@RequestParam(required = false) String chainId) {
         return Result.success(blockchainService.chainInfo(chainId));
     }
 
     @GetMapping("/chain/overview")
+    @RequirePermission("blockchain:chain")
     public Result<List<Map<String, Object>>> chainOverview() {
         String[] chains = {"meiyetec-main", "meiyetec-cosmetic", "meiyetec-drug", "meiyetec-device"};
         List<Map<String, Object>> rows = new ArrayList<>();
@@ -126,12 +138,14 @@ public class BlockchainController {
     }
 
     @GetMapping("/trace/{recordType}/{bizId}")
+    @RequirePermission("blockchain:trace")
     public Result<Map<String, Object>> trace(@PathVariable String recordType,
                                              @PathVariable Long bizId) {
         return Result.success(blockchainService.trace(recordType, bizId));
     }
 
     @PostMapping("/utils/hash")
+    @RequirePermission("blockchain:record")
     public Result<Map<String, Object>> hash(@RequestBody Map<String, Object> body) {
         String text = (String) body.get("text");
         String sha = blockchainService.sha256Hex(text == null ? "" : text);
@@ -143,22 +157,26 @@ public class BlockchainController {
     }
 
     @GetMapping("/stats/chain")
+    @RequirePermission("blockchain:monitor")
     public Result<List<Map<String, Object>>> chainStats() {
         return Result.success(blockchainService.chainStats());
     }
 
     @GetMapping("/stats/record-type")
+    @RequirePermission("blockchain:monitor")
     public Result<List<Map<String, Object>>> recordTypeStats() {
         return Result.success(blockchainService.recordTypeStats());
     }
 
     @GetMapping("/stats/trend")
+    @RequirePermission("blockchain:monitor")
     public Result<List<Map<String, Object>>> dailyTrend(
             @RequestParam(defaultValue = "7") int days) {
         return Result.success(blockchainService.dailyTrend(days));
     }
 
     @GetMapping("/stats/overview")
+    @RequirePermission("blockchain:monitor")
     public Result<Map<String, Object>> overview() {
         return Result.success(blockchainService.overview());
     }

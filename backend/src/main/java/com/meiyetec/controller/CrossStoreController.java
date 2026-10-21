@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -84,6 +85,7 @@ public class CrossStoreController {
      *          topRuleName / topHitCount / totalRules / enabledRules
      */
     @GetMapping("/rule/stats")
+    @RequirePermission("crm:cross:rule:list")
     public Result<Map<String, Object>> ruleStats() {
         Long t = tid();
 
@@ -141,6 +143,7 @@ public class CrossStoreController {
     }
 
     @GetMapping("/rule/page")
+    @RequirePermission("crm:cross:rule:list")
     public Result<Page<CrmCrossStoreRule>> rulePage(
             @RequestParam(defaultValue = "1") long pageNum,
             @RequestParam(defaultValue = "20") long pageSize,
@@ -169,6 +172,7 @@ public class CrossStoreController {
     }
 
     @GetMapping("/rule/trash")
+    @RequirePermission("crm:cross:rule:list")
     public Result<Page<CrmCrossStoreRule>> ruleTrash(
             @RequestParam(defaultValue = "1") long pageNum,
             @RequestParam(defaultValue = "20") long pageSize) {
@@ -181,6 +185,7 @@ public class CrossStoreController {
     }
 
     @GetMapping("/rule/{id}")
+    @RequirePermission("crm:cross:rule:list")
     public Result<CrmCrossStoreRule> ruleDetail(@PathVariable Long id) {
         Long t = tid();
         CrmCrossStoreRule r = ruleMapper.selectById(id);
@@ -190,6 +195,7 @@ public class CrossStoreController {
 
     @PostMapping("/rule")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:cross:rule:edit")
     public Result<CrmCrossStoreRule> createRule(@RequestBody CrmCrossStoreRule r) {
         Long t = tid();
         if (r.getRuleName() == null || r.getRuleName().isEmpty()) {
@@ -209,6 +215,7 @@ public class CrossStoreController {
 
     @PutMapping("/rule/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:cross:rule:edit")
     public Result<CrmCrossStoreRule> updateRule(@PathVariable Long id, @RequestBody CrmCrossStoreRule patch) {
         Long t = tid();
         CrmCrossStoreRule old = ruleMapper.selectById(id);
@@ -236,6 +243,7 @@ public class CrossStoreController {
 
     @DeleteMapping("/rule/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:cross:rule:edit")
     public Result<Void> deleteRule(@PathVariable Long id) {
         Long t = tid();
         CrmCrossStoreRule old = ruleMapper.selectById(id);
@@ -245,6 +253,7 @@ public class CrossStoreController {
     }
 
     @PutMapping("/rule/{id}/toggle")
+    @RequirePermission("crm:cross:rule:edit")
     public Result<Map<String, Object>> toggle(@PathVariable Long id, @RequestBody(required = false) Map<String, Object> body) {
         Long t = tid();
         CrmCrossStoreRule old = ruleMapper.selectById(id);
@@ -261,6 +270,7 @@ public class CrossStoreController {
     }
 
     @PutMapping("/rule/batch-toggle")
+    @RequirePermission("crm:cross:rule:edit")
     public Result<Map<String, Object>> batchToggle(@RequestBody Map<String, Object> body) {
         Long t = tid();
         @SuppressWarnings("unchecked")
@@ -282,6 +292,7 @@ public class CrossStoreController {
     }
 
     @PutMapping("/rule/{id}/trash")
+    @RequirePermission("crm:cross:rule:edit")
     public Result<Void> trash(@PathVariable Long id) {
         Long t = tid();
         CrmCrossStoreRule r = ruleMapper.selectById(id);
@@ -292,6 +303,7 @@ public class CrossStoreController {
     }
 
     @PutMapping("/rule/batch-trash")
+    @RequirePermission("crm:cross:rule:edit")
     public Result<Map<String, Object>> batchTrash(@RequestBody Map<String, Object> body) {
         Long t = tid();
         @SuppressWarnings("unchecked")
@@ -311,6 +323,7 @@ public class CrossStoreController {
     }
 
     @PutMapping("/rule/{id}/restore")
+    @RequirePermission("crm:cross:rule:edit")
     public Result<Void> restore(@PathVariable Long id) {
         Long t = tid();
         CrmCrossStoreRule r = ruleMapper.selectById(id);
@@ -322,6 +335,7 @@ public class CrossStoreController {
     }
 
     @PostMapping("/rule/{id}/clone")
+    @RequirePermission("crm:cross:rule:edit")
     public Result<CrmCrossStoreRule> cloneRule(@PathVariable Long id) {
         Long t = tid();
         CrmCrossStoreRule old = ruleMapper.selectById(id);
@@ -353,6 +367,7 @@ public class CrossStoreController {
     }
 
     @PostMapping("/rule/batch-copy")
+    @RequirePermission("crm:cross:rule:edit")
     public Result<Map<String, Object>> batchCopy(@RequestBody Map<String, Object> body) {
         Long t = tid();
         @SuppressWarnings("unchecked")
@@ -380,6 +395,7 @@ public class CrossStoreController {
     // ====================================================================
 
     @GetMapping("/rule/test")
+    @RequirePermission("crm:cross:rule:list")
     public Result<Map<String, Object>> ruleTest(@RequestParam Long ruleId,
                                                 @RequestParam(required = false) String type,
                                                 @RequestParam(required = false) BigDecimal amount,
@@ -448,6 +464,7 @@ public class CrossStoreController {
     }
 
     @GetMapping("/rule/preview-match")
+    @RequirePermission("crm:cross:rule:list")
     public Result<List<Map<String, Object>>> previewMatch(@RequestParam Long ruleId) {
         Long t = tid();
         CrmCrossStoreRule r = ruleMapper.selectById(ruleId);
@@ -482,6 +499,7 @@ public class CrossStoreController {
     // ====================================================================
 
     @GetMapping("/redemption/page")
+    @RequirePermission("crm:cross:redemption:list")
     public Result<Page<CrmCrossStoreRedemption>> redemptionPage(
             @RequestParam(defaultValue = "1") long pageNum,
             @RequestParam(defaultValue = "20") long pageSize,
@@ -520,6 +538,7 @@ public class CrossStoreController {
      * 字段：total / today / originalSum / feeSum / netSum / typeDist
      */
     @GetMapping("/redemption/stats")
+    @RequirePermission("crm:cross:redemption:list")
     public Result<Map<String, Object>> redemptionStats(
             @RequestParam(required = false) String dateFrom,
             @RequestParam(required = false) String dateTo) {
@@ -573,6 +592,7 @@ public class CrossStoreController {
 
     @PostMapping("/redemption/{id}/revoke")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:cross:redemption:edit")
     public Result<Map<String, Object>> revoke(@PathVariable Long id, @RequestBody(required = false) Map<String, Object> body) {
         Long t = tid();
         CrmCrossStoreRedemption r = redemptionMapper.selectById(id);
@@ -592,6 +612,7 @@ public class CrossStoreController {
     // ====================================================================
 
     @GetMapping("/member/lookup")
+    @RequirePermission("crm:cross:redemption:list")
     public Result<Map<String, Object>> memberLookup(@RequestParam String phone) {
         Long t = tid();
         if (phone == null || phone.isBlank()) return Result.error(com.meiyetec.exception.BizCode.BAD_REQUEST, "phone 必填");
@@ -642,6 +663,7 @@ public class CrossStoreController {
      */
     @PostMapping("/redemption")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("crm:cross:redemption:edit")
     public Result<Map<String, Object>> submitRedemption(@RequestBody Map<String, Object> body) {
         Long memberId = body.get("memberId") == null ? null : ((Number) body.get("memberId")).longValue();
         Long orderId = body.get("orderId") == null ? null : ((Number) body.get("orderId")).longValue();
@@ -765,6 +787,7 @@ public class CrossStoreController {
      * 会员-门店关联查询
      */
     @GetMapping("/member-store")
+    @RequirePermission("crm:cross:redemption:list")
     public Result<List<Map<String, Object>>> memberStores(@RequestParam(required = false) Long memberId,
                                                           @RequestParam(required = false) Long storeId) {
         StringBuilder sql = new StringBuilder(

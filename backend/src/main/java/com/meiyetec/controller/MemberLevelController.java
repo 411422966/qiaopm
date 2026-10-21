@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.dto.MemberLevelDTO;
@@ -38,6 +39,7 @@ public class MemberLevelController {
     }
 
     @GetMapping("/list")
+    @RequirePermission("member:level:list")
     public Result<List<MemberLevel>> list() {
         Long tid = tenantId();
         LambdaQueryWrapper<MemberLevel> w = new LambdaQueryWrapper<>();
@@ -46,6 +48,7 @@ public class MemberLevelController {
     }
 
     @PostMapping("/page")
+    @RequirePermission("member:level:list")
     public Result<PageResult<MemberLevel>> page(@RequestBody PageQueryDTO query) {
         Page<MemberLevel> page = new Page<>(query.getPageNum(), query.getPageSize());
         LambdaQueryWrapper<MemberLevel> wrapper = new LambdaQueryWrapper<>();
@@ -61,6 +64,7 @@ public class MemberLevelController {
     }
 
     @GetMapping("/stats")
+    @RequirePermission("member:level:list")
     public Result<Map<String, Object>> stats() {
         Long tid = tenantId();
         LambdaQueryWrapper<MemberLevel> w = new LambdaQueryWrapper<>();
@@ -79,6 +83,7 @@ public class MemberLevelController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("member:level:list")
     public Result<MemberLevel> getById(@PathVariable Long id) {
         MemberLevel l = requireLevel(id);
         if (l == null) return Result.error("等级不存在或无权访问");
@@ -86,6 +91,7 @@ public class MemberLevelController {
     }
 
     @PostMapping
+    @RequirePermission("member:level:edit")
     public Result<Void> create(@Valid @RequestBody MemberLevelDTO dto) {
         Long tid = tenantId();
         MemberLevel level = new MemberLevel();
@@ -96,6 +102,7 @@ public class MemberLevelController {
     }
 
     @PutMapping
+    @RequirePermission("member:level:edit")
     public Result<Void> update(@Valid @RequestBody MemberLevelDTO dto) {
         if (dto.getId() == null) return Result.error("ID不能为空");
         MemberLevel level = requireLevel(dto.getId());
@@ -106,6 +113,7 @@ public class MemberLevelController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("member:level:edit")
     public Result<Void> delete(@PathVariable Long id) {
         MemberLevel level = requireLevel(id);
         if (level == null) return Result.error("等级不存在或无权访问");

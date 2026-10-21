@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.LevelBenefit;
@@ -40,6 +41,7 @@ public class LevelBenefitController {
     }
 
     @GetMapping("/list")
+    @RequirePermission("employee:level:benefit")
     public Result<List<Map<String, Object>>> list(@RequestParam(required = false) Long levelId) {
         Long tid = tenantId();
         if (tid != null && levelId != null) {
@@ -52,6 +54,7 @@ public class LevelBenefitController {
     }
 
     @GetMapping("/by-level/{levelId}")
+    @RequirePermission("employee:level:benefit")
     public Result<List<LevelBenefit>> getByLevelId(@PathVariable Long levelId) {
         Long tid = tenantId();
         if (tid != null && levelId != null) {
@@ -64,6 +67,7 @@ public class LevelBenefitController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("employee:level:benefit")
     public Result<LevelBenefit> getById(@PathVariable Long id) {
         LevelBenefit b = requireBenefit(id);
         if (b == null) return Result.error("权益不存在或无权访问");
@@ -71,6 +75,7 @@ public class LevelBenefitController {
     }
 
     @PostMapping
+    @RequirePermission("employee:level:benefit")
     public Result<Void> create(@RequestBody LevelBenefit benefit) {
         Long tid = tenantId();
         if (tid != null && benefit.getLevelId() != null) {
@@ -85,6 +90,7 @@ public class LevelBenefitController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("employee:level:benefit")
     public Result<Void> update(@PathVariable Long id, @RequestBody LevelBenefit benefit) {
         LevelBenefit existing = requireBenefit(id);
         if (existing == null) return Result.error("权益不存在或无权访问");
@@ -95,6 +101,7 @@ public class LevelBenefitController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("employee:level:benefit")
     public Result<Void> delete(@PathVariable Long id) {
         LevelBenefit b = requireBenefit(id);
         if (b == null) return Result.error("权益不存在或无权访问");
@@ -103,6 +110,7 @@ public class LevelBenefitController {
     }
 
     @PostMapping("/batch/{levelId}")
+    @RequirePermission("employee:level:benefit")
     public Result<Void> batchSave(@PathVariable Long levelId, @RequestBody List<LevelBenefit> benefits) {
         Long tid = tenantId();
         if (tid != null) {
