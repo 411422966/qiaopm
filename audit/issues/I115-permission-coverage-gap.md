@@ -1,4 +1,4 @@
-﻿# I115 — 权限注解覆盖率不足（P0）
+# I115 — 权限注解覆盖率不足（P0）
 
 ## 现象
 - 全仓库 137 个 Controller，仅 14 个含 `@RequirePermission`（10.2%）
@@ -57,7 +57,11 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
   - DcepConfigController（5）：sys:dcep:list / edit / test
 - DB 新增 28 个权限码（sys_permission，INSERT IGNORE 幂等）
 - 编译 EXIT=0
-- 覆盖率：<待填>
+- 覆盖率（2026-10-21 第 1 批后）：
+- @RequirePermission 命中：208（原 139，+69）
+- Controller 覆盖：22 / 138（原 14 / 137）
+- 方法覆盖：208 / 1002 = 20.8%（原 7.4%）
+- 提升：Controller 10.2% → 15.9%，方法 7.4% → 20.8%
 - 待办：给 BOSS / MANAGER / CLERK / OPERATOR 角色分配对应权限（sys_role_permission），否则这些角色调上述接口会 403
 
 ## 状态
