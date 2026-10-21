@@ -194,3 +194,19 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1、2、3、4a、4b、4c、4d 批完成，第 4e~4g 批待办
+
+## 第 4e 批完成（2026-10-21，电商/第三方）
+- 扫描 `Ecommerce*` / `Platform*` / `Wx*` / `Push*` / `Sync*` / `Open*` / `Youzan*` 相关 Controller
+- 实际结果：
+  - YouzanWebhookController：webhook 回调，无需权限（外部系统调用）
+  - 其他电商/第三方功能无独立 Controller（EcommerceService 等可能是被别的 Controller 间接调用，或本身未暴露）
+- 权限码查询：电商/第三方域暂无任何权限码
+- 结论：第 4e 批无实际目标，跳过
+
+### 第 4e 批覆盖率（无变化）
+- @RequirePermission 命中：536
+- Controller 覆盖：60 / 138
+- 方法覆盖：536 / 1002 = 53.5%
+
+## 状态
+第 1、2、3、4a、4b、4c、4d、4e 批完成，第 4f~4g 批待办
