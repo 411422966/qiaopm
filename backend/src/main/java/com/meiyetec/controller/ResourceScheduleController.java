@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.Booking;
 import com.meiyetec.service.ResourceScheduleService;
@@ -20,6 +21,7 @@ public class ResourceScheduleController {
     private final ResourceScheduleService resourceScheduleService;
 
     @GetMapping("/check-conflict")
+    @RequirePermission("resource:schedule:view")
     public Result<ResourceScheduleService.ConflictCheckResult> checkConflict(
             @RequestParam(required = false) Long roomId,
             @RequestParam(required = false) Long employeeId,
@@ -31,6 +33,7 @@ public class ResourceScheduleController {
     }
 
     @GetMapping("/suggest")
+    @RequirePermission("resource:schedule:view")
     public Result<List<ResourceScheduleService.ScheduleSuggestion>> suggest(
             @RequestParam Long serviceId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
@@ -39,6 +42,7 @@ public class ResourceScheduleController {
     }
 
     @PostMapping("/create")
+    @RequirePermission("resource:schedule:edit")
     public Result<Booking> createSchedule(@RequestBody Booking booking,
                                           @RequestParam(defaultValue = "manual_resolve") String conflictResolveAction) {
         return Result.success("创建成功", resourceScheduleService.createSchedule(booking, conflictResolveAction));

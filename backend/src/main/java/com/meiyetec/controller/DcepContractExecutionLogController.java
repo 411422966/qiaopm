@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.DcepContractExecutionLog;
 import com.meiyetec.service.DcepContractExecutionLogService;
@@ -18,6 +19,7 @@ public class DcepContractExecutionLogController {
     private final DcepContractExecutionLogService logService;
 
     @GetMapping("/list")
+    @RequirePermission("dcep:contract:log:list")
     public Result<List<DcepContractExecutionLog>> list(@RequestParam(required = false) Long contractId) {
         return Result.success(logService.queryList(contractId));
     }

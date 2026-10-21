@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.SubscriptionMember;
 import com.meiyetec.entity.SubscriptionPlan;
 import com.meiyetec.exception.BizCode;
@@ -43,6 +44,7 @@ public class SubscriptionController {
     // ==================== 计划管理 ====================
 
     @PostMapping("/plan")
+    @RequirePermission("subscription:plan:edit")
     public Result<SubscriptionPlan> createPlan(@RequestBody SubscriptionPlan p) {
         Long tenantId = tid();
         if (p.getPlanCode() == null || p.getPlanName() == null)
@@ -52,11 +54,13 @@ public class SubscriptionController {
     }
 
     @GetMapping("/plan/list")
+    @RequirePermission("subscription:plan:list")
     public Result<List<SubscriptionPlan>> listPlans() {
         return Result.success(subscriptionService.listPlans(tid()));
     }
 
     @PostMapping("/plan/init-default")
+    @RequirePermission("subscription:plan:edit")
     public Result<Map<String, Object>> initDefaults() {
         int created = subscriptionService.initDefaults(tid());
         return Result.success("已初始化", Map.of("created", created));
@@ -65,6 +69,7 @@ public class SubscriptionController {
     // ==================== 订阅管理 ====================
 
     @PostMapping("/subscribe")
+    @RequirePermission("subscription:member:edit")
     public Result<SubscriptionMember> subscribe(@RequestBody Map<String, Object> body) {
         Long tenantId = tid();
         if (body.get("planId") == null || body.get("memberId") == null)
@@ -80,6 +85,7 @@ public class SubscriptionController {
     }
 
     @PostMapping("/{id:\\d+}/cancel")
+    @RequirePermission("subscription:member:edit")
     public Result<Void> cancel(@PathVariable Long id, @RequestBody(required = false) Map<String, Object> body) {
         String reason = body == null ? null : (String) body.get("reason");
         subscriptionService.cancel(id, tid(), reason);
@@ -87,23 +93,27 @@ public class SubscriptionController {
     }
 
     @PostMapping("/{id:\\d+}/pause")
+    @RequirePermission("subscription:member:edit")
     public Result<Void> pause(@PathVariable Long id) {
         subscriptionService.pause(id, tid());
         return Result.success("已暂停", null);
     }
 
     @PostMapping("/{id:\\d+}/resume")
+    @RequirePermission("subscription:member:edit")
     public Result<Void> resume(@PathVariable Long id) {
         subscriptionService.resume(id, tid());
         return Result.success("已恢复", null);
     }
 
     @GetMapping("/by-member/{memberId:\\d+}")
+    @RequirePermission("subscription:member:list")
     public Result<List<SubscriptionMember>> byMember(@PathVariable Long memberId) {
         return Result.success(subscriptionService.byMember(memberId, tid()));
     }
 
     @PostMapping("/use")
+    @RequirePermission("subscription:member:edit")
     public Result<Void> use(@RequestBody Map<String, Object> body) {
         if (body.get("memberId") == null)
             return Result.error(BizCode.BAD_REQUEST, "memberId 必填");
@@ -115,6 +125,7 @@ public class SubscriptionController {
     // ==================== 仪表盘 ====================
 
     @GetMapping("/dashboard")
+    @RequirePermission("subscription:member:list")
     public Result<Map<String, Object>> dashboard() {
         return Result.success(subscriptionService.dashboard(tid()));
     }

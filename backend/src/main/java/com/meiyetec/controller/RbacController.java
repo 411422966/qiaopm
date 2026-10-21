@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.dto.RbacSessionDTO;
 import com.meiyetec.dto.RoleUpsertDTO;
 import com.meiyetec.entity.SysRole;
@@ -38,22 +39,26 @@ public class RbacController {
     }
 
     @GetMapping("/sys/role/list")
+    @RequirePermission("sys:role:list")
     public Result<List<SysRole>> listRoles() {
         return Result.success(rbacService.listRoles());
     }
 
     @PostMapping("/sys/role")
+    @RequirePermission("sys:role:add")
     public Result<SysRole> createRole(@RequestBody RoleUpsertDTO dto) {
         return Result.success("创建成功", rbacService.createRole(dto));
     }
 
     @PutMapping("/sys/role/{id}")
+    @RequirePermission("sys:role:edit")
     public Result<Void> updateRole(@PathVariable Long id, @RequestBody RoleUpsertDTO dto) {
         rbacService.updateRole(id, dto);
         return Result.success("更新成功", null);
     }
 
     @DeleteMapping("/sys/role/{id}")
+    @RequirePermission("sys:role:delete")
     public Result<Void> deleteRole(@PathVariable Long id) {
         rbacService.deleteRole(id);
         return Result.success("删除成功", null);

@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.IotDeviceData;
@@ -29,6 +30,7 @@ public class IotDeviceDataController {
     }
 
     @GetMapping("/list")
+    @RequirePermission("iot:data:list")
     public Result<List<IotDeviceData>> list(
             @RequestParam(required = false) Long deviceId,
             @RequestParam(required = false) Long memberId,
@@ -39,11 +41,13 @@ public class IotDeviceDataController {
     }
 
     @GetMapping("/member/{memberId}/recent")
+    @RequirePermission("iot:data:list")
     public Result<List<IotDeviceData>> recentByMember(@PathVariable Long memberId) {
         return Result.success(dataService.recentByMember(tid(), memberId));
     }
 
     @GetMapping("/member/{memberId}/trend")
+    @RequirePermission("iot:data:list")
     public Result<List<Map<String, Object>>> trendByMember(
             @PathVariable Long memberId,
             @RequestParam String dataType,
@@ -53,6 +57,7 @@ public class IotDeviceDataController {
     }
 
     @PostMapping
+    @RequirePermission("iot:data:edit")
     public Result<IotDeviceData> create(@RequestBody IotDeviceData data) {
         data.setTenantId(tid());
         if (data.getStoreId() == null) data.setStoreId(1L);
@@ -61,6 +66,7 @@ public class IotDeviceDataController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("iot:data:edit")
     public Result<Void> delete(@PathVariable Long id) {
         IotDeviceData exist = dataService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "数据不存在");

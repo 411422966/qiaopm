@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.StockInventory;
 import com.meiyetec.exception.BizCode;
@@ -21,6 +22,7 @@ public class ExpiryScanController {
     private final ExpiryScanService expiryScanService;
 
     @PostMapping("/trigger")
+    @RequirePermission("stock:expiry:edit")
     public Result<Map<String, Object>> trigger(@RequestParam(required = false) Long storeId) {
         Long tid = TenantContextHolder.get().getTenantId();
         if (tid == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -29,6 +31,7 @@ public class ExpiryScanController {
     }
 
     @GetMapping("/near-expiry")
+    @RequirePermission("stock:expiry:view")
     public Result<List<StockInventory>> nearExpiry(
             @RequestParam(required = false) Long storeId,
             @RequestParam(defaultValue = "30") Integer withinDays) {

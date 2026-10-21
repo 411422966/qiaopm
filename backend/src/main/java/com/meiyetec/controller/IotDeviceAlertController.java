@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.IotDeviceAlert;
@@ -27,6 +28,7 @@ public class IotDeviceAlertController {
     }
 
     @GetMapping("/list")
+    @RequirePermission("iot:alert:list")
     public Result<List<IotDeviceAlert>> list(
             @RequestParam(required = false) Long deviceId,
             @RequestParam(required = false) String alertLevel,
@@ -36,6 +38,7 @@ public class IotDeviceAlertController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("iot:alert:list")
     public Result<IotDeviceAlert> getById(@PathVariable Long id) {
         IotDeviceAlert a = alertService.getById(id);
         if (a == null || !tid().equals(a.getTenantId())) return Result.error(BizCode.NOT_FOUND, "告警不存在");
@@ -43,6 +46,7 @@ public class IotDeviceAlertController {
     }
 
     @PostMapping
+    @RequirePermission("iot:alert:edit")
     public Result<IotDeviceAlert> create(@RequestBody IotDeviceAlert alert) {
         alert.setTenantId(tid());
         if (alert.getStoreId() == null) alert.setStoreId(1L);
@@ -51,6 +55,7 @@ public class IotDeviceAlertController {
     }
 
     @PutMapping("/{id:\\d+}/handle")
+    @RequirePermission("iot:alert:edit")
     public Result<Void> handle(@PathVariable Long id, @RequestBody IotDeviceAlert params) {
         IotDeviceAlert alert = alertService.getById(id);
         if (alert == null || !tid().equals(alert.getTenantId())) return Result.error(BizCode.NOT_FOUND, "告警不存在");
@@ -64,6 +69,7 @@ public class IotDeviceAlertController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("iot:alert:edit")
     public Result<Void> delete(@PathVariable Long id) {
         IotDeviceAlert exist = alertService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "告警不存在");

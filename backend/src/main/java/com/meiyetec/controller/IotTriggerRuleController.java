@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.IotTriggerRule;
@@ -26,6 +27,7 @@ public class IotTriggerRuleController {
     }
 
     @GetMapping("/list")
+    @RequirePermission("iot:rule:list")
     public Result<List<IotTriggerRule>> list(@RequestParam(required = false) Integer enabled) {
         LambdaQueryWrapper<IotTriggerRule> qw = new LambdaQueryWrapper<>();
         qw.eq(IotTriggerRule::getTenantId, tid());
@@ -34,6 +36,7 @@ public class IotTriggerRuleController {
         return Result.success(ruleService.list(qw));
     }
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("iot:rule:list")
     public Result<IotTriggerRule> getById(@PathVariable Long id) {
         IotTriggerRule r = ruleService.getById(id);
         if (r == null || !tid().equals(r.getTenantId())) return Result.error(BizCode.NOT_FOUND, "规则不存在");
@@ -41,6 +44,7 @@ public class IotTriggerRuleController {
     }
 
     @PostMapping
+    @RequirePermission("iot:rule:edit")
     public Result<IotTriggerRule> create(@RequestBody IotTriggerRule rule) {
         rule.setTenantId(tid());
         if (rule.getStoreId() == null) rule.setStoreId(1L);
@@ -50,6 +54,7 @@ public class IotTriggerRuleController {
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("iot:rule:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody IotTriggerRule rule) {
         IotTriggerRule exist = ruleService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "规则不存在");
@@ -60,6 +65,7 @@ public class IotTriggerRuleController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("iot:rule:edit")
     public Result<Void> delete(@PathVariable Long id) {
         IotTriggerRule exist = ruleService.getById(id);
         if (exist == null || !tid().equals(exist.getTenantId())) return Result.error(BizCode.NOT_FOUND, "规则不存在");
@@ -68,6 +74,7 @@ public class IotTriggerRuleController {
     }
 
     @GetMapping("/active")
+    @RequirePermission("iot:rule:list")
     public Result<List<IotTriggerRule>> active(
             @RequestParam(required = false) String deviceType,
             @RequestParam(required = false) String dataType) {

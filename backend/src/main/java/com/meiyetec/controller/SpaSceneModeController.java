@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.dto.SpaSceneRecommendDTO;
 import com.meiyetec.entity.SpaSceneMode;
@@ -22,38 +23,45 @@ public class SpaSceneModeController {
     }
 
     @GetMapping("/list")
+    @RequirePermission("spa:scene:list")
     public Result<List<SpaSceneMode>> list(@RequestParam(required = false) Integer status) {
         return Result.success(sceneService.listAll(status));
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("spa:scene:list")
     public Result<SpaSceneMode> get(@PathVariable Long id) {
         return Result.success(sceneService.getById(id));
     }
 
     @PostMapping
+    @RequirePermission("spa:scene:edit")
     public Result<SpaSceneMode> create(@RequestBody SpaSceneMode entity) {
         return Result.success("创建成功", sceneService.save(entity));
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("spa:scene:edit")
     public Result<SpaSceneMode> update(@PathVariable Long id, @RequestBody SpaSceneMode entity) {
         entity.setId(id);
         return Result.success("更新成功", sceneService.update(entity));
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("spa:scene:edit")
     public Result<Void> delete(@PathVariable Long id) {
         sceneService.delete(id);
         return Result.success("删除成功", null);
     }
 
     @GetMapping("/{id:\\d+}/slots")
+    @RequirePermission("spa:scene:list")
     public Result<List<SpaSceneRoomSlot>> listSlots(@PathVariable Long id) {
         return Result.success(sceneService.listSlots(id));
     }
 
     @PutMapping("/{id:\\d+}/slots")
+    @RequirePermission("spa:scene:edit")
     public Result<Void> saveSlots(@PathVariable Long id,
                                   @RequestBody List<SpaSceneRoomSlot> slots) {
         sceneService.saveSlots(id, slots);
@@ -61,6 +69,7 @@ public class SpaSceneModeController {
     }
 
     @GetMapping("/{id:\\d+}/recommend")
+    @RequirePermission("spa:scene:list")
     public Result<SpaSceneRecommendDTO> recommend(@PathVariable Long id) {
         return Result.success(sceneService.recommend(id));
     }

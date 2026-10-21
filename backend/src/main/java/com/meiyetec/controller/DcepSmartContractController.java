@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.DcepSmartContract;
 import com.meiyetec.service.DcepSmartContractService;
@@ -21,6 +22,7 @@ public class DcepSmartContractController {
     private final DcepSmartContractService contractService;
 
     @GetMapping("/list")
+    @RequirePermission("dcep:contract:list")
     public Result<List<DcepSmartContract>> list(
             @RequestParam(required = false) String contractType,
             @RequestParam(required = false) String status,
@@ -29,11 +31,13 @@ public class DcepSmartContractController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("dcep:contract:list")
     public Result<DcepSmartContract> getById(@PathVariable Long id) {
         return Result.success(contractService.getById(id));
     }
 
     @PostMapping("/deploy")
+    @RequirePermission("dcep:contract:edit")
     public Result<DcepSmartContract> deploy(@RequestBody Map<String, Object> params) {
         String contractName = (String) params.get("contractName");
         String contractType = (String) params.get("contractType");
@@ -47,12 +51,14 @@ public class DcepSmartContractController {
     }
 
     @PostMapping("/{id:\\d+}/trigger")
+    @RequirePermission("dcep:contract:edit")
     public Result<Void> trigger(@PathVariable Long id, @RequestParam String action) {
         contractService.triggerContract(id, action);
         return Result.success("执行成功", null);
     }
 
     @PostMapping("/auto-execute-expired")
+    @RequirePermission("dcep:contract:edit")
     public Result<Integer> autoExecute() {
         return Result.success(contractService.autoExecuteExpired());
     }

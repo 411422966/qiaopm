@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.DcepOfflineTransaction;
 import com.meiyetec.exception.BizCode;
@@ -22,6 +23,7 @@ public class DcepOfflineTransactionController {
     private final DcepOfflineTransactionService offlineService;
 
     @GetMapping("/list")
+    @RequirePermission("dcep:offline:list")
     public Result<List<DcepOfflineTransaction>> list(
             @RequestParam(required = false) Long walletId,
             @RequestParam(required = false) String syncStatus,
@@ -31,6 +33,7 @@ public class DcepOfflineTransactionController {
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("dcep:offline:list")
     public Result<DcepOfflineTransaction> getById(@PathVariable Long id) {
         DcepOfflineTransaction tx = offlineService.getById(id);
         if (tx == null) return Result.error(BizCode.NOT_FOUND, "离线交易不存在");
@@ -41,6 +44,7 @@ public class DcepOfflineTransactionController {
     }
 
     @PostMapping("/create")
+    @RequirePermission("dcep:offline:edit")
     public Result<DcepOfflineTransaction> create(@RequestBody Map<String, Object> params) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (tenantId == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
@@ -55,6 +59,7 @@ public class DcepOfflineTransactionController {
     }
 
     @PostMapping("/sync/{offlineTxNo}")
+    @RequirePermission("dcep:offline:edit")
     public Result<DcepOfflineTransaction> sync(@PathVariable String offlineTxNo) {
         DcepOfflineTransaction existing = offlineService.findByOfflineTxNo(offlineTxNo);
         if (existing == null) return Result.error(BizCode.NOT_FOUND, "离线交易不存在");
@@ -65,6 +70,7 @@ public class DcepOfflineTransactionController {
     }
 
     @GetMapping("/detect-double-spend")
+    @RequirePermission("dcep:offline:list")
     public Result<Boolean> detectDoubleSpend(
             @RequestParam Long walletId,
             @RequestParam String offlineCert) {

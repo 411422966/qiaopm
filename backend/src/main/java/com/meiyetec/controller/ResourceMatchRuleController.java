@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.ResourceMatchRule;
 import com.meiyetec.mapper.ResourceMatchRuleMapper;
@@ -18,27 +19,32 @@ public class ResourceMatchRuleController {
     private final ResourceMatchRuleMapper resourceMatchRuleMapper;
 
     @GetMapping("/list")
+    @RequirePermission("resource:match-rule:list")
     public Result<List<ResourceMatchRule>> list() {
         return Result.success(resourceMatchRuleMapper.selectList(null));
     }
 
     @GetMapping("/{id:\\d+}")
+    @RequirePermission("resource:match-rule:list")
     public Result<ResourceMatchRule> getById(@PathVariable Long id) {
         return Result.success(resourceMatchRuleMapper.selectById(id));
     }
 
     @GetMapping("/service/{serviceId}")
+    @RequirePermission("resource:match-rule:list")
     public Result<ResourceMatchRule> getByService(@PathVariable Long serviceId) {
         return Result.success(resourceMatchRuleMapper.findByServiceId(serviceId));
     }
 
     @PostMapping
+    @RequirePermission("resource:match-rule:edit")
     public Result<Void> create(@RequestBody ResourceMatchRule rule) {
         resourceMatchRuleMapper.insert(rule);
         return Result.success("创建成功", null);
     }
 
     @PutMapping("/{id:\\d+}")
+    @RequirePermission("resource:match-rule:edit")
     public Result<Void> update(@PathVariable Long id, @RequestBody ResourceMatchRule rule) {
         rule.setId(id);
         resourceMatchRuleMapper.updateById(rule);
@@ -46,6 +52,7 @@ public class ResourceMatchRuleController {
     }
 
     @DeleteMapping("/{id:\\d+}")
+    @RequirePermission("resource:match-rule:edit")
     public Result<Void> delete(@PathVariable Long id) {
         resourceMatchRuleMapper.deleteById(id);
         return Result.success("删除成功", null);
