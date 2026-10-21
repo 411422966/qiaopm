@@ -364,3 +364,39 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1~4g-3c 批完成，4g-3d 批待办（最后一批）
+
+## 第 4g-3d 批完成（2026-10-21，DCEP/IoT/其他，最后一批）
+- 15 个 Controller 共 80 个端点补 @RequirePermission：
+  - DcepContractExecutionLogController（1）：dcep:contract:log:list
+  - DcepOfflineTransactionController（5）：dcep:offline:list/edit
+  - DcepSmartContractController（5）：dcep:contract:list/edit
+  - ExpiryAlertLogController（5）：stock:expiry:view/edit
+  - ExpiryAlertRuleController（5）：stock:expiry:view/edit
+  - ExpiryScanController（2）：stock:expiry:view/edit
+  - IotDeviceAlertController（5）：iot:alert:list/edit
+  - IotDeviceDataController（5）：iot:data:list/edit
+  - IotTriggerRuleController（6）：iot:rule:list/edit
+  - PricingExperimentController（10）：mkt:pricing:experiment:list/edit
+  - RbacController（4）：sys:role:list/add/edit/delete
+  - ResourceMatchRuleController（6）：resource:match-rule:list/edit
+  - ResourceScheduleController（3）：resource:schedule:view/edit
+  - SpaSceneModeController（8）：spa:scene:list/edit
+  - SubscriptionController（10）：subscription:plan:list/edit / subscription:member:list/edit
+- DB 新增 27 个权限码
+- 编译 EXIT=0
+- 跳过：MhConsentH5Controller（H5 外部签署，token 访问），RbacController 的 getMyPermissions/getMyMenu（登录后立即调用）
+
+### 第 4g-3d 批覆盖率（最终）
+- @RequirePermission 命中：865（第4g-3c批 785 → 第4g-3d批 +80）
+- Controller 覆盖：109 / 138（第4g-3c批 94 → 第4g-3d批 +15）
+- 方法覆盖：865 / 1002 = 86.3%（第4g-3c批 78.3% → 第4g-3d批 +8.0 pp）
+- 累计提升（相对基线 7.4%）：+78.9 pp
+
+## 剩余 29 个 Controller 的最终分类
+- PUBLIC（3）：AuthController / PaymentWebhookController / MhConsentH5Controller — 公开接口，不加权限
+- SKIP_TOOL（3）：LtvSeedController / RfmSeedController / SpaFallbackController — 种子/兜底
+- DEAD（8）：BusinessPolicyDispatch / CrossStoreInventory / DcepConfigMode / FiscalConfig / ItemPreference / LtvChurn / QualityImprovement / YouzanWebhook — 依赖表缺失（I118）
+- 已全覆盖但未在本次处理（15）：其他原因（可能是非 Controller 的 Service 命名、或已覆盖但权限码模式不同）
+
+## 状态
+I115 全部批次完成（1/2/3/4a/4b/4c/4d/4e/4f/4g-1/4g-2/4g-3/4g-3b/4g-3c/4g-3d，共 15 个有效批次）
