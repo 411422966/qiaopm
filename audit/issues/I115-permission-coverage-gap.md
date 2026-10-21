@@ -210,3 +210,21 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1、2、3、4a、4b、4c、4d、4e 批完成，第 4f~4g 批待办
+
+## 第 4f 批完成（2026-10-21，插件/运行时）
+- PluginRuntimeController 10 个端点补 @RequirePermission：
+  - list / dashboard / persisted / listTenant → plugin:runtime:list
+  - load / enable / disable / unload → plugin:runtime:edit
+  - enableForTenant / disableForTenant → plugin:runtime:tenant:edit
+- DB 新增 3 个权限码
+- 插件表 plugin_install / plugin_market / plugin_review / plugin_runtime_state 均存在（真业务）
+- 编译 EXIT=0
+
+### 第 4f 批覆盖率
+- @RequirePermission 命中：546（第4e批 536 → 第4f批 +10）
+- Controller 覆盖：61 / 138（第4e批 60 → 第4f批 +1）
+- 方法覆盖：546 / 1002 = 54.5%（第4e批 53.5% → 第4f批 +1.0 pp）
+- 累计提升（相对基线 7.4%）：+47.1 pp
+
+## 状态
+第 1、2、3、4a~4f 批完成，第 4g 批待办
