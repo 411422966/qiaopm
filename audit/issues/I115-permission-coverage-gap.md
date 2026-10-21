@@ -272,3 +272,34 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1~4g-2 批完成，第 4g-3 批待办
+
+## 第 4g-3 批完成（2026-10-21，剩余杂项第一批）
+- 7 个 Controller 共 32 个端点补 @RequirePermission：
+  - CustomerCareController（1）：crm:care:complaint:reply
+  - DetectionDiagnosisController（1）：crm:detection:diagnosis:view
+  - DomesticPayController（5，webhook 排除）：domestic-payment:prepay/query/refund/close/health
+  - RepurchaseRateController（3）：report:repurchase:view
+  - PriceSensitivityController（4）：report:price-sensitivity:view
+  - RfmBatchController（4）：report:rfm:batch:run
+  - ExpiryController（14）：stock:expiry:view/edit
+- DB 新增 12 个权限码
+- 编译 EXIT=0
+- 跳过：LtvSeedController / RfmSeedController（种子工具），SpaFallbackController（路由兜底），AuthController / PaymentWebhookController / YouzanWebhookController（公开/webhook）
+- 已知风险：ExpiryController 的 handleAlert/ignoreAlert/createHandle 依赖 biz_expiry_handle_log 表（DB 不存在），调用会 500（I118 同类问题）
+
+### 第 4g-3 批第一批覆盖率
+- @RequirePermission 命中：625（第4g-2批 593 → 第4g-3批第一批 +32）
+- Controller 覆盖：74 / 138（第4g-2批 67 → 第4g-3批第一批 +7）
+- 方法覆盖：625 / 1002 = 62.4%（第4g-2批 59.2% → 第4g-3批第一批 +3.2 pp）
+- 累计提升（相对基线 7.4%）：+55.0 pp
+
+## 待办：第 4g-3 批第二批
+剩余 36 个 LIVE Controller（约 200+ 端点）待处理：
+- 关怀检测类：CareRecipe / CareSuggestion* / Complaint / Detection* / HairDetection / NailDetection / SkinDetection
+- CRM 会员类：Cohort / CrossStore / MemberLevel / MemberLifecycle / MemberMessage / MemberStylePreference / MemberTag
+- 等级类：LevelBenefit / LevelEvaluation
+- DCEP/IoT 类：DcepContractExecutionLog / DcepOfflineTransaction / DcepSmartContract / IotDeviceAlert / IotDeviceData / IotTriggerRule
+- 其他：Blockchain / PricingExperiment / Rbac / ResourceMatchRule / ResourceSchedule / SpaSceneMode / Subscription / MhConsentH5
+
+## 状态
+第 1~4g-2 批 + 4g-3 第一批完成，4g-3 第二批待办
