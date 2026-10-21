@@ -131,3 +131,26 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1、2、3、4a 批完成，第 4b~4g 批待办
+
+## 第 4b 批完成（2026-10-21，商品/服务/套餐）
+- 8 个 Controller 共 57 个端点补 @RequirePermission：
+  - BizServiceItemController（5）：biz:service-item:list/edit
+  - CategoryController（7）：category:list/edit
+  - PackageController（补 16，原 6 → 22）：package:list/add/purchase/refund/edit/delete/redeem
+  - ServiceMaterialController（5）：material:binding:list/edit
+  - ServiceMaterialCostController（2）：material:cost:list
+  - ServiceMaterialDeductController（2）：material:deduct:manage
+  - StyleGalleryController（7）：style:gallery:list/edit
+  - StyleLibraryController（13）：style:library:list/edit
+- DB 新增 13 个权限码，复用 9 个现有 package:* 权限码
+- 编译 EXIT=0
+- 跳过：ServiceMaterialDeductLogController / ServiceMaterialGroupController / ServiceMaterialRuleController（I118 已关闭）
+
+### 第 4b 批覆盖率
+- @RequirePermission 命中：441（第4a批 384 → 第4b批 +57）
+- Controller 覆盖：52 / 138（第4a批 44 → 第4b批 +8）
+- 方法覆盖：441 / 1002 = 44.0%（第4a批 38.3% → 第4b批 +5.7 pp）
+- 累计提升（相对基线 7.4%）：+36.6 pp
+
+## 状态
+第 1、2、3、4a、4b 批完成，第 4c~4g 批待办
