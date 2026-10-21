@@ -248,3 +248,27 @@ StockController / StockDualVerifyController / SysPermissionController / WalletCo
 
 ## 状态
 第 1、2、3、4a~4f、4g-1 批完成，第 4g-2/4g-3 批待办
+
+## 第 4g-2 批完成（2026-10-21，AI/IoT/LBS/DCEP 剩余）
+- 扫描结果：8 个 LIVE，但仅 1 个真业务（IotDeviceLinkController）
+- 处理：IotDeviceLinkController（10）：iot:link:list/edit/execute
+- 跳过（依赖表在 DB 不存在，I118 同类死代码）：
+  - DcepConfigModeController（dcep_config 缺失）
+  - DcepContractExecutionLogController（dcep_contract_execution_log 缺失）
+  - DcepOfflineTransactionController（dcep_offline_transaction 缺失）
+  - DcepSmartContractController（dcep_smart_contract 缺失）
+  - IotDeviceAlertController（iot_device_alert 缺失）
+  - IotDeviceDataController（iot_device_data 缺失）
+  - IotTriggerRuleController（iot_trigger_rule 缺失）
+- DB 新增 3 个权限码
+- 编译 EXIT=0
+- 注意：IotDeviceLinkController 的 logPage/logDetail 依赖 iot_device_link_log 表（不存在），调用会 500，属 I118 同类问题
+
+### 第 4g-2 批覆盖率
+- @RequirePermission 命中：593（第4g-1批 583 → 第4g-2批 +10）
+- Controller 覆盖：66 / 138
+- 方法覆盖：593 / 1002 = 59.2%
+- 累计提升（相对基线 7.4%）：+51.8 pp
+
+## 状态
+第 1~4g-2 批完成，第 4g-3 批待办
