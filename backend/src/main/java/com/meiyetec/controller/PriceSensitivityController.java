@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.service.PriceSensitivityService;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
@@ -31,21 +32,25 @@ public class PriceSensitivityController {
     private final PriceSensitivityService service;
 
     @GetMapping("/overview")
+    @RequirePermission("report:price-sensitivity:view")
     public Result<Map<String, Object>> overview() {
         return service.overview();
     }
 
     @GetMapping("/curve")
+    @RequirePermission("report:price-sensitivity:view")
     public Result<Map<String, Object>> curve(@RequestParam Long projectId) {
         return service.curve(projectId);
     }
 
     @GetMapping("/segments")
+    @RequirePermission("report:price-sensitivity:view")
     public Result<Map<String, Object>> segments() {
         return service.segments();
     }
 
     @GetMapping("/matrix")
+    @RequirePermission("report:price-sensitivity:view")
     public Result<Map<String, Object>> matrix(@RequestParam(required = false) Integer topN) {
         return service.matrix(topN);
     }

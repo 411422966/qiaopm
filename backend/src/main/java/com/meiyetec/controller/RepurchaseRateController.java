@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.security.TenantContextHolder;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,7 @@ public class RepurchaseRateController {
     // 1. 总览：当前 30 天复购率
     // ================================================================
     @GetMapping("/overview")
+    @RequirePermission("report:repurchase:view")
     public Result<Map<String, Object>> overview(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) String endDate) {
@@ -66,6 +68,7 @@ public class RepurchaseRateController {
     // 2. 月度趋势：最近 N 个月（每月口径 = 当月自然月内复购率）
     // ================================================================
     @GetMapping("/trend")
+    @RequirePermission("report:repurchase:view")
     public Result<List<Map<String, Object>>> trend(
             @RequestParam(required = false) Long storeId,
             @RequestParam(defaultValue = "6") int months) {
@@ -97,6 +100,7 @@ public class RepurchaseRateController {
     //    L1 = 仅 1 次（潜在复购），L2 = 2 次（已复购），L3 = 3-4 次（高频），L4 = 5+ 次（忠诚）
     // ================================================================
     @GetMapping("/tier")
+    @RequirePermission("report:repurchase:view")
     public Result<Map<String, Object>> tier(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) String endDate) {

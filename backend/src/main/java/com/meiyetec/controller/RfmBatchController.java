@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.exception.BizCode;
 import com.meiyetec.security.TenantContextHolder;
 import com.meiyetec.service.RfmBatchExecutor;
@@ -42,6 +43,7 @@ public class RfmBatchController {
     // 启动批量
     // ----------------------------------------------------------------
     @PostMapping("/batch/run")
+    @RequirePermission("report:rfm:batch:run")
     public Result<Map<String, Object>> runBatch(@RequestBody(required = false) Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (tenantId == null) return Result.error(BizCode.BAD_REQUEST, "未识别租户");
@@ -66,6 +68,7 @@ public class RfmBatchController {
     // 启动种子数据生成（仅异步 RFM 重算；造会员/订单的同步 INSERT 由 /seed 端点处理，见 RfmSeedController）
     // ----------------------------------------------------------------
     @PostMapping("/seed/run")
+    @RequirePermission("report:rfm:batch:run")
     public Result<Map<String, Object>> runSeed(@RequestBody(required = false) Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (tenantId == null) return Result.error(BizCode.BAD_REQUEST, "未识别租户");
@@ -88,6 +91,7 @@ public class RfmBatchController {
     // 取消
     // ----------------------------------------------------------------
     @PostMapping("/batch/cancel/{taskId}")
+    @RequirePermission("report:rfm:batch:run")
     public Result<Map<String, Object>> cancel(@PathVariable("taskId") long taskId) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (tenantId == null) return Result.error(BizCode.BAD_REQUEST, "未识别租户");
@@ -123,6 +127,7 @@ public class RfmBatchController {
     // 查进度（前端轮询，1~2 秒一次）
     // ----------------------------------------------------------------
     @GetMapping("/batch/progress/{taskId}")
+    @RequirePermission("report:rfm:batch:run")
     public Result<Map<String, Object>> progress(@PathVariable("taskId") long taskId) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (tenantId == null) return Result.error(BizCode.BAD_REQUEST, "未识别租户");

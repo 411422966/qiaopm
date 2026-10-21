@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.service.DetectionDiagnosisService;
 import com.meiyetec.util.Result;
@@ -17,6 +18,7 @@ public class DetectionDiagnosisController {
     private final DetectionDiagnosisService detectionDiagnosisService;
 
     @GetMapping("/all/{memberId}")
+    @RequirePermission("crm:detection:diagnosis:view")
     public Result<List<String>> diagnoseAll(@PathVariable Long memberId) {
         return Result.success(detectionDiagnosisService.diagnoseAll(memberId));
     }

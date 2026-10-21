@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.service.CustomerCareService;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,7 @@ public class CustomerCareController {
     // ====================================================================
 
     @PostMapping("/complaint/{id}/reply")
+    @RequirePermission("crm:care:complaint:reply")
     public Result<Void> replyComplaint(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         return careService.replyComplaint(id, body);
     }

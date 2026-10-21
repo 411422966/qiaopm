@@ -1,5 +1,6 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
@@ -46,6 +47,7 @@ public class ExpiryController {
     // ==================== 看板 / 统计 ====================
 
     @GetMapping("/dashboard")
+    @RequirePermission("stock:expiry:view")
     public Result<Map<String, Object>> dashboard() {
         Long tid = currentTenantIdOrReject();
         LocalDate today = LocalDate.now();
@@ -101,6 +103,7 @@ public class ExpiryController {
     }
 
     @GetMapping("/total-loss")
+    @RequirePermission("stock:expiry:view")
     public Result<Map<String, Object>> totalLoss() {
         Long tid = currentTenantIdOrReject();
         Map<String, Object> r = jdbc.queryForMap(
@@ -114,6 +117,7 @@ public class ExpiryController {
     }
 
     @GetMapping("/statistics/method")
+    @RequirePermission("stock:expiry:view")
     public Result<List<Map<String, Object>>> statisticsByMethod(
             @RequestParam(required = false) String dateFrom,
             @RequestParam(required = false) String dateTo) {
@@ -138,6 +142,7 @@ public class ExpiryController {
     // ==================== 扫描 / 临期批次 ====================
 
     @PostMapping("/scan/trigger")
+    @RequirePermission("stock:expiry:edit")
     public Result<Map<String, Object>> triggerScan(@RequestBody(required = false) Map<String, Object> body) {
         Long tid = currentTenantIdOrReject();
         Long storeId = body == null || body.get("storeId") == null ? null
@@ -148,6 +153,7 @@ public class ExpiryController {
     }
 
     @GetMapping("/near-expiry")
+    @RequirePermission("stock:expiry:view")
     public Result<List<Map<String, Object>>> nearExpiry(
             @RequestParam(required = false) Long storeId,
             @RequestParam(defaultValue = "30") Integer withinDays) {
@@ -174,6 +180,7 @@ public class ExpiryController {
     // ==================== 预警日志 ====================
 
     @GetMapping("/alerts")
+    @RequirePermission("stock:expiry:view")
     public Result<PageResult<BizExpiryAlertLog>> alerts(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -193,6 +200,7 @@ public class ExpiryController {
 
     @PostMapping("/alerts/{id}/handle")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("stock:expiry:edit")
     public Result<BizExpiryAlertLog> handleAlert(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         Long tid = currentTenantIdOrReject();
         BizExpiryAlertLog log = alertLogMapper.selectById(id);
@@ -237,6 +245,7 @@ public class ExpiryController {
     }
 
     @PostMapping("/alerts/{id}/ignore")
+    @RequirePermission("stock:expiry:edit")
     public Result<BizExpiryAlertLog> ignoreAlert(@PathVariable Long id) {
         Long tid = currentTenantIdOrReject();
         BizExpiryAlertLog log = alertLogMapper.selectById(id);
@@ -252,6 +261,7 @@ public class ExpiryController {
     // ==================== 处理记录 ====================
 
     @GetMapping("/handles")
+    @RequirePermission("stock:expiry:view")
     public Result<PageResult<BizExpiryHandleLog>> handles(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -271,6 +281,7 @@ public class ExpiryController {
 
     @PostMapping("/handles")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("stock:expiry:edit")
     public Result<BizExpiryHandleLog> createHandle(@RequestBody BizExpiryHandleLog body) {
         Long tid = currentTenantIdOrReject();
         if (body.getHandleMethod() == null) {
@@ -289,6 +300,7 @@ public class ExpiryController {
     // ==================== 规则 ====================
 
     @GetMapping("/rules")
+    @RequirePermission("stock:expiry:view")
     public Result<PageResult<BizExpiryAlertRule>> rules(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -306,6 +318,7 @@ public class ExpiryController {
 
     @PostMapping("/rules")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("stock:expiry:edit")
     public Result<BizExpiryAlertRule> createRule(@RequestBody BizExpiryAlertRule rule) {
         Long tid = currentTenantIdOrReject();
         if (rule.getRuleName() == null || rule.getRuleName().isEmpty()) {
@@ -324,6 +337,7 @@ public class ExpiryController {
 
     @PutMapping("/rules/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("stock:expiry:edit")
     public Result<BizExpiryAlertRule> updateRule(@PathVariable Long id, @RequestBody BizExpiryAlertRule rule) {
         Long tid = currentTenantIdOrReject();
         BizExpiryAlertRule old = ruleMapper.selectById(id);
@@ -338,6 +352,7 @@ public class ExpiryController {
 
     @DeleteMapping("/rules/{id}")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("stock:expiry:edit")
     public Result<Void> deleteRule(@PathVariable Long id) {
         Long tid = currentTenantIdOrReject();
         BizExpiryAlertRule old = ruleMapper.selectById(id);
