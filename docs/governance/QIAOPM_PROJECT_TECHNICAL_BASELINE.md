@@ -59,6 +59,8 @@
 | v0.1 | `\[填写]` | `\[填写]` | 建立 QIAOPM 治理框架 | 全项目 | 待审阅 |
 
 | v0.2 | 2026-10-22 | QIAOPM 技术文档负责人 | 回填第 2 章，登记 ISSUE-1~8 | 第 2 章 / 第 5 章索引 / 附录 D | 待审阅 |
+| v0.3 | 2026-10-22 | QIAOPM 技术文档负责人 | 回填第 4.2 节正向清单初稿（静态），登记 ISSUE-006~014、TD-002~003、Q-005~006 | 第 4.2~4.4 节 / 附录 D / 0.2 版本记录 | 待审阅 |
+| v0.4 | 2026-10-22 | QIAOPM 技术文档负责人 | 登记 Q-007 暂停 P-1，ISSUE-006 标记暂停 | 附录 D.1 / 附录 D.3 / 0.2 版本记录 | 待审阅 |
 
 
 
@@ -550,7 +552,50 @@
 
 
 
-\### 4.2 正向清单模板（UI → 文档 → 代码）
+\### 4.2 正向清单（UI → 文档 → 代码）
+
+
+
+\#### 4.2.0 本章限制说明
+
+
+
+> \*\*本节主表基于前端 fallbackMenus 静态代码，不等于运行态菜单；运行态菜单由 sys\_menu\_permission 表决定，待导出后对账。\*\*
+> 关联待确认项：QIAOPM-Q-005。
+
+
+
+以下 5 条结构性事实决定了本节全表的**可追溯性边界**，阅读主表前必须先确认：
+
+
+
+| 编号 | 结构性事实 | 证据 | 对全表的影响 |
+
+|---|---|---|---|
+
+| S-1 | 菜单由后端 `/auth/me/menu` 动态下发，`Layout.vue` 的 `fallbackMenus` 仅为兜底 | `components/Layout.vue:102`（`fallbackMenus` 定义）、`:321-324`（`dynamicMenus` 取 `store.menus`）、`:326-332`（`displayedMenus`：`store.loaded && dynamicMenus.length > 0` 时用动态菜单，否则回落 `fallbackMenus`）；`controller/RbacController.java:71-75`；`service/RbacService.buildMenuTree` | 左侧菜单**实际内容取决于 `sys_menu_permission` 表运行态数据，本次只读调查无法确认**。下表「菜单层级 / UI 入口」列基于 `fallbackMenus` 静态代码，**非运行态事实** |
+
+| S-2 | 菜单数据源为表 `sys_menu_permission`，菜单与权限同表 | `entity/SysMenuPermission.java`；`mapper/SysMenuPermissionMapper.java` | 菜单与权限同表，**无法静态区分「隐藏菜单」与「无权限菜单」**；`visible` 与权限点实际覆盖需连库确认 |
+
+| S-3 | 84 个 `@RestController` 位于 `service/` 包，不在 `controller/` 包 | `backend/src/main/java/com/meiyetec/service/` 下 `@RestController` 计数（本次复测口径见 QIAOPM-TD-002）；标准位置 `controller/` 包 136 个全部为 `@RestController` | 「追踪到 `controller/` 目录」的做法**不成立**，约 1/3 后端接口无法通过 `controller/` 包定位，第 4 步只能部分完成 |
+
+| S-4 | 前端 62 个 `api/*.ts` 中多数页面绕过 api 层用 http 直连 | `src/api/` 计数 62 个 `.ts`；`views/**` 中直接 `import ... from '@/utils/http'` 或 `@/api/request` 的 `.vue` 文件 51 个 | 「前端 API」列**无法统一按 api 模块归集**，须按实际请求 URL 追踪（见 QIAOPM-TD-003） |
+
+| S-5 | 路由表存在重复注册：`commission/rules` 出现 2 次 | `router/index.ts:58`（`permission: 'commission:rule:list'`，title `提成规则`）与 `router/index.ts:114`（`permission: 'commission:rule:config'`，title `提成规则配置`），二者 `name` 同为 `CommissionRules` | 后注册覆盖前者，`commission:rule:list` 权限点失效，持有该权限但无 `commission:rule:config` 的角色访问 `/commission/rules` 被守卫跳 `/403`（见 QIAOPM-ISSUE-011） |
+
+
+
+> \*\*状态口径（本章专用）\*\*：`CONFIRMED` = 静态文件级链路齐全（菜单 → 路由 → 组件 → API → 后端 → 表可追踪）；`PARTIAL` = 链路存在但有断点或语义错配；`MISSING` = 静态证据显示明确缺失；`UNVERIFIED` = 只读范围内无法确认。
+> \*\*按第 10.3 节，本节无任何运行证据，全表最高只到 `CONFIRMED`，不得据此标 `VERIFIED`。\*\*
+> \*\*「PRD 章节」列统一留空\*\*：QIAOPM PRD 原文未找到，待补（见 QIAOPM-Q-006、第 5.1 章）。
+
+
+
+\#### 4.2.1 主表：一级 / 二级菜单 → 路由 → 页面 → API → 后端 → 数据表
+
+
+
+**（1）首页**
 
 
 
@@ -558,11 +603,482 @@
 
 |---|---|---|---|---|---|---|---|---|---|---|
 
-| `\[待回填]` | `\[待回填]` | `\[待回填]` | `\[待回填]` | `\[待回填]` | `\[待回填]` | `\[待回填]` | `\[待回填]` | `\[待回填]` | `\[待回填]` | UNVERIFIED |
+| L1 | 首页 | `/dashboard` | `views/dashboard.vue` | KPI 卡片、跳转 | 有 | `basic.ts` | `MemberController` `/member/stats`；`PosController` `/pos/orders/today`；`BookingController` `/booking/stats` | `crm_member`、`pos_order`、`biz_booking` | *（QIAOPM PRD 原文未找到，待补）* | CONFIRMED（用户已实测通过） |
+
+| — | （KPI 卡片跳转） | `$router.push` 直跳 | — | — | 无独立菜单 | — | 跳转目标 `/crm/care-follow-task`，该页面存在跨页面路径悬空 | — | *（同上）* | PARTIAL |
 
 
 
-\### 4.3 反向清单模板（文档 → UI → 代码）
+**（2）基础资料**
+
+
+
+| 菜单层级 | 菜单名称 | 路由 | 页面组件 | 功能点 | UI 入口 | 前端 API | 后端接口 | 数据表 | PRD 章节 | 状态 |
+
+|---|---|---|---|---|---|---|---|---|---|---|
+
+| L2 | 服务项目 | `/biz/service-item` | `views/biz/service-item.vue` | 列表 / 编辑 | 有 | \*\*无\*\*（`http` 直连，S-4） | `service/BizServiceItemService.java` `/biz/service` ⚠️非 `controller/` 包 | `biz_service_item`、`biz_service_category` | *（同上）* | CONFIRMED |
+
+| L2 | 疗程方案 | `/biz/treatment-plan` | `views/biz/treatment-plan.vue` | 列表 / 编辑 | 有 | `treatment.ts` | `service/BizTreatmentService.java` `/biz/treatment` ⚠️ | `biz_treatment_plan`、`biz_treatment_phase` | *（同上）* | CONFIRMED |
+
+| L2 | 效果报告 | `/biz/treatment-report` | `views/biz/treatment-report.vue` | 列表 / 导出 | 有 | `treatment-report.ts` + `http` 直连 | `controller/BizTreatmentReportController.java` `/biz/treatment/report` | `treatment_report` | *（同上）* | CONFIRMED |
+
+| L2 | 电子价目表卡项套餐 | `/dev/pricelist` | `views/dev/PriceList.vue` | 价目表 / 套餐 | 有 | `sys.ts` | `service/PriceListService.java` `/intel/pricelist` ⚠️ | `price_list`、`price_list_item` | *（同上）* | \*\*PARTIAL\*\*：`views/dev/PriceList.vue:331` 调 `POST /crm/member/list`，后端无此路径（QIAOPM-ISSUE-008） |
+
+| L2 | 护肤方案共享套餐 | `/dev/care-plan` | `views/dev/CarePlan.vue` | 方案维护 | 有 | `sys.ts` | `service/CarePlanService.java` `/care/plan` ⚠️ | `care_plan` | *（同上）* | CONFIRMED |
+
+| L2 | 配方护理建议 | `/care` | `views/care/index.vue` | 配方 / 建议 | 有 | `care.ts` | `service/CareRecipeService.java` `/care`（另 `CareFormulaService` `/care/formula`） | `care_recipe`、`care_recipe_item`、`care_formula` | *（同上）* | CONFIRMED |
+
+
+
+**（3）会员 / 储值 / 套餐**
+
+
+
+| 菜单层级 | 菜单名称 | 路由 | 页面组件 | 功能点 | UI 入口 | 前端 API | 后端接口 | 数据表 | PRD 章节 | 状态 |
+
+|---|---|---|---|---|---|---|---|---|---|---|
+
+| L1 | 会员管理 | `/member` | `views/member/index.vue` | 会员全量操作 | 有 | `basic`+`coupon`+`package`+`point`+`pos`+`treatment` + `http` | `controller/MemberController.java` `/member` | `crm_member`、`crm_member_profile`、`member_credit` | *（同上）* | CONFIRMED |
+
+| L2 | 储值充值 | `/wallet/recharge` | `views/wallet/recharge.vue` | 充值 | 有 | `basic.ts` | `controller/WalletController.java` `/wallet` | `crm_wallet`、`crm_wallet_transaction` | *（同上）* | CONFIRMED |
+
+| L2 | 储值流水 | `/wallet/transactions` | `views/wallet/transactions.vue` | 流水查询 | 有 | `basic.ts` | `controller/WalletController.java` `/wallet` | `crm_wallet_transaction` | *（同上）* | CONFIRMED |
+
+| L2 | 礼品卡 | `/gift-card` | `views/gift-card/index.vue` | 礼品卡 | 有 | `gift-card.ts` | `service/GiftCardService.java` `/gift-card` ⚠️ | `gift_card`、`gift_card_transaction` | *（同上）* | CONFIRMED |
+
+| L2 | 套餐管理 | `/package/list` | `views/package/index.vue` | 套餐 / 次卡 | 有 | `package.ts` | `controller/PackageController.java` `/packages` | `crm_package`、`crm_package_order` | *（同上）* | CONFIRMED |
+
+| L2 | 会员套餐查询 | `/package/member-orders` | `views/package/member-orders.vue` | 套餐订单 | 有 | `package`+`basic` | `controller/PackageController.java` `/packages` | `crm_package_order`、`crm_package_redemption` | *（同上）* | CONFIRMED |
+
+| L2 | \*\*多人共享套餐\*\* | `/package/share` | `views/package/share.vue` | 分享 / 暂停 / 冲正 | 有（菜单 `Layout.vue:158`，路由 `router/index.ts:41`） | `package-share.ts` | `service/P2FeaturesService.java` `/crm/package/share`（**仅** `invite`:52 / `redeem`:105 / `list`:166 / `enable-share`:175） | `crm_package_share`、`shared_package*` | *（同上）* | \*\*MISSING\*\*：前端调 `stats`/`page`/`pause`/`resume`/`revoke`/`quota` 六端点，后端均无 mapping（QIAOPM-ISSUE-006） |
+
+
+
+**（4）预约管理**
+
+
+
+| 菜单层级 | 菜单名称 | 路由 | 页面组件 | 功能点 | UI 入口 | 前端 API | 后端接口 | 数据表 | PRD 章节 | 状态 |
+
+|---|---|---|---|---|---|---|---|---|---|---|
+
+| L2 | 预约日历 | `/booking/calendar` | `views/booking/calendar.vue` | 日历排期 | 有 | `booking.ts` | `controller/BookingController.java` `/booking` | `biz_booking` | *（同上）* | CONFIRMED |
+
+| L2 | 预约列表 | `/booking/list` | `views/booking/list.vue` | 列表 / 改约 | 有 | `booking`+`basic` | `controller/BookingController.java` `/booking` | `biz_booking` | *（同上）* | CONFIRMED |
+
+| L2 | 排班管理 | `/booking/schedule` | `views/booking/schedule.vue` | 排班 | 有 | `booking`+`basic` | `controller/ScheduleController.java` `/schedule` | `biz_employee_schedule` | *（同上）* | CONFIRMED |
+
+| L2 | 预约资源 | `/booking/resource` | `views/booking/resource.vue` | 资源维护 | 有 | \*\*无\*\*（`http` 直连） | `service/BookingResourceService.java` `/biz/booking` ⚠️ | `booking_resource`、`booking_resource_link` | *（同上）* | CONFIRMED |
+
+| L2 | 候补队列 | `/booking/waitlist` | `views/booking/waitlist.vue` | 候补 | 有 | \*\*无\*\*（`http` 直连） | `service/BookingResourceService.java` `/biz/booking` ⚠️ | `booking_waitlist` | *（同上）* | CONFIRMED |
+
+| L2 | 爽约管理 | `/booking/no-show` | `views/booking/no-show.vue` | 爽约规则 / 预测 | 有 | \*\*无\*\*（`http` 直连） | `service/BookingResourceService.java` + `NoShowPredictionService` `/noshow` | `booking_no_show_rule`、`no_show_prediction` | *（同上）* | CONFIRMED |
+
+| L2 | 上门服务调度 | `/lbs` | `views/lbs/index.vue` | 调度 | 有 | `lbs.ts` | `service/LbsDispatchService.java` `/lbs` ⚠️ | `geofence`、`pos_order` | *（同上）* | CONFIRMED |
+
+| L2 | SPA场景模式 | `/spa-scene` | `views/spa-scene/index.vue` | 场景 / 时段 | 有 | \*\*无\*\*（`http` 直连，仅 `/room/list`） | `controller/SpaSceneModeController.java` `/spa-scene`；`controller/RoomController.java` `/room` | `biz_spa_scene_mode`、`biz_spa_scene_room_slot`、`biz_room` | *（同上）* | CONFIRMED |
+
+| L2 | 客流预测与智能排班 | `/dev/forecast` | `views/dev/Forecast.vue` | 预测 | 有 | `sys.ts` | `service/BookingForecastService.java` `/ai/forecast` ⚠️ | `biz_forecast_demand`、`ai_sales_forecast` | *（同上）* | CONFIRMED |
+
+
+
+**（5）收银结算**
+
+
+
+| 菜单层级 | 菜单名称 | 路由 | 页面组件 | 功能点 | UI 入口 | 前端 API | 后端接口 | 数据表 | PRD 章节 | 状态 |
+
+|---|---|---|---|---|---|---|---|---|---|---|
+
+| L2 | 收银台 | `/pos/checkout` | `views/pos/checkout.vue` | 开单 / 收银 | 有 | `basic`+`coupon`+`pos`+`pricing-experiment` | `controller/PosController.java` `/pos` | `pos_order`、`pos_order_item`、`pos_payment` | *（同上）* | CONFIRMED |
+
+| L2 | 订单列表 | `/pos/orders` | `views/pos/orders.vue` | 订单 | 有 | `pos.ts` | `controller/PosController.java` `/pos` | `pos_order`、`pos_transaction` | *（同上）* | CONFIRMED |
+
+| L2 | 收银统计 | `/pos/stats` | `views/pos/stats.vue` | 统计 | 有 | `pos.ts` | `controller/PosController.java` `/pos` | `pos_payment` | *（同上）* | CONFIRMED |
+
+| L2 | 退款单 | `/pos/refund` | `views/pos/refund.vue` | 退款 / 审核 | 有 | `pos.ts` | `controller/PosRefundController.java` `/pos/refund`；`RefundAuditController` `/pos/refund/audit` | `pos_refund`、`pos_refund_item`、`pos_refund_audit_log` | *（同上）* | CONFIRMED |
+
+| L2 | 支付对账 | `/pos/reconciliation` | `views/pos/reconciliation.vue` | 对账 | 有 | `pos.ts` | `controller/ReconciliationController.java` `/pos/reconciliation` | `pos_reconciliation` | *（同上）* | CONFIRMED |
+
+| L2 | 数字人民币 | `/pay/dcep` | `views/pay/dcep.vue` | 数字人民币 | 有 | \*\*无\*\*（`http` 直连） | `service/DcepService.java` `/pay/dcep` ⚠️ | `pay_dcep_order`、`pay_dcep_channel` | *（同上）* | CONFIRMED |
+
+
+
+**（6）库存管理**
+
+
+
+| 菜单层级 | 菜单名称 | 路由 | 页面组件 | 功能点 | UI 入口 | 前端 API | 后端接口 | 数据表 | PRD 章节 | 状态 |
+
+|---|---|---|---|---|---|---|---|---|---|---|
+
+| L2 | 库存列表 | `/stock/list` | `views/stock/list.vue` | 库存 | 有 | `stock.ts` | `controller/StockController.java` `/stock` | `stock_inventory` | *（同上）* | CONFIRMED |
+
+| L2 | 商品耗材 | `/stock/product` | `views/stock/product.vue` | 商品 | 有 | `stock.ts` | `controller/StockController.java` `/stock/products` | `stock_product` | *（同上）* | CONFIRMED |
+
+| L2 | 出入库记录 | `/stock/record` | `views/stock/record.vue` | 出入库 | 有 | `stock`+`pos` | `controller/StockController.java` `/stock` | `stock_record` | *（同上）* | CONFIRMED |
+
+| L2 | 消耗记录 | `/stock/consumption` | `views/stock/consumption.vue` | 消耗 | 有 | `basic`+`pos`+`stock` | `controller/StockController.java` `/stock/consumption` | `pos_order_consumption`、`biz_material_consumption_log` | *（同上）* | CONFIRMED |
+
+| L2 | 盘点管理 | `/stock/check` | `views/stock/check.vue` | 盘点 | 有 | `stock`+`basic` | `controller/StockController.java` `/stock/check` | `stock_check` | *（同上）* | CONFIRMED |
+
+| L2 | 库存预警 | `/stock/alert` | `views/stock/alert.vue` | 预警 | 有 | `stock.ts` | `controller/StockController.java` `/stock/alert` | `stock_inventory`、`wms_expiry_alert` | *（同上）* | CONFIRMED |
+
+| L2 | 库存统计 | `/stock/stats` | `views/stock/stats.vue` | 统计 | 有 | `stock.ts` | `controller/StockController.java` `/stock/stats` | `stock_inventory`、`stock_record` | *（同上）* | CONFIRMED |
+
+| L2 | 跨店调度 | `/stock/cross-store` | `views/stock/crossStore.vue` | 调拨 | 有 | `stock.ts` | `service/CrossStoreInventoryController.java` `/wms/cross-store` ⚠️（`service/` 包下唯一以 `Controller` 命名的类） | `wms_stock_transfer`、`wms_transfer_suggestion`、`wms_warehouse` | *（同上）* | CONFIRMED |
+
+| L2 | 批次追溯 | `/stock/trace/:id` | `views/stock/trace.vue` | 追溯 | 有 | `stock.ts` | `controller/StockController.java` + `service/TraceService` `/trace` ⚠️ | `stock_product`、`cloud_trace_log` | *（同上）* | CONFIRMED |
+
+
+
+**（7）员工提成**
+
+
+
+| 菜单层级 | 菜单名称 | 路由 | 页面组件 | 功能点 | UI 入口 | 前端 API | 后端接口 | 数据表 | PRD 章节 | 状态 |
+
+|---|---|---|---|---|---|---|---|---|---|---|
+
+| L2 | 提成规则 | `/commission/rules` | `views/commission/rules.vue` | 规则 / 版本 | 有 | `commission-rule.ts` + `http` | `controller/CommissionController.java` `/commission` | `commission_rule`、`commission_rule_version` | *（同上）* | \*\*PARTIAL\*\*：路由重复注册，`commission:rule:list` 权限点失效（S-5 / QIAOPM-ISSUE-011） |
+
+| L2 | 提成记录 | `/commission/records` | `views/commission/records.vue` | 记录 | 有 | `commission`+`basic` | `controller/CommissionController.java` `/commission` | `commission_record` | *（同上）* | CONFIRMED |
+
+| L2 | 工资报表 | `/commission/salary` | `views/commission/salary.vue` | 报表 | 有 | `commission`+`basic` | `controller/CommissionController.java` `/commission` | `commission_salary` | *（同上）* | CONFIRMED |
+
+| L2 | 结算管理 | `/commission/settlement` | `views/commission/settlement.vue` | 结算 | 有 | `commission.ts` | `controller/CommissionController.java` `/commission` | `commission_settlement`、`commission_settlement_batch` | *（同上）* | CONFIRMED |
+
+| L2 | \*\*提成结算批次\*\* | `/commission/batch` | `views/commission/batch.vue` | 批次生成 / 导出 | 有（路由 `router/index.ts:94`，`permission: 'commission:batch'`） | \*\*无\*\*（`http` 直连） | 后端\*\*无\*\* `/commission/batch` mapping | 实体 `CommissionSettlementBatch` 存在 | *（同上）* | \*\*MISSING\*\*（QIAOPM-ISSUE-007） |
+
+| L2 | \*\*提成冲正\*\* | `/commission/reversal` | `views/commission/reversal.vue` | 冲正 / 导出 | 有（路由 `router/index.ts:95`，`permission: 'commission:reversal'`） | \*\*无\*\*（`http` 直连） | 后端\*\*无\*\* `/commission/reversal` mapping（全仓 grep 零命中） | 实体 `CommissionReversal` 存在 | *（同上）* | \*\*MISSING\*\*（QIAOPM-ISSUE-007） |
+
+
+
+**（8）营销工具**
+
+
+
+| 菜单层级 | 菜单名称 | 路由 | 页面组件 | 功能点 | UI 入口 | 前端 API | 后端接口 | 数据表 | PRD 章节 | 状态 |
+
+|---|---|---|---|---|---|---|---|---|---|---|
+
+| L2 | 优惠券 | `/market/coupon` | `views/mkt/coupon.vue` | 券管理 | 有 | \*\*无\*\*（`http` 直连） | `controller/MktCouponController.java` `/mkt/coupon`；`CouponController` `/market/coupon` | `mkt_coupon`、`mkt_coupon_batch`、`market_coupon` | *（同上）* | CONFIRMED（\*\*双后端并存，见 QIAOPM-ISSUE-014\*\*） |
+
+| L2 | 积分商城 | `/market/points` | `views/mkt/points.vue` | 积分 | 有 | \*\*无\*\*（`http` 直连） | `controller/MktPointsController.java` `/mkt/points`；`PointController` `/market/point` | `mkt_points_rule`、`mkt_points_log`、`market_point_record`、`point_goods` | *（同上）* | CONFIRMED（\*\*双后端并存，见 QIAOPM-ISSUE-014\*\*） |
+
+| L2 | 营销活动 | `/market/activity` | `views/mkt/promotion.vue` | 活动 | 有 | \*\*无\*\*（`http` 直连） | `controller/MktPromotionController.java` `/mkt/promotion`；`MarketActivityController` `/market/activity` | `mkt_promotion`、`market_activity` | *（同上）* | CONFIRMED（\*\*双后端并存，见 QIAOPM-ISSUE-014\*\*） |
+
+| L2 | 会员日自动化 | `/member-day` | `views/member-day/index.vue` | 会员日 | 有 | `member-day.ts` | `service/MemberDayService.java` `/member-day` ⚠️ | `member_day_config`、`member_day_execution` | *（同上）* | CONFIRMED |
+
+| L2 | 订阅会员制 | `/subscription` | `views/subscription/index.vue` | 订阅 | 有 | `subscription.ts` | `controller/SubscriptionController.java` `/subscription` | `subscription_plan`、`subscription_member`、`subscription_billing` | *（同上）* | CONFIRMED |
+
+| L2 | 营销效果 | `/mkt/effect` | `views/mkt/effect.vue` | 效果分析 | 有 | \*\*无\*\*（`http` 直连） | `controller/MktEffectController.java` `/mkt/effect` | `marketing_touch_log` | *（同上）* | CONFIRMED |
+
+| L2 | 渠道配置 | `/mkt/channel` | `views/mkt/channel.vue` | 渠道 | 有 | \*\*无\*\*（`http` 直连） | `controller/MktChannelController.java` `/mkt/channel` | `mkt_channel_config`、`mkt_channel_template` | *（同上）* | CONFIRMED |
+
+| L2 | 消息模板 | `/mkt/template` | `views/mkt/template.vue` | 模板 | 有 | \*\*无\*\*（`http` 直连） | `controller/MktTemplateController.java` `/mkt/template` | `mkt_channel_template` | *（同上）* | CONFIRMED |
+
+| L2 | 触达任务 | `/mkt/touch-task` | `views/mkt/touch-task.vue` | 触达 | 有 | \*\*无\*\*（`http` 直连） | `controller/MktTouchTaskController.java` `/mkt/task` | `marketing_touch_task`、`marketing_touch_log` | *（同上）* | CONFIRMED |
+
+| L2 | 营销旅程 | `/mkt/journey` | `views/mkt/journey.vue` | 旅程 | 有 | \*\*无\*\*（`http` 直连） | `controller/MktJourneyController.java` `/mkt/journey` | `mkt_journey`、`mkt_journey_instance` | *（同上）* | CONFIRMED |
+
+| L2 | 触达效果 | `/mkt/conversion` | `views/mkt/conversion.vue` | 转化 | 有 | \*\*无\*\*（`http` 直连） | `controller/MktConversionController.java` `/mkt/conversion` | `marketing_touch_conversion` | *（同上）* | CONFIRMED |
+
+| L2 | 动态定价 | `/mkt/pricing` | `views/mkt/pricing.vue` | 定价 | 有 | \*\*无\*\*（`http` 直连） | `service/DynamicPricingService.java` `/mkt/pricing` ⚠️ | `mkt_dynamic_pricing_rule`、`mkt_pricing_log` | *（同上）* | CONFIRMED |
+
+| L2 | 生命周期看板 | `/lifecycle` | `views/lifecycle/index.vue` | 生命周期 | 有 | \*\*无\*\*（`request` 直连） | `controller/MemberLifecycleController.java` `/lifecycle`；`MemberInviteController` `/lifecycle/invite` | `member_lifecycle_log`、`member_lifecycle_rule` | *（同上）* | CONFIRMED |
+
+| L2 | 款式图库 | `/style-gallery` | `views/style-gallery/index.vue` | 图库浏览 | 有（路由 `router/index.ts:155`） | `style-gallery.ts` | `controller/StyleGalleryController.java` base `/gallery` | `style_gallery`、`biz_style_browse_log` | *（同上）* | \*\*PARTIAL\*\*：前端调 `/style/*`，后端图库 base 为 `/gallery`，`/style/*` 归 `StyleLibraryController`（款式**偏好库**）→ 契约漂移（QIAOPM-ISSUE-012） |
+
+
+
+**（9）客户运营**
+
+
+
+| 菜单层级 | 菜单名称 | 路由 | 页面组件 | 功能点 | UI 入口 | 前端 API | 后端接口 | 数据表 | PRD 章节 | 状态 |
+
+|---|---|---|---|---|---|---|---|---|---|---|
+
+| L2 | 客户运营看板 | `/crm/care/overview` | `views/crm/care-overview.vue` | 看板 | 有 | \*\*无\*\*（`http` 直连） | `controller/CrmCareOpsController.java` `/crm/care/ops` | `crm_follow_up_task`、`crm_follow_up_plan`、`crm_complaint_ticket`、`crm_review` | *（同上）* | CONFIRMED |
+
+| L2 | 回访任务 | `/crm/care/follow-task` | `views/crm/care-follow-task.vue` | 回访任务 | 有 | \*\*无\*\*（`http` 直连） | `controller/CrmFollowUpTaskController.java` `/crm/care/follow/task` | `crm_follow_up_task`、`crm_follow_up_touch`、`crm_follow_up_note` | *（同上）* | \*\*PARTIAL\*\*：页面另调 `/crm/care/follow-rule`，后端仅有 `CrmFollowUpPlanController` `/crm/care/follow/plan` → 路径悬空 |
+
+| L2 | 回访计划 | `/crm/care/follow-plan` | `views/crm/care-follow-plan.vue` | 计划 | 有 | \*\*无\*\*（`http` 直连） | `controller/CrmFollowUpPlanController.java` `/crm/care/follow/plan` | `crm_follow_up_plan` | *（同上）* | CONFIRMED |
+
+| L2 | 回访任务规则 | `/crm/care/follow-rule` | `views/crm/care-follow-rule.vue` | 规则 | 有 | \*\*无\*\*（`http` 直连） | 后端\*\*无独立\*\* `/crm/care/follow/rule`；页面实际打 `/crm/care/follow/plan` | `crm_follow_up_trigger_log` | *（同上）* | \*\*PARTIAL\*\*：菜单 / 路由 / 组件三段一致，后端语义错配（复用 plan 接口） |
+
+| L2 | 护理建议 | `/crm/care/suggestion` | `views/crm/care-suggestion.vue` | 建议 | 有 | `care-suggestion.ts` + `http` | `controller/CareSuggestionEngineController.java` `/crm/care/suggestion`；+ `RuleController`/`TemplateController`/`LogController` | `biz_care_suggestion_log`、`biz_care_suggestion_rule`、`biz_care_suggestion_template` | *（同上）* | CONFIRMED |
+
+| L2 | 肤质档案 | `/crm/detection` | `views/crm/detection.vue` | 肤质检测 | 有 | `detection.ts` + `http` | `controller/SkinDetectionController` `/crm/detection/skin`；`HairDetectionController` `/crm/detection/hair`；`NailDetectionController` `/crm/detection/nail`；`DetectionReportController` `/crm/detection/report` | `biz_skin_detection`、`biz_hair_detection`、`biz_nail_detection`、`biz_detection_report` | *（同上）* | CONFIRMED |
+
+| L2 | 款式偏好 | `/crm/style-package` | `views/crm/style-package.vue` | 偏好 | 有 | `style-package.ts` + `http` | `controller/StyleLibraryController.java` `/style`；`MaterialPackageController.java` `/material/package`；`MemberStylePreferenceController` `/style/preference` | `biz_style_library`、`biz_material_package`、`biz_member_style_preference` | *（同上）* | CONFIRMED |
+
+| L2 | 投诉工单 | `/crm/care/complaint` | `views/crm/care-complaint.vue` | 投诉 | 有 | \*\*无\*\*（`http` 直连） | `controller/ComplaintTicketController.java` `/crm/care/complaint`；`service/ComplaintLifecycleService` `/complaint` | `crm_complaint_ticket`、`crm_complaint_log`、`complaint_satisfaction` | *（同上）* | CONFIRMED |
+
+| L2 | 客户评价 | `/crm/care/review` | `views/crm/care-review.vue` | 评价 | 有 | \*\*无\*\*（`http` 直连） | `controller/CrmReviewController.java` `/crm/care/review` | `crm_review`、`crm_review_dimension_config` | *（同上）* | CONFIRMED |
+
+| L2 | 评价模板 | `/crm/care/review-tpl` | `views/crm/care-review-tpl.vue` | 模板 | 有 | \*\*无\*\*（`http` 直连） | `controller/CrmReviewTemplateController.java` `/crm/care/review/tpl` | `crm_review_template` | *（同上）* | CONFIRMED |
+
+| L2 | 跨店规则 | `/crm/cross-rule` | `views/crm/cross-rule.vue` | 规则 | 有 | \*\*无\*\*（`http` 直连） | `controller/CrossStoreController.java` `/crm/cross` | `crm_cross_store_rule` | *（同上）* | CONFIRMED |
+
+| L2 | 跨店核销 | `/crm/cross-record` | `views/crm/cross-record.vue` | 核销 | 有 | \*\*无\*\*（`http` 直连） | `controller/CrossStoreController.java` `/crm/cross` | `crm_cross_store_redemption` | *（同上）* | CONFIRMED |
+
+| L2 | RFM 分群 | `/intel/rfm` | `views/intel/rfm.vue`（shim）→ `views/intel/rfm/index.vue` + 子组件 | 分群 / 批量 | 有（路由 `router/index.ts:146`） | `api/rfm.ts`（被 `SegmentDrawer.vue`、`TagDictTable.vue`、`useRfm*.ts` 等 11 处引用） | `controller/RfmBatchController.java` `/intel/rfm`；`RfmSeedController` `/intel/rfm/seed` | `crm_rfm_snapshot`、`rfm_batch_log`、`crm_tag_dictionary` | *（同上）* | UNVERIFIED：**静态链路齐全**，但引 RFM 的均为 `views/intel/rfm/` 内部子组件，`index.vue` 的 4 个 tab 是否均取到数需运行期确认 |
+
+| L2 | LTV 预测 | `/intel/ltv` | `views/intel/ltv.vue` | 预测 | 有 | \*\*无\*\*（`http` 直连） | `service/LtvService.java` `/intel/ltv` ⚠️ | `crm_ltv_snapshot`、`ai_ltv_model` | *（同上）* | CONFIRMED |
+
+
+
+**（10）组织架构 / 数据报表 / 医美合规**
+
+
+
+| 菜单层级 | 菜单名称 | 路由 | 页面组件 | 功能点 | UI 入口 | 前端 API | 后端接口 | 数据表 | PRD 章节 | 状态 |
+
+|---|---|---|---|---|---|---|---|---|---|---|
+
+| L2 | 总部看板 | `/org/hq` | `views/org/hq.vue` | 总部看板 | 有 | \*\*无\*\*（`http` 直连） | `service/OrgHierarchyService.java` `/org` ⚠️ | `hq_dashboard_snapshot`、`hq_dashboard_widget`、`hq_cross_store_metric` | *（同上）* | CONFIRMED |
+
+| L2 | 品牌管理 | `/org/brand` | `views/org/brand.vue` | 品牌 | 有 | \*\*无\*\*（`http` 直连） | `service/OrgHierarchyService` `/org`；`BrandManagementService` `/brand` ⚠️ | `brand`、`brand_store_rel`、`mkt_brand` | *（同上）* | CONFIRMED |
+
+| L2 | 门店管理 | `/org/store` | `views/org/store.vue` | 门店 | 有 | \*\*无\*\*（`http` 直连） | `service/OrgHierarchyService` `/org`；`controller/StoreController.java` `/store` | `pos_store` | *（同上）* | CONFIRMED |
+
+| L2 | 数据看板 | `/report/dashboard` | `views/report/dashboard.vue` | 看板 | 有 | \*\*无\*\*（`http` 直连） | `service/ReportV2Service.java` `/report/v2` ⚠️ | `report_snapshot`、`report_metric_snapshot` | *（同上）* | CONFIRMED |
+
+| L2 | 营业报表 | `/report/biz` | `views/report/biz.vue` | 报表 | 有 | `report.ts` | `controller/ReportController.java` `/report` | `report_snapshot`、`report_config` | *（同上）* | CONFIRMED |
+
+| L2 | 导出管理 | `/report/export` | `views/report/export.vue` | 导出 | 有 | `report.ts` | `controller/ReportController.java` `/report` | `report_export_task`、`report_export_log` | *（同上）* | CONFIRMED |
+
+| L2 | 导出任务 | `/report/task` | `views/report/task.vue` | 任务 | 有 | \*\*无\*\*（`http` 直连 `/report/task/page`） | `controller/ReportController.java` `/report` | `report_export_task` | *（同上）* | CONFIRMED |
+
+| L2 | 指标口径 | `/report/caliber` | `views/report/caliber.vue` | 口径 | 有 | \*\*无\*\*（`http` 直连） | `controller/ReportController.java` `/report` | `report_metric_caliber`、`metric_definition` | *（同上）* | CONFIRMED |
+
+| L2 | 视觉档案 | `/mh/visual` | `views/mh/visual.vue` | 视觉档案 | 有 | \*\*无\*\*（`http` 直连） | `service/VisualArchiveService.java` `/mh/visual` ⚠️ | `mh_visual_archive`、`mh_visual_compare`、`mh_image_consent` | *（同上）* | CONFIRMED（用户已实测通过） |
+
+| L2 | 合规记录 | `/mh/consent` | `views/mh/consent.vue` | 合规签署 | 有 | \*\*无\*\*（`http` 直连） | `service/ConsentAndDrugDeviceService.java` `/mh` ⚠️；`controller/MhConsentH5Controller` `/mh/consent` | `mh_consent_signature`、`mh_consent_template`、`mh_drug_device` | *（同上）* | CONFIRMED（用户已实测通过） |
+
+
+
+**（11）考勤 / 技师 / 耗材 / 设备**
+
+
+
+| 菜单层级 | 菜单名称 | 路由 | 页面组件 | 功能点 | UI 入口 | 前端 API | 后端接口 | 数据表 | PRD 章节 | 状态 |
+
+|---|---|---|---|---|---|---|---|---|---|---|
+
+| L2 | 考勤打卡 | `/attendance/index` | `views/attendance/index.vue` | 打卡 | 有 | `attendance.ts` | `controller/AttendanceController.java` `/attendance` | `attendance_record` | *（同上）* | CONFIRMED |
+
+| L2 | 考勤记录 | `/attendance/records` | `views/attendance/records.vue` | 记录 | 有 | `attendance.ts` | `controller/AttendanceController.java` `/attendance` | `attendance_record` | *（同上）* | CONFIRMED |
+
+| L2 | 请假管理 | `/attendance/leave` | `views/attendance/leave.vue` | 请假 | 有 | `attendance.ts` | `controller/LeaveRequestController.java` `/attendance/leave` | `attendance_leave`（实体未在 `@TableName` 提取结果中检出） | *（同上）* | UNVERIFIED：表映射未能静态确认 |
+
+| L2 | 考勤统计 | `/attendance/statistics` | `views/attendance/statistics.vue` | 统计 | 有 | `attendance.ts` | `controller/AttendanceController.java` `/attendance` | `attendance_record` | *（同上）* | CONFIRMED |
+
+| L2 | 考勤规则 | `/attendance/config` | `views/attendance/config.vue` | 规则 | 有 | `attendance.ts` | `controller/AttendanceConfigController.java` `/attendance/config` | `attendance_config` | *（同上）* | CONFIRMED |
+
+| L2 | 技师等级 | `/technician/level` | `views/technician/level.vue` | 等级 | 有 | `technician-level.ts` | `controller/TechnicianLevelController.java` `/technician/level` | `biz_technician_level` | *（同上）* | CONFIRMED |
+
+| L2 | 等级权益 | `/technician/benefit` | `views/technician/benefit.vue` | 权益 | 有 | `technician-level.ts` | `controller/LevelBenefitController.java` `/technician/level/benefit` | `biz_technician_level_benefit`（实体未检出） | *（同上）* | PARTIAL |
+
+| L2 | 等级评定 | `/technician/evaluation` | `views/technician/evaluation.vue` | 评定 | 有 | `technician-level.ts` | `controller/LevelEvaluationController.java` `/technician/level/evaluation` | `biz_technician_level_evaluation`（实体未检出） | *（同上）* | PARTIAL |
+
+| L2 | 耗材绑定 | `/material/binding` | `views/material/binding.vue` | 绑定 | 有 | `material-binding.ts` + `http` | `controller/ServiceMaterialController.java` `/material/binding` | `biz_service_material`、`biz_material_substitute` | *（同上）* | \*\*PARTIAL\*\*：`views/material/binding.vue:543` 调 `/service/list`，后端无此路径（QIAOPM-ISSUE-009） |
+
+| L2 | 消耗统计 | `/material/statistics` | `views/material/statistics.vue` | 统计 | 有 | `material-binding.ts` + `http` | `controller/MaterialConsumptionLogController.java` `/material/consumption` | `biz_material_consumption_log` | *（同上）* | CONFIRMED |
+
+| L2 | 效期追踪 | `/material/expiry` | `views/material/expiry-tracking.vue` | 效期 | 有 | `expiry-tracking.ts` + `http` | `controller/ExpiryController.java` `/expiry`；+ `AlertRule`/`AlertLog`/`Scan`/`Handle` | `biz_expiry_alert_rule`、`biz_expiry_alert_log`、`biz_expiry_handle_log` | *（同上）* | CONFIRMED |
+
+| L2 | 项目耗材 | `/material/service-material` | `views/material/service-material.vue` | 项目耗材规则 | 有 | `service-material.ts` + `http` | `controller/ServiceMaterialRuleController.java` `/stock/service-material/rule`；`ServiceMaterialDeductController` `/stock/service-material/deduct` | `biz_service_material_rule`、`biz_service_material_deduct_log` | *（同上）* | \*\*PARTIAL\*\*：`views/material/service-material.vue:364` 调 `/service/list`，后端无此路径（QIAOPM-ISSUE-009） |
+
+| L2 | 双资源排程 | `/resource/schedule` | `views/resource/resource-schedule.vue` | 排程 | 有 | `resource-schedule.ts` + `http` | `controller/ResourceScheduleController.java` `/resource/schedule`；+ `Conflict`/`MatchRule`/`Utilization` | `biz_resource_conflict_log`、`biz_resource_match_rule`、`biz_resource_utilization` | *（同上）* | \*\*PARTIAL\*\*：`views/resource/resource-schedule.vue:386` 调 `/service/list`，后端无此路径（QIAOPM-ISSUE-009） |
+
+| L2 | 海外支付 | `/payment/overseas` | `views/payment/overseas-payment.vue` | 海外支付 | 有 | `overseas-payment.ts` | `controller/OverseasPaymentController.java` `/overseas-payment/payment`；`Gateway`；`PaymentRouteRule`；`PaymentWebhookController` | `biz_overseas_payment`、`biz_overseas_payment_gateway`、`biz_payment_route_rule`、`biz_payment_webhook_log` | *（同上）* | CONFIRMED |
+
+| L2 | IoT设备 | `/iot/management` | `views/iot/iot-management.vue` | 设备 | 有 | `iot.ts` + `http` | `controller/IotDeviceLinkController` `/iot/device/link`；`IotDeviceDataController` `/iot/data`；`IotTriggerRuleController` `/iot/rule`；`IotDeviceAlertController` `/iot/alert` | `iot_device`、`iot_device_link`、`biz_iot_device_data`、`biz_iot_device_alert` | *（同上）* | CONFIRMED |
+
+| L2 | 数字人民币2.0 | `/payment/dcep-advanced` | `views/payment/dcep-advanced.vue` | DCEP 进阶 | 有 | `dcep-advanced.ts` | `controller/DcepSmartContractController` `/dcep/contract`；`DcepHardwareWalletController` `/dcep/wallet`；`DcepOfflineTransactionController` `/dcep/offline` | `biz_dcep_smart_contract`、`biz_dcep_hardware_wallet`、`biz_dcep_offline_transaction` | *（同上）* | CONFIRMED |
+
+
+
+**（12）系统设置**
+
+
+
+| 菜单层级 | 菜单名称 | 路由 | 页面组件 | 功能点 | UI 入口 | 前端 API | 后端接口 | 数据表 | PRD 章节 | 状态 |
+
+|---|---|---|---|---|---|---|---|---|---|---|
+
+| L2 | 店铺配置 | `/sys/setting` | `views/system/setting.vue` | 配置 | 有 | `sys.ts` | `controller/SysConfigController.java` `/sys/config` | `sys_config` | *（同上）* | CONFIRMED |
+
+| L2 | 租户管理 | `/sys/tenant` | `views/system/tenant.vue` | 租户 | 有 | `sys.ts` | `controller/SysTenantController.java` `/sys/tenant` | `sys_tenant`、`sys_tenant_config` | *（同上）* | CONFIRMED |
+
+| L2 | \*\*员工管理\*\* | \*\*无路由\*\* | \*\*无独立组件\*\*（`views/setting/employee.vue` 仅被 `/setting` 作 tab 引用） | 员工 | 菜单 `Layout.vue:281` `{ path: 'employee', title: '员工管理' }` → 解析为 `/sys/employee` | — | `controller/EmployeeController.java` `/employee` + `/employee/list` + `/employee/page`（**后端齐备**） | `pos_employee` | *（同上）* | \*\*MISSING\*\*：153+ 路由中无 `sys/employee`，菜单点击无落地页（QIAOPM-ISSUE-010） |
+
+| L2 | 操作日志 | `/sys/log` | `views/system/log.vue` | 日志 | 有 | `sys`+`request` | `controller/SysLogController.java` `/sys/log` | `sys_log` | *（同上）* | CONFIRMED |
+
+| L2 | 登录日志 | `/sys/login-log` | `views/system/login-log.vue` | 登录日志 | 有 | `sys`+`request` | `controller/SysLoginLogController.java` `/sys/login-log` | `sys_login_log` | *（同上）* | CONFIRMED |
+
+| L2 | 支付配置 | `/sys/payment` | `views/system/payment.vue` | 支付配置 | 有 | `sys.ts` | `service/PaymentConfigService.java` `/payment` ⚠️；`controller/DcepConfigController` `/sys/dcep` | `payment_config`、`payment_channel`、`dcep_config` | *（同上）* | CONFIRMED |
+
+| L2 | 商户资质材料 | `/sys/qualification` | `views/system/qualification.vue` | 资质 | 有 | `sys.ts` | `controller/DcepMerchantQualificationController.java` `/sys/dcep/qualification` | `dcep_merchant_qualification`、`dcep_qualification_attachment` | *（同上）* | CONFIRMED |
+
+
+
+**（13）研发工具**
+
+
+
+| 菜单层级 | 菜单名称 | 路由 | 页面组件 | 功能点 | UI 入口 | 前端 API | 后端接口 | 数据表 | PRD 章节 | 状态 |
+
+|---|---|---|---|---|---|---|---|---|---|---|
+
+| L2 | 灰度发布控制台 | `/dev/gray-release` | `views/dev/GrayRelease.vue` | 灰度 | 有 | `sys.ts` | `controller/GrayReleaseController.java` `/gray` | `feature_flag`、`gray_experiment` | *（同上）* | CONFIRMED |
+
+| L2 | LTV流失预测 | `/dev/ltv-training` | `views/dev/LtvTraining.vue` | 训练 | 有 | `sys.ts` | `service/LtvTrainingService.java` `/intel/ltv/training`；`ChurnTrainingService` `/intel/churn/training` | `ai_ltv_model`、`ai_churn_model`、`churn_training_run_log` | *（同上）* | CONFIRMED |
+
+| L2 | 数据中台 | `/dev/datahub` | `views/dev/DataHub.vue` | 元数据 | 有 | `sys.ts` | `service/DataHubService.java` `/datahub` ⚠️ | `meta_table`、`meta_column`、`meta_lineage`、`meta_value` | *（同上）* | CONFIRMED |
+
+| L2 | 配方护理会员日 | `/dev/care-memberday` | `views/dev/CareMemberDay.vue` | 会员日 | 有 | `sys.ts` | `service/MemberDayService.java` `/member-day` ⚠️ | `member_day_config`、`member_day_execution` | *（同上）* | CONFIRMED |
+
+| L2 | AI 视觉识别 | `/ai-vision` | `views/ai-vision/index.vue` | 视觉识别 | 有 | `ai-vision.ts` | `service/AIVisionService.java` `/ai/vision` ⚠️ | `cv_model`、`cv_recognition_log` | *（同上）* | CONFIRMED |
+
+| L2 | LTV/Churn 分析 | `/ltv-churn` | `views/ltv-churn/index.vue` | 分析 | 有 | `ltv-churn.ts` | `controller/LtvChurnController.java` `/ltv-churn` | `crm_churn_prediction`、`crm_churn_alert` | *（同上）* | CONFIRMED |
+
+| L2 | IoT 设备管理 | `/iot` | `views/iot/index.vue` | 设备 | 有 | `iot.ts` | `service/IoTDeviceService.java` `/iot/device` ⚠️ | `iot_device`、`iot_command`、`iot_device_event` | *（同上）* | CONFIRMED |
+
+| L2 | 自助 Kiosk | `/kiosk` | `views/kiosk/index.vue` | 自助 | 有 | `kiosk.ts` | `service/KioskService.java` `/kiosk` ⚠️；`service/P1SuiteService` `/p1-suite` | `pos_device`、`kiosk_checkin` | *（同上）* | CONFIRMED |
+
+| L2 | 并发症 SOP | `/complication` | `views/complication/index.vue` | SOP | 有 | `complication.ts` | `service/ComplicationService.java` `/complication` ⚠️ | `complication_event`、`complication_sop` | *（同上）* | CONFIRMED |
+
+| L2 | Cohort 队列 | `/cohort` | `views/cohort/index.vue` | 队列 | 有 | `cohort.ts` | `controller/CohortController.java` `/cohort`；`service/P1SuiteService` | `cohort_definition`、`cohort_result` | *（同上）* | CONFIRMED |
+
+| L2 | GDPR 合规 | `/gdpr` | `views/gdpr/index.vue` | 合规 | 有 | `gdpr.ts` + `http` | `service/GdprService.java` `/gdpr` ⚠️ | `gdpr_consent`、`gdpr_data_request`、`gdpr_audit_log` | *（同上）* | CONFIRMED |
+
+| L2 | HIPAA 加固 | `/hipaa` | `views/hipaa/index.vue` | 加固 | 有 | `hipaa.ts` | `service/HipaaService.java` `/hipaa` ⚠️ | `hipaa_encryption_key`、`hipaa_phi_access` | *（同上）* | CONFIRMED |
+
+| L2 | 海外 POS | `/pos-device` | `views/pos-device/index.vue` | 设备 | 有 | `pos-device.ts` | `service/PosDeviceService.java` `/pos-device` ⚠️ | `pos_device` | *（同上）* | CONFIRMED |
+
+| L2 | 插件市场 | `/plugin` | `views/plugin/index.vue` | 插件 | 有 | `plugin.ts` | `service/PluginService.java` `/plugin` ⚠️；`controller/PluginRuntimeController.java` `/plugin/runtime` | `plugin_market`、`plugin_install`、`plugin_review`、`plugin_runtime_state` | *（同上）* | CONFIRMED（EXT-23 SoT） |
+
+| L2 | 财税直连 | `/fiscal` | `views/fiscal/index.vue` | 财税 | 有 | `fiscal.ts` | `service/FiscalService.java` `/fiscal` ⚠️；`controller/FiscalConfigController.java` `/fiscal/config` | `fiscal_config`、`fiscal_invoice` | *（同上）* | CONFIRMED |
+
+| L2 | CRM 集成 | `/crm-integration` | `views/crm-integration/index.vue` | CRM | 有 | `crm-integration.ts` | `service/CrmIntegrationService.java` `/crm-integration` ⚠️ | `crm_integration`、`crm_contact_map`、`crm_sync_log` | *（同上）* | CONFIRMED（EXT-24 SoT） |
+
+| L2 | 电商集成 | `/ecommerce` | `views/ecommerce/index.vue` | 电商 | 有 | `ecommerce.ts` | `service/EcommerceService.java` `/ecommerce` ⚠️；`service/P3EcosystemSuiteService` | `ecommerce_platform`、`ecommerce_order`、`ecommerce_product` | *（同上）* | CONFIRMED（EXT-22 SoT） |
+
+| L2 | 国际支付 | `/intl-payment` | `views/intl-payment/index.vue` | 国际支付 | 有 | `intl-payment.ts` | `service/IntlPaymentService.java` `/intl-payment` ⚠️ | `payment_intent`、`payment_gateway` | *（同上）* | CONFIRMED |
+
+| L2 | 国际预约 | `/intl-booking` | `views/intl-booking/index.vue` | 国际预约 | 有 | `intl-booking.ts` | `service/IntlBookingService.java` `/intl-booking` ⚠️ | `overseas_booking`、`platform_booking` | *（同上）* | CONFIRMED（EXT-19 SoT） |
+
+| L2 | AI 智能排班 | `/ai-scheduler` | `views/ai-scheduler/index.vue` | 排班 | 有 | `ai-scheduler.ts` | `service/AiSchedulerService.java` `/ai-scheduler` ⚠️ | `ai_schedule_plan`、`schedule_recommendation` | *（同上）* | CONFIRMED |
+
+| L2 | 资金风控 | `/risk-control` | `views/risk-control/index.vue` | 风控 | 有 | `risk-control.ts` | `service/RiskControlService.java` `/risk-control` ⚠️ | `risk_event`、`risk_rule` | *（同上）* | CONFIRMED |
+
+| L2 | Google Maps | `/google-maps` | `views/google-maps/index.vue` | 地图 | 有 | `google-maps.ts` | `service/GoogleMapsService.java` `/google-maps` ⚠️ | `google_maps_config`、`google_maps_geocode_log` | *（同上）* | CONFIRMED（EXT-22 SoT） |
+
+| L2 | P1套件合集 | `/dev/p1-suite` | `views/dev/P1Suite.vue` | 套件 | 有 | `sys.ts` | `service/P1SuiteService.java` `/p1-suite` ⚠️ | `perf_load_test_result` 等 | *（同上）* | CONFIRMED |
+
+| L2 | P2套件合集 | `/dev/p2-suite` | `views/dev/P2Suite.vue` | 套件 | 有 | `sys.ts` | `service/P2ComplianceSuiteService.java` `/p2-suite` ⚠️ | `gdpr_consent`、`hipaa_phi_access` | *（同上）* | CONFIRMED |
+
+| L2 | P3套件合集 | `/dev/p3-suite` | `views/dev/P3Suite.vue` | 套件 | 有 | `sys.ts` | `service/P3EcosystemSuiteService.java` `/p3-suite` ⚠️ | `ecommerce_*`、`platform_*` | *（同上）* | CONFIRMED |
+
+| L2 | 补齐套件 | `/dev/gap-suite` | `views/dev/GapSuite.vue` | 套件 | 有 | `sys.ts` | `service/P1RemainingService.java`（无 `@RequestMapping` base）⚠️ | 多表 | *（同上）* | UNVERIFIED：控制器无 base path，无法静态归属 |
+
+
+
+### 4.3 隐藏路由与非菜单入口
+
+
+
+> 本节登记**在 `router/index.ts` 中注册、但不在 `fallbackMenus` 任何一级/二级菜单中**的路由，以及**有页面但无路由**的孤儿入口。
+> 按第 16 章要求，非菜单入口必须单独登记，不得因「左侧菜单没有」而漏检。
+> 标签口径：`NON_MENU_ENTRY` = 有路由但无菜单入口；`CODE_WITHOUT_UI` = 有代码无用户可达入口；`已计入菜单` = 该路由已在上节主表登记，不重复计列。
+
+
+
+| 编号 | 路由 | 名称 / 标题 | 页面组件 | 前端 API | 后端接口 | 标签 | 说明 |
+
+|---|---|---|---|---|---|---|---|
+
+| H-1 | `/login` | Login / 登录 | `views/login.vue` | `auth.ts` + `request` | `controller/AuthController.java` `/auth/login` | `NON_MENU_ENTRY` | 认证入口，免登录 |
+
+| H-2 | `/403` | Forbidden / 无权限 | `views/403.vue` | 无 | 无 | `NON_MENU_ENTRY` | 错误页；S-5 权限点失效时用户最终落点 |
+
+| H-3 | `/mh-consent-h5/:token` | MhConsentH5 / 知情同意签署 | `views/mh/consent-h5.vue` | \*\*无\*\*（`http` 直连） | `controller/MhConsentH5Controller.java` `/mh/consent` | `NON_MENU_ENTRY` | \*\*外部 H5 入口\*\*，凭 URL token 免登录进入，属高风险外部入口需单独验收 |
+
+| H-4 | `/setting` | Setting / 系统设置 | `views/setting/index.vue`（组合 4 个 tab） | 经 `store`/`category`/`level` 子组件 | `CategoryController` `/category`、`MemberLevelController` `/member-level`、`EmployeeController` `/employee`、`StoreController` `/store` | `NON_MENU_ENTRY` | 与菜单 `/sys/setting` 标题相同、职责不同，用户易混淆 |
+
+| H-5 | `/package` | PackageList / 套餐次卡 | `views/package/index.vue` | `package.ts` | `controller/PackageController.java` `/packages` | `NON_MENU_ENTRY` | 与菜单 `/package/list` 同组件重复路由 |
+
+| H-6 | `/booking/resource` | — | `views/booking/resource.vue` | — | — | `已计入菜单` | 已在 4.2.1（4）登记 |
+
+| H-7 | `/report/kpi` | ReportKpiOverview / 高级KPI看板 | `views/report/kpi-overview.vue` | `report.ts` | `controller/ReportController.java` `/report` | `NON_MENU_ENTRY` | 有完整页面无菜单入口，只能手敲 URL |
+
+| H-8 | `/commission/rule-list` | CommissionRuleList / 提成规则列表 | `views/commission/rule-list.vue` | `commission-rule.ts` + `http` | `controller/CommissionController.java` `/commission` | `NON_MENU_ENTRY` | 同上 |
+
+| H-9 | `/commission/simulation` | CommissionSimulation / 提成模拟计算 | `views/commission/simulation.vue` | `commission-rule.ts` + `http` | `controller/CommissionSimulationController.java` `/commission/simulation` | `NON_MENU_ENTRY` | 同上 |
+
+| H-10 | `/mkt/birthday` | MktBirthday / 生日提醒 | `views/mkt/birthday.vue` | `birthday`+`basic`+`coupon` | `service/BirthdayReminderService.java` `/birthday` ⚠️ | `NON_MENU_ENTRY` | 同上 |
+
+| H-11 | `/mkt/promotion` | MktPromotion / 营销活动 | `views/mkt/promotion.vue` | `http` 直连 | `controller/MktPromotionController.java` `/mkt/promotion` | `NON_MENU_ENTRY` | 与菜单 `/market/activity` \*\*同组件不同 base\*\*（QIAOPM-ISSUE-014） |
+
+| H-12 | `/mkt/coupon` | MktCoupon / 优惠券 | `views/mkt/coupon.vue` | `http` 直连 | `controller/MktCouponController.java` `/mkt/coupon` | `NON_MENU_ENTRY` | 与菜单 `/market/coupon` 同组件不同 base（QIAOPM-ISSUE-014） |
+
+| H-13 | `/mkt/points` | MktPoints / 积分规则 | `views/mkt/points.vue` | `http` 直连 | `controller/MktPointsController.java` `/mkt/points` | `NON_MENU_ENTRY` | 与菜单 `/market/points` 同组件不同 base（QIAOPM-ISSUE-014） |
+
+| H-14 | `/intel/price-sensitivity` | IntelPriceSensitivity / 价格敏感度 | `views/intel/price-sensitivity.vue` | `price-sensitivity.ts` | `controller/PriceSensitivityController.java` `/intel/price-sensitivity` | `NON_MENU_ENTRY` | 有完整页面无菜单入口 |
+
+| H-15 | `/m09/invite` | M09Invite / 裂变邀请 | `views/m09-invite/index.vue` | `invite.ts` | `controller/InviteController.java` `/m09/invite/*` | `NON_MENU_ENTRY` | 同上 |
+
+| H-16 | `/m12/dispatch` | M12Dispatch / 业务策略下发 | `views/m12/dispatch/index.vue` | `dispatch.ts` | `controller/BusinessPolicyDispatchController.java` `/m12/dispatch` | `NON_MENU_ENTRY` | 同上 |
+
+| H-17 | `/fiscal/config` | FiscalConfig / 财税渠道配置 | `views/fiscal/config.vue` | `fiscal.ts` | `controller/FiscalConfigController.java` `/fiscal/config` | `NON_MENU_ENTRY` | 配置型子页，无菜单直达 |
+
+| H-18 | `/fiscal/list` | FiscalList / 发票列表 | `views/fiscal/list.vue` | `fiscal.ts` | `service/FiscalService.java` `/fiscal` ⚠️ | `NON_MENU_ENTRY` | 同上 |
+
+| H-19 | `/style-gallery/quick-order` | StyleGalleryQuickOrder / 快速下单 | `views/style-gallery/quick-order.vue` | `style-gallery`+`basic`+`request` | `controller/StyleGalleryController.java` ⚠️ | `NON_MENU_ENTRY` | 二级下钻页；受 QIAOPM-ISSUE-012 base path 漂移影响 |
+
+| H-20 | `/blockchain/trace` | BlockchainTrace / 区块链溯源 | `views/blockchain/trace.vue` | `blockchain.ts` | `controller/BlockchainController.java` `/blockchain` | `NON_MENU_ENTRY` | 有完整页面无菜单入口 |
+
+| H-21 | `/blockchain/monitor` | BlockchainMonitor / 区块链监控大屏 | `views/blockchain/monitor.vue` | `blockchain.ts` | `controller/BlockchainController.java` `/blockchain` | `NON_MENU_ENTRY` | 同上 |
+
+| H-22 | `/sys/role` | SysRole / 角色管理 | `views/system/role.vue` | `rbac.ts` | `controller/RbacController.java` `/sys/role` | `NON_MENU_ENTRY` | 菜单「系统设置」无「角色管理」项，但属 RBAC 核心页，缺入口影响权限验收 |
+
+| H-23 | `/sys/qualification` | — | `views/system/qualification.vue` | — | — | `已计入菜单` | 已在 4.2.1（12）登记 |
+
+| H-24 | `/mkt/experiment` | \*\*无路由\*\* | `views/mkt/experiment.vue` | `pricing-experiment.ts` | `controller/PricingExperimentController.java` `/mkt/pricing/experiment` | `CODE_WITHOUT_UI` | 组件 + API + 后端三端齐全，但 `router/index.ts` 未注册该路径（已复测确认零命中）→ 用户无法到达 |
+
+
+
+### 4.4 未引用 API 模块
+
+
+
+> 本节登记**在 `src/api/` 存在、但未被任何 `.vue` 视图引用**的接口模块。此类模块属潜在孤儿：后端接口可能已实现却无前端入口，是第 15 章 Step 2「反向清单」的重要线索来源。
+> 判定方式：对 `src/` 全量检索模块名的 import 语句（含 `@/api/x` 与相对路径两种写法）。
+
+
+
+| API 模块 | 大小 | 端点覆盖 | 引用方 | 标签 | 状态与说明 |
+
+|---|---|---|---|---|---|
+
+| `api/rfm.ts` | 8892 B | `/intel/rfm/*`（14 个端点） | `views/intel/rfm/` 下 11 处（`SegmentDrawer.vue:93`、`TagDictTable.vue:185`、`useRfmBatch.ts:2`、`useRfmOverview.ts:2`、`useRfmCompute.ts:2`、`useRfmDict.ts:2` 等） | — | UNVERIFIED：**已被引用**，非孤儿；主表 `/intel/rfm` 行亦标 UNVERIFIED（子组件链路齐全，tab 取数需运行期确认） |
+
+| `api/gray.ts` | 3396 B | `/gray/*`（3 个端点） | \*\*0 个视图\*\*（`src/` 全量检索 `api/gray` 零命中） | `CODE_WITHOUT_UI` | UNVERIFIED：疑似与 `sys.ts` 覆盖同类 `/gray/*` 路径；需确认是重复封装还是被 `sys.ts` 取代后的残留 |
+
+| `api/bnpl-huabei.ts` | 2026 B | `/bnpl/*`、`/huabei/*`（8 个端点） | \*\*0 个视图\*\*（`src/` 全量检索 `api/bnpl-huabei` 零命中） | `CODE_WITHOUT_UI` | UNVERIFIED：后端 `BnplController`/`HuabeiController` 存在，但无菜单、无路由、无组件引用 → 三端缺失中的「UI 端」 |
+
+
+
+> \*\*反向清单（4.5）当前仍为模板状态\*\*：QIAOPM PRD 原文未找到（QIAOPM-Q-006），反向清单的「PRD 章节 / 文档描述的功能点」两列在 PRD 补齐前**无法回填**，不得以本节正向清单反推文档预期。
+
+
+
+\### 4.5 反向清单模板（文档 → UI → 代码）
 
 
 
@@ -574,7 +1090,7 @@
 
 
 
-\### 4.4 映射规则
+\### 4.6 映射规则
 
 
 
@@ -1682,14 +2198,27 @@ Step 11 未验证项标记 UNVERIFIED，不假装完成
 | QIAOPM-ISSUE-003 | P2 | `DEPLOY-SOP.md` 监控表提及"Kafka / MQ 积压"，但代码零 MQ 依赖 | 部署文档 / 消息队列 | `docs/DEPLOY-SOP.md` §4 监控项列有"Kafka / MQ 积压 < 100" | `backend/pom.xml` 无 kafka / rabbitmq / rocketmq 依赖；`backend/src` 全量 grep 无命中；唯一类 MQ 组件为 IoT 用 HiveMQ MQTT Client `1.3.3`（`iot.mqtt.enabled` 默认 false） | 监控项无指标来源，属**文档漂移（假能力）**；若生产真部署了 Kafka 则监控表与运行态脱节 | 确认是否实际部署 Kafka（见 QIAOPM-Q-003）：确未部署则删除监控项；确有部署则补明其用途与代码接入路径 | OPEN |
 | QIAOPM-ISSUE-004 | P2 | `docs/governance/CURRENT_STATE.md` 代码规模数字过期 | 治理文档 / 现状快照 | `CURRENT_STATE.md:99` SQL 迁移文件 `78`；`:107` 前端视图目录 `41`；`:108` API 接口文件 `42`；`:110,123` E2E `8 个 spec 文件 / 180` 用例 | 实测：`db/sql/` **170** 个 `.sql`；`src/views/` **171** 个 `.vue`；`src/api/` **62** 个 `.ts`；`e2e/` **21** 个 `*.spec.ts` | 现状快照失真，新人按此评估工作量会低估约 2~4 倍 | 基于实测重新生成代码规模快照，替换过期数字 | OPEN |
 | QIAOPM-ISSUE-005 | P2 | CI `integration` job 引用仓库中不存在的 `Run-All-Tests.ps1` | CI 流水线 | `.github/workflows/ci.yml` `integration` job 声明执行集成测试 | `.github/workflows/ci.yml:143` → `pwsh ./Run-All-Tests.ps1`；仓库根**不存在**该文件；该 job 另混用 bash / pwsh 语法 | 该 job 必然失败或被静默跳过 → **集成测试实际无门禁效果**，假绿风险 | 补齐脚本或改指向 `tests/` 下现有的 `smoke-full.ps1`；同时统一 job 的 shell 声明 | OPEN |
+| QIAOPM-ISSUE-006 | P0 | `多人共享套餐`（`/package/share`）前端调用的 6 个后端接口完全缺失，页面 `onMounted` 即触发必然失败的请求 | 会员 / 套餐（对应 4.2.1（3）主表行；对应调查草稿 P-1） | 第 4.2 节正向清单要求「每个功能点必须能追踪到前端 API、后端接口和数据表」 | 菜单 `Layout.vue:158`；路由 `router/index.ts:41`（`permission: 'package:list'`）；组件 `views/package/share.vue`；前端 `api/package-share.ts`（1929 B）调 `stats`→`GET /crm/package/share/stats`、`page`→`GET /crm/package/share/page`、`pause`→`POST .../pause`、`resume`→`POST .../resume`、`revoke`→`POST .../revoke`、`adjustQuota`→`PUT .../quota`；后端 `service/P2FeaturesService.java` 全量 mapping 仅 `invite`(:52)、`redeem`(:105)、`list`(:166)、`enable-share`(:175) 四项 → **六个 mapping 均不存在**；实体 `CrmPackageShare` + Mapper 存在 | 主流程断裂：页面 `onMounted:341` 同时调 `loadList()+loadStats()`，两者必然失败；列表与统计恒为空且 `try/catch` 吞异常无提示 → **静默空白页**（属假成功/幽灵功能）。属「只做了 Model 层未做接口层」 | 补齐 6 个 mapping，或按最小修改原则移除页面对应调用与按钮；补接口后按第 8 章覆盖正常流/空态/异常/权限 | 暂停 —— 见 QIAOPM-Q-007 |
+| QIAOPM-ISSUE-007 | P0 | `提成结算批次` / `提成冲正` 两个菜单页后端无任何接口映射 | 员工提成（对应 4.2.1（7）主表两行；对应调查草稿 P-4） | 第 4.2 节正向清单要求后端接口可追踪 | 菜单 `Layout.vue:170-171`；路由 `router/index.ts:94`（`commission:batch`）与 `:95`（`commission:reversal`）；组件 `views/commission/batch.vue`、`views/commission/reversal.vue`；前端直连 `/commission/batch/{export,generate,page}`、`/commission/reversal`、`/commission/reversal/export`、`/commission/reversal/page`、`/commission/reversal/stats`；后端 `controller/` 包仅有 `CommissionController`(`/commission`)、`CommissionSimulationController`、`CommissionConditionController`、`CommissionTierController`，**全仓检索 `commission/batch`、`commission/reversal` 零命中**；实体 `CommissionSettlementBatch`、`CommissionReversal` 存在 | 两个一级功能菜单可从左侧进入但**全部操作无效**；提成财务链路（结算→冲正）不可用，属主流程断裂 | 补齐 `/commission/batch` 与 `/commission/reversal` 的 Controller 层；确认是否与既有 `/commission/settlement` 重复后再定契约 | OPEN |
+| QIAOPM-ISSUE-008 | P1 | 电子价目表页调用不存在的 `POST /crm/member/list` | 基础资料（对应 4.2.1（2）主表行；对应调查草稿 P-2） | `controller/MemberController.java` base 为 `/member` | `views/dev/PriceList.vue:331` → `method: 'POST', url: '/crm/member/list'`；后端 `MemberController` base `/member`（正确路径应为 `/member/list` 或 `/member/page`）；全仓检索 `@RequestMapping("/crm/member")` **零命中** | 契约漂移：价目表页绑卡项套餐时必然 404，下拉为空且无有效错误提示 | 统一改为 `/member/list` 或 `/member/page`；按第 3.4 章「契约变更需评审」确认目标路径后修改 | OPEN |
+| QIAOPM-ISSUE-009 | P1 | `/service/list` 被 3 个页面调用，后端不存在该路径 | 耗材 / 资源排程（对应 4.2.1（11）主表三行；对应调查草稿 P-9） | 服务项目实际由 `service/BizServiceItemService.java` 提供 `/biz/service*` | 调用方三处：`views/resource/resource-schedule.vue:386`、`views/material/binding.vue:543`、`views/material/service-material.vue:364`，均为 `request.get('/service/list')`；后端全仓检索 `@RequestMapping("/service")` **零命中** | 三个页面的服务下拉框恒为空 —— 耗材绑定、双资源排程、项目耗材规则**均依赖此下拉**，属主要功能缺失 | 统一改为 `/biz/service/item/page`（以 `BizServiceItemService` 实际 mapping 为准）；建议抽到 `api/` 层避免第 3 处再漂移 | OPEN |
+| QIAOPM-ISSUE-010 | P1 | 菜单「员工管理」无路由、无组件，菜单点击无落地页 | 系统设置（对应 4.2.1（12）主表行；对应调查草稿 P-10） | 菜单声明存在即应有路由与组件（第 4.6 章映射规则） | 菜单 `Layout.vue:281` `{ path: 'employee', title: '员工管理', icon: User }` → 按父级解析为 `/sys/employee`；`router/index.ts` 中 `path: 'employee'` **零命中**（全表 156 条 `path:` 声明）；组件 `views/setting/employee.vue` 存在但仅被 `views/setting/index.vue` 作为 tab 引用；后端 `controller/EmployeeController.java` 的 `/employee`、`/employee/list`、`/employee/page` **接口齐备** | 菜单可见 → 点击空白/404，属「UI 入口与实现脱节」；后端已就绪，属纯前端路由缺失 | 补注册 `sys/employee` 路由指向 `views/setting/employee.vue`；或按最小修改原则从 `fallbackMenus` 移除该菜单项 | OPEN |
+| QIAOPM-ISSUE-011 | P1 | `commission/rules` 路由重复注册，权限点被覆盖导致 403 | 员工提成（对应 4.2.1（7）主表行；对应 4.2.0 S-5；对应调查草稿 P-5） | 每条路由应唯一绑定一个权限点（第 3.5 章权限约定） | `router/index.ts:58` → `permission: 'commission:rule:list'`，title `提成规则`；`router/index.ts:114` → `permission: 'commission:rule:config'`，title `提成规则配置`；两条 `name` 同为 `CommissionRules`，Vue Router 后注册者覆盖前者 | 持有 `commission:rule:list` 但无 `commission:rule:config` 的角色访问 `/commission/rules` 被 `beforeEach` 守卫跳 `/403` → **假性 404：有菜单、有权限点但进不去**，属假成功 | 删除其一或改 `name` / 路径区分；确认两个权限点在 `sys_menu_permission` 中的实际意图后再改 | OPEN |
+| QIAOPM-ISSUE-012 | P2 | 款式图库前端 API base path 与后端不一致 | 营销工具 / 款式图库（对应 4.2.1（8）主表行；对应 4.3 H-19；对应调查草稿 P-6） | 前后端契约须一致（第 3.4 章 API 约定） | 前端 `api/style-gallery.ts` 调 `/style/list`(:16)、`/style/${id}`(:20)、`/style/${id}/view`(:28)、`/style/${id}/like`(:32)、`/style/${id}/order`(:40)、`/style/quick-order`(:77)、`/style/init-default`(:81)；后端 `controller/StyleGalleryController.java:23` base 为 **`/gallery`**（含 `POST`、`GET /{id}`、`POST /{id}/view`、`POST /{id}/like`、`GET /list`、`POST /{id}/order`、`POST /init-default`）；`/style` 由 `controller/StyleLibraryController.java:16` 提供，实体为 `StyleLibrary`（款式**偏好库**，`@SysOpLog(module = "款式库")`），**语义不同** | 前端图库请求打到款式库接口，命中错误的实体与权限点（`style:library:*` vs `style:gallery:*`）；返回结构可能不匹配，快捷下单受影响 | 前端改调 `/gallery/*`，或后端在 `/style` 下补图库 mapping；**须先确认 `/style` 下两套语义是否本就重叠**，属契约变更需评审 | OPEN |
+| QIAOPM-ISSUE-013 | P2 | RFM 分群模块静态链路存在但数据取数未确认 | 客户运营 / RFM（对应 4.2.1（9）主表行；对应 4.4 API 模块表；对应调查草稿 P-7） | 第 4.6 章「每个功能点必须能追踪到前端 API、后端接口和数据表」 | 路由 `router/index.ts:146`（`permission: 'crm:rfm'`）；入口 `views/intel/rfm.vue` 为 shim（注释自述「旧入口兼容，真实实现已迁移到 `./rfm/index.vue`」）；`views/intel/rfm/index.vue` 挂 4 个 tab（`OverviewTab`、`ComputeTab`、`TagDictTable`、`BatchTab`）；**`api/rfm.ts` 确被引用**：`SegmentDrawer.vue:93`、`TagDictTable.vue:185`、`useRfmBatch.ts:2`、`useRfmOverview.ts:2`、`useRfmCompute.ts:2`、`useRfmDict.ts:2` 等 11 处（均用相对路径 `../../../api/rfm`）；后端 `controller/RfmBatchController.java` `/intel/rfm`、`RfmSeedController` `/intel/rfm/seed` 存在 | 静态链路（菜单→路由→组件→API→后端）**齐全**，但「10 个组件全部零 API import」这一初判**经复测不成立**（原调查疑似只检索了 `@/api/rfm` 别名写法，漏掉相对路径写法）。剩余风险：4 个 tab 是否均取到数、批量任务是否真跑通，需运行期确认 | 按第 8 章对 `/intel/rfm` 4 个 tab 逐个做端到端验证后再定级；**本条不得按「UI 与 API 零关联」处理** | OPEN |
+| QIAOPM-ISSUE-014 | P2 | 营销三模块双后端并存（`/market/*` 与 `/mkt/*`），数据表亦分裂 | 营销工具（对应 4.2.1（8）主表三行；对应 4.3 H-11/H-12/H-13；对应调查草稿 P-14） | 一个业务概念应有唯一权威接口与表（第 3.4 / 3.3 章） | `/market/coupon` → `controller/CouponController.java:38` 与 `/mkt/coupon` → `controller/MktCouponController.java:37` 并存；`/market/point` → `controller/PointController.java:21` 与 `/mkt/points` → `controller/MktPointsController.java:31` 并存；`/market/activity` → `controller/MarketActivityController.java:29` 与 `/mkt/promotion` → `controller/MktPromotionController.java:35` 并存；对应表分裂为 `market_coupon` / `mkt_coupon`、`market_point_record` / `mkt_points_log`、`market_activity` / `mkt_promotion`；同一组件 `views/mkt/coupon.vue` 等被两条 base 复用 | **数据分裂风险**：同一业务概念两套表，若两套都在写入将导致数据不一致、统计口径失真；当前哪套在用**无法静态确认** | 连库确认两套表的行数与写入方，确定唯一权威实现后下线另一套；迁移前须按第 12.3 章做生产数据变更授权 | OPEN |
 
 > **已关闭**：原调查项 ISSUE-5（仓库根 `.env` 敏感文件风险）—— 经人工确认，`.env` 未进 git 历史、已被 `.gitignore` 忽略、未被跟踪，**关闭**，不再登记为 ISSUE。
+> **本轮复测修正（2026-10-22）**：`QIAOPM-ISSUE-013` 登记描述与初稿（P-7「RFM 模块 UI 与 API 零关联」）**不一致**。复测确认 `api/rfm.ts` 被 `views/intel/rfm/` 下 11 处引用，故该行按「静态链路齐全、取数待运行期确认」登记，未按「零关联」定性。详见该行证据列。
 
 \#### D.2 技术债（TD）
 
 | 编号 | 级别 | 问题 | 涉及模块 | 文档说法 | 代码事实（证据） | 影响 | 建议处理 | 状态 |
 |---|---|---|---|---|---|---|---|---|
 | QIAOPM-TD-001 | P2 | `backend/` 根目录堆积 300+ 个临时日志 / 脚本 / 编译参数产物 | 仓库卫生 | 仓库根与 `backend/` 根应为源码与配置的规范结构 | `backend/` 根下有 300+ 个 `*.log` / `*.txt` / `compile_*.ps1` / `javac_args*.txt` / 临时 `*.sql`；仓库根另有 `out*.log`、`check_servers.ps1`、`check_v2.ps1` | 污染目录结构事实（已登记到 2.1）；干扰新人定位源码；`.gitignore` 覆盖不全时有误提交风险 | 归档到 `backup/` 或删除；补齐 `.gitignore` 规则；清理后更新 2.1 目录表 | OPEN |
+| QIAOPM-TD-002 | P2 | 84 个 `@RestController` 位于 `service/` 包，不符合「controller → service」分层约定 | 后端分层 / 可追溯性（对应 4.2.0 S-3；对应第 2.3 章分层事实） | 第 2.3 章「后端分层：`controller` → `service` / `service.impl` → `mapper` → `entity`」 | 标准位置 `backend/src/main/java/com/meiyetec/controller/` 136 个 `.java` 全部为 `@RestController`；`service/` 目录下另有 81 个 `@RestController`（含 `P1SuiteService`、`P2FeaturesService`、`P3EcosystemSuiteService`、`KioskService`、`GdprService`、`HipaaService`、`IntlBookingService`、`IntlPaymentService`、`GoogleMapsService`、`ReportV2Service`、`VisualArchiveService`、`OrgHierarchyService`、`ConsentAndDrugDeviceService`、`CrmIntegrationService`、`EcommerceService`、`FiscalService`、`MemberDayService`、`LbsDispatchService`、`LtvService`、`DynamicPricingService`、`GiftCardService`、`ComplicationService`、`BirthdayReminderService`、`BizServiceItemService`、`BizTreatmentService`、`BookingResourceService`、`BrandManagementService`、`CarePlanService`、`CareFormulaService`、`PriceListService`、`DataHubService`、`PosDeviceService`、`PaymentConfigService`、`PluginService`、`RiskControlService` 及 `CrossStoreInventoryController` 等）；另 `cn/domestic/DomesticPayController.java`、`config/TraceResponseAdvice.java`、`exception/GlobalExceptionHandler.java` | 违反第 2.3 章分层事实：**按目录追踪接口会漏掉约 1/3 接口**（本次 4.2 主表中 ⚠️ 标记行均属此类）；Service 类同时承担业务与 HTTP 契约，难以单测与复用 | 制定 `controller` 包迁移计划（建议随功能迭代小步迁移，不做一次性大重构）；至少先在第 2.3 章标注「`service/` 下 84 个 `@RestController` 属已知偏差」；排查工具/脚本须按 `@RestController` 注解全仓检索而非仅扫 `controller/` 目录 | OPEN |
+| QIAOPM-TD-003 | P2 | 40+ 视图绕过 `api/` 层直连 HTTP，接口契约分散 | 前端分层（对应 4.2.0 S-4；对应第 2.3 章前端分层事实） | 第 2.3 章「前端分层：`views/`（页面）→ `api/`（接口封装）→ `src/api/request.ts`」 | `src/api/` 存在 62 个 `.ts`，但 `src/views/**/*.vue` 中直接 `import ... from '@/utils/http'` 或 `@/api/request` 的文件达 **51** 个（如 `views/org/{hq,brand,store}.vue`、`views/mkt/*.vue`、`views/crm/care-*.vue`、`views/mh/{visual,consent}.vue`、`views/booking/{resource,waitlist,no-show}.vue`、`views/commission/{batch,reversal}.vue`、`views/spa-scene/index.vue`、`views/pay/dcep.vue` 等） | 接口路径散落在 51 个组件内，**绕过 `api/` 统一封装**：改 base path / 加拦截器 / 统一错误处理时易遗漏；本次 `/service/list`（ISSUE-009）与 `/crm/member/list`（ISSUE-008）两处契约漂移均出自直连代码 | 将直连调用逐步收敛到 `src/api/*.ts`；优先收敛 4.2 主表中标 **无（http 直连）** 的行；收敛后按第 3.1 章「API 调用封装」补齐约定 | OPEN |
+| QIAOPM-TD-004 | P2 | 静态引用扫描只覆盖 `@/` 别名、漏检相对路径写法，导致「零引用 / 零关联」误判 | 审计方法论 / 排查工具（由 QIAOPM-ISSUE-013 复测衍生；关联 QIAOPM-TD-003） | 第 4.6 章「每个功能点必须能追踪到前端 API、后端接口和数据表」要求结论以全量引用关系为依据 | 本次 RFM 初判「UI 与 API 零关联」**仅检索 `@/api/rfm` 别名写法**，未覆盖 `../../../api/rfm` 相对路径写法，复测发现 `views/intel/rfm/` 下实际有 11 处相对路径引用（`SegmentDrawer.vue:93`、`TagDictTable.vue:185`、`useRfmBatch.ts:2`、`useRfmOverview.ts:2`、`useRfmCompute.ts:2`、`useRfmDict.ts:2` 等），初判不成立 | **方法论缺陷**：单写法扫描会产生「零引用」假阴性结论，进而误判功能缺失、错定 ISSUE 级别（如 ISSUE-013 曾被按「主流程断裂」拟稿）；同样可能把实际已收敛到 `api/` 的视图误计入 TD-003 的 51 个直连统计（**TD-003 的 51 这一数字未经双写法复核，暂按待复核对待**） | 后续所有「零引用 / 零关联 / 零调用」结论必须**双写法交叉验证**：`@/api/*`（或 `@/utils/http`、`@/api/request`）与 `../../../api/*` 相对路径同时检索，两者结果合并后才可下结论；建议在 `audit/` 下沉淀一个双写法检索脚本作为守门步骤，后续 PR / 复测复用；对 TD-003 的 51 个直连视图做一次双写法重扫并回填数字 | OPEN |
 
 \#### D.3 待确认问题（Q）
 
@@ -1699,6 +2228,9 @@ Step 11 未验证项标记 UNVERIFIED，不假装完成
 | QIAOPM-Q-002 | 生产真实域名（CloudFront 前端域名、nginx 后端入口）、真实 DB / Redis 主机分别是什么？ | 环境矩阵 / 部署 | `docs/prod-env-manifest.md` §2-§4 为环境变量事实源 | `.env.example` 全为占位（`prod-rds-host` / `prod-redis-host`）；`application-prod.yml` 强制 ENV 注入不落盘 | 流程文档完整，但真实地址无任何仓库内来源 | 2.5 生产"真实地址"行 UNVERIFIED；生产验收无法定位入口 | 运维 | 2.5 生产真实地址行保持 UNVERIFIED；验收记录不得写具体生产地址 | UNVERIFIED | |
 | QIAOPM-Q-003 | Kafka 是否实际部署？ | 部署 / 消息队列 | `DEPLOY-SOP.md` §4 监控表列"Kafka / MQ 积压 < 100" | 代码零 MQ 依赖（见 QIAOPM-ISSUE-003 证据） | 文档有监控项，代码无对应组件 | 若确未部署 → 监控表为假能力需删除；若确有部署 → 监控表与代码脱节，需补接入路径 | 运维 | 2.2 "消息队列"行按"代码零 MQ 依赖 = CONFIRMED"记录，不宣称有 Kafka | UNVERIFIED | |
 | QIAOPM-Q-004 | Node 版本以 20 为准还是 18+ 为准？ | 前端构建 / 工程规范 | `README.md:45` 写"Node.js 18+" | `ci.yml:73,114,184` 用 `node-version: '20'`；`frontend/meiyetec-web/Dockerfile` 用 `node:20-alpine`；仓库无 `.nvmrc` | 文档口径 18+，CI 与镜像口径 20 | 新人按 18+ 装环境可能与 CI 不一致，导致"本地过、CI 挂" | 前端负责人 | 2.4.1 本地前端行标 PARTIAL 并注明口径冲突，不擅自选定版本 | UNVERIFIED | |
+| QIAOPM-Q-005 | 运行态左侧菜单的真实内容是什么？请导出 `sys_menu_permission` 表数据（菜单层级 / `path` / `title` / `permission` / `visible` / `sort`）用于与 4.2 节静态清单对账 | 菜单与权限 / 第 4.2 章（对应 4.2.0 S-1、S-2） | 第 4.2 章正向清单要求「菜单 → 路由 → 页面 → 功能点」逐段可追踪 | 菜单由后端 `GET /auth/me/menu` 动态下发（`controller/RbacController.java:71-75` → `service/RbacService.buildMenuTree`）；`components/Layout.vue:321-332` 优先渲染 `store.menus`，仅在动态菜单为空时回落到静态 `fallbackMenus`（`Layout.vue:102`）；菜单与权限**同表**（`entity/SysMenuPermission.java`） | 4.2 主表基于**静态 `fallbackMenus`**，与运行态 `sys_menu_permission` 是否一致**未验证**；两者不一致时会出现「有菜单无路由」或「有路由无菜单」，直接影响第 4 章全部行 | 4.2 全表可信度存疑；H-22（`/sys/role` 无菜单入口）等判定可能反转 | 产品 + 后端 | 4.2.0 顶部按原文声明限制；主表「菜单层级 / UI 入口」列视为静态事实，**不得当作运行态事实引用**；导出后逐行对账并更新 4.2 / 4.3 | UNVERIFIED | |
+| QIAOPM-Q-006 | QIAOPM PRD 原文在哪里？如不存在，请指定替代的经确认需求文档（技术设计 / 补充需求 / 验收清单） | 文档依据 / 第 4.5、第 5.1 章 | 第 0.3 章规定「业务预期以经确认的 PRD / 补充需求为准」；第 4.5 章反向清单需以 PRD 为唯一输入 | 仓库内未检索到 QIAOPM PRD 文档；`docs/` 下仅有 `DEPLOY-SOP.md`、`prod-env-manifest.md`、`runbook/*`、治理文档 | 规范强依赖的 PRD 缺失 → 业务预期无权威来源 | 第 4.2 节主表「PRD 章节」列全部留空；第 4.5 章反向清单无法回填；双向对账无法完成 → 相关模块整体不得标 `VERIFIED` | 产品 | 主表「PRD 章节」列统一标注"QIAOPM PRD 原文未找到，待补"；4.5 保持模板状态，**不得用正向清单反推文档预期** | UNVERIFIED | |
+| QIAOPM-Q-007 | 多人共享套餐（`/package/share`）的业务意图与 `crm_package_share` 表状态双重待确认 | 会员 / 套餐（对应 QIAOPM-ISSUE-006；对应 4.2.1（3）主表行） | 第 7.2 章要求新增功能须有需求来源；第 4.6 章要求功能点可追踪到数据表 | **代码证据（指向开发中断）**：六项调查证据中 5 项指向「开发中断」而非「功能废弃」——(a) 实体+Mapper 被 `P2FeaturesService.java:34/95/119/169` 生产代码实际读写，`invite`/`redeem`/`list`/`enable-share` 四端点逻辑完整（含 CAS 扣次、配额校验、状态机、`@Transactional`、租户隔离）；(b) `share.vue` / `P2FeaturesService.java` / `package-share.ts` 三文件零 TODO / FIXME / 待补充注释；(c) `migrate_r3_0_e_p2_features.sql:12-40` 有完整建表 + `crm_package_order` 3 列 ALTER，注释自述「R3.0-E P2：高级差异化（最小骨架）」；(d) `P2EntityFieldsTest.java:19` 实体字段测试保留；(e) `share.vue` 无 `v-if="false"` / 无「敬请期待」/ 无 feature flag，撤销按钮的 `disabled` 为业务态条件 | **缺失证据**：① PRD 原文（见 QIAOPM-Q-006，仓库内无 QIAOPM PRD）；② `crm_package_share` 表在目标环境是否实际 apply —— `audit/post-audit/scripts/migrate_r3_0_e_p2_features.EXCLUDED-FOR-2.3.sql:16` 注释「暂不 apply」，`audit/post-audit/phase-2.3-batch-2-apply-log.md:40,48` 记录 apply 后 `SHOW TABLES LIKE 'crm_package_share'` 返回 `Empty set`；③ 停做决策来源（2026-10-16 前 git 历史因仓库损坏丢失，`git log` 仅剩 `a414f95 recover`，无法查证是否存在主动叫停记录） | **双重阻塞**：① 补齐 6 个接口（`stats`/`page`/`pause`/`resume`/`revoke`/`quota`）属**新增功能**，按第 7.2 章须有需求来源定义验收条件，PRD 缺失状态下不得开发——**开发中断 ≠ 应当补齐**；② 若表未建，即便补齐接口也无法运行验证，修复不可验收 | 产品（PRD 与业务意图）+ 运维/DBA（目标环境表状态） | **暂停该模块修复**；前端保持现状不改（`share.vue` 的 `loadStats` / `loadList` 以 `catch { /* 静默 */ }` 吞异常，用户看到空列表且不报错，属已知静默降级，不在本次修复范围）；后端 4 个现存端点保持不动；待 Q-007 结论回填后再定修复方向（补接口 / 移除页面 / 维持现状三选一须重新决策） | UNVERIFIED |
 
 > **关闭条件**：以上 Q 项按第 10.6 节执行——取得证据（运维确认记录 / 实际地址 / 配置截图）后更新 2.5 对应行、在此表填写「结论」列，并把状态改为最终结论（CONFIRMED / CORRECTED）。不得只在聊天中口头关闭。
 
