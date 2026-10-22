@@ -500,3 +500,6 @@ audit/evidence/*/full_backup.sql
 backup/*.sql
 backup/*.sql.gz
 backup/logs/*.log
+
+# I123 备份脚本（长期资产，需入库）
+!scripts/backup-db-docker.ps1
