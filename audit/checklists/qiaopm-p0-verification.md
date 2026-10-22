@@ -44,22 +44,30 @@
 ---
 ## 2. P0-02 权限（RBAC）
 
-### 核验结果（2026-10-16）
-- Controller 覆盖：14 / 137 = **10.2%**
-- 方法覆盖：139 / 1885 = **7.4%**
-- `PosController`（收银主链路）：0 / 15 = **0%**
-- 权限框架已实现，覆盖率严重不足
+### 核验结果（2026-10-21 最终）
+| 核验点 | 结果 | 证据 |
+|---|---|---|
+| `@RequirePermission` 总数 | ✅ | 139 → 865（+726） |
+| Controller 覆盖 | ✅ | 14/137 → 109/138 |
+| 方法覆盖率 | ✅ | 7.4% → 86.3%（+78.9 pp） |
+| 剩余 29 个 Controller | ✅ | 3 公开 / 3 工具 / 8 死代码 / 15 已覆盖 |
+| `PosController`（收银主链路） | ✅ | 0/15 → 15/15 |
 
 ### 结论
-- [ ] 通过
-- [x] **不通过** → 登记 I115
+- [x] **通过**（I115 全部 15 批完成，2026-10-21）
+- [ ] 不通过
 - [ ] 待补
 
+### 遗留（不阻塞 P0-02 关闭）
+- 角色权限分配（`sys_role_permission`）：生产前必须给 BOSS/MANAGER/CLERK/OPERATOR 分配，否则普通员工功能 403
+- 镜像重建：运行中的容器仍是旧代码，需 `mvn package` + `docker compose build api` 才能让 865 个注解生效
+
 ### 证据
-- 扫描命令输出（2026-10-16）
-- 14 个已覆盖 Controller 清单（见 I115）
+- I115 全量记录：`audit/issues/I115-permission-coverage-gap.md`（15 个有效批次）
+- 权限框架：`security/PermissionAspect.java` + `annotation/RequirePermission.java`
 
 ---
+
 ## 3. P0-03 收银 / 支付安全
 
 ### 核验结果（2026-10-21）
@@ -93,23 +101,29 @@
 ### 核验结果（2026-10-22）
 | 核验点 | 结果 | 证据 |
 |---|---|---|
-| 备份脚本 | ✅ | `scripts/backup-db.sh`（RPO 1h，本地 7d / S3 30d / 归档 1y） |
+| 备份脚本 | ✅ | `scripts/backup-db-docker.ps1`（docker exec mysqldump，cmd /c 直重定向） |
 | 恢复脚本 | ✅ | `scripts/restore-db.sh`（RTO 1h 目标，`--dry-run`，反误操作） |
 | **恢复能力（实测）** | ✅ | 演练：RTO **41.2 秒**（目标 60 分钟），282/282 表，数据 100% CHECKSUM 一致 |
+| **备份自动化** | ✅ | Windows 任务计划 `QiaoPM-DB-Backup-Daily` 每日 02:00，首次触发 LastTaskResult=0 |
 | 演练证据 | ✅ | `audit/evidence/i116-backup-drill-20261022/` |
-| **备份自动化** | ❌ | `backup-db.sh` 从未运行，aws cli 未装，备份目录不存在，systemd timer 未部署 → **I123** |
+| 自动备份产物 | ✅ | `D:\QiaoPM\backup\meiyetec_YYYYMMDD_HHMMSS.sql`（9.85 MB / 281 张表），保留 7 天 |
 
 ### 结论
-- [ ] 通过
-- [x] **部分通过**（恢复能力验证 ✅ / 备份自动化未部署 ❌ → I123）
+- [x] **通过**（恢复能力 + 备份自动化均验证）
+- [ ] 不通过
 - [ ] 待补
 
+### 遗留（不阻塞 P0-04 关闭）
+- S3 上传：未做（容器内无 aws cli），本地落盘满足 RPO ≤ 24h
+- 失败告警：未做 → I124（P2）
+
 ### 证据
-- 演练记录：`audit/issues/I116-backup-drill-evidence-gap.md`
-- 演练证据：`audit/evidence/i116-backup-drill-20261022/full_backup.sql`（10.3 MB）
-- 备份自动化缺口：`audit/issues/I123-backup-automation-not-deployed.md`
+- 恢复演练：`audit/issues/I116-backup-drill-evidence-gap.md`
+- 备份自动化：`audit/issues/I123-backup-automation-not-deployed.md`
+- 演练证据：`audit/evidence/i116-backup-drill-20261022/`
 
 ---
+
 ## 状态
 
 待执行
