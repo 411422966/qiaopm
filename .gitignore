@@ -495,3 +495,8 @@ audit/baseline/*-backup-*.sql
 
 # I116 演练 SQL 快照（10MB，本地留存，不入库）
 audit/evidence/*/full_backup.sql
+
+# I123 数据库备份产物（不入库）
+backup/*.sql
+backup/*.sql.gz
+backup/logs/*.log

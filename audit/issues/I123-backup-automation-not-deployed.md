@@ -1,4 +1,4 @@
-﻿# I123 — 备份自动化从未运行（脚本存在但未部署）
+# I123 — 备份自动化从未运行（脚本存在但未部署）
 
 ## 现象（I116 演练暴露）
 - `scripts/backup-db.sh` 存在但从未执行
@@ -27,5 +27,30 @@
 - 来源：I116 备份恢复演练暴露
 - 前置：I116（恢复能力已演练通过：RTO 41.2s，数据 100% 一致）
 
+## 处置完成（2026-10-22）
+
+### 方案
+- 脚本：`scripts/backup-db-docker.ps1`（PowerShell + docker exec mysqldump + cmd /c 直重定向）
+- 调度：Windows 任务计划 `QiaoPM-DB-Backup-Daily`，每日 02:00
+- 落盘：`D:\QiaoPM\backup\meiyetec_YYYYMMDD_HHMMSS.sql`（约 9.85 MB / 281 张表）
+- 日志：`D:\QiaoPM\backup\logs\backup-YYYYMMDD.log`
+- 保留：最近 7 天（自动清理更早）
+
+### 验证
+- 手动执行：10325242 字节 / 281 CREATE TABLE / EXIT=0
+- 关键表抽查：crm_member / pos_order / pos_order_item / flyway_schema_history 全部 ✅
+- 任务注册：State=Ready，NextRunTime=2026-10-23 02:00
+- 任务触发：LastTaskResult=0，新备份 meiyetec_20261022_162740.sql（10326562 字节）
+
+### 踩坑记录（4 次迭代）
+- ❌ v1：`-p` + `2>&1` + `$ErrorActionPreference=Stop` → 密码警告被误判为致命错误
+- ❌ v2：`MYSQL_PWD` + 密码拼错（`proot123456` 应为 `root123456`） → Access denied
+- ❌ v3：容器内生成文件 + `stat -c %s` → 变量展开/引号嵌套问题，size 空值
+- ✅ v4：`cmd /c` 把 `docker exec mysqldump` 的 stdout 直接重定向到宿主机文件，绕开容器内文件 + PowerShell 管道
+
+### 已知未覆盖
+- S3 上传：容器内无 aws cli，本地落盘已满足 RPO ≤ 24h
+- 失败告警：日志可查，无主动通知 → 可作为后续 I124
+
 ## 状态
-待办
+已修复（2026-10-22，本地自动备份就绪，S3 上传与告警待后续）
