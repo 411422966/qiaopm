@@ -1,0 +1,355 @@
+{
+ "apiBase": "http://localhost:8080",
+ "users": {
+  "admin": {
+   "permCount": 123,
+   "hasStar": true,
+   "colonCodes": [
+    "blockchain:chain",
+    "blockchain:monitor",
+    "blockchain:record",
+    "blockchain:trace",
+    "booking:spa-scene",
+    "crm:follow-rule",
+    "dev:ai-scheduler",
+    "dev:google-maps",
+    "dev:intl-booking",
+    "dev:intl-payment",
+    "dev:risk-control",
+    "employee:level",
+    "employee:level:benefit",
+    "employee:level:eval",
+    "material:binding",
+    "material:binding:add",
+    "material:binding:del",
+    "material:binding:edit",
+    "member:add",
+    "member:delete",
+    "member:edit",
+    "member:list",
+    "pos:refund:audit:l1",
+    "pos:refund:audit:l2",
+    "pos:refund:audit:l3",
+    "pos:refund:audit:rule",
+    "wallet:list"
+   ],
+   "dottedCount": 78
+  },
+  "boss01": {
+   "permCount": 49,
+   "hasStar": false,
+   "colonCodes": [
+    "member:list",
+    "wallet:list"
+   ],
+   "dottedCount": 32
+  },
+  "clerk01": {
+   "permCount": 19,
+   "hasStar": false,
+   "colonCodes": [
+    "member:list"
+   ],
+   "dottedCount": 13
+  },
+  "manager01": {
+   "permCount": 37,
+   "hasStar": false,
+   "colonCodes": [
+    "member:list",
+    "wallet:list"
+   ],
+   "dottedCount": 25
+  },
+  "operator01": {
+   "permCount": 8,
+   "hasStar": false,
+   "colonCodes": [],
+   "dottedCount": 5
+  }
+ },
+ "cases": [
+  {
+   "path": "/sys/tenant/list",
+   "requirePermission": "sys:tenant:list",
+   "note": "SysTenantController.list",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": true
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "operator01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    }
+   }
+  },
+  {
+   "path": "/sys/tenant/page",
+   "requirePermission": "sys:tenant:list",
+   "note": "SysTenantController.page",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": true
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "operator01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    }
+   }
+  },
+  {
+   "path": "/booking/list?pageNum=1&pageSize=2",
+   "requirePermission": "booking:list",
+   "note": "BookingController.list",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": true
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "operator01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    }
+   }
+  },
+  {
+   "path": "/mkt/channel/list?pageNum=1&pageSize=2",
+   "requirePermission": "mkt:channel",
+   "note": "MktChannelController.list",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": true
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "operator01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    }
+   }
+  },
+  {
+   "path": "/member/list?pageNum=1&pageSize=2",
+   "requirePermission": "member:list",
+   "note": "MemberController.list",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": true,
+     "userHoldsStar": true
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": true,
+     "userHoldsStar": false
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": true,
+     "userHoldsStar": false
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED",
+     "userHoldsPerm": true,
+     "userHoldsStar": false
+    },
+    "operator01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：member:list",
+     "verdict": "DENIED",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    }
+   }
+  },
+  {
+   "path": "/sys/log/list?pageNum=1&pageSize=2",
+   "requirePermission": "sys:log:list",
+   "note": "SysLogController.list",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 500,
+     "msg": "系统繁忙，请稍后重试",
+     "verdict": "ERROR",
+     "userHoldsPerm": false,
+     "userHoldsStar": true
+    },
+    "boss01": {
+     "http": 200,
+     "code": 500,
+     "msg": "系统繁忙，请稍后重试",
+     "verdict": "ERROR",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 500,
+     "msg": "系统繁忙，请稍后重试",
+     "verdict": "ERROR",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "manager01": {
+     "http": 200,
+     "code": 500,
+     "msg": "系统繁忙，请稍后重试",
+     "verdict": "ERROR",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    },
+    "operator01": {
+     "http": 200,
+     "code": 500,
+     "msg": "系统繁忙，请稍后重试",
+     "verdict": "ERROR",
+     "userHoldsPerm": false,
+     "userHoldsStar": false
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,2944 @@
+{
+ "uniqueCodes": 324,
+ "missingInDb": [
+  "xxx:yyy"
+ ],
+ "existsNoBinding": [
+  "attendance:check",
+  "attendance:config:edit",
+  "attendance:config:list",
+  "attendance:edit",
+  "attendance:leave:approve",
+  "attendance:leave:list",
+  "attendance:leave:submit",
+  "attendance:list",
+  "attendance:stat",
+  "biz:service-item:edit",
+  "biz:service-item:list",
+  "bnpl:cancel",
+  "bnpl:create",
+  "bnpl:credit",
+  "bnpl:list",
+  "bnpl:statistics",
+  "booking:add",
+  "booking:available",
+  "booking:calendar",
+  "booking:checkin",
+  "booking:complete",
+  "booking:delete",
+  "booking:detail",
+  "booking:edit",
+  "booking:export",
+  "booking:list",
+  "booking:schedule:list",
+  "booking:stat",
+  "booking:update",
+  "category:edit",
+  "category:list",
+  "commission:calculate",
+  "commission:record:list",
+  "commission:record:stat",
+  "commission:rule:add",
+  "commission:rule:delete",
+  "commission:rule:detail",
+  "commission:rule:edit",
+  "commission:rule:list",
+  "commission:rule:stat",
+  "commission:rule:status",
+  "commission:salary:add",
+  "commission:salary:adjust",
+  "commission:salary:batch-confirm",
+  "commission:salary:batch-pay",
+  "commission:salary:confirm",
+  "commission:salary:export",
+  "commission:salary:list",
+  "commission:salary:pay",
+  "commission:salary:stat",
+  "commission:settlement:add",
+  "commission:settlement:batch-confirm",
+  "commission:settlement:batch-pay",
+  "commission:settlement:confirm",
+  "commission:settlement:detail",
+  "commission:settlement:export",
+  "commission:settlement:list",
+  "commission:settlement:pay",
+  "commission:settlement:stat",
+  "crm:care:complaint:edit",
+  "crm:care:complaint:handle",
+  "crm:care:complaint:list",
+  "crm:care:complaint:reply",
+  "crm:care:follow:plan:list",
+  "crm:care:follow:task:edit",
+  "crm:care:follow:task:list",
+  "crm:care:ops:view",
+  "crm:care:recipe:edit",
+  "crm:care:recipe:list",
+  "crm:care:review:edit",
+  "crm:care:review:list",
+  "crm:care:review:tpl:edit",
+  "crm:care:review:tpl:list",
+  "crm:care:suggestion:engine:edit",
+  "crm:care:suggestion:engine:view",
+  "crm:care:suggestion:log:edit",
+  "crm:care:suggestion:log:list",
+  "crm:care:suggestion:rule:edit",
+  "crm:care:suggestion:rule:list",
+  "crm:care:suggestion:tpl:edit",
+  "crm:care:suggestion:tpl:list",
+  "crm:cohort:edit",
+  "crm:cohort:list",
+  "crm:cross:redemption:edit",
+  "crm:cross:redemption:list",
+  "crm:cross:rule:edit",
+  "crm:cross:rule:list",
+  "crm:detection:diagnosis:view",
+  "crm:detection:hair:edit",
+  "crm:detection:hair:list",
+  "crm:detection:nail:edit",
+  "crm:detection:nail:list",
+  "crm:detection:report:edit",
+  "crm:detection:report:list",
+  "crm:detection:skin:edit",
+  "crm:detection:skin:list",
+  "crm:detection:solution:edit",
+  "crm:detection:solution:list",
+  "dcep:contract:edit",
+  "dcep:contract:list",
+  "dcep:contract:log:list",
+  "dcep:offline:edit",
+  "dcep:offline:list",
+  "dcep:qualification:edit",
+  "dcep:qualification:list",
+  "dcep:qualification:submit",
+  "dcep:sub-wallet:add",
+  "dcep:sub-wallet:edit",
+  "dcep:sub-wallet:list",
+  "dcep:sub-wallet:manage",
+  "dcep:sub-wallet:transfer",
+  "dcep:wallet:activate",
+  "dcep:wallet:list",
+  "dcep:wallet:manage",
+  "dcep:wallet:recharge",
+  "employee:add",
+  "employee:delete",
+  "employee:edit",
+  "employee:level:edit",
+  "employee:level:promote",
+  "employee:list",
+  "employee:reset-password",
+  "huabei:cancel",
+  "huabei:create",
+  "huabei:credit",
+  "huabei:list",
+  "iot:alert:edit",
+  "iot:alert:list",
+  "iot:data:edit",
+  "iot:data:list",
+  "iot:link:edit",
+  "iot:link:execute",
+  "iot:link:list",
+  "iot:rule:edit",
+  "iot:rule:list",
+  "market:activity:add",
+  "market:activity:delete",
+  "market:activity:detail",
+  "market:activity:edit",
+  "market:activity:list",
+  "market:activity:stat",
+  "market:coupon:add",
+  "market:coupon:delete",
+  "market:coupon:edit",
+  "market:coupon:list",
+  "market:point:add",
+  "market:point:delete",
+  "market:point:edit",
+  "market:point:list",
+  "material:binding:list",
+  "material:cost:list",
+  "material:deduct:manage",
+  "material:package:edit",
+  "material:package:list",
+  "member:batch",
+  "member:export",
+  "member:freeze",
+  "member:import",
+  "member:level:edit",
+  "member:level:list",
+  "member:lifecycle:edit",
+  "member:lifecycle:view",
+  "member:message:edit",
+  "member:message:list",
+  "member:order:list",
+  "member:profile",
+  "member:stat",
+  "member:style-preference:edit",
+  "member:style-preference:list",
+  "member:tag",
+  "mkt:channel:edit",
+  "mkt:channel:list",
+  "mkt:conversion:track",
+  "mkt:conversion:view",
+  "mkt:coupon",
+  "mkt:effect:edit",
+  "mkt:effect:view",
+  "mkt:invite:edit",
+  "mkt:invite:list",
+  "mkt:journey:edit",
+  "mkt:journey:list",
+  "mkt:journey:trigger:edit",
+  "mkt:journey:trigger:list",
+  "mkt:points",
+  "mkt:pricing:experiment:edit",
+  "mkt:pricing:experiment:list",
+  "mkt:promotion",
+  "mkt:template:edit",
+  "mkt:template:list",
+  "mkt:touch:task:edit",
+  "mkt:touch:task:list",
+  "overseas-payment:create",
+  "overseas-payment:gateway:add",
+  "overseas-payment:gateway:delete",
+  "overseas-payment:gateway:edit",
+  "overseas-payment:gateway:list",
+  "overseas-payment:list",
+  "overseas-payment:refund",
+  "overseas-payment:route:add",
+  "overseas-payment:route:delete",
+  "overseas-payment:route:edit",
+  "overseas-payment:route:list",
+  "overseas-payment:stat",
+  "package:add",
+  "package:delete",
+  "package:edit",
+  "package:freeze",
+  "package:list",
+  "package:purchase",
+  "package:redeem",
+  "package:refund",
+  "package:suspend",
+  "package:transfer",
+  "plugin:runtime:edit",
+  "plugin:runtime:list",
+  "plugin:runtime:tenant:edit",
+  "pos:order:add",
+  "pos:order:list",
+  "pos:order:pay",
+  "pos:order:refund",
+  "pos:order:stat",
+  "pos:order:void",
+  "pos:reconciliation:handle",
+  "pos:reconciliation:list",
+  "pos:reconciliation:run",
+  "pos:refund",
+  "pos:refund:audit",
+  "pos:refund:audit:finance",
+  "pos:refund:audit:hq",
+  "pos:refund:audit:store",
+  "pos:service:list",
+  "report:biz:list",
+  "report:caliber",
+  "report:caliber:edit",
+  "report:dashboard",
+  "report:export:add",
+  "report:export:download",
+  "report:export:list",
+  "report:price-sensitivity:view",
+  "report:repurchase:view",
+  "report:rfm:batch:run",
+  "resource:match-rule:edit",
+  "resource:match-rule:list",
+  "resource:schedule:edit",
+  "resource:schedule:view",
+  "room:edit",
+  "room:list",
+  "schedule:edit",
+  "schedule:list",
+  "spa:scene:edit",
+  "spa:scene:list",
+  "stock:alert",
+  "stock:check",
+  "stock:consumption",
+  "stock:expiry:edit",
+  "stock:expiry:view",
+  "stock:export",
+  "stock:inbound",
+  "stock:outbound",
+  "stock:product:add",
+  "stock:product:delete",
+  "stock:product:edit",
+  "stock:product:import",
+  "stock:product:list",
+  "stock:record",
+  "stock:replenish",
+  "stock:stat",
+  "store:edit",
+  "store:list",
+  "style:gallery:edit",
+  "style:gallery:list",
+  "style:library:edit",
+  "style:library:list",
+  "subscription:member:edit",
+  "subscription:member:list",
+  "subscription:plan:edit",
+  "subscription:plan:list",
+  "sys:config:edit",
+  "sys:config:list",
+  "sys:dcep:edit",
+  "sys:dcep:list",
+  "sys:dcep:test",
+  "sys:log-retention:edit",
+  "sys:log-retention:list",
+  "sys:log:clear",
+  "sys:log:export",
+  "sys:log:list",
+  "sys:login-log:clear",
+  "sys:login-log:export",
+  "sys:login-log:list",
+  "sys:permission:add",
+  "sys:permission:delete",
+  "sys:permission:edit",
+  "sys:permission:list",
+  "sys:permission:sync",
+  "sys:role:add",
+  "sys:role:delete",
+  "sys:role:edit",
+  "sys:role:list",
+  "sys:tenant:add",
+  "sys:tenant:delete",
+  "sys:tenant:edit",
+  "sys:tenant:freeze",
+  "sys:tenant:list",
+  "wallet:consume",
+  "wallet:freeze",
+  "wallet:recharge",
+  "wallet:refund"
+ ],
+ "okBound": [
+  "blockchain:record",
+  "blockchain:chain",
+  "blockchain:trace",
+  "blockchain:monitor",
+  "crm:follow-rule",
+  "employee:level:benefit",
+  "employee:level:eval",
+  "member:list",
+  "member:add",
+  "member:edit",
+  "member:delete",
+  "pos:refund:audit:rule",
+  "material:binding:edit",
+  "employee:level",
+  "wallet:list"
+ ],
+ "detail": [
+  {
+   "code": "attendance:config:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "AttendanceConfigController.java"
+   ]
+  },
+  {
+   "code": "attendance:config:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "AttendanceConfigController.java"
+   ]
+  },
+  {
+   "code": "attendance:check",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "AttendanceController.java"
+   ]
+  },
+  {
+   "code": "attendance:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "AttendanceController.java"
+   ]
+  },
+  {
+   "code": "attendance:stat",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "AttendanceController.java"
+   ]
+  },
+  {
+   "code": "attendance:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "AttendanceController.java"
+   ]
+  },
+  {
+   "code": "biz:service-item:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BizServiceItemController.java"
+   ]
+  },
+  {
+   "code": "biz:service-item:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BizServiceItemController.java"
+   ]
+  },
+  {
+   "code": "blockchain:record",
+   "status": "BOUND",
+   "roles": "ADMIN,SUPER_ADMIN\r",
+   "controllers": [
+    "BlockchainController.java"
+   ]
+  },
+  {
+   "code": "blockchain:chain",
+   "status": "BOUND",
+   "roles": "ADMIN,SUPER_ADMIN\r",
+   "controllers": [
+    "BlockchainController.java"
+   ]
+  },
+  {
+   "code": "blockchain:trace",
+   "status": "BOUND",
+   "roles": "ADMIN,SUPER_ADMIN\r",
+   "controllers": [
+    "BlockchainController.java"
+   ]
+  },
+  {
+   "code": "blockchain:monitor",
+   "status": "BOUND",
+   "roles": "ADMIN,SUPER_ADMIN\r",
+   "controllers": [
+    "BlockchainController.java"
+   ]
+  },
+  {
+   "code": "bnpl:credit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BnplController.java"
+   ]
+  },
+  {
+   "code": "bnpl:create",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BnplController.java"
+   ]
+  },
+  {
+   "code": "bnpl:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BnplController.java"
+   ]
+  },
+  {
+   "code": "bnpl:cancel",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BnplController.java"
+   ]
+  },
+  {
+   "code": "bnpl:statistics",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BnplController.java"
+   ]
+  },
+  {
+   "code": "booking:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "booking:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "booking:available",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "booking:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "booking:checkin",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "booking:complete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "booking:detail",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "booking:update",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "booking:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "booking:stat",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "booking:export",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "booking:calendar",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "booking:schedule:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "BookingController.java"
+   ]
+  },
+  {
+   "code": "crm:care:recipe:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CareRecipeController.java"
+   ]
+  },
+  {
+   "code": "crm:care:recipe:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CareRecipeController.java"
+   ]
+  },
+  {
+   "code": "crm:care:suggestion:engine:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CareSuggestionEngineController.java"
+   ]
+  },
+  {
+   "code": "crm:care:suggestion:engine:view",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CareSuggestionEngineController.java"
+   ]
+  },
+  {
+   "code": "crm:care:suggestion:log:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CareSuggestionLogController.java"
+   ]
+  },
+  {
+   "code": "crm:care:suggestion:log:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CareSuggestionLogController.java"
+   ]
+  },
+  {
+   "code": "crm:care:suggestion:rule:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CareSuggestionRuleController.java"
+   ]
+  },
+  {
+   "code": "crm:care:suggestion:rule:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CareSuggestionRuleController.java"
+   ]
+  },
+  {
+   "code": "crm:care:suggestion:tpl:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CareSuggestionTemplateController.java"
+   ]
+  },
+  {
+   "code": "crm:care:suggestion:tpl:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CareSuggestionTemplateController.java"
+   ]
+  },
+  {
+   "code": "category:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CategoryController.java"
+   ]
+  },
+  {
+   "code": "category:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CategoryController.java"
+   ]
+  },
+  {
+   "code": "crm:cohort:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CohortController.java"
+   ]
+  },
+  {
+   "code": "crm:cohort:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CohortController.java"
+   ]
+  },
+  {
+   "code": "commission:rule:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:rule:detail",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:rule:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:rule:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:rule:status",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:rule:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:rule:stat",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:calculate",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:record:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:record:stat",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:salary:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:salary:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:salary:adjust",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:salary:confirm",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:salary:pay",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:salary:stat",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:salary:export",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:salary:batch-confirm",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:salary:batch-pay",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:settlement:stat",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:settlement:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:settlement:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:settlement:detail",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:settlement:confirm",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:settlement:pay",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:settlement:batch-confirm",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:settlement:batch-pay",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "commission:settlement:export",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CommissionController.java"
+   ]
+  },
+  {
+   "code": "crm:care:complaint:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ComplaintTicketController.java"
+   ]
+  },
+  {
+   "code": "crm:care:complaint:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ComplaintTicketController.java"
+   ]
+  },
+  {
+   "code": "crm:care:complaint:handle",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ComplaintTicketController.java"
+   ]
+  },
+  {
+   "code": "market:coupon:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CouponController.java"
+   ]
+  },
+  {
+   "code": "market:coupon:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CouponController.java"
+   ]
+  },
+  {
+   "code": "market:coupon:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CouponController.java"
+   ]
+  },
+  {
+   "code": "market:coupon:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CouponController.java"
+   ]
+  },
+  {
+   "code": "crm:care:ops:view",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CrmCareOpsController.java"
+   ]
+  },
+  {
+   "code": "crm:care:follow:plan:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CrmFollowUpPlanController.java"
+   ]
+  },
+  {
+   "code": "crm:follow-rule",
+   "status": "BOUND",
+   "roles": "ADMIN\r",
+   "controllers": [
+    "CrmFollowUpPlanController.java"
+   ]
+  },
+  {
+   "code": "crm:care:follow:task:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CrmFollowUpTaskController.java"
+   ]
+  },
+  {
+   "code": "crm:care:follow:task:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CrmFollowUpTaskController.java"
+   ]
+  },
+  {
+   "code": "crm:care:review:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CrmReviewController.java"
+   ]
+  },
+  {
+   "code": "crm:care:review:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CrmReviewController.java"
+   ]
+  },
+  {
+   "code": "crm:care:review:tpl:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CrmReviewTemplateController.java"
+   ]
+  },
+  {
+   "code": "crm:care:review:tpl:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CrmReviewTemplateController.java"
+   ]
+  },
+  {
+   "code": "crm:cross:rule:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CrossStoreController.java"
+   ]
+  },
+  {
+   "code": "crm:cross:rule:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CrossStoreController.java"
+   ]
+  },
+  {
+   "code": "crm:cross:redemption:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CrossStoreController.java"
+   ]
+  },
+  {
+   "code": "crm:cross:redemption:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CrossStoreController.java"
+   ]
+  },
+  {
+   "code": "crm:care:complaint:reply",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "CustomerCareController.java"
+   ]
+  },
+  {
+   "code": "sys:dcep:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepConfigController.java"
+   ]
+  },
+  {
+   "code": "sys:dcep:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepConfigController.java"
+   ]
+  },
+  {
+   "code": "sys:dcep:test",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepConfigController.java"
+   ]
+  },
+  {
+   "code": "dcep:contract:log:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepContractExecutionLogController.java"
+   ]
+  },
+  {
+   "code": "dcep:wallet:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepHardwareWalletController.java"
+   ]
+  },
+  {
+   "code": "dcep:wallet:activate",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepHardwareWalletController.java"
+   ]
+  },
+  {
+   "code": "dcep:wallet:recharge",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepHardwareWalletController.java"
+   ]
+  },
+  {
+   "code": "dcep:wallet:manage",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepHardwareWalletController.java"
+   ]
+  },
+  {
+   "code": "dcep:qualification:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepMerchantQualificationController.java"
+   ]
+  },
+  {
+   "code": "dcep:qualification:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepMerchantQualificationController.java"
+   ]
+  },
+  {
+   "code": "dcep:qualification:submit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepMerchantQualificationController.java"
+   ]
+  },
+  {
+   "code": "dcep:offline:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepOfflineTransactionController.java"
+   ]
+  },
+  {
+   "code": "dcep:offline:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepOfflineTransactionController.java"
+   ]
+  },
+  {
+   "code": "dcep:contract:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepSmartContractController.java"
+   ]
+  },
+  {
+   "code": "dcep:contract:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepSmartContractController.java"
+   ]
+  },
+  {
+   "code": "dcep:sub-wallet:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepSubWalletController.java"
+   ]
+  },
+  {
+   "code": "dcep:sub-wallet:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepSubWalletController.java"
+   ]
+  },
+  {
+   "code": "dcep:sub-wallet:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepSubWalletController.java"
+   ]
+  },
+  {
+   "code": "dcep:sub-wallet:manage",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepSubWalletController.java"
+   ]
+  },
+  {
+   "code": "dcep:sub-wallet:transfer",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DcepSubWalletController.java"
+   ]
+  },
+  {
+   "code": "crm:detection:diagnosis:view",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DetectionDiagnosisController.java"
+   ]
+  },
+  {
+   "code": "crm:detection:report:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DetectionReportController.java"
+   ]
+  },
+  {
+   "code": "crm:detection:report:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DetectionReportController.java"
+   ]
+  },
+  {
+   "code": "crm:detection:solution:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DetectionSolutionController.java"
+   ]
+  },
+  {
+   "code": "crm:detection:solution:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "DetectionSolutionController.java"
+   ]
+  },
+  {
+   "code": "employee:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "EmployeeController.java"
+   ]
+  },
+  {
+   "code": "employee:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "EmployeeController.java"
+   ]
+  },
+  {
+   "code": "employee:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "EmployeeController.java"
+   ]
+  },
+  {
+   "code": "employee:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "EmployeeController.java"
+   ]
+  },
+  {
+   "code": "employee:reset-password",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "EmployeeController.java"
+   ]
+  },
+  {
+   "code": "stock:expiry:view",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ExpiryAlertLogController.java",
+    "ExpiryAlertRuleController.java",
+    "ExpiryController.java",
+    "ExpiryScanController.java"
+   ]
+  },
+  {
+   "code": "stock:expiry:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ExpiryAlertLogController.java",
+    "ExpiryAlertRuleController.java",
+    "ExpiryController.java",
+    "ExpiryScanController.java"
+   ]
+  },
+  {
+   "code": "crm:detection:hair:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "HairDetectionController.java"
+   ]
+  },
+  {
+   "code": "crm:detection:hair:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "HairDetectionController.java"
+   ]
+  },
+  {
+   "code": "huabei:credit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "HuabeiController.java"
+   ]
+  },
+  {
+   "code": "huabei:create",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "HuabeiController.java"
+   ]
+  },
+  {
+   "code": "huabei:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "HuabeiController.java"
+   ]
+  },
+  {
+   "code": "huabei:cancel",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "HuabeiController.java"
+   ]
+  },
+  {
+   "code": "mkt:invite:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "InviteController.java",
+    "MemberInviteController.java"
+   ]
+  },
+  {
+   "code": "mkt:invite:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "InviteController.java",
+    "MemberInviteController.java"
+   ]
+  },
+  {
+   "code": "iot:alert:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "IotDeviceAlertController.java"
+   ]
+  },
+  {
+   "code": "iot:alert:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "IotDeviceAlertController.java"
+   ]
+  },
+  {
+   "code": "iot:data:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "IotDeviceDataController.java"
+   ]
+  },
+  {
+   "code": "iot:data:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "IotDeviceDataController.java"
+   ]
+  },
+  {
+   "code": "iot:link:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "IotDeviceLinkController.java"
+   ]
+  },
+  {
+   "code": "iot:link:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "IotDeviceLinkController.java"
+   ]
+  },
+  {
+   "code": "iot:link:execute",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "IotDeviceLinkController.java"
+   ]
+  },
+  {
+   "code": "iot:rule:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "IotTriggerRuleController.java"
+   ]
+  },
+  {
+   "code": "iot:rule:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "IotTriggerRuleController.java"
+   ]
+  },
+  {
+   "code": "mkt:journey:trigger:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "JourneyTriggerController.java"
+   ]
+  },
+  {
+   "code": "mkt:journey:trigger:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "JourneyTriggerController.java"
+   ]
+  },
+  {
+   "code": "attendance:leave:submit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "LeaveRequestController.java"
+   ]
+  },
+  {
+   "code": "attendance:leave:approve",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "LeaveRequestController.java"
+   ]
+  },
+  {
+   "code": "attendance:leave:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "LeaveRequestController.java"
+   ]
+  },
+  {
+   "code": "employee:level:benefit",
+   "status": "BOUND",
+   "roles": "ADMIN,STORE_ADMIN,SUPER_ADMIN\r",
+   "controllers": [
+    "LevelBenefitController.java"
+   ]
+  },
+  {
+   "code": "employee:level:eval",
+   "status": "BOUND",
+   "roles": "ADMIN,STORE_ADMIN,SUPER_ADMIN\r",
+   "controllers": [
+    "LevelEvaluationController.java",
+    "TechnicianLevelController.java"
+   ]
+  },
+  {
+   "code": "employee:level:promote",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "LevelEvaluationController.java",
+    "TechnicianLevelController.java"
+   ]
+  },
+  {
+   "code": "sys:log-retention:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "LogRetentionController.java"
+   ]
+  },
+  {
+   "code": "sys:log-retention:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "LogRetentionController.java"
+   ]
+  },
+  {
+   "code": "market:activity:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MarketActivityController.java"
+   ]
+  },
+  {
+   "code": "market:activity:detail",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MarketActivityController.java"
+   ]
+  },
+  {
+   "code": "market:activity:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MarketActivityController.java"
+   ]
+  },
+  {
+   "code": "market:activity:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MarketActivityController.java"
+   ]
+  },
+  {
+   "code": "market:activity:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MarketActivityController.java"
+   ]
+  },
+  {
+   "code": "market:activity:stat",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MarketActivityController.java"
+   ]
+  },
+  {
+   "code": "material:package:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MaterialPackageController.java"
+   ]
+  },
+  {
+   "code": "material:package:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MaterialPackageController.java"
+   ]
+  },
+  {
+   "code": "member:list",
+   "status": "BOUND",
+   "roles": "ADMIN,BOSS,CLERK,MANAGER,SUPER_ADMIN\r",
+   "controllers": [
+    "MemberController.java"
+   ]
+  },
+  {
+   "code": "member:stat",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberController.java"
+   ]
+  },
+  {
+   "code": "member:order:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberController.java"
+   ]
+  },
+  {
+   "code": "member:add",
+   "status": "BOUND",
+   "roles": "ADMIN,SUPER_ADMIN\r",
+   "controllers": [
+    "MemberController.java"
+   ]
+  },
+  {
+   "code": "member:edit",
+   "status": "BOUND",
+   "roles": "ADMIN,SUPER_ADMIN\r",
+   "controllers": [
+    "MemberController.java"
+   ]
+  },
+  {
+   "code": "member:delete",
+   "status": "BOUND",
+   "roles": "ADMIN,SUPER_ADMIN\r",
+   "controllers": [
+    "MemberController.java"
+   ]
+  },
+  {
+   "code": "member:freeze",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberController.java"
+   ]
+  },
+  {
+   "code": "member:profile",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberController.java"
+   ]
+  },
+  {
+   "code": "member:tag",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberController.java",
+    "MemberTagController.java"
+   ]
+  },
+  {
+   "code": "member:batch",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberController.java"
+   ]
+  },
+  {
+   "code": "member:export",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberController.java"
+   ]
+  },
+  {
+   "code": "member:import",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberController.java"
+   ]
+  },
+  {
+   "code": "member:level:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberLevelController.java"
+   ]
+  },
+  {
+   "code": "member:level:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberLevelController.java"
+   ]
+  },
+  {
+   "code": "member:lifecycle:view",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberLifecycleController.java"
+   ]
+  },
+  {
+   "code": "member:lifecycle:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberLifecycleController.java"
+   ]
+  },
+  {
+   "code": "member:message:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberMessageController.java"
+   ]
+  },
+  {
+   "code": "member:message:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberMessageController.java"
+   ]
+  },
+  {
+   "code": "member:style-preference:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberStylePreferenceController.java"
+   ]
+  },
+  {
+   "code": "member:style-preference:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MemberStylePreferenceController.java"
+   ]
+  },
+  {
+   "code": "mkt:channel:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktChannelController.java"
+   ]
+  },
+  {
+   "code": "mkt:channel:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktChannelController.java"
+   ]
+  },
+  {
+   "code": "mkt:conversion:view",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktConversionController.java"
+   ]
+  },
+  {
+   "code": "mkt:conversion:track",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktConversionController.java"
+   ]
+  },
+  {
+   "code": "mkt:coupon",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktCouponController.java"
+   ]
+  },
+  {
+   "code": "mkt:effect:view",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktEffectController.java"
+   ]
+  },
+  {
+   "code": "mkt:effect:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktEffectController.java"
+   ]
+  },
+  {
+   "code": "mkt:journey:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktJourneyController.java"
+   ]
+  },
+  {
+   "code": "mkt:journey:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktJourneyController.java"
+   ]
+  },
+  {
+   "code": "mkt:points",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktPointsController.java"
+   ]
+  },
+  {
+   "code": "mkt:promotion",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktPromotionController.java"
+   ]
+  },
+  {
+   "code": "mkt:template:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktTemplateController.java"
+   ]
+  },
+  {
+   "code": "mkt:template:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktTemplateController.java"
+   ]
+  },
+  {
+   "code": "mkt:touch:task:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktTouchTaskController.java"
+   ]
+  },
+  {
+   "code": "mkt:touch:task:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "MktTouchTaskController.java"
+   ]
+  },
+  {
+   "code": "crm:detection:nail:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "NailDetectionController.java"
+   ]
+  },
+  {
+   "code": "crm:detection:nail:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "NailDetectionController.java"
+   ]
+  },
+  {
+   "code": "overseas-payment:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "OverseasPaymentController.java"
+   ]
+  },
+  {
+   "code": "overseas-payment:create",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "OverseasPaymentController.java"
+   ]
+  },
+  {
+   "code": "overseas-payment:refund",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "OverseasPaymentController.java"
+   ]
+  },
+  {
+   "code": "overseas-payment:stat",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "OverseasPaymentController.java"
+   ]
+  },
+  {
+   "code": "overseas-payment:gateway:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "OverseasPaymentGatewayController.java"
+   ]
+  },
+  {
+   "code": "overseas-payment:gateway:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "OverseasPaymentGatewayController.java"
+   ]
+  },
+  {
+   "code": "overseas-payment:gateway:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "OverseasPaymentGatewayController.java"
+   ]
+  },
+  {
+   "code": "overseas-payment:gateway:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "OverseasPaymentGatewayController.java"
+   ]
+  },
+  {
+   "code": "package:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PackageController.java"
+   ]
+  },
+  {
+   "code": "package:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PackageController.java"
+   ]
+  },
+  {
+   "code": "package:purchase",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PackageController.java"
+   ]
+  },
+  {
+   "code": "package:redeem",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PackageController.java"
+   ]
+  },
+  {
+   "code": "package:freeze",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PackageController.java"
+   ]
+  },
+  {
+   "code": "package:suspend",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PackageController.java"
+   ]
+  },
+  {
+   "code": "package:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PackageController.java"
+   ]
+  },
+  {
+   "code": "package:refund",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PackageController.java"
+   ]
+  },
+  {
+   "code": "package:transfer",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PackageController.java"
+   ]
+  },
+  {
+   "code": "package:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PackageController.java"
+   ]
+  },
+  {
+   "code": "overseas-payment:route:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PaymentRouteRuleController.java"
+   ]
+  },
+  {
+   "code": "overseas-payment:route:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PaymentRouteRuleController.java"
+   ]
+  },
+  {
+   "code": "overseas-payment:route:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PaymentRouteRuleController.java"
+   ]
+  },
+  {
+   "code": "overseas-payment:route:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PaymentRouteRuleController.java"
+   ]
+  },
+  {
+   "code": "plugin:runtime:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PluginRuntimeController.java"
+   ]
+  },
+  {
+   "code": "plugin:runtime:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PluginRuntimeController.java"
+   ]
+  },
+  {
+   "code": "plugin:runtime:tenant:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PluginRuntimeController.java"
+   ]
+  },
+  {
+   "code": "market:point:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PointController.java",
+    "PointGoodsController.java"
+   ]
+  },
+  {
+   "code": "market:point:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PointController.java",
+    "PointGoodsController.java"
+   ]
+  },
+  {
+   "code": "market:point:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PointController.java",
+    "PointGoodsController.java"
+   ]
+  },
+  {
+   "code": "market:point:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PointGoodsController.java"
+   ]
+  },
+  {
+   "code": "pos:service:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PosController.java"
+   ]
+  },
+  {
+   "code": "pos:order:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PosController.java"
+   ]
+  },
+  {
+   "code": "pos:order:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PosController.java"
+   ]
+  },
+  {
+   "code": "pos:order:pay",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PosController.java"
+   ]
+  },
+  {
+   "code": "pos:order:refund",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PosController.java"
+   ]
+  },
+  {
+   "code": "pos:order:void",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PosController.java"
+   ]
+  },
+  {
+   "code": "pos:order:stat",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PosController.java"
+   ]
+  },
+  {
+   "code": "pos:refund",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PosRefundController.java",
+    "RefundAuditController.java"
+   ]
+  },
+  {
+   "code": "pos:refund:audit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PosRefundController.java",
+    "RefundAuditController.java"
+   ]
+  },
+  {
+   "code": "pos:refund:audit:store",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PosRefundController.java"
+   ]
+  },
+  {
+   "code": "pos:refund:audit:hq",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PosRefundController.java"
+   ]
+  },
+  {
+   "code": "pos:refund:audit:finance",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PosRefundController.java"
+   ]
+  },
+  {
+   "code": "report:price-sensitivity:view",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PriceSensitivityController.java"
+   ]
+  },
+  {
+   "code": "mkt:pricing:experiment:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PricingExperimentController.java"
+   ]
+  },
+  {
+   "code": "mkt:pricing:experiment:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "PricingExperimentController.java"
+   ]
+  },
+  {
+   "code": "sys:role:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "RbacController.java"
+   ]
+  },
+  {
+   "code": "sys:role:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "RbacController.java"
+   ]
+  },
+  {
+   "code": "sys:role:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "RbacController.java"
+   ]
+  },
+  {
+   "code": "sys:role:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "RbacController.java"
+   ]
+  },
+  {
+   "code": "pos:reconciliation:run",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ReconciliationController.java"
+   ]
+  },
+  {
+   "code": "pos:reconciliation:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ReconciliationController.java"
+   ]
+  },
+  {
+   "code": "pos:reconciliation:handle",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ReconciliationController.java"
+   ]
+  },
+  {
+   "code": "pos:refund:audit:rule",
+   "status": "BOUND",
+   "roles": "STORE_ADMIN,SUPER_ADMIN\r",
+   "controllers": [
+    "RefundAuditController.java"
+   ]
+  },
+  {
+   "code": "report:dashboard",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ReportController.java"
+   ]
+  },
+  {
+   "code": "report:biz:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ReportController.java"
+   ]
+  },
+  {
+   "code": "report:caliber",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ReportController.java"
+   ]
+  },
+  {
+   "code": "report:caliber:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ReportController.java"
+   ]
+  },
+  {
+   "code": "report:export:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ReportController.java"
+   ]
+  },
+  {
+   "code": "report:export:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ReportController.java"
+   ]
+  },
+  {
+   "code": "report:export:download",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ReportController.java"
+   ]
+  },
+  {
+   "code": "report:repurchase:view",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "RepurchaseRateController.java"
+   ]
+  },
+  {
+   "code": "resource:match-rule:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ResourceMatchRuleController.java"
+   ]
+  },
+  {
+   "code": "resource:match-rule:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ResourceMatchRuleController.java"
+   ]
+  },
+  {
+   "code": "resource:schedule:view",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ResourceScheduleController.java"
+   ]
+  },
+  {
+   "code": "resource:schedule:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ResourceScheduleController.java"
+   ]
+  },
+  {
+   "code": "report:rfm:batch:run",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "RfmBatchController.java"
+   ]
+  },
+  {
+   "code": "room:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "RoomController.java"
+   ]
+  },
+  {
+   "code": "room:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "RoomController.java"
+   ]
+  },
+  {
+   "code": "schedule:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ScheduleController.java"
+   ]
+  },
+  {
+   "code": "schedule:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ScheduleController.java"
+   ]
+  },
+  {
+   "code": "material:binding:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ServiceMaterialController.java"
+   ]
+  },
+  {
+   "code": "material:binding:edit",
+   "status": "BOUND",
+   "roles": "ADMIN,STORE_ADMIN,SUPER_ADMIN\r",
+   "controllers": [
+    "ServiceMaterialController.java"
+   ]
+  },
+  {
+   "code": "material:cost:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ServiceMaterialCostController.java"
+   ]
+  },
+  {
+   "code": "material:deduct:manage",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "ServiceMaterialDeductController.java"
+   ]
+  },
+  {
+   "code": "crm:detection:skin:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SkinDetectionController.java"
+   ]
+  },
+  {
+   "code": "crm:detection:skin:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SkinDetectionController.java"
+   ]
+  },
+  {
+   "code": "spa:scene:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SpaSceneModeController.java"
+   ]
+  },
+  {
+   "code": "spa:scene:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SpaSceneModeController.java"
+   ]
+  },
+  {
+   "code": "stock:product:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "stock:product:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "stock:product:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "stock:product:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "stock:product:import",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "stock:stat",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "stock:alert",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "stock:inbound",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "stock:outbound",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "stock:check",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java",
+    "StockDualVerifyController.java"
+   ]
+  },
+  {
+   "code": "stock:export",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "stock:record",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "stock:consumption",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "stock:replenish",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StockController.java"
+   ]
+  },
+  {
+   "code": "store:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StoreController.java"
+   ]
+  },
+  {
+   "code": "store:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StoreController.java"
+   ]
+  },
+  {
+   "code": "style:gallery:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StyleGalleryController.java"
+   ]
+  },
+  {
+   "code": "style:gallery:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StyleGalleryController.java"
+   ]
+  },
+  {
+   "code": "style:library:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StyleLibraryController.java"
+   ]
+  },
+  {
+   "code": "style:library:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "StyleLibraryController.java"
+   ]
+  },
+  {
+   "code": "subscription:plan:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SubscriptionController.java"
+   ]
+  },
+  {
+   "code": "subscription:plan:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SubscriptionController.java"
+   ]
+  },
+  {
+   "code": "subscription:member:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SubscriptionController.java"
+   ]
+  },
+  {
+   "code": "subscription:member:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SubscriptionController.java"
+   ]
+  },
+  {
+   "code": "sys:config:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysConfigController.java"
+   ]
+  },
+  {
+   "code": "sys:config:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysConfigController.java"
+   ]
+  },
+  {
+   "code": "sys:log:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysLogController.java"
+   ]
+  },
+  {
+   "code": "sys:log:export",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysLogController.java"
+   ]
+  },
+  {
+   "code": "sys:log:clear",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysLogController.java"
+   ]
+  },
+  {
+   "code": "sys:login-log:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysLoginLogController.java"
+   ]
+  },
+  {
+   "code": "sys:login-log:clear",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysLoginLogController.java"
+   ]
+  },
+  {
+   "code": "sys:login-log:export",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysLoginLogController.java"
+   ]
+  },
+  {
+   "code": "xxx:yyy",
+   "status": "MISSING",
+   "roles": null,
+   "controllers": [
+    "SysPermissionController.java"
+   ]
+  },
+  {
+   "code": "sys:permission:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysPermissionController.java"
+   ]
+  },
+  {
+   "code": "sys:permission:sync",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysPermissionController.java"
+   ]
+  },
+  {
+   "code": "sys:permission:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysPermissionController.java"
+   ]
+  },
+  {
+   "code": "sys:permission:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysPermissionController.java"
+   ]
+  },
+  {
+   "code": "sys:permission:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysPermissionController.java"
+   ]
+  },
+  {
+   "code": "sys:tenant:list",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysTenantController.java"
+   ]
+  },
+  {
+   "code": "sys:tenant:add",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysTenantController.java"
+   ]
+  },
+  {
+   "code": "sys:tenant:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysTenantController.java"
+   ]
+  },
+  {
+   "code": "sys:tenant:delete",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysTenantController.java"
+   ]
+  },
+  {
+   "code": "sys:tenant:freeze",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "SysTenantController.java"
+   ]
+  },
+  {
+   "code": "employee:level",
+   "status": "BOUND",
+   "roles": "ADMIN,STORE_ADMIN,SUPER_ADMIN\r",
+   "controllers": [
+    "TechnicianLevelController.java"
+   ]
+  },
+  {
+   "code": "employee:level:edit",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "TechnicianLevelController.java"
+   ]
+  },
+  {
+   "code": "wallet:list",
+   "status": "BOUND",
+   "roles": "ADMIN,BOSS,MANAGER,SUPER_ADMIN\r",
+   "controllers": [
+    "WalletController.java"
+   ]
+  },
+  {
+   "code": "wallet:recharge",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "WalletController.java"
+   ]
+  },
+  {
+   "code": "wallet:consume",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "WalletController.java"
+   ]
+  },
+  {
+   "code": "wallet:refund",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "WalletController.java"
+   ]
+  },
+  {
+   "code": "wallet:freeze",
+   "status": "NO_BINDING",
+   "roles": "\r",
+   "controllers": [
+    "WalletController.java"
+   ]
+  }
+ ]
+}

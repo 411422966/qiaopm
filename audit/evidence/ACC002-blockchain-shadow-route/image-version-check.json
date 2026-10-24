@@ -1,0 +1,43 @@
+{
+    "CheckedAt":  "2026-10-24 01:06:31 +08:00",
+    "RepoRoot":  "D:\\QiaoPM",
+    "Head":  "77767e14c177a7512fc92ba6764e9d5427447969",
+    "Images":  [
+                   {
+                       "Image":  "meiyetec/api:dev",
+                       "ImageId":  "aab709859b0a",
+                       "CreatedAt":  "2026-10-20 17:14:10 +0800 CST",
+                       "SourceCommit":  "a5df9694f1e02f6e55cfe3ef4e51ee12c476a3e9",
+                       "Head":  "77767e14c177a7512fc92ba6764e9d5427447969",
+                       "Container":  "meiyetec-api",
+                       "RunningId":  "aab709859b0a",
+                       "RunningMatch":  true,
+                       "Status":  "DRIFT",
+                       "Detail":  "构建时源码 a5df9694f1e02f6e55cfe3ef4e51ee12c476a3e9 != HEAD 77767e14c177a7512fc92ba6764e9d5427447969"
+                   },
+                   {
+                       "Image":  "meiyetec/web:dev",
+                       "ImageId":  "7f307b72f025",
+                       "CreatedAt":  "2026-10-10 16:16:56 +0800 CST",
+                       "SourceCommit":  null,
+                       "Head":  "77767e14c177a7512fc92ba6764e9d5427447969",
+                       "Container":  "meiyetec-web",
+                       "RunningId":  "7f307b72f025",
+                       "RunningMatch":  true,
+                       "Status":  "UNKNOWN",
+                       "Detail":  "构建时间 2026-10-10 16:16:56 +0800 CST 在 git 可见历史之外（历史损坏，见 I109），无法反查源码 commit"
+                   }
+               ],
+    "DeepCheck":  {
+                      "SourceFiles":  136,
+                      "SourceWithAnnot":  108,
+                      "ContainerClasses":  143,
+                      "ContainerWithAnnot":  14
+                  },
+    "Failures":  [
+                     "meiyetec/api:dev : DRIFT — 构建时源码 a5df9694f1e02f6e55cfe3ef4e51ee12c476a3e9 != HEAD 77767e14c177a7512fc92ba6764e9d5427447969",
+                     "meiyetec/web:dev : UNKNOWN — 构建时间 2026-10-10 16:16:56 +0800 CST 在 git 可见历史之外（历史损坏，见 I109），无法反查源码 commit",
+                     "DeepCheck : 容器内含 RequirePermission 的 Controller 14 个 \u003c 源码 108 个（镜像缺注解）"
+                 ],
+    "ExitCode":  1
+}

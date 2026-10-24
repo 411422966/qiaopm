@@ -1,0 +1,18 @@
+{
+ "apiImageBuiltAt": "2026-10-20T17:14:10+08:00",
+ "webImageBuiltAt": "2026-10-10T16:16:56+08:00",
+ "headCommit": "77767e14c177a7512fc92ba6764e9d5427447969",
+ "apiBaseCommit": "a5df9694f1e02f6e55cfe3ef4e51ee12c476a3e9",
+ "webBaseCommit": "",
+ "commitsAfterApiImage": 57,
+ "commitsAfterWebImage": 0,
+ "changedFilesAfterApiImage": 118,
+ "changedBackendControllers": 101,
+ "changedBackendOther": 5,
+ "changedFrontend": 0,
+ "imageControllersWithPerm": 14,
+ "imageControllersTotal": 143,
+ "srcControllersWithPerm": 108,
+ "srcControllersTotal": 136,
+ "drift": 94
+}

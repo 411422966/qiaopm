@@ -1,0 +1,12 @@
+{
+ "srcCount": 97,
+ "bundleCount": 97,
+ "onlySrc": [],
+ "onlyBundle": [],
+ "onlySrcPairs": [
+  "member => member:list"
+ ],
+ "onlyBundlePairs": [
+  "setting => member:list"
+ ]
+}
