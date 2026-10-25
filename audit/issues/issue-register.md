@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-10-25（补登 I115~I126）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -47,3 +47,19 @@
 | I112 | I112 — issue-register.md 中文永久损坏 | Open | [I112-issue-register-mojibake.md](I112-issue-register-mojibake.md) |
 | I113 | I113 — compile_impls.ps1 使用 -Encoding ascii 写文件 | Open | [I113-ascii-encoding-risk.md](I113-ascii-encoding-risk.md) |
 | I114 | I114 — Java class 覆盖 .git/objects 的根因排查 | Fixed | [I114-class-overwrites-git-objects.md](I114-class-overwrites-git-objects.md) |
+| I115 | I115 — 权限注解覆盖率不足（P0） | Fixed | [I115-permission-coverage-gap.md](I115-permission-coverage-gap.md) |
+| I116 | I116 — 备份恢复演练证据缺失（P0） | Closed | [I116-backup-drill-evidence-gap.md](I116-backup-drill-evidence-gap.md) |
+| I117 | I117 — DataScopeInterceptor 覆盖路径不全（P0） | Open | [I117-datascope-coverage-gap.md](I117-datascope-coverage-gap.md) |
+| I118 | I118 — 132 张表的 DDL 缺失但实体/Mapper/Controller 完整（P0） | Open | [I118-missing-ddl-132-tables.md](I118-missing-ddl-132-tables.md) |
+| I119 | I119 — TechnicianLevel 晋升 UPDATE 写错表（sys_user → pos_employee） | Open | [I119-technician-level-update-wrong-table.md](I119-technician-level-update-wrong-table.md) |
+| I120 | I120 — Entity 字段与 DB 字段命名漂移（MyBatis-Plus 驼峰转换不一致） | Open | [I120-entity-column-name-drift.md](I120-entity-column-name-drift.md) |
+| I121 | I121 — GrayReleaseService 命名与职责不符（Controller 伪装成 Service） | Open | [I121-service-named-controller.md](I121-service-named-controller.md) |
+| I122 | I122 — payment_webhook_log 表不存在，支付回调必 500（P0） | Open | [I122-payment-webhook-log-table-missing.md](I122-payment-webhook-log-table-missing.md) |
+| I123 | I123 — 备份自动化从未运行（脚本存在但未部署） | Fixed | [I123-backup-automation-not-deployed.md](I123-backup-automation-not-deployed.md) |
+| I124 | I124 — 权限码体系分裂（点号 vs 冒号），前端菜单与路由守卫系统性错配 | Open | [I124-authz-code-system-split.md](I124-authz-code-system-split.md) |
+| I125 | I125 — Blockchain Record / Chain 菜单已上线但前端无路由（影子功能） | Open | [I125-blockchain-shadow-route.md](I125-blockchain-shadow-route.md) |
+| I126 | I126 — 运行中的容器镜像落后源码 4 天 / 14 天，运行态验证结论与源码不一致 | Open | [I126-runtime-image-drift.md](I126-runtime-image-drift.md) |
+
+## 备注
+
+- **I119**：代码+数据已修复，运行时晋升验证待补。
