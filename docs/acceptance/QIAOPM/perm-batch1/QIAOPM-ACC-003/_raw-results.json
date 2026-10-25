@@ -1,0 +1,1055 @@
+[
+  {
+    "user": "admin",
+    "loginOk": true,
+    "afterLoginUrl": "http://localhost:8088/dashboard",
+    "menuTexts": [
+      "首页",
+      "医美合规",
+      "视觉档案",
+      "合规记录",
+      "客户运营",
+      "客户运营看板",
+      "回访任务",
+      "回访计划",
+      "投诉工单",
+      "客户评价",
+      "评价模板",
+      "跨店规则",
+      "跨店核销",
+      "RFM 分群",
+      "LTV 预测",
+      "回访任务规则",
+      "组织架构",
+      "总部看板",
+      "品牌管理",
+      "门店管理",
+      "系统设置",
+      "店铺配置",
+      "租户管理",
+      "操作日志",
+      "登录日志",
+      "支付配置",
+      "商户资质材料",
+      "数字人民币",
+      "会员管理",
+      "储值管理",
+      "储值充值",
+      "储值流水",
+      "套餐次卡",
+      "套餐管理",
+      "会员套餐查询",
+      "预约管理",
+      "预约日历",
+      "预约列表",
+      "排班管理",
+      "预约资源",
+      "候补队列",
+      "爽约管理",
+      "SPA场景模式",
+      "收银结算",
+      "收银台",
+      "订单列表",
+      "收银统计",
+      "退款单",
+      "支付对账",
+      "库存管理",
+      "库存列表",
+      "商品耗材",
+      "出入库记录",
+      "消耗记录",
+      "盘点管理",
+      "库存预警",
+      "库存统计",
+      "员工提成",
+      "提成规则",
+      "提成记录",
+      "工资报表",
+      "结算管理",
+      "提成结算批次",
+      "提成冲正",
+      "基础资料",
+      "服务项目",
+      "疗程方案",
+      "营销工具",
+      "优惠券",
+      "积分商城",
+      "营销活动",
+      "营销效果",
+      "渠道配置",
+      "消息模板",
+      "触达任务",
+      "营销旅程",
+      "触达效果",
+      "动态定价",
+      "椤圭洰鑰楁潗閰嶇疆",
+      "数据报表",
+      "数据看板",
+      "营业报表",
+      "导出管理",
+      "导出任务",
+      "指标口径",
+      "Blockchain",
+      "Blockchain Trace",
+      "Blockchain Monitor",
+      "Blockchain Record",
+      "Blockchain Chain",
+      "鎶?笀绛夌骇",
+      "绛夌骇鏉冪泭",
+      "绛夌骇璇勫畾",
+      "研发工具",
+      "灰度发布控制台",
+      "LTV流失预测",
+      "数据中台",
+      "配方护理会员日",
+      "P1套件合集",
+      "P2套件合集",
+      "P3套件合集",
+      "补齐套件",
+      "客流预测与智能排班",
+      "电子价目表卡项套餐",
+      "护肤方案共享套餐",
+      "国际支付",
+      "国际预约",
+      "AI 智能排班",
+      "资金风控",
+      "Google Maps"
+    ],
+    "pages": [
+      {
+        "route": "/member",
+        "finalUrl": "http://localhost:8088/member",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/member-level/list",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/member-level/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/stats",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/tag/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/store/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/page",
+            "status": 200,
+            "method": "POST"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 0,
+        "rowCount": 0,
+        "emptyCount": 0,
+        "emptyVisible": false,
+        "errToast": [],
+        "mainTextLen": 1052,
+        "mainTextHead": "489 会员总数 本月新增 -100% 489 活跃会员 活跃率 100% ¥16538.00 储值总额 本月新增 0% 53040 积分总量 本月新增 0% 会员状态 会员等级 会员标签 所属门店 查询 重置 排序：默认 导出 导入 新增会员 视图 普通会员 1 女 113号 M13917321821 1391732",
+        "consoleErrors": [],
+        "pageShot": "admin-member-page.png",
+        "netShot": "admin-member-network.png"
+      },
+      {
+        "route": "/booking/list",
+        "finalUrl": "http://localhost:8088/booking/list",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/booking/list",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/booking/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/employee/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/list",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 1,
+        "rowCount": 0,
+        "emptyCount": 1,
+        "emptyVisible": true,
+        "errToast": [],
+        "mainTextLen": 196,
+        "mainTextHead": "今日预约 0 今日共 0 条 待确认 0 需店长/前台跟进 已签到 0 当前服务中 已完成 0 历史总完成 已取消/爽约 0 取消 0 · 爽约 0 今日 明日 本周 全部 至 状态 会员 技师 重置 新建预约 导出CSV 打印 # 预约号 会员 技师 服务项目 房间 时间 状态 备注 ",
+        "consoleErrors": [],
+        "pageShot": "admin-booking-list-page.png",
+        "netShot": "admin-booking-list-network.png"
+      },
+      {
+        "route": "/pos/checkout",
+        "finalUrl": "http://localhost:8088/pos/checkout",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/pos/orders/today",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/pos/orders/today",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/pos/services/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/employee/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/pos/orders/stats",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 1,
+        "rowCount": 0,
+        "emptyCount": 1,
+        "emptyVisible": true,
+        "errToast": [
+          "数据库异常",
+          "数据库异常"
+        ],
+        "mainTextLen": 521,
+        "mainTextHead": "收银台 今日订单 0 今日营收 ¥0.00 进行中 0 选择服务/产品 基础面部护理 ¥280.00 ¥198.00 60' 基础面部护理 ¥280.00 ¥198.00 60' 深层补水护理 ¥480.00 ¥358.00 90' 深层补水护理 ¥480.00 ¥358.00 90' 肩颈舒缓按摩 ¥180.00 ",
+        "consoleErrors": [],
+        "pageShot": "admin-pos-checkout-page.png",
+        "netShot": "admin-pos-checkout-network.png"
+      },
+      {
+        "route": "/stock/list",
+        "finalUrl": "http://localhost:8088/stock/list",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/auth/userinfo",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/stock/inventory/page?pageNum=1&pageSize=20&keyword=&category=&alertType=&expiryStatus=",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/stock/stats",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 1,
+        "rowCount": 6,
+        "emptyCount": 0,
+        "emptyVisible": false,
+        "errToast": [],
+        "mainTextLen": 925,
+        "mainTextHead": "商品种类 20 在库种类 6 缺货 0 低于最低 1 超储 0 分类 库存状态 有效期 查询 重置 批量打印标签 批量调整 导出 编码 商品名称 分类 规格 批次号 库存 单位 成本(元) 安全库存 预警 过期日期 供应商 操作 SP-CUP-006 一次性杯",
+        "consoleErrors": [],
+        "pageShot": "admin-stock-list-page.png",
+        "netShot": "admin-stock-list-network.png"
+      },
+      {
+        "route": "/package",
+        "finalUrl": "http://localhost:8088/package",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/packages/stats",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/packages/stats",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/packages?pageNum=1&pageSize=20",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 1,
+        "rowCount": 0,
+        "emptyCount": 1,
+        "emptyVisible": true,
+        "errToast": [
+          "数据库异常",
+          "数据库异常"
+        ],
+        "mainTextLen": 149,
+        "mainTextHead": "套餐次卡管理 支持套餐上下架、会员购买与服务核销，剩余次数一目了然 会员套餐查询 分类 状态 查询 重置 新增套餐 ID 封面 名称 编码 分类 总次数 价格 有效期 销量/核销 状态 操作 No Data Total 0 20/page 1 Go to",
+        "consoleErrors": [
+          "PAGEERROR: Error: 数据库异常"
+        ],
+        "pageShot": "admin-package-page.png",
+        "netShot": "admin-package-network.png"
+      }
+    ]
+  },
+  {
+    "user": "boss01",
+    "loginOk": true,
+    "afterLoginUrl": "http://localhost:8088/dashboard",
+    "menuTexts": [
+      "首页",
+      "医美合规",
+      "视觉档案",
+      "合规记录",
+      "客户运营",
+      "客户运营看板",
+      "回访任务",
+      "投诉工单",
+      "客户评价",
+      "跨店规则",
+      "RFM 分群",
+      "组织架构",
+      "总部看板",
+      "品牌管理",
+      "门店管理",
+      "系统设置",
+      "店铺配置",
+      "租户管理",
+      "操作日志",
+      "登录日志",
+      "会员管理",
+      "储值管理",
+      "套餐次卡",
+      "预约管理",
+      "收银结算",
+      "库存管理",
+      "员工提成",
+      "提成规则",
+      "提成记录",
+      "工资报表",
+      "结算管理",
+      "基础资料",
+      "营销工具",
+      "优惠券",
+      "积分商城",
+      "营销活动",
+      "营销效果",
+      "渠道配置",
+      "消息模板",
+      "触达任务",
+      "营销旅程",
+      "触达效果",
+      "动态定价",
+      "数据报表",
+      "数据看板",
+      "营业报表",
+      "导出管理"
+    ],
+    "pages": [
+      {
+        "route": "/member",
+        "finalUrl": "http://localhost:8088/member",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/store/list",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/store/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/stats",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/page",
+            "status": 200,
+            "method": "POST"
+          },
+          {
+            "url": "/api/member/tag/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member-level/list",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 0,
+        "rowCount": 0,
+        "emptyCount": 0,
+        "emptyVisible": false,
+        "errToast": [],
+        "mainTextLen": 1052,
+        "mainTextHead": "489 会员总数 本月新增 -100% 489 活跃会员 活跃率 100% ¥16538.00 储值总额 本月新增 0% 53040 积分总量 本月新增 0% 会员状态 会员等级 会员标签 所属门店 查询 重置 排序：默认 导出 导入 新增会员 视图 普通会员 1 女 113号 M13917321821 1391732",
+        "consoleErrors": [],
+        "pageShot": "boss01-member-page.png",
+        "netShot": "boss01-member-network.png"
+      },
+      {
+        "route": "/booking/list",
+        "finalUrl": "http://localhost:8088/booking/list",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/booking/list",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/booking/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/employee/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/list",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 1,
+        "rowCount": 0,
+        "emptyCount": 1,
+        "emptyVisible": true,
+        "errToast": [],
+        "mainTextLen": 196,
+        "mainTextHead": "今日预约 0 今日共 0 条 待确认 0 需店长/前台跟进 已签到 0 当前服务中 已完成 0 历史总完成 已取消/爽约 0 取消 0 · 爽约 0 今日 明日 本周 全部 至 状态 会员 技师 重置 新建预约 导出CSV 打印 # 预约号 会员 技师 服务项目 房间 时间 状态 备注 ",
+        "consoleErrors": [],
+        "pageShot": "boss01-booking-list-page.png",
+        "netShot": "boss01-booking-list-network.png"
+      },
+      {
+        "route": "/package",
+        "finalUrl": "http://localhost:8088/package",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/auth/userinfo",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/packages/stats",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/packages?pageNum=1&pageSize=20",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 1,
+        "rowCount": 0,
+        "emptyCount": 1,
+        "emptyVisible": true,
+        "errToast": [
+          "数据库异常",
+          "数据库异常"
+        ],
+        "mainTextLen": 149,
+        "mainTextHead": "套餐次卡管理 支持套餐上下架、会员购买与服务核销，剩余次数一目了然 会员套餐查询 分类 状态 查询 重置 新增套餐 ID 封面 名称 编码 分类 总次数 价格 有效期 销量/核销 状态 操作 No Data Total 0 20/page 1 Go to",
+        "consoleErrors": [
+          "PAGEERROR: Error: 数据库异常"
+        ],
+        "pageShot": "boss01-package-page.png",
+        "netShot": "boss01-package-network.png"
+      }
+    ]
+  },
+  {
+    "user": "manager01",
+    "loginOk": true,
+    "afterLoginUrl": "http://localhost:8088/dashboard",
+    "menuTexts": [
+      "首页",
+      "会员管理",
+      "储值管理",
+      "储值充值",
+      "储值流水",
+      "套餐次卡",
+      "套餐管理",
+      "会员套餐查询",
+      "预约管理",
+      "预约日历",
+      "预约列表",
+      "排班管理",
+      "收银结算",
+      "收银台",
+      "订单列表",
+      "收银统计",
+      "退款单",
+      "支付对账",
+      "库存管理",
+      "库存列表",
+      "商品耗材",
+      "出入库记录",
+      "消耗记录",
+      "盘点管理",
+      "基础资料",
+      "服务项目",
+      "疗程方案",
+      "营销工具",
+      "优惠券",
+      "积分商城",
+      "营销活动",
+      "数据报表",
+      "数据看板",
+      "营业报表",
+      "导出管理"
+    ],
+    "pages": [
+      {
+        "route": "/member",
+        "finalUrl": "http://localhost:8088/member",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/store/list",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/store/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/stats",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member-level/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/page",
+            "status": 200,
+            "method": "POST"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/tag/list",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 0,
+        "rowCount": 0,
+        "emptyCount": 0,
+        "emptyVisible": false,
+        "errToast": [],
+        "mainTextLen": 1052,
+        "mainTextHead": "489 会员总数 本月新增 -100% 489 活跃会员 活跃率 100% ¥16538.00 储值总额 本月新增 0% 53040 积分总量 本月新增 0% 会员状态 会员等级 会员标签 所属门店 查询 重置 排序：默认 导出 导入 新增会员 视图 普通会员 1 女 113号 M13917321821 1391732",
+        "consoleErrors": [],
+        "pageShot": "manager01-member-page.png",
+        "netShot": "manager01-member-network.png"
+      },
+      {
+        "route": "/booking/list",
+        "finalUrl": "http://localhost:8088/booking/list",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/employee/list",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/employee/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/booking/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/list",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 1,
+        "rowCount": 0,
+        "emptyCount": 1,
+        "emptyVisible": true,
+        "errToast": [],
+        "mainTextLen": 196,
+        "mainTextHead": "今日预约 0 今日共 0 条 待确认 0 需店长/前台跟进 已签到 0 当前服务中 已完成 0 历史总完成 已取消/爽约 0 取消 0 · 爽约 0 今日 明日 本周 全部 至 状态 会员 技师 重置 新建预约 导出CSV 打印 # 预约号 会员 技师 服务项目 房间 时间 状态 备注 ",
+        "consoleErrors": [],
+        "pageShot": "manager01-booking-list-page.png",
+        "netShot": "manager01-booking-list-network.png"
+      },
+      {
+        "route": "/pos/checkout",
+        "finalUrl": "http://localhost:8088/pos/checkout",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/employee/list",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/employee/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/pos/services/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/pos/orders/stats",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/pos/orders/today",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 1,
+        "rowCount": 0,
+        "emptyCount": 1,
+        "emptyVisible": true,
+        "errToast": [
+          "数据库异常",
+          "数据库异常"
+        ],
+        "mainTextLen": 521,
+        "mainTextHead": "收银台 今日订单 0 今日营收 ¥0.00 进行中 0 选择服务/产品 基础面部护理 ¥280.00 ¥198.00 60' 基础面部护理 ¥280.00 ¥198.00 60' 深层补水护理 ¥480.00 ¥358.00 90' 深层补水护理 ¥480.00 ¥358.00 90' 肩颈舒缓按摩 ¥180.00 ",
+        "consoleErrors": [],
+        "pageShot": "manager01-pos-checkout-page.png",
+        "netShot": "manager01-pos-checkout-network.png"
+      },
+      {
+        "route": "/stock/list",
+        "finalUrl": "http://localhost:8088/stock/list",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/auth/userinfo",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/stock/inventory/page?pageNum=1&pageSize=20&keyword=&category=&alertType=&expiryStatus=",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/stock/stats",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 1,
+        "rowCount": 6,
+        "emptyCount": 0,
+        "emptyVisible": false,
+        "errToast": [],
+        "mainTextLen": 925,
+        "mainTextHead": "商品种类 20 在库种类 6 缺货 0 低于最低 1 超储 0 分类 库存状态 有效期 查询 重置 批量打印标签 批量调整 导出 编码 商品名称 分类 规格 批次号 库存 单位 成本(元) 安全库存 预警 过期日期 供应商 操作 SP-CUP-006 一次性杯",
+        "consoleErrors": [],
+        "pageShot": "manager01-stock-list-page.png",
+        "netShot": "manager01-stock-list-network.png"
+      },
+      {
+        "route": "/booking/schedule",
+        "finalUrl": "http://localhost:8088/booking/schedule",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/schedule/list",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/schedule/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/booking/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/employee/list",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 2,
+        "rowCount": 48,
+        "emptyCount": 0,
+        "emptyVisible": false,
+        "errToast": [],
+        "mainTextLen": 3254,
+        "mainTextHead": "技师排班管理 横向周历视图 · 一键批量排班 · 排班冲突自动预警 上一周 本周 下一周 批量排班 新增排班 本周排班数 0 条 正常上班 0 绿色 请假 0 橙色 休息 0 灰色 已预约/最大 0/0 预约占用率 0% 技师 10/26 一 10/27 二 10/28 三 10/29 四 10",
+        "consoleErrors": [],
+        "pageShot": "manager01-booking-schedule-page.png",
+        "netShot": "manager01-booking-schedule-network.png"
+      }
+    ]
+  },
+  {
+    "user": "clerk01",
+    "loginOk": true,
+    "afterLoginUrl": "http://localhost:8088/dashboard",
+    "menuTexts": [
+      "首页",
+      "会员管理",
+      "预约管理",
+      "预约日历",
+      "预约列表",
+      "排班管理",
+      "收银结算",
+      "收银台",
+      "订单列表",
+      "收银统计",
+      "退款单",
+      "支付对账",
+      "库存管理",
+      "库存列表",
+      "商品耗材",
+      "出入库记录",
+      "消耗记录",
+      "盘点管理"
+    ],
+    "pages": [
+      {
+        "route": "/member",
+        "finalUrl": "http://localhost:8088/member",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/member-level/list",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/member-level/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/stats",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/page",
+            "status": 200,
+            "method": "POST"
+          },
+          {
+            "url": "/api/member/tag/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/store/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 0,
+        "rowCount": 0,
+        "emptyCount": 0,
+        "emptyVisible": false,
+        "errToast": [],
+        "mainTextLen": 1052,
+        "mainTextHead": "489 会员总数 本月新增 -100% 489 活跃会员 活跃率 100% ¥16538.00 储值总额 本月新增 0% 53040 积分总量 本月新增 0% 会员状态 会员等级 会员标签 所属门店 查询 重置 排序：默认 导出 导入 新增会员 视图 普通会员 1 女 113号 M13917321821 1391732",
+        "consoleErrors": [],
+        "pageShot": "clerk01-member-page.png",
+        "netShot": "clerk01-member-network.png"
+      },
+      {
+        "route": "/booking/list",
+        "finalUrl": "http://localhost:8088/booking/list",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/booking/list",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/booking/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/employee/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/list",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 1,
+        "rowCount": 0,
+        "emptyCount": 1,
+        "emptyVisible": true,
+        "errToast": [],
+        "mainTextLen": 196,
+        "mainTextHead": "今日预约 0 今日共 0 条 待确认 0 需店长/前台跟进 已签到 0 当前服务中 已完成 0 历史总完成 已取消/爽约 0 取消 0 · 爽约 0 今日 明日 本周 全部 至 状态 会员 技师 重置 新建预约 导出CSV 打印 # 预约号 会员 技师 服务项目 房间 时间 状态 备注 ",
+        "consoleErrors": [],
+        "pageShot": "clerk01-booking-list-page.png",
+        "netShot": "clerk01-booking-list-network.png"
+      },
+      {
+        "route": "/pos/checkout",
+        "finalUrl": "http://localhost:8088/pos/checkout",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/pos/services/list",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/pos/services/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/pos/orders/today",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/employee/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/pos/orders/stats",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 1,
+        "rowCount": 0,
+        "emptyCount": 1,
+        "emptyVisible": true,
+        "errToast": [],
+        "mainTextLen": 521,
+        "mainTextHead": "收银台 今日订单 0 今日营收 ¥0.00 进行中 0 选择服务/产品 基础面部护理 ¥280.00 ¥198.00 60' 基础面部护理 ¥280.00 ¥198.00 60' 深层补水护理 ¥480.00 ¥358.00 90' 深层补水护理 ¥480.00 ¥358.00 90' 肩颈舒缓按摩 ¥180.00 ",
+        "consoleErrors": [],
+        "pageShot": "clerk01-pos-checkout-page.png",
+        "netShot": "clerk01-pos-checkout-network.png"
+      }
+    ]
+  },
+  {
+    "user": "operator01",
+    "loginOk": true,
+    "afterLoginUrl": "http://localhost:8088/dashboard",
+    "menuTexts": [
+      "首页",
+      "营销工具",
+      "优惠券",
+      "积分商城",
+      "营销活动",
+      "数据报表",
+      "数据看板",
+      "营业报表"
+    ],
+    "pages": [
+      {
+        "route": "/member",
+        "finalUrl": "http://localhost:8088/member",
+        "redirected403": false,
+        "firstApi": {
+          "url": "/api/store/list",
+          "status": 200,
+          "method": "GET"
+        },
+        "allApi": [
+          {
+            "url": "/api/store/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/auth/userinfo",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/page",
+            "status": 200,
+            "method": "POST"
+          },
+          {
+            "url": "/api/member-level/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/tag/list",
+            "status": 200,
+            "method": "GET"
+          },
+          {
+            "url": "/api/member/stats",
+            "status": 200,
+            "method": "GET"
+          }
+        ],
+        "tableCount": 0,
+        "rowCount": 0,
+        "emptyCount": 0,
+        "emptyVisible": false,
+        "errToast": [],
+        "mainTextLen": 1052,
+        "mainTextHead": "489 会员总数 本月新增 -100% 489 活跃会员 活跃率 100% ¥16538.00 储值总额 本月新增 0% 53040 积分总量 本月新增 0% 会员状态 会员等级 会员标签 所属门店 查询 重置 排序：默认 导出 导入 新增会员 视图 普通会员 1 女 113号 M13917321821 1391732",
+        "consoleErrors": [],
+        "pageShot": "operator01-member-page.png",
+        "netShot": "operator01-member-network.png"
+      }
+    ]
+  }
+]
