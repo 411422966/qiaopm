@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-10-25（补登 I115~I126）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-10-25（补登 I115~I128）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -59,7 +59,10 @@
 | I124 | I124 — 权限码体系分裂（点号 vs 冒号），前端菜单与路由守卫系统性错配 | Open | [I124-authz-code-system-split.md](I124-authz-code-system-split.md) |
 | I125 | I125 — Blockchain Record / Chain 菜单已上线但前端无路由（影子功能） | Open | [I125-blockchain-shadow-route.md](I125-blockchain-shadow-route.md) |
 | I126 | I126 — 运行中的容器镜像落后源码 4 天 / 14 天，运行态验证结论与源码不一致 | Open | [I126-runtime-image-drift.md](I126-runtime-image-drift.md) |
+| I127 | I127 — 备份文件编码损坏：PowerShell 5.1 重定向造成 UTF-16LE + GBK 双重转码 | Fixed | [I127-backup-file-encoding-corruption.md](I127-backup-file-encoding-corruption.md) |
+| I128 | I128 — 库内 CJK 文本编码污染：RBAC 三表 15 行中文不可读 | Open | [I128-db-cjk-encoding-pollution.md](I128-db-cjk-encoding-pollution.md) |
 
 ## 备注
 
 - **I119**：代码+数据已修复，运行时晋升验证待补。
+- **I127**：事故件 `before-batch1-20261025-180825.sql` 已改名为 `.UNUSABLE` 保留为证据，不恢复；根因（PS 5.1 `>` 重定向）已消除，正确备份方式（容器内 dump + `docker cp`）已验证可恢复。
