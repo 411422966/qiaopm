@@ -503,3 +503,5 @@ backup/logs/*.log
 
 # I123 备份脚本（长期资产，需入库）
 !scripts/backup-db-docker.ps1
+backup/
+audit/baseline/.tmp-sql/
