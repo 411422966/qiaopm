@@ -63,7 +63,7 @@ org.springframework.jdbc.BadSqlGrammarException:
 | `pos_order` | 1848 | ❌ `tendered_amount` ❌ `change_amount` |
 | `crm_package` | 46 | ❌ `bundle_type` ❌ `bundle_config` ❌ `bundle_item_count` |
 
-`pos_order` 现有列全集（24 列，无上述两列）：
+`pos_order` 现有列全集（26 列，无上述两列）：
 
 ```
 booking_id, cashier_id, cashier_name, create_time, deleted, discount_amount, final_amount,
@@ -72,7 +72,7 @@ refund_amount, refund_count, refund_reason, refund_time, refunded_amount,
 remark, status, store_id, tenant_id, total_amount, type, update_time
 ```
 
-`crm_package` 现有列全集（20 列，无上述三列）：
+`crm_package` 现有列全集（19 列，无上述三列）：
 
 ```
 category, code, cost_price, cover, create_by, create_time, deleted, description,

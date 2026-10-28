@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-10-26（补登 I127~I130）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-10-28（补登 I131/I132/TD-006）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -63,6 +63,9 @@
 | I128 | I128 — 库内 CJK 文本编码污染：RBAC 三表 15 行中文不可读 | Open | [I128-db-cjk-encoding-pollution.md](I128-db-cjk-encoding-pollution.md) |
 | I129 | I129 — pos_order / crm_package 缺列导致收银台与套餐列表必 500 | Open | [I129-missing-columns-pos-crm.md](I129-missing-columns-pos-crm.md) |
 | I130 | I130 — MySQL 8.0 不支持 ADD COLUMN IF NOT EXISTS，历史迁移脚本中存在多处使用 | Open | [I130-mysql-add-column-if-not-exists-incompatible.md](I130-mysql-add-column-if-not-exists-incompatible.md) |
+| I131 | I131 — PackageItem 实体缺 deleted 字段（软删除隐患），Controller 从不写 createBy | Open | [I131-packageitem-missing-deleted-and-createby.md](I131-packageitem-missing-deleted-and-createby.md) |
+| I132 | I132 — 收银台前端未传入 tenderedAmount，找零功能未接入 UI | Open | [I132-pos-checkout-missing-tendered-ui.md](I132-pos-checkout-missing-tendered-ui.md) |
+| TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
 
