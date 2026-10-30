@@ -346,11 +346,19 @@ public class P2FeaturesService {
         if (inviterId != null) { sql.append("AND inviter_id=? "); args.add(inviterId); }
         Map<String, Object> row = jdbc.queryForMap(sql.toString(), args.toArray());
         Map<String, Object> data = new HashMap<>(row);
+        long ordered = toLongValue(row.get("ordered"));
+        long total = toLongValue(row.get("total"));
         data.put("conversionRate",
-                (Long) row.getOrDefault("ordered", 0) == 0 ? 0
-                        : Math.round(((Long) row.getOrDefault("ordered", 0)) * 1000.0
-                                / (Long) row.getOrDefault("total", 1)) / 10.0);
+                ordered == 0 ? 0
+                        : Math.round(ordered * 1000.0 / (total == 0 ? 1 : total)) / 10.0);
         return Result.success(data);
+    }
+
+    /**
+     * SUM(CASE...) 在无匹配行时为 NULL，统一兜底为 0。
+     */
+    private static long toLongValue(Object value) {
+        return value instanceof Number ? ((Number) value).longValue() : 0L;
     }
 
     // ====================================================================

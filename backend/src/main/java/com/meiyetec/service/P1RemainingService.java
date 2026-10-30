@@ -463,12 +463,13 @@ public class P1RemainingService {
         BigDecimal ltv = rfm == null ? BigDecimal.ZERO
                 : (BigDecimal) rfm.get("ltv_predicted_365d");
         long lastDays = rfm == null ? 9999L
-                : ((Number) rfm.getOrDefault("last_purchase_days", 9999)).longValue();
+                : (rfm.get("last_purchase_days") instanceof Number
+                    ? ((Number) rfm.get("last_purchase_days")).longValue() : 9999L);
 
         // 2. 候选优惠券打分
         List<Map<String, Object>> coupons = jdbc.queryForList(
-            "SELECT id, coupon_name, discount_amount, min_order_amount " +
-            "FROM mkt_coupon WHERE deleted=0 AND tenant_id=? AND enabled=1 AND status=1 LIMIT 20",
+            "SELECT id, coupon_name, discount_amount, min_consume " +
+            "FROM mkt_coupon WHERE deleted=0 AND tenant_id=? AND status=1 LIMIT 20",
             tenantId);
         List<Map<String, Object>> couponScores = new ArrayList<>();
         for (Map<String, Object> c : coupons) {
@@ -484,7 +485,7 @@ public class P1RemainingService {
 
         // 3. 候选套餐（按价位匹配）
         List<Map<String, Object>> packages = jdbc.queryForList(
-            "SELECT id, package_name, price FROM crm_package WHERE deleted=0 AND tenant_id=? LIMIT 20",
+            "SELECT id, name, price FROM crm_package WHERE deleted=0 AND tenant_id=? LIMIT 20",
             tenantId);
         List<Map<String, Object>> pkgScores = new ArrayList<>();
         for (Map<String, Object> p : packages) {
@@ -492,7 +493,7 @@ public class P1RemainingService {
             Map<String, Object> item = new HashMap<>();
             item.put("type", "PACKAGE");
             item.put("id", p.get("id"));
-            item.put("name", p.get("package_name"));
+            item.put("name", p.get("name"));
             item.put("score", round2(score));
             item.put("reason", reasonForPackage(segment, ltv));
             pkgScores.add(item);

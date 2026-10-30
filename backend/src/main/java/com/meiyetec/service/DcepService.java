@@ -637,16 +637,27 @@ public class DcepService {
             "       o.error_code, o.error_msg, o.notify_count, o.create_time " +
             "FROM pay_dcep_order o WHERE o.deleted = 0 AND o.tenant_id = ? ");
         List<Object> args = new ArrayList<>();
+        List<Object> cargs = new ArrayList<>();
         args.add(tenantId);
-        if (status != null) { sql.append("AND o.status = ? "); args.add(status); }
-        if (channelCode != null && !channelCode.isEmpty()) { sql.append("AND o.channel_code = ? "); args.add(channelCode); }
-        if (bizOrderNo != null && !bizOrderNo.isEmpty()) { sql.append("AND o.biz_order_no LIKE ? "); args.add("%" + bizOrderNo + "%"); }
+        cargs.add(tenantId);
+        if (status != null) {
+            sql.append("AND o.status = ? "); args.add(status); cargs.add(status);
+        }
+        if (channelCode != null && !channelCode.isEmpty()) {
+            sql.append("AND o.channel_code = ? "); args.add(channelCode); cargs.add(channelCode);
+        }
+        if (bizOrderNo != null && !bizOrderNo.isEmpty()) {
+            sql.append("AND o.biz_order_no LIKE ? "); args.add("%" + bizOrderNo + "%"); cargs.add("%" + bizOrderNo + "%");
+        }
         sql.append("ORDER BY o.id DESC LIMIT ? OFFSET ?");
         args.add(pageSize); args.add((pageNum - 1) * pageSize);
         List<Map<String, Object>> records = jdbc.queryForList(sql.toString(), args.toArray());
 
         StringBuilder csql = new StringBuilder("SELECT COUNT(*) FROM pay_dcep_order o WHERE o.deleted = 0 AND o.tenant_id = ? ");
-        Long total = jdbc.queryForObject(csql.toString(), Long.class, args.toArray());
+        if (status != null) { csql.append("AND o.status = ? "); }
+        if (channelCode != null && !channelCode.isEmpty()) { csql.append("AND o.channel_code = ? "); }
+        if (bizOrderNo != null && !bizOrderNo.isEmpty()) { csql.append("AND o.biz_order_no LIKE ? "); }
+        Long total = jdbc.queryForObject(csql.toString(), Long.class, cargs.toArray());
 
         com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>> page =
                 new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(pageNum, pageSize);

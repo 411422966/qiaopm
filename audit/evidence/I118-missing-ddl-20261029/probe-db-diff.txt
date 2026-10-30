@@ -1,0 +1,46 @@
+# I118 缺表 — 实体字段 vs 影子库实际列（audit_probe_i118）差异比对
+# 生成：audit/evidence/I118-missing-ddl-20261029/probe-db-diff.js
+# 影子库：由仓库候选 DDL 脚本在 MySQL 8.0.46 实建（部分脚本失败，见 DDL 执行日志）
+#
+表	实体文件	实体列数	影子库列数	实体有但影子库缺	影子库有但实体无	结论
+
+birthday_member	BirthdayMember.java	15	15	-	-	列齐备
+birthday_send_log	BirthdaySendLog.java	16	16	-	-	列齐备
+biz_expiry_handle_log	BizExpiryHandleLog.java	21	21	-	-	列齐备
+card_package_template	CardPackageTemplate.java	25	25	-	-	列齐备
+care_formula	CareFormula.java	19	19	-	-	列齐备
+care_formula_apply	CareFormulaApply.java	12	12	-	-	列齐备
+care_plan	CarePlan.java	21	21	-	-	列齐备
+cloud_trace_log	TraceLog.java	22	0	id,trace_id,parent_span_id,span_id,tenant_id,service_name,app_name,call_type,endpoint,method,request_body,response_body,status_code,duration_ms,error_msg,client_ip,user_id,tags,phase,depth,is_error,created_at	-	影子库无此表（DDL 未成功建立）
+crm_churn_alert	CrmChurnAlert.java	19	19	-	-	列齐备
+crm_churn_prediction	CrmChurnPrediction.java	19	19	-	-	列齐备
+dcep_config	DcepConfig.java	13	13	-	-	列齐备
+dianping_deal	DianpingDeal.java	16	16	-	-	列齐备
+dianping_order	DianpingOrder.java	17	17	-	-	列齐备
+dianping_shop	DianpingShop.java	18	18	-	-	列齐备
+dianping_sync_log	DianpingSyncLog.java	10	10	-	-	列齐备
+fiscal_config	FiscalConfig.java	16	16	-	-	列齐备
+lbs_service_order	LbsServiceOrder.java	27	27	-	-	列齐备
+lbs_technician	LbsTechnician.java	26	26	-	-	列齐备
+ltv_model_registry	LtvModelRegistry.java	28	28	-	-	列齐备
+ltv_training_run_log	LtvTrainingRunLog.java	14	14	-	-	列齐备
+market_point_rule	PointRule.java	13	0	id,store_id,tenant_id,name,type,event_key,point_value,amount_limit,multiplier,status,remark,created_at,updated_at	-	影子库无此表（DDL 未成功建立）
+no_show_model	NoShowModel.java	18	18	-	-	列齐备
+no_show_prediction	NoShowPrediction.java	12	12	-	-	列齐备
+payment_gateway	PaymentGateway.java	18	18	-	-	列齐备
+payment_intent	PaymentIntent.java	17	17	-	-	列齐备
+price_list	PriceList.java	15	15	-	-	列齐备
+price_list_item	PriceListItem.java	16	16	-	-	列齐备
+price_list_view_log	<无实体>	-	9	-	id,tenant_id,price_list_id,service_id,template_id,member_id,channel,view_date,created_at	DDL 有表但无实体（纯 SQL 用途）
+report_snapshot	ReportSnapshot.java	7	0	id,store_id,biz_date,metric_key,metric_value,extra,created_at	-	影子库无此表（DDL 未成功建立）
+risk_event	RiskEvent.java	20	20	-	-	列齐备
+risk_rule	RiskRule.java	16	16	-	-	列齐备
+shared_package	SharedPackage.java	18	18	-	-	列齐备
+shared_package_invite	SharedPackageInvite.java	12	12	-	-	列齐备
+shared_package_member	SharedPackageMember.java	8	8	-	-	列齐备
+shared_package_usage	SharedPackageUsage.java	11	11	-	-	列齐备
+skin_profile	SkinProfile.java	22	22	-	-	列齐备
+wms_stock_transfer	WmsStockTransfer.java	20	20	-	-	列齐备
+wms_transfer_suggestion	WmsTransferSuggestion.java	19	19	-	-	列齐备
+
+=== 影子库中仍有实体列缺口的表数：3 ===

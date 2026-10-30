@@ -251,17 +251,24 @@ public class OverseasPaymentServiceImpl extends ServiceImpl<OverseasPaymentMappe
         List<Map<String, Object>> byGateway = jdbc.queryForList(byGatewaySql, args.toArray());
 
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("totalCount", ((Number) row.get("total_count")).longValue());
+        result.put("totalCount", toLongValue(row.get("total_count")));
         result.put("totalAmount", row.get("total_amount"));
         result.put("totalFee", row.get("total_fee"));
         result.put("totalNet", row.get("total_net"));
         result.put("totalRefund", row.get("total_refund"));
-        result.put("pendingCount", ((Number) row.get("pending_count")).longValue());
-        result.put("successCount", ((Number) row.get("success_count")).longValue());
-        result.put("refundedCount", ((Number) row.get("refunded_count")).longValue());
-        result.put("failedCount", ((Number) row.get("failed_count")).longValue());
+        result.put("pendingCount", toLongValue(row.get("pending_count")));
+        result.put("successCount", toLongValue(row.get("success_count")));
+        result.put("refundedCount", toLongValue(row.get("refunded_count")));
+        result.put("failedCount", toLongValue(row.get("failed_count")));
         result.put("byGateway", byGateway);
 
         return result;
+    }
+
+    /**
+     * 聚合列在无匹配行时为 NULL（SUM/CASE 不带 COALESCE），统一兜底为 0。
+     */
+    private static long toLongValue(Object value) {
+        return value instanceof Number ? ((Number) value).longValue() : 0L;
     }
 }

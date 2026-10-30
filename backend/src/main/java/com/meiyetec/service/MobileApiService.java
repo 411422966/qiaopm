@@ -125,9 +125,9 @@ public class MobileApiService {
 
         // 3) 优惠卡（最多 3）
         List<Map<String, Object>> coupons = jdbc.queryForList(
-            "SELECT id, coupon_name, coupon_value, status " +
+            "SELECT id, coupon_name, discount_amount, status " +
             "FROM mkt_coupon WHERE deleted = 0 AND tenant_id = ? " +
-            "  AND status = 'ACTIVE' LIMIT 3",
+            "  AND status = 1 LIMIT 3",
             tenantId);
         data.put("coupons", coupons);
 

@@ -1,0 +1,27 @@
+﻿######## Unknown column 'bs.price'
+org.springframework.jdbc.BadSqlGrammarException:
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'bs.price' in 'field list'
+### The error may exist in com/meiyetec/mapper/ServiceMaterialCostMapper.java (best guess)
+### The error may involve defaultParameterMap
+######## Unknown column 'coupon_value'
+at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.sql.SQLSyntaxErrorException: Unknown column 'coupon_value' in 'field list'
+at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:121)
+at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+######## Unknown column 'i.warehouse_id'
+at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.sql.SQLSyntaxErrorException: Unknown column 'i.warehouse_id' in 'field list'
+at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:121)
+at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+######## EmptyResultDataAccessException
+2026-10-30 17:50:50.491 [http-nio-8080-exec-5] ERROR c.m.exception.GlobalExceptionHandler [traceId=1765b702a75e41b285db6771ef5b1f2b] [tenant=] [order=] [pay=] [DBError]
+org.springframework.dao.EmptyResultDataAccessException: Incorrect result size: expected 1, actual 0
+at org.springframework.dao.support.DataAccessUtils.nullableSingleResult(DataAccessUtils.java:98)
+at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:887)
+######## Unknown column 'product_name'
+org.springframework.jdbc.BadSqlGrammarException:
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown column 'product_name' in 'field list'
+### The error may exist in com/meiyetec/mapper/StockInventoryMapper.java (best guess)
+### The error may involve defaultParameterMap
+######## Unknown column 'category'  -> NOT FOUND
+######## Unknown column 'version'  -> NOT FOUND

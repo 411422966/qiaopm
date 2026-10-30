@@ -1,0 +1,9 @@
+{
+ "missingInJar": [
+  "com.meiyetec.controller.GrayReleaseController",
+  "com.meiyetec.util.GrayReleaseHasher"
+ ],
+ "extraInJar": [
+  "com.meiyetec.service.GrayReleaseService"
+ ]
+}

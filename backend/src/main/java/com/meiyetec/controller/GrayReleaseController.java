@@ -1,6 +1,5 @@
 package com.meiyetec.controller;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import com.meiyetec.util.GrayReleaseHasher;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.entity.AbAssignment;
@@ -46,7 +45,6 @@ import java.util.*;
  * </ul>
  */
 @Slf4j
-@ConditionalOnProperty(name = "feature.legacy-missing-ddl.enabled", havingValue = "true", matchIfMissing = false)
 @RestController
 @RequestMapping("/gray")
 @RequiredArgsConstructor

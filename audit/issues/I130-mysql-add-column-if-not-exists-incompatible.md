@@ -202,3 +202,57 @@ DB snapshot：`backup/meiyetec_20261025_020004.sql` / env：`audit/baseline/env.
    该脚本用的是**无条件** `ADD COLUMN`（无 `IF NOT EXISTS`），语法本身在 MySQL 8.0 可跑，
    即「未执行」与「语法不兼容」是**两个独立原因**；本单已把 I129 的失败归因于「从未执行」，
    但**为何从未执行**（漏执行 vs 执行失败 vs 未纳入流程）→ **未确认**。
+
+---
+
+## 7. 补充实测（2026-10-30 23:0x，R1–R8 修复过程中再次命中）
+
+本单登记后，修复 `GET /stock/trace/{id}`（I133 / R3）时**再次踩中**同一问题 —— 本单的判断在真实修复场景中再次得到验证。
+
+### 7.1 `migrate_p2_11_dual_verify.sql` 实际执行中断
+
+```
+> mysql ... meiyetec < backend/src/main/resources/db/sql/migrate_p2_11_dual_verify.sql
+ERROR 1064 (42000) at line 43: You have an error in your SQL syntax; check the manual that
+corresponds to your MySQL server version for the right syntax to be used near
+'IF NOT EXISTS `dual_verify_status` varchar(16) DEFAULT ''NOT_REQUIRED'' COMMENT ''...''' at line 2
+```
+
+- 脚本在第 43 行（`ALTER TABLE stock_record ADD COLUMN IF NOT EXISTS ...`）**中断**，
+  后续 `stock_check` 补列 + `sys_config` 插入**全部未执行**。
+- 这解释了为何 `stock_dual_verify_record` 表存在（脚本前半段 `CREATE TABLE IF NOT EXISTS` 能跑），
+  但 `stock_record.dual_verify_status` 列**不存在** → `GET /stock/trace/{id}` 500。
+- I118 落地时只补了 `stock_check.dual_verify_status`，**漏了 `stock_record`**，
+  正是这个中断造成的后果。
+
+### 7.2 第二个隐藏缺陷：`sys_config` 插入列名与实际表结构不符
+
+脚本第 60-62 行假设 `sys_config` 有 `config_type / default_value / remark` 三列，
+实测该表实际列为 `id / config_key / config_value / config_group / description / sort_order / created_at / updated_at`：
+
+```
+> INSERT IGNORE INTO sys_config (config_key, config_value, config_type, default_value, remark, create_time) ...
+ERROR 1054 (42S22) at line 10: Unknown column 'config_type' in 'field list'
+```
+
+即**即使把 `ADD COLUMN IF NOT EXISTS` 改对，该脚本仍会在 `sys_config` 插入处报 1054**。
+这是 §2.2 表格未覆盖的**第二类**不兼容问题（不只是 MariaDB 语法，还有表结构漂移）。
+→ §4.2 批量改造时需增加「脚本内引用的列必须逐个对照 `information_schema` 核对」这一步。
+
+### 7.3 本次的处置（不改历史脚本本体）
+
+按 §4.1 写法 A，另建 `backup/fix-r3-stock-record.sql`（判存 + `PREPARE` 动态执行），
+实测在 MySQL 8.0.46 执行成功且**可重复执行幂等**（第二次输出 `SKIP column ... already exists`）。
+历史脚本 `migrate_p2_11_dual_verify.sql` **本体未改**（改历史迁移脚本属 §4.2 批量改造范畴，需用户单独批准）。
+
+> ⚠️ 注意：`backup/` 目录被 `.gitignore:506` 忽略 → `fix-r3-stock-record.sql` **不入库**，
+> 仅存在于本地工作区。若需在生产复现该补列，需另找入库路径。
+
+### 7.4 证据
+
+| 文件 | 内容 |
+|---|---|
+| `audit/evidence/F140-i118-ddl-landing/ddl-stock-record-executed.sql` | 本次实际执行的 DDL（含判存动态 SQL） |
+| `audit/evidence/F140-i118-ddl-landing/result.md` 附录 A.1 | R3-b 完整根因与处置 |
+| `audit/evidence/F140-i118-ddl-landing/result.md` 附录 A.5 | 未处理项清单（含本脚本两处不兼容） |
+| `audit/issues/I133-schema-drift-missing-columns.md` | R3 补充处置记录 |

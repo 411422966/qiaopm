@@ -1,0 +1,347 @@
+current_db
+meiyetec
+total_tables	missing_tables
+98	0
+table_name	status	est_rows	tbl_comment
+aggregate_root	OK	0	聚合根
+ai_churn_model	OK	0	流失预测模型
+arch_decision	OK	0	架构决策记录
+arch_dependency	OK	0	服务依赖图
+arch_roadmap	OK	0	架构演进路线图
+birthday_member	OK	0	生日会员
+biz_expiry_handle_log	OK	0	效期处理记录
+biz_huabei_order	OK	0	
+biz_treatment_phase_step	OK	0	疗程阶段步骤（含并行/串行）
+booking_waitlist_score_log	OK	0	候补评分日志（explainable AI 审计）
+bounded_context	OK	0	限界上下文
+card_package_template	OK	0	卡项套餐模板
+care_formula	OK	0	
+care_formula_apply	OK	0	
+care_plan	OK	0	
+cloud_circuit_breaker	OK	0	熔断记录
+cloud_slow_query	OK	0	慢查询
+compliance_log	OK	0	合规日志
+compliance_report	OK	0	合规报表
+cqrs_query_model	OK	0	CQRS 读模型
+crm_churn_alert	OK	0	流失预警工单
+crm_churn_prediction	OK	0	会员流失预测
+crm_review_dimension_config	OK	0	评价维度配置
+crm_service_improvement	OK	0	评价驱动的服务改进任务
+crm_service_improvement_log	OK	0	服务改进操作日志
+cross_platform	OK	0	跨端平台定义
+cross_platform_capability	OK	0	端能力
+data_export_audit	OK	0	数据导出审计
+dcep_config	OK	0	
+dianping_deal	OK	0	大众点评团购
+dianping_order	OK	0	大众点评订单
+dianping_shop	OK	0	大众点评店铺
+dianping_sync_log	OK	0	点评同步日志
+domain_event_store	OK	0	领域事件存储
+dr_backup_record	OK	0	备份记录
+dr_drill_execution	OK	0	演练执行
+dr_drill_plan	OK	0	演练计划
+dr_incident	OK	0	故障事件
+dr_runbook	OK	0	应急预案
+dr_site	OK	0	灾备站点
+dr_switch_log	OK	0	切换日志
+event_projection	OK	0	投影进度
+exp_experiment	OK	0	AB 实验
+fiscal_config	OK	0	财税开票渠道配置
+geofence	OK	0	地理围栏
+i18n_locale	OK	0	语言列表
+iot_device_event	OK	0	设备事件流
+iot_device_link_log	OK	0	IoT 联动执行日志
+lbs_dispatch_log	OK	0	派单决策日志（可解释 AI 审计）
+lbs_route_plan	OK	0	上门路线规划
+lbs_service_order	OK	0	上门服务订单
+lbs_service_zone	OK	0	上门服务区域（支持圆形 / 多边形）
+lbs_technician	OK	0	上门技师
+ltv_model_registry	OK	0	LTV 模型注册表
+ltv_training_run_log	OK	0	LTV 训练运行日志
+map_config	OK	0	地图配置
+member_treatment_step_log	OK	0	会员疗程步骤执行日志
+microservice_boundary	OK	0	微服务边界
+monitor_alert_event	OK	0	告警事件
+monitor_alert_rule	OK	0	告警规则
+monitor_notification_log	OK	0	通知日志
+no_show_model	OK	0	NoShow 模型
+open_api_log	OK	0	开放平台 API 调用日志
+open_app	OK	0	开放平台应用
+payment_gateway	OK	0	支付网关
+payment_intent	OK	0	支付意图
+platform_booking	OK	0	美团/抖音预约同步
+platform_order	OK	0	第三方平台订单
+platform_sync_log	OK	0	第三方平台同步日志
+platform_webhook_delivery	OK	0	Webhook 投递 + 重试
+platform_webhook_event	OK	0	Webhook 事件类型
+platform_webhook_subscription	OK	0	Webhook 订阅配置
+pos_employee_store	OK	0	员工-门店关联
+price_list	OK	0	电子价目表
+price_list_item	OK	0	价目表项目
+product	OK	0	
+push_template	OK	0	推送模板
+risk_event	OK	0	风控事件
+risk_rule	OK	0	风控规则
+service_contract	OK	0	服务契约
+service_route_rule	OK	0	API 网关路由
+shared_package	OK	0	共享套餐主表
+shared_package_member	OK	0	共享套餐成员表
+skin_profile	OK	0	会员肤质档案
+sla_report	OK	0	SLA 月报
+sla_target	OK	0	SLA 目标
+stock_dual_verify_record	OK	0	双人核销记录表
+wallet_promotion	OK	0	充值优惠规则表
+web_route_audit	OK	0	前端路由审计
+web_template	OK	0	前端模板
+wms_cross_warehouse_alert	OK	0	跨仓预警
+wms_expiry_alert	OK	0	跨仓过期预警
+wms_stock_transfer	OK	0	仓库调拨单
+wms_transfer_suggestion	OK	0	智能调拨建议
+wms_warehouse	OK	0	仓库主数据
+wms_warehouse_threshold	OK	0	仓库级阈值
+wx_pay_order	OK	0	微信支付订单
+wx_template_log	OK	0	微信模板消息日志
+total	missing
+43	0
+table_name	column_name	status	COLUMN_TYPE	IS_NULLABLE	COLUMN_DEFAULT
+crm_follow_up_task	reopens	OK	int	YES	0
+crm_member	brand_id	OK	bigint	YES	NULL
+crm_member	email	OK	varchar(128)	YES	NULL
+crm_member	member_name	OK	varchar(64)	YES	NULL
+crm_member	openid	OK	varchar(64)	YES	NULL
+crm_member_profile	hair_type	OK	varchar(64)	YES	NULL
+crm_member_profile	nail_type	OK	varchar(64)	YES	NULL
+crm_member_profile	tenant_id	OK	bigint	YES	1
+crm_rfm_snapshot	last_purchase_days	OK	int	YES	NULL
+crm_rfm_snapshot	ltv_predicted_365d	OK	decimal(18,2)	YES	NULL
+crm_rfm_snapshot	rfm_segment	OK	varchar(32)	YES	NULL
+fiscal_invoice	platform_invoice_no	OK	varchar(128)	YES	NULL
+fiscal_invoice	platform_pdf_url	OK	varchar(500)	YES	NULL
+fiscal_invoice	platform_request_id	OK	varchar(128)	YES	NULL
+fiscal_invoice	platform_response	OK	text	YES	NULL
+fiscal_invoice	platform_void_no	OK	varchar(128)	YES	NULL
+fiscal_invoice	request_completed_at	OK	datetime	YES	NULL
+fiscal_invoice	request_mode	OK	varchar(32)	YES	NULL
+fiscal_invoice	request_payload	OK	text	YES	NULL
+fiscal_invoice	request_started_at	OK	datetime	YES	NULL
+fiscal_invoice	retry_count	OK	int	YES	0
+kiosk_checkin	member_name	OK	varchar(64)	YES	NULL
+market_coupon	tenant_id	OK	bigint	YES	1
+market_coupon_grant	tenant_id	OK	bigint	YES	1
+mkt_coupon	coupon_name	OK	varchar(128)	YES	NULL
+mkt_dispatch	dispatch_subtype	OK	varchar(64)	YES	NULL
+mkt_dispatch	fail_count	OK	int	YES	0
+mkt_dispatch	published_version	OK	int	YES	NULL
+mkt_dispatch	source_id	OK	bigint	YES	NULL
+mkt_dispatch	source_version	OK	varchar(64)	YES	NULL
+mkt_dispatch	success_count	OK	int	YES	0
+mkt_dispatch	total_count	OK	int	YES	0
+pos_order	created_at	OK	datetime	YES	CURRENT_TIMESTAMP
+pos_refund	audit_status	OK	varchar(32)	YES	NULL
+pricing_experiment_result	deleted	OK	tinyint	YES	0
+stock_check	dual_verify_status	OK	varchar(32)	YES	NULL
+stock_check	main_verifier_id	OK	bigint	YES	NULL
+stock_check	main_verifier_name	OK	varchar(64)	YES	NULL
+stock_check	review_time	OK	datetime	YES	NULL
+stock_check	reviewer_gps	OK	varchar(128)	YES	NULL
+stock_check	reviewer_id	OK	bigint	YES	NULL
+stock_check	reviewer_name	OK	varchar(64)	YES	NULL
+sys_role	tenant_id	OK	bigint	YES	NULL
+tbl	row_count
+arch_decision	0
+tbl	row_count
+arch_dependency	0
+tbl	row_count
+arch_roadmap	0
+tbl	row_count
+bounded_context	0
+tbl	row_count
+aggregate_root	0
+tbl	row_count
+microservice_boundary	0
+tbl	row_count
+service_contract	0
+tbl	row_count
+service_route_rule	0
+tbl	row_count
+cqrs_query_model	0
+tbl	row_count
+domain_event_store	0
+tbl	row_count
+event_projection	0
+tbl	row_count
+exp_experiment	0
+tbl	row_count
+web_route_audit	0
+tbl	row_count
+web_template	0
+tbl	row_count
+ai_churn_model	0
+tbl	row_count
+crm_churn_prediction	0
+tbl	row_count
+crm_churn_alert	0
+tbl	row_count
+ltv_model_registry	0
+tbl	row_count
+ltv_training_run_log	0
+tbl	row_count
+biz_treatment_phase_step	0
+tbl	row_count
+booking_waitlist_score_log	0
+tbl	row_count
+member_treatment_step_log	0
+tbl	row_count
+care_formula	0
+tbl	row_count
+care_formula_apply	0
+tbl	row_count
+care_plan	0
+tbl	row_count
+skin_profile	0
+tbl	row_count
+card_package_template	0
+tbl	row_count
+price_list	0
+tbl	row_count
+price_list_item	0
+tbl	row_count
+no_show_model	0
+tbl	row_count
+birthday_member	0
+tbl	row_count
+biz_expiry_handle_log	0
+tbl	row_count
+crm_service_improvement	0
+tbl	row_count
+crm_service_improvement_log	0
+tbl	row_count
+crm_review_dimension_config	0
+tbl	row_count
+dcep_config	0
+tbl	row_count
+payment_gateway	0
+tbl	row_count
+payment_intent	0
+tbl	row_count
+biz_huabei_order	0
+tbl	row_count
+wx_pay_order	0
+tbl	row_count
+dianping_deal	0
+tbl	row_count
+dianping_order	0
+tbl	row_count
+dianping_shop	0
+tbl	row_count
+dianping_sync_log	0
+tbl	row_count
+dr_incident	0
+tbl	row_count
+dr_drill_execution	0
+tbl	row_count
+dr_drill_plan	0
+tbl	row_count
+dr_backup_record	0
+tbl	row_count
+dr_runbook	0
+tbl	row_count
+dr_site	0
+tbl	row_count
+dr_switch_log	0
+tbl	row_count
+fiscal_config	0
+tbl	row_count
+lbs_service_order	0
+tbl	row_count
+lbs_technician	0
+tbl	row_count
+lbs_dispatch_log	0
+tbl	row_count
+lbs_service_zone	0
+tbl	row_count
+lbs_route_plan	0
+tbl	row_count
+wallet_promotion	0
+tbl	row_count
+monitor_alert_event	0
+tbl	row_count
+monitor_notification_log	0
+tbl	row_count
+monitor_alert_rule	0
+tbl	row_count
+cloud_circuit_breaker	0
+tbl	row_count
+cloud_slow_query	0
+tbl	row_count
+open_app	0
+tbl	row_count
+open_api_log	0
+tbl	row_count
+platform_webhook_delivery	0
+tbl	row_count
+platform_webhook_event	0
+tbl	row_count
+platform_webhook_subscription	0
+tbl	row_count
+platform_booking	0
+tbl	row_count
+platform_order	0
+tbl	row_count
+platform_sync_log	0
+tbl	row_count
+wx_template_log	0
+tbl	row_count
+push_template	0
+tbl	row_count
+stock_dual_verify_record	0
+tbl	row_count
+wms_stock_transfer	0
+tbl	row_count
+wms_warehouse	0
+tbl	row_count
+wms_transfer_suggestion	0
+tbl	row_count
+wms_cross_warehouse_alert	0
+tbl	row_count
+wms_expiry_alert	0
+tbl	row_count
+wms_warehouse_threshold	0
+tbl	row_count
+product	0
+tbl	row_count
+shared_package	0
+tbl	row_count
+shared_package_member	0
+tbl	row_count
+pos_employee_store	0
+tbl	row_count
+sla_report	0
+tbl	row_count
+sla_target	0
+tbl	row_count
+risk_rule	0
+tbl	row_count
+risk_event	0
+tbl	row_count
+map_config	0
+tbl	row_count
+geofence	0
+tbl	row_count
+i18n_locale	0
+tbl	row_count
+iot_device_event	0
+tbl	row_count
+iot_device_link_log	0
+tbl	row_count
+compliance_log	0
+tbl	row_count
+compliance_report	0
+tbl	row_count
+data_export_audit	0
+tbl	row_count
+cross_platform	0
+tbl	row_count
+cross_platform_capability	0
+total	missing
+14	0

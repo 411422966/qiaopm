@@ -1,0 +1,5122 @@
+[
+ {
+  "p": "/fiscal/channel/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos-device/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/governance/model/report",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/service-material/deduct-log/success-rate",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/gdpr/consent/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/birthday/member/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/material/consumption/statistics/by-product",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/pos/refund/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/resource/conflict/list",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/stock/dual-verify/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/suggestion/rule/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/hipaa/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/room/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/employee/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/alert/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/category/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/fiscal/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos/orders/today",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos/reconciliation/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/resource/utilization/list",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/ai/forecast/accuracy/trend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/material/cost/analysis",
+  "http": 200,
+  "code": 500,
+  "msg": "数据库异常"
+ },
+ {
+  "p": "/material/substitute/list",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/iot/device/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/rule/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/category/tree",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/service-material/deduct-log/statistics",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/material/package/hot",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai-scheduler/forecasts",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/alert/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/packages/members/recent-with-orders",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/overseas-payment/payment/statistics",
+  "http": 200,
+  "code": 500,
+  "msg": "Cannot invoke \"java.lang.Number.longValue()\" because the return value of \"java.util.Map.get(Object)\" is null"
+ },
+ {
+  "p": "/member-day/roi",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/attendance/today",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/auth/me/menu",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/log/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m09/invite/reward-log/page",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/governance/model/churn/validate",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/packages/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member-day/config/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/expiry/total-loss",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/member/analysis",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/nail/statistics/type",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/fiscal/config/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/rules/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/resource/match-rule/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/service-material/rule/list",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/material/group/list",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/m09/invite/campaign/page",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/wms/cross-store/suggestion/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/governance/model/ltv/validate",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/role/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/log/enums",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/login-log/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/auth/me/permissions",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/store/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/log/search",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos-device/transaction/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/suggestion/rule/active",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm-integration/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/complication/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai/forecast/curve",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/records/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos/orders/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/risk-control/rule/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/subscription/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/blockchain/chain/overview",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/login-log/trend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m09/invite/code/page",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/dcep/offline/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wallet/promotion/rules",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/birthday/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/complication/sop/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/auth/userinfo",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ecommerce/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/market/coupon/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/settlement/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/blockchain/stats/record-type",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm-integration/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/invite/my-codes",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/complication/event/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/products/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/dual-verify/threshold",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai/vision/model/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai-scheduler/staff-load",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos/refund/audit/pending",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/log/anomaly",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos/refund/audit/rules",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/login-log/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wms/cross-store/dashboard",
+  "http": 200,
+  "code": 500,
+  "msg": "Cannot invoke \"java.lang.Number.longValue()\" because the return value of \"java.util.Map.getOrDefault(Object, Object)\" is"
+ },
+ {
+  "p": "/intel/price-sensitivity/overview",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wms/cross-store/transfer/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/login-log/search",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intl-booking/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/alert/replenish",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/records/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/attendance/monthly-report",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/technician/level/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/skin/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/dual-verify/pending",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/expiry/statistics/method",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/inventory/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos/refund/audit/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ecommerce/platform/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/pricing/experiment/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos-device/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/schedule/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/settlement/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=3351"
+ },
+ {
+  "p": "/iot/rule/active",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai-scheduler/schedules",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/nail/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/suggestion/log/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member-day/upcoming",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intl-booking/channels",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/expiry/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/check/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wms/cross-store/store/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/gdpr/data-request/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/trace/error/top",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/expiry/alerts",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/store/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/record/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dcep/contract/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/overseas-payment/payment/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/gray/flag/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/blockchain/stats/overview",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/booking/available",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/stock/inventory/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=4276"
+ },
+ {
+  "p": "/overseas-payment/payment/select-gateway",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/overseas-payment/webhook/logs",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/check/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=3732"
+ },
+ {
+  "p": "/expiry/near-expiry",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intl-payment/charges",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/resource/utilization/top",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/crm/detection/hair/statistics/type",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/alert/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/blockchain/chain/verify",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/gray/experiment/stats",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/stock/consumption/overview",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/material/consumption/statistics/by-service",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/crm/package/share/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/sys/config/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai/forecast/schedule/recommendations",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/schedule/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m12/dispatch/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/permission/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/employee/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intl-payment/gateways",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ltv-churn/churn/risk-list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member-level/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/risk-control/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/log/trend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/expiry/rules",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/lbs/dispatch-log",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/technician/level/evaluation/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/export/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/attendance/config/active",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/tenant/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/subscription/plan/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/dashboard/consumables-variance",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/invite/my-code",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/google-maps/heatmap",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/lbs/dispatch-config",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/booking/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/consumption/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=3642"
+ },
+ {
+  "p": "/ecommerce/order/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/gdpr/audit-log/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m09/invite/record/page",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/crm-integration/sync-log/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/price-sensitivity/curve",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/blockchain/stats/trend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/log/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/market/activity/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/salary/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ecommerce/product/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/skin/statistics/type",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/login-log/anomaly",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/plugin/runtime/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/attendance/statistics",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai/vision/log/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/device/link/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m09/invite/stats",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/fiscal/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/trace/slow/top",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/consumption/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/overseas-payment/route/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/check/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/blockchain/stats/chain",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/risk-control/alert/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/care/recipe/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/biz/daily",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/birthday/log/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/hipaa/phi/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/blockchain/record/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/attendance/leave/my",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/booking/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/employee/performance",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/products/import-template",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=352"
+ },
+ {
+  "p": "/member-level/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/inventory/alerts",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/plugin/install/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/log/context",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/crm/detection/hair/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/suggestion/template/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/attendance/leave/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/settlement/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/expiry/handles",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/packages/orders/recent",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/biz/payType",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/technician/level/active",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/dashboard/inventory-turnover-trend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wallet/promotion/calc",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/stock/service-material/deduct-log/list",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/pos/services/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/material/package/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wallet/transactions/all",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/lbs/zone/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/governance/quality/diagnosis",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m12/dispatch/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/plugin/market/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/gift-card/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/material/package/statistics/type",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/overseas-payment/route/match",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/products/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/plugin/runtime/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/blockchain/chain/info",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/invite/my-stats",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/resource/schedule/suggest",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/dcep/wallet/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ltv-churn/ltv/top",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/shortage/list",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/stock/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wms/cross-store/inventory/aggregate",
+  "http": 200,
+  "code": 500,
+  "msg": "数据库异常"
+ },
+ {
+  "p": "/stock/stats/trend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/lbs/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/invite/share-page",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/ltv-churn/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member/tag/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/dashboard/kpi",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/dcep/qualification/current",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/technician/level/benefit/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/stats/ranking",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/rules/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/lbs/order/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/config/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai/vision/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/google-maps/config",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/salary/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=3363"
+ },
+ {
+  "p": "/attendance/config/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/dcep/current",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/cohort/definition/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/report/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/hipaa/key/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/config/grouped",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/resource/schedule/check-conflict",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/google-maps/stores",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/perf/v2/report/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/birthday/log/stat",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/attendance/records",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/birthday/upcoming",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/salary/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/cohort/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/booking/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member-day/executions",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/attendance/leave/pending-count",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/lbs/technician/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai/forecast/heatmap",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/biz/monthly",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/data/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/overseas-payment/gateway/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/solution/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/price-sensitivity/segments",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/perf/v2/slow/top",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/perf/v2/model/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/birthday/preview",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wms/cross-store/product/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/ltv/training/model/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dcep/offline/detect-double-spend",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/trace/chain/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/price-sensitivity/matrix",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m09/invite/record/1",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/lifecycle/log/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai/forecast/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dcep/contract/log/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/technician/level/statistics",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/review/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/event/recent",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/pricing/rule/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/monitor/alert/event/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/market/activity/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/open/api/v2/secret/audit",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/kiosk/stats/daily-target",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/follow/task/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/monitor/alert/notification/log",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p1-suite/booking/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/v2/product/top",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/treatment/plan/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/review/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/style/statistics/type",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/kiosk/stats/staff",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/treatment/plan/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/suggestion/skin-profile/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/trace/visual/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 链路不存在"
+ },
+ {
+  "p": "/intel/ltv/recent-orders/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/packages/redemptions/recent",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/settlement/1",
+  "http": 200,
+  "code": 404,
+  "msg": "结算单不存在"
+ },
+ {
+  "p": "/biz/treatment/step/phase/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/brand/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/cloud/health/recent",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/intel/ltv/model/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/frontend/route/top",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member/1/tabs",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/technician/level/evaluation/metrics/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/monitor/metric/recent",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/intel/ltv/top",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/market/point/goods/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/follow/task/1/notes",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/review/loop/dim/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/noshow/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/loop/touch/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/crm/review/loop/analysis/rank",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mapi/version/check",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/industry/template/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 行业不存在"
+ },
+ {
+  "p": "/crm/review/loop/analysis/nps",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/review/loop/analysis/trend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/care/plan/list/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/cross/capability/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/overseas-payment/gateway/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 网关不存在"
+ },
+ {
+  "p": "/mkt/conversion/by-channel",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/points/rule/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/datahub/dashboard/ops",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/preference/top",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/biz/treatment/report/recent",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/datahub/metric/1/trend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/dual-verify/check/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/hair/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 检测记录不存在"
+ },
+ {
+  "p": "/gray/ab-test/1/stats",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 实验不存在"
+ },
+ {
+  "p": "/material/substitute/by-main/1",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/fiscal/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/market/activity/1/participants",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dcep/wallet/by-code/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 钱包不存在"
+ },
+ {
+  "p": "/spa-scene/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mapi/booking/slots",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/p2-suite/pos/device/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/v2/employee/commission",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/cross/platform/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member-level/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/noshow/model/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/follow/task/kanban/grouped",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/log/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=1196616"
+ },
+ {
+  "p": "/style/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/alert/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 告警不存在"
+ },
+ {
+  "p": "/intel/pricelist/template/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/expiry/rule/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/spa-scene/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/lbs/technician/1/route",
+  "http": 200,
+  "code": 500,
+  "msg": "数据库异常"
+ },
+ {
+  "p": "/gift-card/by-card-no/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 卡片不存在"
+ },
+ {
+  "p": "/iot/device/1/telemetry",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mapi/home",
+  "http": 200,
+  "code": 500,
+  "msg": "数据库异常"
+ },
+ {
+  "p": "/mh/drug-device/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/security/compliance/report/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 报表不存在"
+ },
+ {
+  "p": "/open/api/v2/webhook/subscription/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dianping/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/lifecycle/invite/my-invites",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/biz/booking/member-credit",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/dcep/sub-wallet/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/market/coupon/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/journey/trigger/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 触发器不存在"
+ },
+ {
+  "p": "/open/log/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sla/report/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/service/category/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dianping/shop/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/booking/no-show/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/frontend/mp/latest",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/cloud/breaker/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/expiry/handle/list",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/wms/warehouse/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/expiry/alert/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/consumption/bom-product/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/cross/capability/1/1/check",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/pricelist/template/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 模板不存在"
+ },
+ {
+  "p": "/es/event/by-correlation/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/booking/resource/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/org/brand/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/export/download",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/dr/runbook/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/platform/integration/wx/pay/order/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 订单不存在"
+ },
+ {
+  "p": "/p1-suite/payment/intent/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/device/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/p1-suite/risk/rule/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/market/activity/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/rules/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/huabei/orders",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/org/scope/me",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/service/item/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/brand/1/stores",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/packages/order/1/status-logs",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/room/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m02/split/record/1/detail",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/industry/template/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/exp/1/assign",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/biz/treatment/plan/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=5870"
+ },
+ {
+  "p": "/store/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dcep/offline/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 离线交易不存在"
+ },
+ {
+  "p": "/complaint/sla/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/diagnose/all/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/quality/improvement/1/log",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/quality/improvement/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 改进任务不存在"
+ },
+ {
+  "p": "/mh/visual/consent/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/record/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=4229"
+ },
+ {
+  "p": "/arch/dependency/blockers",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p2-suite/gdpr/consent/by-member/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m12/dispatch/1/logs",
+  "http": 404,
+  "code": 404,
+  "msg": "资源不存在: 下发单不存在"
+ },
+ {
+  "p": "/crm/cross/rule/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/suggestion/log/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 日志不存在"
+ },
+ {
+  "p": "/p2-suite/gdpr/audit",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/micro/contract/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m12/dispatch/1",
+  "http": 404,
+  "code": 404,
+  "msg": "资源不存在: 下发单不存在"
+ },
+ {
+  "p": "/report/v2/caliber/1/query",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 指标不存在"
+ },
+ {
+  "p": "/stock/check/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/tenant/1/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/service-material/rule/service/1",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/ddd/aggregate/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ddd/context/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/cross/rule/preview-match",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/crm/care/loop/closure/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p3-suite/plugin/installed",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wallet/balance/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/expiry/scan/near-expiry",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/style/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/forecast/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/mh/visual/consent/expiring",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/material/package/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/arch/adr/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dcep/sub-wallet/1/stats",
+  "http": 404,
+  "code": 404,
+  "msg": "资源不存在: 子钱包不存在: 1"
+ },
+ {
+  "p": "/quality/improvement/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/cross/rule/test",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/schedule/ai/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/crm/care/follow/task/pending-count",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/effect/snapshot",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/micro/boundary/topology",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p2-suite/map/config",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/booking/waitlist/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/journey/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/kiosk/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/review/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/ops/overview",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/arch/summary",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p2-suite/map/geofence/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/push/record/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/shared/package/overview",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/es/event/replay",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/biz/booking/resource/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mh/consent/template/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p2-suite/hipaa/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dr/incident/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/payment/config/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/overseas-payment/payment/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 支付不存在"
+ },
+ {
+  "p": "/ddd/aggregate/1/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/expiry/alert/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/cross/platform/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/cross/member-store",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/journey/trigger/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dianping/order/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/review/loop/analysis/tags",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/preference/recommend",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/biz/treatment/step/phase/1/arrangement",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dcep/sub-wallet/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 子钱包不存在"
+ },
+ {
+  "p": "/wms/cross/suggestion/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/perf/v2/report/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/device/session/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/crm/care/follow/plan/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/market/coupon/member/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/frontend/template/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dcep/wallet/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 钱包不存在"
+ },
+ {
+  "p": "/mkt/journey/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/attendance/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 打卡记录不存在"
+ },
+ {
+  "p": "/ddd/context/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos/refund/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/expiry/rule/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/consumption/order/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ddd/context/map",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/v2/snapshot/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/repurchase/trend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wms/cross/inventory/view",
+  "http": 200,
+  "code": 500,
+  "msg": "数据库异常"
+ },
+ {
+  "p": "/m12/dispatch/1/targets",
+  "http": 404,
+  "code": 404,
+  "msg": "资源不存在: 下发单不存在"
+ },
+ {
+  "p": "/technician/level/evaluation/by-employee/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intl-booking/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 预约不存在"
+ },
+ {
+  "p": "/wallet/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p3-suite/fiscal/invoice/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/template/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dr/incident/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/v2/sales/daily",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/complaint/category/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dr/site/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/channel/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ltv-churn/ltv/member/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/perf/slow/top",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/brand/snapshot/latest",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/booking/resource/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=493"
+ },
+ {
+  "p": "/stock/expiry/handle/total-loss",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/crm/care/complaint/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/booking/waitlist/score-config",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/device/1/telemetry/latest",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/review/loop/analysis/dimension",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/v2/caliber/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/complaint/satisfaction/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m09/invite/campaign/1",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/intl-booking/1/confirmation-template",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 预约不存在"
+ },
+ {
+  "p": "/mh/drug-device/usage/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/resource/match-rule/service/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/permission/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/v2/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dianping/sync-log",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/nail/latest/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/report/v2/task/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/device/link/log/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 日志不存在"
+ },
+ {
+  "p": "/lifecycle/funnel",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mh/consent/sign-link/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 链接不存在"
+ },
+ {
+  "p": "/monitor/alert/event/active",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos/orders/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/complaint/sla/check/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p1-suite/cohort/definition/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai/forecast/schedule/recommendation/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 无建议数据"
+ },
+ {
+  "p": "/p1-suite/cohort/pivot",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/shared/package/detail/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 套餐不存在"
+ },
+ {
+  "p": "/micro/boundary/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/open/api/v2/webhook/events",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/device/link/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 联动不存在"
+ },
+ {
+  "p": "/fiscal/config/by-channel/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mh/visual/archive/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/treatment/progress/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=3652"
+ },
+ {
+  "p": "/booking/schedule",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/recommend/1",
+  "http": 200,
+  "code": 500,
+  "msg": "Cannot invoke \"java.lang.Number.longValue()\" because the return value of \"java.util.Map.getOrDefault(Object, Object)\" is"
+ },
+ {
+  "p": "/crm/detection/hair/latest/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pay/dcep/order/page",
+  "http": 200,
+  "code": 500,
+  "msg": "数据库异常"
+ },
+ {
+  "p": "/wms/cross/expiry/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/pricing/rule/technician-level/levels",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ddd/context-matrix",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/gift-card/1/transactions",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/rules/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/packages/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/kiosk/checkin/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/dispatch/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/preference/by-type",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/datahub/meta/lineage/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/payment/log/stat",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p1-suite/cohort/revenue",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/login-log/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=39875"
+ },
+ {
+  "p": "/material/substitute/1",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/crm/care/review/export",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/journey/trigger/1/logs",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/arch/adr/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/cross/member/lookup",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/crm/review/loop/improvement/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/follow/plan/week-trend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/pricing/experiment/1/stats",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 实验不存在"
+ },
+ {
+  "p": "/p3-suite/crm/config/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/material/consumption/by-order/1",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/intel/churn/overview",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dr/drill/execution/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/org/employee/1/stores",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/expiry/alert/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/treatment/report/list",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/care/formula/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/booking/resource/check-conflict",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/dcep/contract/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p1-suite/sop/event/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/review/tpl/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/complaint/sla/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/bnpl/statistics",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos/refund/audit/timeline/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/follow/plan/1/preview-count",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/technician/level/benefit/1",
+  "http": 200,
+  "code": 500,
+  "msg": "权益不存在或无权访问"
+ },
+ {
+  "p": "/mh/drug-device/batch/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/cloud/discovery",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/trace/chain/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/follow/task/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/ltv/compute/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/trace/topology",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dr/backup/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/care/formula/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/domestic/health",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/platform/integration/sync/log/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pay/dcep/channel/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member/message/unread-count",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/mkt/conversion/roi",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/cross/redemption/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/review-analysis",
+  "http": 200,
+  "code": 500,
+  "msg": "Cannot invoke \"java.lang.Number.longValue()\" because the return value of \"java.util.Map.get(Object)\" is null"
+ },
+ {
+  "p": "/p3-suite/plugin/market",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/device/link/log/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sla/uptime/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/biz/treatment/report/1",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/category/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/task/1/log",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/es/snapshot/latest",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/biz/service/item/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/treatment/plan/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/subscription/by-member/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/market/coupon/member/1/count",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/report/solution/match",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/treatment/step/log/progress/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/review/tpl/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/complaint/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p3-suite/ecommerce/platform/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/config/key/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/loop/note/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/commission/simulation/recent/1",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/open/api/v2/webhook/delivery/dead-letter",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/device/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/plugin/runtime/tenant/1/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/kiosk/checkin/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/complaint/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/review/tpl/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/platform/integration/wx/template/log",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mh/visual/consent/member/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/treatment/plan/template",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=3806"
+ },
+ {
+  "p": "/stock/expiry/handle/statistics/by-method",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/report/v2/task/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 任务不存在"
+ },
+ {
+  "p": "/cohort/result/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 队列不存在"
+ },
+ {
+  "p": "/dianping/deal/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/material/cost/by-service/1",
+  "http": 200,
+  "code": 500,
+  "msg": "数据库异常"
+ },
+ {
+  "p": "/p3-suite/ecommerce/product/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/condition/by-rule/1",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/booking/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=47"
+ },
+ {
+  "p": "/iot/rule/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 规则不存在"
+ },
+ {
+  "p": "/stock/alert/replenish/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=4507"
+ },
+ {
+  "p": "/intel/churn/alert/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/booking/resource/available-slots",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/wms/cross/overview",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mh/consent/template/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/ltv/training/run/log",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/market/point/goods/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 商品不存在"
+ },
+ {
+  "p": "/datahub/dashboard/1/subscribers",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/complaint/sla/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/i18n/locale/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/platform/integration/platform/booking/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/plugin/runtime/persisted",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/service/item/template",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=3817"
+ },
+ {
+  "p": "/iot/device/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mh/visual/archive/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/material/group/1",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/crm/care/follow/plan/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/care/recipe/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 配方不存在"
+ },
+ {
+  "p": "/platform/integration/platform/booking/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/task/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/open/api/v2/quota/status",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/crm/care/complaint/category/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intl-booking/webhook/instagram",
+  "http": 200,
+  "code": 400,
+  "msg": "请求参数错误: verify token invalid"
+ },
+ {
+  "p": "/intel/repurchase/overview",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/datahub/health",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/dual-verify/record/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/rfm/batch/progress/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/follow/task/member/1/timeline",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/frontend/route/recent",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/skin/latest/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=31720"
+ },
+ {
+  "p": "/iot/device/link/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wx/booking/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/market/point/1/records",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mh/visual/withdraw/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/complaint/escalate/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/frontend/mp/version/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/bnpl/orders",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/micro/route/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/treatment/report/stats",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/intel/ltv/trend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/care/formula/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/gray/flag/1/evaluate",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/report/v2/task/1/download",
+  "http": 200,
+  "code": 500,
+  "msg": "任务不存在"
+ },
+ {
+  "p": "/mkt/preference/summary",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/resource/match-rule/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/follow/plan/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/tenant/1/config",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sla/report/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/org/hq/brand/1/stores",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/blockchain/trace/1/1",
+  "http": 404,
+  "code": 404,
+  "msg": "资源不存在: 存证不存在"
+ },
+ {
+  "p": "/intel/ltv/rank/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m02/split/stats",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/dcep/sub-wallet/by-code/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 子钱包不存在"
+ },
+ {
+  "p": "/intel/pricelist/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/market/point/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wallet/1/transactions",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/es/cqrs/model/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/complaint/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/packages/order/1/redemptions",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/arch/dependency/graph",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/care/suggestion/template/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 模板不存在"
+ },
+ {
+  "p": "/p2-suite/pos/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/datahub/meta/table",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p1-suite/risk/event/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/**",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/biz/service-item/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/blockchain/record/1",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/care/assessment/by-member/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dr/drill/execution/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dr/incident/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m02/split/record/page",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/crm/care/loop/task/my-today",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/crm/cross/rule/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/commission/tier/by-rule/1",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/dcep/config/mode",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/style/preference/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/care/plan/skin/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/pricelist/item/by-list/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/service/item/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=5420"
+ },
+ {
+  "p": "/crm/care/suggestion/rule/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 规则不存在"
+ },
+ {
+  "p": "/technician/level/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/review/loop/improvement/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/booking/waitlist/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=105"
+ },
+ {
+  "p": "/mkt/pricing/experiment/1/distribution",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/service/category/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/technician/level/benefit/by-level/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mapi/feed",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/coupon/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/booking/1",
+  "http": 200,
+  "code": 500,
+  "msg": "预约不存在"
+ },
+ {
+  "p": "/p1-suite/kiosk/checkin/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/bnpl/providers",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/cohort/definition/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 队列不存在"
+ },
+ {
+  "p": "/sla/target/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/platform/order/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/attendance/leave/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 请假申请不存在"
+ },
+ {
+  "p": "/attendance/config/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/data/member/1/recent",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/journey/trigger/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/repurchase/tier",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/trace/1",
+  "http": 200,
+  "code": 500,
+  "msg": "数据库异常"
+ },
+ {
+  "p": "/datahub/dim/1/values",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wallet/transactions",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/lifecycle/rule/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/schedule/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/style/recommend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/packages/redemption/member/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/monitor/alert/rule/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/gallery/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p2-suite/gdpr/request/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/pricing/experiment/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 实验不存在"
+ },
+ {
+  "p": "/mh/visual/compare/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/datahub/dim",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dr/switchover/log",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/tenant/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/report/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 报告不存在"
+ },
+ {
+  "p": "/market/activity/1/detail",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wms/transfer/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/consumption/bom/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/brand/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/promotion/export",
+  "http": 200,
+  "code": null,
+  "msg": "NON-JSON len=88"
+ },
+ {
+  "p": "/kiosk/stats/staff-trend",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/exp/1/result",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 实验不存在"
+ },
+ {
+  "p": "/biz/booking/resource/available",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/intel/churn/model/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/booking/resource/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/market/point/goods/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/gray/experiment/1/assign",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/gallery/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 款式不存在"
+ },
+ {
+  "p": "/lifecycle/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/perf/capacity",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mh/consent/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/frontend/template/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/solution/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 方案不存在"
+ },
+ {
+  "p": "/crm/detection/report/statistics/type",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/org/hq/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/kiosk/stats/hourly",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/skin/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 检测记录不存在"
+ },
+ {
+  "p": "/lifecycle/invite/code",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/booking/calendar",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos/services/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/micro/contract/1/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wms/cross/threshold/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wms/cross-store/transfer/1",
+  "http": 404,
+  "code": 404,
+  "msg": "资源不存在: 调拨单不存在"
+ },
+ {
+  "p": "/intel/pricelist/hot-items",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/churn/training/model/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/pos/experiment/quote",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/org/store/1/employees",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/gray/flag/mode",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/noshow/high-risk",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/i18n/bundle",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/p3-suite/fiscal/invoice/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/birthday/member/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 未录入生日"
+ },
+ {
+  "p": "/lbs/technician/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 技师不存在"
+ },
+ {
+  "p": "/bnpl/credit",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/p3-suite/ecommerce/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/detection/nail/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 检测记录不存在"
+ },
+ {
+  "p": "/brand/metric/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/brand/widget/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member/1/orders",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/push/template/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/kiosk/alerts/offline",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/kiosk/device/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/m02/split/rule/list",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/technician/level/promote/evaluate",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/quality/improvement/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/material/binding/by-service/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/arch/roadmap/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/security/export/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/shared/package/list/my/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/churn/predict/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 未配置激活的流失模型"
+ },
+ {
+  "p": "/payment/config/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/booking/waitlist/score-log",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mh/consent/sign/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ecommerce/platform/1/health",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/datahub/dashboard",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/care/formula/apply/log",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/pricelist/template/top",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/stock/products/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/platform/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/style/hot",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ltv-churn/churn/member/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mapi/member/card",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/p1-suite/payment/gateway/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/payment/channel/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/cross/redemption/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/datahub/meta/table/1/columns",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/cross/rule/trash",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/treatment/progress/member/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/member/message/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/lifecycle/invite/rewards",
+  "http": 404,
+  "msg": "No message available"
+ },
+ {
+  "p": "/sync/member/list",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/p2-suite/hipaa/phi-access/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/open/app/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/huabei/credit",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/dr/drill/plan/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/booking/resource/types",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p3-suite/crm/sync-log",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p2-suite/pos/transaction/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/dr/runbook/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/crm/cross/rule/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/technician/level/evaluation/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/payment/log/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/iot/data/member/1/trend",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/crm/care/loop/closure/owner-stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai/review/summary/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 摘要不存在"
+ },
+ {
+  "p": "/dcep/sub-wallet/1/ledger",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/spa-scene/1/slots",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/org/store/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/sys/tenant/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/ltv/member/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mh/visual/withdraw/stats",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/datahub/metric",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/intel/ltv/overview",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/treatment/progress/1",
+  "http": 200,
+  "code": 404,
+  "msg": "资源不存在: 进度不存在"
+ },
+ {
+  "p": "/mkt/fission/stats",
+  "http": 200,
+  "code": 500,
+  "msg": "Cannot invoke \"java.lang.Long.longValue()\" because the return value of \"java.util.Map.getOrDefault(Object, Object)\" is n"
+ },
+ {
+  "p": "/mkt/promotion/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/wms/cross/alert/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/conversion/funnel",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/security/compliance/log/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/cloud/slow-query/page",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/google-maps/geocode/log",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/es/projection/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/ai/recommend",
+  "http": 200,
+  "code": 500,
+  "msg": "系统繁忙，请稍后重试"
+ },
+ {
+  "p": "/p3-suite/ecommerce/order/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/biz/booking/no-show-rule/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/spa-scene/1/recommend",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/mkt/coupon/export",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/p1-suite/sop/list",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/plugin/review/list/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/packages/member/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ },
+ {
+  "p": "/employee/1",
+  "http": 200,
+  "code": 200,
+  "msg": "操作成功"
+ }
+]

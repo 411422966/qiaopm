@@ -1,0 +1,14 @@
+﻿R1	/material/cost/analysis	HTTP=200 code=200  {"code":200,"message":"鎿嶄綔鎴愬姛","data":[{"item_count":0,"service_price":280.00,"cost_ratio":0.00,"servi
+R1	/material/cost/by-service/1	HTTP=200 code=200  {"code":200,"message":"鎿嶄綔鎴愬姛","data":{"item_count":0,"service_price":280.00,"cost_ratio":0.00,"servic
+R2	/mapi/home	HTTP=200 code=200  {"code":200,"message":"鎿嶄綔鎴愬姛","data":{"member":null,"recentOrders":[{"id":1,"order_no":"PO20260809511
+R3	/stock/trace/1	HTTP=200 code=200  {"code":200,"message":"鎿嶄綔鎴愬姛","data":{"product":{"id":1,"tenantId":1,"storeId":1,"productCode":"SP-BO
+R4	/wms/cross-store/inventory/aggregate	HTTP=200 code=200  {"code":200,"message":"鎿嶄綔鎴愬姛","data":{"products":[{"productId":1,"productCode":"SP-BOT-001","productN
+R5	/wms/cross/inventory/view	HTTP=200 code=200  {"code":200,"message":"鎿嶄綔鎴愬姛","data":{"products":[]},"traceId":"14270d75872146709192605457c9586d","ti
+R6	/pay/dcep/order/page	HTTP=200 code=200  {"code":200,"message":"鎿嶄綔鎴愬姛","data":{"records":[{"dcepOrderNo":"DCEP-REFUND-e5b15593","prepayAt":nul
+R7	/lbs/technician/1/route	HTTP=200 code=200  {"code":200,"message":"鎿嶄綔鎴愬姛","data":{"plan":null,"orders":[],"route":null},"traceId":"ef85760a3ffa44
+R8	/overseas-payment/payment/statistics	HTTP=200 code=200  {"code":200,"message":"鎿嶄綔鎴愬姛","data":{"totalCount":0,"totalAmount":0.00,"totalFee":0.00,"totalNet":0.
+R8	/wms/cross-store/dashboard	HTTP=200 code=200  {"code":200,"message":"鎿嶄綔鎴愬姛","data":{"pendingCount":0,"approvedCount":0,"shippedCount":0,"receivedCo
+R8	/intel/recommend/1	HTTP=200 code=200  {"code":200,"message":"鎺ㄨ崘 5 椤?,"data":{"lastDays":9999,"segment":null,"recommendations":[{"score":0.
+R8	/crm/care/review-analysis	HTTP=200 code=200  {"code":200,"message":"鎿嶄綔鎴愬姛","data":{"nps":0.0,"improvementActions":["鏈嶅姟鎬佸害璇勫垎鍋忎綆锛?.0锛夛紝寤鸿寮€灞曟湇鍔＄ぜ浠煿璁?,"鎶€鏈瘎
+R8	/mkt/fission/stats	HTTP=200 code=200  {"code":200,"message":"鎿嶄綔鎴愬姛","data":{"ordered":null,"total_reward":0.00,"total":0,"rewarded":null,"p
+=== code=500 count: 0 ===

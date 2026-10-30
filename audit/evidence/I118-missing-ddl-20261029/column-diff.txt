@@ -1,0 +1,126 @@
+# I118 缺表 — 实体字段 vs 仓库 DDL（CREATE + ALTER）差异比对
+# 生成：audit/evidence/I118-missing-ddl-20261029/column-diff.js
+# 扫描 DDL 源：backend/src/main/resources/db/sql/*.sql (170) + docs/audit/*.sql (12)
+# transient 字段按 MyBatis-Plus 行为忽略（不映射为列）
+
+表	实体文件	DDL来源	类型	DDL列数	实体有但DDL缺	DDL有但实体无
+
+birthday_member	BirthdayMember.java	docs/audit/gap_p0_p3.sql:1	CREATE	15	-	-
+  >> birthday_member 合并后（1 个 DDL 片段）: 实体 15 列 / DDL 15 列 | 缺=- | 多=-
+
+birthday_send_log	BirthdaySendLog.java	docs/audit/gap_p0_p3.sql:21	CREATE	16	-	-
+  >> birthday_send_log 合并后（1 个 DDL 片段）: 实体 16 列 / DDL 16 列 | 缺=- | 多=-
+
+biz_expiry_handle_log	BizExpiryHandleLog.java	backend/src/main/resources/db/sql/init_expiry_tracking.sql:61	CREATE	21	-	-
+  >> biz_expiry_handle_log 合并后（1 个 DDL 片段）: 实体 21 列 / DDL 21 列 | 缺=- | 多=-
+
+card_package_template	CardPackageTemplate.java	docs/audit/p4_3_pricelist.sql:54	CREATE	25	-	-
+  >> card_package_template 合并后（1 个 DDL 片段）: 实体 25 列 / DDL 25 列 | 缺=- | 多=-
+
+care_formula	CareFormula.java	backend/src/main/resources/db/sql/init_care_recipe.sql:84	CREATE	19	-	-
+care_formula	CareFormula.java	docs/audit/gap_p0_p3.sql:158	CREATE	19	-	-
+  >> care_formula 合并后（2 个 DDL 片段）: 实体 19 列 / DDL 19 列 | 缺=- | 多=-
+
+care_formula_apply	CareFormulaApply.java	backend/src/main/resources/db/sql/init_care_recipe.sql:108	CREATE	12	-	-
+care_formula_apply	CareFormulaApply.java	docs/audit/gap_p0_p3.sql:182	CREATE	12	-	-
+  >> care_formula_apply 合并后（2 个 DDL 片段）: 实体 12 列 / DDL 12 列 | 缺=- | 多=-
+
+care_plan	CarePlan.java	backend/src/main/resources/db/sql/init_care_recipe.sql:130	CREATE	21	-	-
+care_plan	CarePlan.java	docs/audit/p4_2_care_and_shared.sql:37	CREATE	21	-	-
+  >> care_plan 合并后（2 个 DDL 片段）: 实体 21 列 / DDL 21 列 | 缺=- | 多=-
+
+cloud_trace_log	TraceLog.java	<无DDL>	-	0	<全部 22 列>	-
+crm_churn_alert	CrmChurnAlert.java	backend/src/main/resources/db/sql/migrate_r3_0_h_p1_6_churn_prediction.sql:54	CREATE	19	-	-
+  >> crm_churn_alert 合并后（1 个 DDL 片段）: 实体 19 列 / DDL 19 列 | 缺=- | 多=-
+
+crm_churn_prediction	CrmChurnPrediction.java	backend/src/main/resources/db/sql/migrate_r3_0_h_p1_6_churn_prediction.sql:24	CREATE	19	-	-
+  >> crm_churn_prediction 合并后（1 个 DDL 片段）: 实体 19 列 / DDL 19 列 | 缺=- | 多=-
+
+dcep_config	DcepConfig.java	backend/src/main/resources/db/sql/init_dcep_config.sql:1	CREATE	13	-	-
+  >> dcep_config 合并后（1 个 DDL 片段）: 实体 13 列 / DDL 13 列 | 缺=- | 多=-
+
+dianping_deal	DianpingDeal.java	docs/audit/gap_p0_p3.sql:103	CREATE	16	-	-
+  >> dianping_deal 合并后（1 个 DDL 片段）: 实体 16 列 / DDL 16 列 | 缺=- | 多=-
+
+dianping_order	DianpingOrder.java	docs/audit/gap_p0_p3.sql:123	CREATE	17	-	-
+  >> dianping_order 合并后（1 个 DDL 片段）: 实体 17 列 / DDL 17 列 | 缺=- | 多=-
+
+dianping_shop	DianpingShop.java	docs/audit/gap_p0_p3.sql:81	CREATE	18	-	-
+  >> dianping_shop 合并后（1 个 DDL 片段）: 实体 18 列 / DDL 18 列 | 缺=- | 多=-
+
+dianping_sync_log	DianpingSyncLog.java	docs/audit/gap_p0_p3.sql:145	CREATE	10	-	-
+  >> dianping_sync_log 合并后（1 个 DDL 片段）: 实体 10 列 / DDL 10 列 | 缺=- | 多=-
+
+fiscal_config	FiscalConfig.java	backend/src/main/resources/db/sql/migrate_fiscal_001_baiwang.sql:1	CREATE	16	-	-
+  >> fiscal_config 合并后（1 个 DDL 片段）: 实体 16 列 / DDL 16 列 | 缺=- | 多=-
+
+lbs_service_order	LbsServiceOrder.java	backend/src/main/resources/db/sql/init_m21_lbs_dispatch.sql:19	ALTER	6	id,tenant_id,order_no,member_id,member_name,member_phone,service_id,service_name,address,lat,lng,scheduled_time,technician_id,dispatch_status,dispatch_time,accept_time,amount,travel_fee,notes,created_at,updated_at	-
+lbs_service_order	LbsServiceOrder.java	docs/audit/p1_p1_p10.sql:64	CREATE	21	dispatch_score,dispatch_breakdown,reject_reason,route_seq,eta_minutes,scheduled_end	-
+  >> lbs_service_order 合并后（2 个 DDL 片段）: 实体 27 列 / DDL 27 列 | 缺=- | 多=-
+
+lbs_technician	LbsTechnician.java	backend/src/main/resources/db/sql/init_m21_lbs_dispatch.sql:1	ALTER	10	id,tenant_id,technician_id,name,phone,current_lat,current_lng,max_radius_km,available,service_ids,rating,online_status,last_loc_time,status,created_at,updated_at	-
+lbs_technician	LbsTechnician.java	docs/audit/p1_p1_p10.sql:41	CREATE	16	skill_tags,skill_levels,home_base_lat,home_base_lng,zone_id,max_orders_per_day,avg_service_minutes,travel_speed_kmh,work_start,work_end	-
+  >> lbs_technician 合并后（2 个 DDL 片段）: 实体 26 列 / DDL 26 列 | 缺=- | 多=-
+
+ltv_model_registry	LtvModelRegistry.java	docs/audit/p4_1_ltv_training.sql:63	CREATE	28	-	-
+  >> ltv_model_registry 合并后（1 个 DDL 片段）: 实体 28 列 / DDL 28 列 | 缺=- | 多=-
+
+ltv_training_run_log	LtvTrainingRunLog.java	docs/audit/p4_1_ltv_training.sql:104	CREATE	14	-	-
+  >> ltv_training_run_log 合并后（1 个 DDL 片段）: 实体 14 列 / DDL 14 列 | 缺=- | 多=-
+
+market_point_rule	PointRule.java	backend/src/main/resources/db/sql/migrate_points_001_add_tenant_and_goods.sql:22	ALTER	1	id,store_id,name,type,event_key,point_value,amount_limit,multiplier,status,remark,created_at,updated_at	-
+  >> market_point_rule 合并后（1 个 DDL 片段）: 实体 13 列 / DDL 1 列 | 缺=id,store_id,name,type,event_key,point_value,amount_limit,multiplier,status,remark,created_at,updated_at | 多=-
+
+no_show_model	NoShowModel.java	docs/audit/gap_p0_p3.sql:41	CREATE	18	-	-
+  >> no_show_model 合并后（1 个 DDL 片段）: 实体 18 列 / DDL 18 列 | 缺=- | 多=-
+
+no_show_prediction	NoShowPrediction.java	docs/audit/gap_p0_p3.sql:64	CREATE	12	-	-
+  >> no_show_prediction 合并后（1 个 DDL 片段）: 实体 12 列 / DDL 12 列 | 缺=- | 多=-
+
+payment_gateway	PaymentGateway.java	docs/audit/p1_p1_p10.sql:208	CREATE	18	-	-
+  >> payment_gateway 合并后（1 个 DDL 片段）: 实体 18 列 / DDL 18 列 | 缺=- | 多=-
+
+payment_intent	PaymentIntent.java	docs/audit/p1_p1_p10.sql:231	CREATE	17	-	-
+  >> payment_intent 合并后（1 个 DDL 片段）: 实体 17 列 / DDL 17 列 | 缺=- | 多=-
+
+price_list	PriceList.java	docs/audit/p4_3_pricelist.sql:1	CREATE	15	-	-
+  >> price_list 合并后（1 个 DDL 片段）: 实体 15 列 / DDL 15 列 | 缺=- | 多=-
+
+price_list_item	PriceListItem.java	docs/audit/p4_3_pricelist.sql:27	CREATE	16	-	-
+  >> price_list_item 合并后（1 个 DDL 片段）: 实体 16 列 / DDL 16 列 | 缺=- | 多=-
+
+price_list_view_log	<无实体>	docs/audit/p4_3_pricelist.sql	-	-	-	-
+report_snapshot	ReportSnapshot.java	<无DDL>	-	0	<全部 7 列>	-
+risk_event	RiskEvent.java	docs/audit/p1_p1_p10.sql:384	CREATE	20	-	-
+  >> risk_event 合并后（1 个 DDL 片段）: 实体 20 列 / DDL 20 列 | 缺=- | 多=-
+
+risk_rule	RiskRule.java	docs/audit/p1_p1_p10.sql:364	CREATE	16	-	-
+  >> risk_rule 合并后（1 个 DDL 片段）: 实体 16 列 / DDL 16 列 | 缺=- | 多=-
+
+shared_package	SharedPackage.java	docs/audit/p4_2_care_and_shared.sql:72	CREATE	18	-	-
+  >> shared_package 合并后（1 个 DDL 片段）: 实体 18 列 / DDL 18 列 | 缺=- | 多=-
+
+shared_package_invite	SharedPackageInvite.java	docs/audit/p4_2_care_and_shared.sql:138	CREATE	12	-	-
+  >> shared_package_invite 合并后（1 个 DDL 片段）: 实体 12 列 / DDL 12 列 | 缺=- | 多=-
+
+shared_package_member	SharedPackageMember.java	docs/audit/p4_2_care_and_shared.sql:105	CREATE	8	-	-
+  >> shared_package_member 合并后（1 个 DDL 片段）: 实体 8 列 / DDL 8 列 | 缺=- | 多=-
+
+shared_package_usage	SharedPackageUsage.java	docs/audit/p4_2_care_and_shared.sql:120	CREATE	11	-	-
+  >> shared_package_usage 合并后（1 个 DDL 片段）: 实体 11 列 / DDL 11 列 | 缺=- | 多=-
+
+skin_profile	SkinProfile.java	docs/audit/p4_2_care_and_shared.sql:1	CREATE	22	-	-
+  >> skin_profile 合并后（1 个 DDL 片段）: 实体 22 列 / DDL 22 列 | 缺=- | 多=-
+
+wms_stock_transfer	WmsStockTransfer.java	backend/src/main/resources/db/sql/migrate_r3_0_d_multi_warehouse.sql:30	CREATE	20	-	-
+  >> wms_stock_transfer 合并后（1 个 DDL 片段）: 实体 20 列 / DDL 20 列 | 缺=- | 多=-
+
+wms_transfer_suggestion	WmsTransferSuggestion.java	backend/src/main/resources/db/sql/migrate_r3_0_h_p2_3_cross_warehouse.sql:50	CREATE	19	-	-
+  >> wms_transfer_suggestion 合并后（1 个 DDL 片段）: 实体 19 列 / DDL 19 列 | 缺=- | 多=-
+
+=== 存在实体列缺口的表数：3 ===
+
+--- 缺口明细 ---
+cloud_trace_log	<无DDL>	id,trace_id,parent_span_id,span_id,tenant_id,service_name,app_name,call_type,endpoint,method,request_body,response_body,status_code,duration_ms,error_msg,client_ip,user_id,tags,phase,depth,is_error,created_at
+market_point_rule	PointRule.java	缺 id,store_id,name,type,event_key,point_value,amount_limit,multiplier,status,remark,created_at,updated_at
+report_snapshot	<无DDL>	id,store_id,biz_date,metric_key,metric_value,extra,created_at

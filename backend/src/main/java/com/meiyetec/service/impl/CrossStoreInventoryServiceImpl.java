@@ -671,9 +671,9 @@ public class CrossStoreInventoryServiceImpl implements CrossStoreInventoryServic
             "  COUNT(*) AS total " +
             "FROM wms_stock_transfer WHERE deleted=0 AND tenant_id=? AND status IN ('RECEIVED','CANCELLED')",
             tenantId);
-        long succ = ((Number) successRate.getOrDefault("success", 0)).longValue();
-        long fail = ((Number) successRate.getOrDefault("fail", 0)).longValue();
-        long total = ((Number) successRate.getOrDefault("total", 0)).longValue();
+        long succ = toLongValue(successRate.get("success"));
+        long fail = toLongValue(successRate.get("fail"));
+        long total = toLongValue(successRate.get("total"));
         double rate = total == 0 ? 0 : Math.round(succ * 1000.0 / total) / 10.0;
         data.put("successRate", rate);
 
@@ -757,6 +757,13 @@ public class CrossStoreInventoryServiceImpl implements CrossStoreInventoryServic
     // ============================================================
     // 内部工具
     // ============================================================
+
+    /**
+     * 聚合列在无匹配行时为 NULL（SUM 不带 COALESCE），统一兜底为 0。
+     */
+    private static long toLongValue(Object value) {
+        return value instanceof Number ? ((Number) value).longValue() : 0L;
+    }
 
     private Long findOrInferWarehouseId(Long storeId) {
         if (storeId == null) return null;

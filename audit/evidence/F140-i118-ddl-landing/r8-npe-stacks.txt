@@ -1,0 +1,70 @@
+﻿######## /wms/cross-store/dashboard  (b75f344cfc5e4414a2bd1563d31729f2)
+2026-10-30 18:19:34.482 [http-nio-8080-exec-10] WARN  c.m.exception.GlobalExceptionHandler [traceId=b75f344cfc5e4414a2bd1563d31729f2] [tenant=] [order=] [pay=] [RuntimeException] Cannot invoke "java.lang.Number.longValue()" because the return value of "java.util.Map.getOrDefault(Object, Object)" is null
+2026-10-30 18:19:34.495 [http-nio-8080-exec-3] ERROR c.m.exception.GlobalExceptionHandler [traceId=fd46802d70a24399bde9b7bda70082c5] [tenant=] [order=] [pay=] [SystemException]
+org.springframework.web.bind.MissingServletRequestParameterException: Required request parameter 'employeeId' for method parameter type Long is not present
+at org.springframework.web.method.annotation.RequestParamMethodArgumentResolver.handleMissingValueInternal(RequestParamMethodArgumentResolver.java:218)
+at org.springframework.web.method.annotation.RequestParamMethodArgumentResolver.handleMissingValue(RequestParamMethodArgumentResolver.java:193)
+at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:114)
+at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:179)
+at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:146)
+at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+######## /overseas-payment/payment/statistics  (a7f5515beb0a481b8f39d6dd9cf5712c)
+2026-10-30 18:19:34.445 [http-nio-8080-exec-1] WARN  c.m.exception.GlobalExceptionHandler [traceId=a7f5515beb0a481b8f39d6dd9cf5712c] [tenant=] [order=] [pay=] [RuntimeException] Cannot invoke "java.lang.Number.longValue()" because the return value of "java.util.Map.get(Object)" is null
+2026-10-30 18:19:34.463 [http-nio-8080-exec-17] ERROR c.m.exception.GlobalExceptionHandler [traceId=4ae7637a59204a8193df1fdec3103439] [tenant=] [order=] [pay=] [SystemException]
+org.springframework.web.bind.MissingServletRequestParameterException: Required request parameter 'employeeId' for method parameter type Long is not present
+at org.springframework.web.method.annotation.RequestParamMethodArgumentResolver.handleMissingValueInternal(RequestParamMethodArgumentResolver.java:218)
+at org.springframework.web.method.annotation.RequestParamMethodArgumentResolver.handleMissingValue(RequestParamMethodArgumentResolver.java:193)
+at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:114)
+at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:179)
+at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:146)
+at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+######## /mkt/fission/stats  (1a26a27093dc4f939a8dc664a177b22d)
+2026-10-30 18:19:38.079 [http-nio-8080-exec-16] WARN  c.m.exception.GlobalExceptionHandler [traceId=1a26a27093dc4f939a8dc664a177b22d] [tenant=] [order=] [pay=] [RuntimeException] Cannot invoke "java.lang.Long.longValue()" because the return value of "java.util.Map.getOrDefault(Object, Object)" is null
+2026-10-30 18:19:38.088 [http-nio-8080-exec-15] ERROR c.m.exception.GlobalExceptionHandler [traceId=3f3cb66420294117b3e6ab448d81f4f8] [tenant=] [order=] [pay=] [SystemException]
+org.springframework.web.bind.MissingServletRequestParameterException: Required request parameter 'memberId' for method parameter type Long is not present
+at org.springframework.web.method.annotation.RequestParamMethodArgumentResolver.handleMissingValueInternal(RequestParamMethodArgumentResolver.java:218)
+at org.springframework.web.method.annotation.RequestParamMethodArgumentResolver.handleMissingValue(RequestParamMethodArgumentResolver.java:193)
+at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:114)
+at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:179)
+at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:146)
+at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+######## /crm/care/review-analysis  (2841e425a356496a968e7df642725372)
+2026-10-30 18:19:35.570 [http-nio-8080-exec-15] WARN  c.m.exception.GlobalExceptionHandler [traceId=2841e425a356496a968e7df642725372] [tenant=] [order=] [pay=] [RuntimeException] Cannot invoke "java.lang.Number.longValue()" because the return value of "java.util.Map.get(Object)" is null
+2026-10-30 18:19:35.579 [http-nio-8080-exec-2] ERROR c.m.exception.GlobalExceptionHandler [traceId=98c7a70f85154f84951bf25cba3baeb5] [tenant=] [order=] [pay=] [SystemException]
+org.springframework.web.bind.MissingServletRequestParameterException: Required request parameter 'serviceCode' for method parameter type String is not present
+at org.springframework.web.method.annotation.RequestParamMethodArgumentResolver.handleMissingValueInternal(RequestParamMethodArgumentResolver.java:218)
+at org.springframework.web.method.annotation.RequestParamMethodArgumentResolver.handleMissingValue(RequestParamMethodArgumentResolver.java:193)
+at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:114)
+at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:179)
+at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:146)
+at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+######## /intel/recommend/1  (0331b1c0f24f477fa1800a9f68a849cd)
+2026-10-30 18:19:34.887 [http-nio-8080-exec-9] WARN  c.m.exception.GlobalExceptionHandler [traceId=0331b1c0f24f477fa1800a9f68a849cd] [tenant=] [order=] [pay=] [RuntimeException] Cannot invoke "java.lang.Number.longValue()" because the return value of "java.util.Map.getOrDefault(Object, Object)" is null
+2026-10-30 18:19:34.897 [http-nio-8080-exec-1] ERROR c.m.exception.GlobalExceptionHandler [traceId=f6d46f5cd2bd4fe9b1c0f755b7922916] [tenant=] [order=] [pay=] [DBError]
+org.springframework.dao.TransientDataAccessResourceException: PreparedStatementCallback; SQL [SELECT COUNT(*) FROM pay_dcep_order o WHERE o.deleted = 0 AND o.tenant_id = ? ]; Parameter index out of range (2 > number of parameters, which is 1).
+at org.springframework.jdbc.support.SQLStateSQLExceptionTranslator.doTranslate(SQLStateSQLExceptionTranslator.java:116)
+at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:73)
+at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:82)
+at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1572)
+at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:667)
+at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:713)
+at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:744)
+at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:757)
+at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:879)
+at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:906)

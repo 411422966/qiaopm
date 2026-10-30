@@ -220,32 +220,32 @@ public class WmsService {
 
         Map<String, Object> data = new HashMap<>();
         data.put("period", days + "天");
-        data.put("total", row.getOrDefault("total", 0));
-        data.put("avgOverall", round1(row.getOrDefault("avgOverall", 0)));
-        data.put("positive", row.getOrDefault("positive", 0));
-        data.put("neutral", row.getOrDefault("neutral", 0));
-        data.put("negative", row.getOrDefault("negative", 0));
-        data.put("avgService", round1(dim.getOrDefault("avgService", 0)));
-        data.put("avgSkill", round1(dim.getOrDefault("avgSkill", 0)));
-        data.put("avgEnv", round1(dim.getOrDefault("avgEnv", 0)));
-        data.put("avgPrice", round1(dim.getOrDefault("avgPrice", 0)));
+        data.put("total", toLongValue(row.get("total")));
+        data.put("avgOverall", round1(toDoubleValue(row.get("avgOverall"))));
+        data.put("positive", toLongValue(row.get("positive")));
+        data.put("neutral", toLongValue(row.get("neutral")));
+        data.put("negative", toLongValue(row.get("negative")));
+        data.put("avgService", round1(toDoubleValue(dim.get("avgService"))));
+        data.put("avgSkill", round1(toDoubleValue(dim.get("avgSkill"))));
+        data.put("avgEnv", round1(toDoubleValue(dim.get("avgEnv"))));
+        data.put("avgPrice", round1(toDoubleValue(dim.get("avgPrice"))));
 
         // NPS 简化版 = (好评 - 差评) / 总数 × 100
-        long total = ((Number) data.get("total")).longValue();
-        long positive = ((Number) data.get("positive")).longValue();
-        long negative = ((Number) data.get("negative")).longValue();
+        long total = toLongValue(data.get("total"));
+        long positive = toLongValue(data.get("positive"));
+        long negative = toLongValue(data.get("negative"));
         double nps = total == 0 ? 0 : Math.round(((positive - negative) * 1000.0 / total)) / 10.0;
         data.put("nps", nps);
 
         // 改进行动建议（基于维度短板）
         List<String> actions = new ArrayList<>();
-        if (((Number) dim.getOrDefault("avgService", 0)).doubleValue() < 3.5)
+        if (toDoubleValue(dim.get("avgService")) < 3.5)
             actions.add("服务态度评分偏低（" + data.get("avgService") + "），建议开展服务礼仪培训");
-        if (((Number) dim.getOrDefault("avgSkill", 0)).doubleValue() < 3.5)
+        if (toDoubleValue(dim.get("avgSkill")) < 3.5)
             actions.add("技术评分偏低，建议技师技能复训 + SOP 考核");
-        if (((Number) dim.getOrDefault("avgEnv", 0)).doubleValue() < 3.5)
+        if (toDoubleValue(dim.get("avgEnv")) < 3.5)
             actions.add("环境评分偏低，建议门店 5S 检查 + 装修升级");
-        if (((Number) dim.getOrDefault("avgPrice", 0)).doubleValue() < 3.5)
+        if (toDoubleValue(dim.get("avgPrice")) < 3.5)
             actions.add("性价比评分偏低，建议调整套餐组合 / 增加增值服务");
         if (nps < 30) actions.add("NPS 偏低（" + nps + "），建议开展低分客户一对一跟进");
         if (actions.isEmpty()) actions.add("暂无明显短板，请保持现状");
@@ -257,5 +257,16 @@ public class WmsService {
     private double round1(Object v) {
         if (v == null) return 0;
         return Math.round(((Number) v).doubleValue() * 10) / 10.0;
+    }
+
+    /**
+     * 聚合列在无匹配行时为 NULL（SUM(CASE...) 不带 COALESCE），统一兜底为 0。
+     */
+    private static long toLongValue(Object value) {
+        return value instanceof Number ? ((Number) value).longValue() : 0L;
+    }
+
+    private static double toDoubleValue(Object value) {
+        return value instanceof Number ? ((Number) value).doubleValue() : 0D;
     }
 }

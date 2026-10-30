@@ -63,9 +63,9 @@ public interface StockInventoryMapper extends BaseMapper<StockInventory> {
                   @Param("version") Integer version,
                   @Param("delta") Integer delta);
 
-    @Select("SELECT si.*, p.name AS product_name, p.category " +
+    @Select("SELECT si.*, p.product_name AS product_name, p.category " +
             "FROM stock_inventory si " +
-            "LEFT JOIN product p ON si.product_id = p.id " +
+            "LEFT JOIN stock_product p ON si.product_id = p.id " +
             "WHERE si.deleted = 0 AND si.store_id = #{storeId} " +
             "  AND si.expiry_date IS NOT NULL " +
             "  AND si.expiry_date <= DATE_ADD(CURDATE(), INTERVAL #{withinDays} DAY) " +
@@ -75,9 +75,9 @@ public interface StockInventoryMapper extends BaseMapper<StockInventory> {
     /**
      * P0-M06: 单条库存详情（耗材自动扣减用）
      */
-    @Select("SELECT si.*, p.name AS product_name, p.category, p.cost_price " +
+    @Select("SELECT si.*, p.product_name AS product_name, p.category, p.cost_price " +
             "FROM stock_inventory si " +
-            "LEFT JOIN product p ON si.product_id = p.id " +
+            "LEFT JOIN stock_product p ON si.product_id = p.id " +
             "WHERE si.id = #{id} AND si.deleted = 0")
     java.util.Map<String, Object> findInventoryById(@Param("id") Long id);
 

@@ -1,0 +1,397 @@
+[
+ {
+  "p": "/material/cost/analysis",
+  "tid": "09392987572944c4807bf979d2ee729a",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/overseas-payment/payment/statistics",
+  "tid": "a7f5515beb0a481b8f39d6dd9cf5712c",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/attendance/today",
+  "tid": "4ae7637a59204a8193df1fdec3103439",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/wms/cross-store/dashboard",
+  "tid": "b75f344cfc5e4414a2bd1563d31729f2",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/attendance/monthly-report",
+  "tid": "fd46802d70a24399bde9b7bda70082c5",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/booking/available",
+  "tid": "c8822cb42bd94757a81696499942da15",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/overseas-payment/payment/select-gateway",
+  "tid": "d1ae75baf5d446b79830358ae632a22a",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/gray/experiment/stats",
+  "tid": "057eff1b8dab476e83e3f4f9ffcd98f1",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/crm/package/share/list",
+  "tid": "412229961a1e4c3895a3ac21f5b7bab8",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/intel/price-sensitivity/curve",
+  "tid": "0c71ec9edcd04aa0aea8e0c9d6fbb524",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/attendance/leave/my",
+  "tid": "1fee22b01d724c6a95c7de6224016990",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/sys/log/context",
+  "tid": "069ecdab147f4befb339572d86359b11",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/wallet/promotion/calc",
+  "tid": "7f67e09037574991bf8b6577f46536ad",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/resource/schedule/suggest",
+  "tid": "e90cd8564ab74185af7bc732ba32f38a",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/wms/cross-store/inventory/aggregate",
+  "tid": "b8e7a34896f44633b0d28ff15e9688f6",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/resource/schedule/check-conflict",
+  "tid": "ae9b70f6da3f47f2a47c9fb8ec87cb9a",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/attendance/leave/pending-count",
+  "tid": "b1e4d2cfde024eb98c98109c8e21b0fc",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/dcep/offline/detect-double-spend",
+  "tid": "217ebd9dc78f46b6ac48f5580cfacc55",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/open/api/v2/secret/audit",
+  "tid": "581626e7d849499ba53080185a942fdb",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/cloud/health/recent",
+  "tid": "b7e9b9f4b6ff43eaa77e69ca29c8b325",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/monitor/metric/recent",
+  "tid": "c33c82635b3e41e7987f82d933c2d467",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/crm/care/loop/touch/list",
+  "tid": "ace2db92e6e84e29927de0b1155f328c",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/mkt/preference/top",
+  "tid": "39a2cd01254d4b0eafa055823f71a09a",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/mapi/booking/slots",
+  "tid": "c782b9ec4aca4e2982fd9a34b5b276ae",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/lbs/technician/1/route",
+  "tid": "8fa734ec37e44b139f08ad276535d26b",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/mapi/home",
+  "tid": "eec546cc1cbc46f2af92354ec8c85ce4",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/biz/booking/member-credit",
+  "tid": "d25653739ac04b4889afbe6bfde406ab",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/frontend/mp/latest",
+  "tid": "e43d17cf27ee45a19748667da0c1b5b9",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/report/export/download",
+  "tid": "2ecdb97392c6447c93e3ac41d05a348e",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/device/list",
+  "tid": "b7c5f73f29be49cd9c27b64353fe76b9",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/exp/1/assign",
+  "tid": "29e3adb41f5541cca546398ec221f832",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/crm/cross/rule/preview-match",
+  "tid": "f0af463034b0402d9bf0299f569e34bb",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/intel/forecast/list",
+  "tid": "58a040440edd467299f6c2874e6eca33",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/crm/cross/rule/test",
+  "tid": "fe9f7294da97478ab503c93b49874d88",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/schedule/ai/list",
+  "tid": "52ce6d02c6c848a18931a95ad4ca1b64",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/push/record/list",
+  "tid": "d4ba4f281cc646498d9efdc58589d4e6",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/es/event/replay",
+  "tid": "c3a0455c69b3498a8acfa80a4a5284eb",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/mkt/preference/recommend",
+  "tid": "2b046d7465b7424a992f7eb1d23a3116",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/device/session/list",
+  "tid": "93921ed19b2e4ea5a8a83bd48eaa87a1",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/wms/cross/inventory/view",
+  "tid": "6402b34204cf4fb8a1832484742eb39f",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/intel/recommend/1",
+  "tid": "0331b1c0f24f477fa1800a9f68a849cd",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/pay/dcep/order/page",
+  "tid": "f6d46f5cd2bd4fe9b1c0f755b7922916",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/mkt/preference/by-type",
+  "tid": "cf1fc9f20aa54b6ebf47ce2103f02338",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/crm/cross/member/lookup",
+  "tid": "bd09c34357b04fb791cfa7cf081c5c0a",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/biz/booking/resource/check-conflict",
+  "tid": "56f989578c804147b101aabf7aa78223",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/technician/level/benefit/1",
+  "tid": "0e0ab343d0e743aea10428cf48603747",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/cloud/discovery",
+  "tid": "e826f62dc09447769d1a2a1e3583d5ca",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/member/message/unread-count",
+  "tid": "36c9857105984b48a6f6ad558b7d1a80",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/crm/care/review-analysis",
+  "tid": "2841e425a356496a968e7df642725372",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/sla/uptime/list",
+  "tid": "98c7a70f85154f84951bf25cba3baeb5",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/es/snapshot/latest",
+  "tid": "88c3eb945a3c45b2a82858a40749bec3",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/crm/care/loop/note/list",
+  "tid": "e6b68c49829f4fce8e63174306089536",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/material/cost/by-service/1",
+  "tid": "943bca875c364caaa28d6f64ff2eb1f3",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/biz/booking/resource/available-slots",
+  "tid": "6f169589ed2843a18f14eb004e8bf833",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/open/api/v2/quota/status",
+  "tid": "9c15e0995c6c472f8844b9524b9e01fc",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/wx/booking/list",
+  "tid": "cff5cf18e7894db4a0e22ebd8a6d657e",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/complaint/escalate/list",
+  "tid": "205ea20d36584da4a625cf45f151a370",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/frontend/mp/version/list",
+  "tid": "000cebdeeb604fa68c3c373bb3590b1e",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/gray/flag/1/evaluate",
+  "tid": "17fa37834b8348cbba3b92e915433de3",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/report/v2/task/1/download",
+  "tid": "b2568b4c05c24bdf91a4a165605819da",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/mkt/preference/summary",
+  "tid": "fb908ae7d7694860a2fb911a2c3bc989",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/blockchain/record/1",
+  "tid": "6826c6cd3b0342a1811947aeb31172da",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/crm/care/loop/task/my-today",
+  "tid": "a43f5ea963df4704a414164fa6c9b7d6",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/booking/1",
+  "tid": "4be857a3744446d091925ef7089d4c94",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/stock/trace/1",
+  "tid": "3ff8e0f7a2ec4621a7d79385521f3531",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/wallet/transactions",
+  "tid": "96058e8215b1472d80d7438ec8cc918d",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/kiosk/stats/staff-trend",
+  "tid": "77de5b79ac5d496687a3369b49fc55e0",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/biz/booking/resource/available",
+  "tid": "5a220583f6a24a07bedd4f7414b931ab",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/gray/experiment/1/assign",
+  "tid": "72386c76a1684e23aa345e4d4824c0a2",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/pos/experiment/quote",
+  "tid": "ae6c86f816da4d1aafba8be440817a92",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/i18n/bundle",
+  "tid": "ebaf04642a4b47e7b570efd32f5131c4",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/bnpl/credit",
+  "tid": "0b7f2775284842a9a69b1b427682434e",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/technician/level/promote/evaluate",
+  "tid": "156b2028d0a94f8bb56e5cd239e472a9",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/mapi/member/card",
+  "tid": "f58852fe09bd4e92a5c4df4d41746bfe",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/sync/member/list",
+  "tid": "62ec9cbb8a2f471a95137a20e591c053",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/huabei/credit",
+  "tid": "ec45f817a31440f49374c4bf993a8881",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/iot/data/member/1/trend",
+  "tid": "3caf17754dd84654afc34a9bc9572c11",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/mkt/fission/stats",
+  "tid": "1a26a27093dc4f939a8dc664a177b22d",
+  "exc": "NOT-IN-LOG"
+ },
+ {
+  "p": "/ai/recommend",
+  "tid": "3f3cb66420294117b3e6ab448d81f4f8",
+  "exc": "NOT-IN-LOG"
+ }
+]

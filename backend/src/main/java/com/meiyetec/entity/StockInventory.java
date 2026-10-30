@@ -18,8 +18,19 @@ public class StockInventory {
     private Long tenantId;
     private Long storeId;
     private Long productId;
+
+    /**
+     * 商品名称（不落库，来自 stock_product.product_name 关联查询）
+     */
+    @TableField(exist = false)
     private String productName;
+
+    /**
+     * 商品分类（不落库，来自 stock_product.category 关联查询）
+     */
+    @TableField(exist = false)
     private String category;
+
     private String batchNo;
     private Integer quantity;
     private LocalDate productionDate;

@@ -1,0 +1,21 @@
+﻿/member-level/1	HTTP=200 code=200	{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"id":1,"levelCode":"LEVEL_PURPLE","levelName":"绱捇浼氬憳","levelIcon":null,"mi
+/member-level/1548	HTTP=200 code=500	{"code":500,"message":"绛夌骇涓嶅瓨鍦ㄦ垨鏃犳潈璁块棶","data":null,"traceId":"02ed26f311b14e77a556fbf4c109babc","timestamp":"2026-
+
+/packages/1	HTTP=200 code=200	{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"id":1,"tenantId":1,"name":"闈㈤儴鍩虹鎶ょ悊 5 娆″崱","code":"PKG-FACE-05","category":
+/packages/1548	HTTP=200 code=500	{"code":500,"message":"濂楅涓嶅瓨鍦?,"data":null,"traceId":"a5f9ad1c39d84e119c3b9c3a3bb326a9","timestamp":"2026-10-30
+
+/pos/orders/1	HTTP=200 code=200	{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"id":1,"tenantId":1,"storeId":1,"orderNo":"PO20260809511531","memberId":1
+/pos/orders/1548	HTTP=200 code=500	{"code":500,"message":"璁㈠崟涓嶅瓨鍦?,"data":null,"traceId":"15a06e45ea684de28bab2b89aa1de987","timestamp":"2026-10-30
+
+/pos/services/1	HTTP=200 code=200	{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"id":1,"tenantId":1,"storeId":null,"serviceCode":"SV0001","serviceName":"
+/pos/services/1548	HTTP=200 code=500	{"code":500,"message":"鏈嶅姟涓嶅瓨鍦?,"data":null,"traceId":"ea1dc45065134a1c9dbb766b266b5aea","timestamp":"2026-10-30
+
+/stock/check/1	HTTP=200 code=200	{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"check":{"id":1,"tenantId":1,"storeId":1,"checkNo":"CHK20260814231633","c
+/stock/check/1548	HTTP=200 code=500	{"code":500,"message":"鐩樼偣鍗曚笉瀛樺湪","data":null,"traceId":"32f89660c1ed4dc6a1492ca479f72b58","timestamp":"2026-10-3
+
+/stock/products/1	HTTP=200 code=200	{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"id":1,"tenantId":1,"storeId":1,"productCode":"SP-BOT-001","productName":
+/stock/products/1548	HTTP=200 code=500	{"code":500,"message":"鍟嗗搧涓嶅瓨鍦?,"data":null,"traceId":"fae559506a63462497ee253c1d5e112e","timestamp":"2026-10-30
+
+/sys/tenant/1/stats	HTTP=200 code=200	{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"tenantId":1,"tenantName":"榛樿绉熸埛","tenantCode":"default","status":1,"expir
+/sys/tenant/1548/stats	HTTP=200 code=500	{"code":500,"message":"绉熸埛涓嶅瓨鍦?,"data":null,"traceId":"17802839fc4f41f9acdab3c93f5b672b","timestamp":"2026-10-30
+

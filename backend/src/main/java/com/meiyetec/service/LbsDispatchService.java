@@ -585,8 +585,8 @@ public class LbsDispatchService {
         LocalDate planDate = date != null ? LocalDate.parse(date) : LocalDate.now();
         Long tenantId = TenantContextHolder.get().getTenantId();
 
-        // 已有路线计划
-        LbsRoutePlan plan = jdbc.queryForObject(
+        // 已有路线计划（无记录时返回 null，避免 EmptyResultDataAccessException）
+        List<LbsRoutePlan> planList = jdbc.query(
                 "SELECT * FROM lbs_route_plan WHERE tenant_id=? AND technician_id=? AND plan_date=? AND status IN ('DRAFT','ACTIVE') LIMIT 1",
                 (rs, rn) -> {
                     LbsRoutePlan p = new LbsRoutePlan();
@@ -603,6 +603,7 @@ public class LbsDispatchService {
                     p.setStatus(rs.getString("status"));
                     return p;
                 }, tenantId, id, planDate.toString());
+        LbsRoutePlan plan = planList.stream().findFirst().orElse(null);
 
         // 当日已派单
         List<LbsServiceOrder> orders = orderMapper.selectList(new LambdaQueryWrapper<LbsServiceOrder>()
