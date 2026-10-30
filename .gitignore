@@ -505,3 +505,7 @@ backup/logs/*.log
 !scripts/backup-db-docker.ps1
 backup/
 audit/baseline/.tmp-sql/
+
+audit-tmp-*
+audit-tpm-*
+\
