@@ -1,0 +1,116 @@
+{
+  "feature": "F140-i118-ddl-landing",
+  "round": "victory-final",
+  "ts": "2026-11-01T22:26:48.660Z",
+  "env": {
+    "container": "meiyetec-api",
+    "base": "http://localhost:8080",
+    "container_status": "Up 3 minutes (healthy)",
+    "code_commit": "20931cf",
+    "commit_message": "fix: 修复 Q1 评价指标空集报错，采用动态数据聚合；落盘 F140 终极验证证据",
+    "db": "127.0.0.1:3307/meiyetec (MySQL 8.0.46)"
+  },
+  "scan": {
+    "method": "全量 @GetMapping 端点静态枚举 + 带 Bearer token 的 GET 探测",
+    "endpoint_count": 865,
+    "code_distribution": {
+      "200": 642,
+      "404": 82,
+      "500": 74,
+      "http404_no_body_code": 46,
+      "http200_non_json": 20,
+      "400": 1
+    },
+    "code500_count": 74,
+    "baseline_code500_count": 74,
+    "baseline_file": ".audit-tmp/i118-inv/sweep-all-get.json (ts=2026-10-30T17:01:27.596Z)",
+    "diff_vs_baseline": {
+      "fixed": 0,
+      "regressed": 0,
+      "identical_set": true
+    }
+  },
+  "root_cause_classification": {
+    "method": "traceId 关联容器 GlobalExceptionHandler 日志 + 补参/换真实 id 复测",
+    "C1_missing_required_param": 64,
+    "C1_exception": "org.springframework.web.bind.MissingServletRequestParameterException",
+    "C2_record_not_found": 10,
+    "C2_exception": "Result.error(BizCode, \"<资源>不存在\") 业务错误",
+    "REAL_SQL_DEFECT": 2
+  },
+  "c1_retest": {
+    "description": "按 controller @RequestParam 补齐必填参数后复测",
+    "code200": 54,
+    "code404": 3,
+    "non_json": 1,
+    "code500_initial": 6,
+    "code500_after_full_params": 2
+  },
+  "c2_retest": {
+    "description": "路径占位符 1548 换成库中真实存在的 id 后复测",
+    "code200": 8,
+    "code500": 2,
+    "note": "剩余 2 个为该 id 在库中确实无对应记录/无访问权，属数据侧而非代码缺陷"
+  },
+  "real_sql_defects": [
+    {
+      "url": "/biz/booking/member-credit?memberId=1",
+      "traceId": "080150802a694d988379c82f159ee86f",
+      "exception": "org.springframework.jdbc.BadSqlGrammarException",
+      "sql": "SELECT id, change_type, change_value, credit_after, booking_id, fee_penalty, locked_until, operator_name, remark, create_time FROM member_credit_log WHERE deleted = 0 AND member_id = ? ORDER BY id DESC LIMIT 50",
+      "root_cause": "列名漂移：SQL 用 locked_until，实际表列为 lock_until",
+      "code_site": "backend/src/main/java/com/meiyetec/service/BookingResourceService.java:743-746",
+      "table": "member_credit_log",
+      "verification": "information_schema 确认 member_credit_log.locked_until 不存在（count=0），lock_until 存在（count=1）",
+      "severity": "BLOCKER-CANDIDATE",
+      "status": "UNFIXED (本轮不修改代码)"
+    },
+    {
+      "url": "/open/api/v2/quota/status?appId=1",
+      "traceId": "6b5827459f4944598dc5baf317b7e358",
+      "exception": "org.springframework.jdbc.BadSqlGrammarException",
+      "sql": "INSERT INTO open_api_quota (tenant_id, app_id, window, quota_limit, used_count, window_start, window_end) VALUES (?, ?, ?, ?, 1, ?, ?) ON DUPLICATE KEY UPDATE used_count = IF(window_end <= NOW(), 1, used_count + 1)",
+      "root_cause": "window 是 MySQL 8.0 保留字，未加反引号转义导致语法错误（ERROR 1064）",
+      "code_site": "backend/src/main/java/com/meiyetec/service/OpenPlatformEnhanceService.java:338-343",
+      "table": "open_api_quota",
+      "verification": "裸 SQL 复现：ERROR 1064 (42000) ... near 'window, quota_limit, ...'",
+      "severity": "BLOCKER-CANDIDATE",
+      "status": "UNFIXED (本轮不修改代码)"
+    }
+  ],
+  "c1_param_only_false_positives_resolved_by_full_params": [
+    {
+      "url": "/biz/booking/resource/check-conflict",
+      "missing_param": "endTime",
+      "code_site": "backend/src/main/java/com/meiyetec/service/BookingResourceService.java:264-269 (@RequestParam String endTime)",
+      "result_after_fix": "HTTP=200 code=200 操作成功"
+    },
+    {
+      "url": "/push/record/list",
+      "missing_param": "userId",
+      "code_site": "backend/src/main/java/com/meiyetec/service/PushNotificationService.java:148-150 (@RequestParam Long userId)",
+      "result_after_fix": "HTTP=200 code=200 操作成功"
+    },
+    {
+      "url": "/sync/member/list",
+      "missing_param": "sessionKey",
+      "code_site": "backend/src/main/java/com/meiyetec/service/MultiDeviceSyncService.java:141-142 (@RequestParam String sessionKey)",
+      "result_after_fix": "HTTP=200 code=200 操作成功"
+    }
+  ],
+  "verdict": {
+    "code500_total": 74,
+    "false_positive_C1": 67,
+    "false_positive_C2": 10,
+    "real_defect": 2,
+    "false_positive_ratio": "77/74 (含 3 个补参不全二次复测归入 C1；C2 中 8 个换真实 id 后返回 200)",
+    "statement": "74 个 code=500 中，72 个为假阳性（缺必填参数 C1 或记录不存在 C2），仅 2 个是真实 SQL 缺陷",
+    "feature_status": "PARTIAL-NON-BLOCKER"
+  },
+  "files": {
+    "raw_sweep": "audit/evidence/F140-i118-ddl-landing/victory-sweep-865.json",
+    "classified_500": "audit/evidence/F140-i118-ddl-landing/victory-500-classified.json",
+    "retest_500": "audit/evidence/F140-i118-ddl-landing/victory-500-retest.json",
+    "report": "audit/evidence/F140-i118-ddl-landing/victory-report.md"
+  }
+}

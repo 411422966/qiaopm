@@ -336,14 +336,14 @@ public class OpenPlatformEnhanceService {
 
         // 用 JdbcTemplate 实现 CAS 扣减
         int updated = jdbc.update(
-            "INSERT INTO open_api_quota (tenant_id, app_id, window, quota_limit, used_count, window_start, window_end) " +
+            "INSERT INTO open_api_quota (tenant_id, app_id, `window`, quota_limit, used_count, window_start, window_end) " +
             "VALUES (?, ?, ?, ?, 1, ?, ?) " +
             "ON DUPLICATE KEY UPDATE " +
             "  used_count = IF(window_end <= NOW(), 1, used_count + 1)",
             TenantContextHolder.get().getTenantId(), appId, window, limit, windowStart, windowEnd);
 
         Integer used = jdbc.queryForObject(
-            "SELECT used_count FROM open_api_quota WHERE app_id=? AND window=? AND window_start=?",
+            "SELECT used_count FROM open_api_quota WHERE app_id=? AND `window`=? AND window_start=?",
             Integer.class, appId, window, windowStart);
 
         Map<String, Object> res = new HashMap<>();

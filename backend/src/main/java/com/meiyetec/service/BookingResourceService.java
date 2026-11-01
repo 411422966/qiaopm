@@ -712,7 +712,7 @@ public class BookingResourceService {
         // 写信用日志
         jdbc.update(
             "INSERT INTO member_credit_log (tenant_id, member_id, change_type, change_value, credit_after, " +
-            "booking_id, fee_penalty, locked_until, operator_name, remark) " +
+            "booking_id, fee_penalty, lock_until, operator_name, remark) " +
             "VALUES (1, ?, 'NO_SHOW', ?, ?, ?, ?, ?, ?, ?)",
             memberId, -Math.abs(rule.getCreditPenalty() == null ? 0 : rule.getCreditPenalty()),
             newCredit, bookingId,
@@ -742,7 +742,7 @@ public class BookingResourceService {
         } catch (Exception e) { data.put("credit", null); }
         List<Map<String, Object>> logs = jdbc.queryForList(
             "SELECT id, change_type, change_value, credit_after, booking_id, fee_penalty, " +
-            "locked_until, operator_name, remark, create_time " +
+            "lock_until, operator_name, remark, create_time " +
             "FROM member_credit_log WHERE deleted = 0 AND member_id = ? ORDER BY id DESC LIMIT 50",
             memberId);
         data.put("logs", Keys.camel(logs));

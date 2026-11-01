@@ -1,0 +1,30 @@
+{
+  "ts": "2026-11-01T14:57:06.853Z",
+  "base": "http://localhost:8080",
+  "results": [
+    {
+      "url": "/biz/booking/member-credit?memberId=1",
+      "http": 200,
+      "code": 200,
+      "traceId": "acff72e747594afea4d5ffd695fb39b5",
+      "message": "操作成功",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"credit\":null,\"logs\":[]},\"traceId\":\"acff72e747594afea4d5ffd695fb39b5\",\"timestamp\":\"2026-11-01 22:57:03\"}"
+    },
+    {
+      "url": "/open/api/v2/quota/status?appId=1",
+      "http": 200,
+      "code": 200,
+      "traceId": "6e83fa9fe1dd4126962ad82770ce9848",
+      "message": "操作成功",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"MINUTE\":{\"blocked\":false,\"windowStart\":\"2026-11-01T22:57:00\",\"limit\":60,\"used\":1,\"window\":\"MINUTE\",\"windowEnd\":\"2026-11-01T22:58:00\",\"remaining\":59},\"HOUR\":{\"blocked\":false,\"windowStart\":\"2026-11-01T22:00:00\",\"limit\":1000,\"used\":3,\"window\":\"HOUR\",\"windowEnd\":\"2026-11-01T23:00:00\",\"remaining\":997},\"DAY\":{\"blocked\":false,\"windowStart\":\"2026-11-01T00:00:00\",\"limi"
+    },
+    {
+      "url": "/biz/booking/member-credit?memberId=999999",
+      "http": 200,
+      "code": 200,
+      "traceId": "71d0a82a21ff476b88d446ff8b0049bc",
+      "message": "操作成功",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"credit\":null,\"logs\":[]},\"traceId\":\"71d0a82a21ff476b88d446ff8b0049bc\",\"timestamp\":\"2026-11-01 22:57:06\"}"
+    }
+  ]
+}

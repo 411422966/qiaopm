@@ -1,0 +1,1196 @@
+{
+  "ts": "2026-11-01T14:31:31.041Z",
+  "total": 74,
+  "groups": {
+    "UNCAUGHT_EXCEPTION": [
+      {
+        "url": "/ai/recommend",
+        "cls": "AiEnhanceService",
+        "trace": "9da33a94bf764ed8b7f27e9c0ad3bda0",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/attendance/leave/my",
+        "cls": "LeaveRequestController",
+        "trace": "f330c45ee895416dbbc212773e92d082",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'employeeId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/attendance/leave/pending-count",
+        "cls": "LeaveRequestController",
+        "trace": "dbe82fff36c342dbb3184839a5e8002d",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'storeId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/attendance/monthly-report",
+        "cls": "AttendanceController",
+        "trace": "3b5864a3cc0640cbb9686d4f0105a8fe",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'employeeId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/attendance/today",
+        "cls": "AttendanceController",
+        "trace": "9066844d632c4ae58ada33ded49fb301",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'employeeId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/biz/booking/member-credit",
+        "cls": "BookingResourceService",
+        "trace": "c22852cc2ad94dafa8e89d48b76a7504",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/biz/booking/resource/available",
+        "cls": "BookingResourceService",
+        "trace": "6f92be90708442b09b58c3c1b31b88ae",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'serviceItemId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/biz/booking/resource/available-slots",
+        "cls": "BookingResourceService",
+        "trace": "3dda1ed3e1884d4695456b0b754b9522",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'resourceId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/biz/booking/resource/check-conflict",
+        "cls": "BookingResourceService",
+        "trace": "89d410f1744245b5826a2a5e3d08d130",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'resourceId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/blockchain/record/1548",
+        "cls": "BlockchainController",
+        "trace": "67b7c5159ff0448eb8c9b9377ab74327",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'recordType' for method parameter type String is not present"
+      },
+      {
+        "url": "/bnpl/credit",
+        "cls": "BnplController",
+        "trace": "73c1102a06764c0a9b719efe09cefd9f",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'provider' for method parameter type String is not present"
+      },
+      {
+        "url": "/booking/available",
+        "cls": "BookingController",
+        "trace": "20146f89123f4107ae2e294fc06789ba",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'employeeId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/cloud/discovery",
+        "cls": "CloudNativeService",
+        "trace": "1dba6822d04e4dd091a31db71632eced",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'serviceCode' for method parameter type String is not present"
+      },
+      {
+        "url": "/cloud/health/recent",
+        "cls": "CloudNativeService",
+        "trace": "c3323893b22b48e2924361fd5e40be95",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'instanceId' for method parameter type String is not present"
+      },
+      {
+        "url": "/complaint/escalate/list",
+        "cls": "ComplaintLifecycleService",
+        "trace": "bd7f303ee2a246aabd395f1549a23768",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'ticketId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/crm/care/loop/note/list",
+        "cls": "FollowUpClosureService",
+        "trace": "274bc1516ea84b3aac4ee7a22ee983f8",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'taskId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/crm/care/loop/task/my-today",
+        "cls": "FollowUpClosureService",
+        "trace": "562c717e4d5e4e3bbe4ffc509f398d9b",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'ownerId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/crm/care/loop/touch/list",
+        "cls": "FollowUpClosureService",
+        "trace": "c934df598ebf43cba29d411c8582bd4d",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'taskId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/crm/cross/member/lookup",
+        "cls": "CrossStoreController",
+        "trace": "3802cc6d4c5c468cab79de185c6cb396",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'phone' for method parameter type String is not present"
+      },
+      {
+        "url": "/crm/cross/rule/preview-match",
+        "cls": "CrossStoreController",
+        "trace": "1f03a69bbd8b479ba57d01635e8fde5a",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'ruleId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/crm/cross/rule/test",
+        "cls": "CrossStoreController",
+        "trace": "3be8938d2a124ea09564febf2a2d41f9",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'ruleId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/crm/package/share/list",
+        "cls": "P2FeaturesService",
+        "trace": "dcc6b83895a04607af6420f43150a1d8",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'packageOrderId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/dcep/offline/detect-double-spend",
+        "cls": "DcepOfflineTransactionController",
+        "trace": "4e639fd0da7a4415bf7cb656103b6e52",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'walletId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/device/list",
+        "cls": "DeviceManagementService",
+        "trace": "0b1335acade84e08acd238deb65dd985",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'userId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/device/session/list",
+        "cls": "DeviceManagementService",
+        "trace": "3992c65166aa4048a5bf1bcbc323a637",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'userId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/es/event/replay",
+        "cls": "EventSourcingService",
+        "trace": "7291ec41a9a54e35b4167129b083eb5b",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'aggregateType' for method parameter type String is not present"
+      },
+      {
+        "url": "/es/snapshot/latest",
+        "cls": "EventSourcingService",
+        "trace": "42d1708cadab45d89eea5320f1f0edce",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'aggregateType' for method parameter type String is not present"
+      },
+      {
+        "url": "/exp/1548/assign",
+        "cls": "P2FeaturesService",
+        "trace": "3a333f1b456f45a1b5d48880d2dbb143",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'subjectId' for method parameter type String is not present"
+      },
+      {
+        "url": "/frontend/mp/latest",
+        "cls": "FrontendTemplateService",
+        "trace": "eda8de126526492b8781c5502f815c78",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'platformCode' for method parameter type String is not present"
+      },
+      {
+        "url": "/frontend/mp/version/list",
+        "cls": "FrontendTemplateService",
+        "trace": "6479a2d73ba147c99c5b3ae077f1726f",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'platformCode' for method parameter type String is not present"
+      },
+      {
+        "url": "/gray/experiment/1548/assign",
+        "cls": "GrayReleaseController",
+        "trace": "4ef426f3ed354b65843fe66d5fffa370",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'userId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/gray/experiment/stats",
+        "cls": "GrayReleaseController",
+        "trace": "531a682b13cd4708bf4b767a864302cb",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'key' for method parameter type String is not present"
+      },
+      {
+        "url": "/gray/flag/1548/evaluate",
+        "cls": "GrayReleaseController",
+        "trace": "60242296938f47c59a591684cad12cd4",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'userId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/huabei/credit",
+        "cls": "HuabeiController",
+        "trace": "ec6534545181416db76bb10cbf98cc19",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/i18n/bundle",
+        "cls": "I18nService",
+        "trace": "1309fea7273b4a44ac6ea9c1740c7cd0",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'locale' for method parameter type String is not present"
+      },
+      {
+        "url": "/intel/forecast/list",
+        "cls": "P1RemainingService",
+        "trace": "f8d6dc572f2e4145b75ef10be97eb40e",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'storeId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/intel/price-sensitivity/curve",
+        "cls": "PriceSensitivityController",
+        "trace": "a9730a39ddb54443b55d0de5dc85319d",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'projectId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/iot/data/member/1548/trend",
+        "cls": "IotDeviceDataController",
+        "trace": "c5d70e45f16748d686a6df0ca8475833",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'dataType' for method parameter type String is not present"
+      },
+      {
+        "url": "/kiosk/stats/staff-trend",
+        "cls": "KioskService",
+        "trace": "07d4647da20643b987e8c7a6ef8a2a93",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'staffIds' for method parameter type String is not present"
+      },
+      {
+        "url": "/mapi/booking/slots",
+        "cls": "MobileApiService",
+        "trace": "66307c3e5869448393af9c012be60c84",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'storeId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/mapi/member/card",
+        "cls": "MobileApiService",
+        "trace": "66494207b35945a79c8d16c511943f2f",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/member/message/unread-count",
+        "cls": "MemberMessageController",
+        "trace": "23212f6461df41fdb3080cb6386a3d63",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/mkt/preference/by-type",
+        "cls": "ItemPreferenceController",
+        "trace": "a1630201156b4664867710a4a83eafbb",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/mkt/preference/recommend",
+        "cls": "ItemPreferenceController",
+        "trace": "431a08a52302484dbfad88885eb5ada8",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/mkt/preference/summary",
+        "cls": "ItemPreferenceController",
+        "trace": "4a744bd1b30f446e83fe436d639c0cd2",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/mkt/preference/top",
+        "cls": "ItemPreferenceController",
+        "trace": "04cf936f351440de889f0c7899ad5718",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/monitor/metric/recent",
+        "cls": "MonitorAlertService",
+        "trace": "53871202e00d4896b8b0d624ae568b7d",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'metricName' for method parameter type String is not present"
+      },
+      {
+        "url": "/open/api/v2/quota/status",
+        "cls": "OpenPlatformEnhanceService",
+        "trace": "5983f0049d744ee8bae8503ee21d1625",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'appId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/open/api/v2/secret/audit",
+        "cls": "OpenPlatformEnhanceService",
+        "trace": "d93939b0186f432791d479325541f677",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'appId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/overseas-payment/payment/select-gateway",
+        "cls": "OverseasPaymentController",
+        "trace": "f22467481b6e4bc8895c74c4ab5b8a4a",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'currency' for method parameter type String is not present"
+      },
+      {
+        "url": "/pos/experiment/quote",
+        "cls": "PosController",
+        "trace": "1872b0cec3b54ff49a2bfbd06fad577d",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/push/record/list",
+        "cls": "PushNotificationService",
+        "trace": "776822474dfe4d82b45c9b444a6c6439",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'userId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/report/export/download",
+        "cls": "ReportController",
+        "trace": "96cc924dfd724f68b062ef507e74eccf",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'id' for method parameter type Long is not present"
+      },
+      {
+        "url": "/report/v2/task/1548/download",
+        "cls": "ReportV2Service",
+        "trace": "732b85a174714e00a14dc40e1bc46b4d",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'startTime' for method parameter type LocalDateTime is not present"
+      },
+      {
+        "url": "/resource/schedule/check-conflict",
+        "cls": "ResourceScheduleController",
+        "trace": "aa2f51e57d744735835129cbea2a3300",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'startTime' for method parameter type LocalDateTime is not present"
+      },
+      {
+        "url": "/resource/schedule/suggest",
+        "cls": "ResourceScheduleController",
+        "trace": "d9318cee39234369acedb19ea6bca5d0",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'serviceId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/schedule/ai/list",
+        "cls": "P1RemainingService",
+        "trace": "9f2b8268acc04e3187e64ff8da0a01bc",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'storeId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/sla/uptime/list",
+        "cls": "SlaReportService",
+        "trace": "4257a857c2fb412884844afba82d9280",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'serviceCode' for method parameter type String is not present"
+      },
+      {
+        "url": "/sync/member/list",
+        "cls": "MultiDeviceSyncService",
+        "trace": "2c3cb253fd4f45ad9912584413cdb5dd",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'sessionKey' for method parameter type String is not present"
+      },
+      {
+        "url": "/sys/log/context",
+        "cls": "SysLogController",
+        "trace": "a88db1994d734de9af97b61977270e92",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'id' for method parameter type Long is not present"
+      },
+      {
+        "url": "/technician/level/promote/evaluate",
+        "cls": "TechnicianLevelController",
+        "trace": "e1bbfd9661e2413a88f3067edfc9cb96",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'employeeId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/wallet/promotion/calc",
+        "cls": "WalletController",
+        "trace": "fd56ae2a3fe8465faca2556389264f4e",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'amount' for method parameter type BigDecimal is not present"
+      },
+      {
+        "url": "/wallet/transactions",
+        "cls": "WalletController",
+        "trace": "bfc8fa8b59274a5181fbd4f22c6a33a2",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+      },
+      {
+        "url": "/wx/booking/list",
+        "cls": "P3EcosystemService",
+        "trace": "e18abc5a84f34cd09e60e180c398b7e1",
+        "cat": "UNCAUGHT_EXCEPTION",
+        "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+        "msg": "Required request parameter 'appid' for method parameter type String is not present"
+      }
+    ],
+    "BUSINESS_ERROR(Result.error(String))": [
+      {
+        "url": "/booking/1548",
+        "cls": "BookingController",
+        "trace": "8196d6bea35942bebc3e8bdd339e9a02",
+        "cat": "BUSINESS_ERROR(Result.error(String))",
+        "exc": "",
+        "msg": "预约不存在"
+      },
+      {
+        "url": "/member-level/1548",
+        "cls": "MemberLevelController",
+        "trace": "787b3bb89f6a41cfadae6c4e5a652fc2",
+        "cat": "BUSINESS_ERROR(Result.error(String))",
+        "exc": "",
+        "msg": "等级不存在或无权访问"
+      },
+      {
+        "url": "/packages/1548",
+        "cls": "PackageController",
+        "trace": "ceb0c2b0b78b42d39d116f05b0b4322f",
+        "cat": "BUSINESS_ERROR(Result.error(String))",
+        "exc": "",
+        "msg": "套餐不存在"
+      },
+      {
+        "url": "/pos/orders/1548",
+        "cls": "PosController",
+        "trace": "d430ca0b02964c08b7ef5129d183fb97",
+        "cat": "BUSINESS_ERROR(Result.error(String))",
+        "exc": "",
+        "msg": "订单不存在"
+      },
+      {
+        "url": "/pos/services/1548",
+        "cls": "PosController",
+        "trace": "9cee3d11dce448a49d172242a9d60bd9",
+        "cat": "BUSINESS_ERROR(Result.error(String))",
+        "exc": "",
+        "msg": "服务不存在"
+      },
+      {
+        "url": "/stock/check/1548",
+        "cls": "StockController",
+        "trace": "cf8510765efb45819e3baa5bb872ad0b",
+        "cat": "BUSINESS_ERROR(Result.error(String))",
+        "exc": "",
+        "msg": "盘点单不存在"
+      },
+      {
+        "url": "/stock/products/1548",
+        "cls": "StockController",
+        "trace": "fde59154469847f0b182ceeb06b9ed87",
+        "cat": "BUSINESS_ERROR(Result.error(String))",
+        "exc": "",
+        "msg": "商品不存在"
+      },
+      {
+        "url": "/stock/trace/1548",
+        "cls": "StockController",
+        "trace": "c870d4506e7a4b32a530858cf5ceb50f",
+        "cat": "BUSINESS_ERROR(Result.error(String))",
+        "exc": "",
+        "msg": "商品不存在"
+      },
+      {
+        "url": "/sys/tenant/1548/stats",
+        "cls": "SysTenantController",
+        "trace": "87ec1b47b50f417b8111a5ddccf1e232",
+        "cat": "BUSINESS_ERROR(Result.error(String))",
+        "exc": "",
+        "msg": "租户不存在"
+      },
+      {
+        "url": "/technician/level/benefit/1548",
+        "cls": "LevelBenefitController",
+        "trace": "83ad9aebdd914065af101ba14d4f2fe2",
+        "cat": "BUSINESS_ERROR(Result.error(String))",
+        "exc": "",
+        "msg": "权益不存在或无权访问"
+      }
+    ]
+  },
+  "rows": [
+    {
+      "url": "/ai/recommend",
+      "cls": "AiEnhanceService",
+      "trace": "9da33a94bf764ed8b7f27e9c0ad3bda0",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/attendance/leave/my",
+      "cls": "LeaveRequestController",
+      "trace": "f330c45ee895416dbbc212773e92d082",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'employeeId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/attendance/leave/pending-count",
+      "cls": "LeaveRequestController",
+      "trace": "dbe82fff36c342dbb3184839a5e8002d",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'storeId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/attendance/monthly-report",
+      "cls": "AttendanceController",
+      "trace": "3b5864a3cc0640cbb9686d4f0105a8fe",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'employeeId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/attendance/today",
+      "cls": "AttendanceController",
+      "trace": "9066844d632c4ae58ada33ded49fb301",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'employeeId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/biz/booking/member-credit",
+      "cls": "BookingResourceService",
+      "trace": "c22852cc2ad94dafa8e89d48b76a7504",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/biz/booking/resource/available",
+      "cls": "BookingResourceService",
+      "trace": "6f92be90708442b09b58c3c1b31b88ae",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'serviceItemId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/biz/booking/resource/available-slots",
+      "cls": "BookingResourceService",
+      "trace": "3dda1ed3e1884d4695456b0b754b9522",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'resourceId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/biz/booking/resource/check-conflict",
+      "cls": "BookingResourceService",
+      "trace": "89d410f1744245b5826a2a5e3d08d130",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'resourceId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/blockchain/record/1548",
+      "cls": "BlockchainController",
+      "trace": "67b7c5159ff0448eb8c9b9377ab74327",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'recordType' for method parameter type String is not present"
+    },
+    {
+      "url": "/bnpl/credit",
+      "cls": "BnplController",
+      "trace": "73c1102a06764c0a9b719efe09cefd9f",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'provider' for method parameter type String is not present"
+    },
+    {
+      "url": "/booking/1548",
+      "cls": "BookingController",
+      "trace": "8196d6bea35942bebc3e8bdd339e9a02",
+      "cat": "BUSINESS_ERROR(Result.error(String))",
+      "exc": "",
+      "msg": "预约不存在"
+    },
+    {
+      "url": "/booking/available",
+      "cls": "BookingController",
+      "trace": "20146f89123f4107ae2e294fc06789ba",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'employeeId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/cloud/discovery",
+      "cls": "CloudNativeService",
+      "trace": "1dba6822d04e4dd091a31db71632eced",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'serviceCode' for method parameter type String is not present"
+    },
+    {
+      "url": "/cloud/health/recent",
+      "cls": "CloudNativeService",
+      "trace": "c3323893b22b48e2924361fd5e40be95",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'instanceId' for method parameter type String is not present"
+    },
+    {
+      "url": "/complaint/escalate/list",
+      "cls": "ComplaintLifecycleService",
+      "trace": "bd7f303ee2a246aabd395f1549a23768",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'ticketId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/crm/care/loop/note/list",
+      "cls": "FollowUpClosureService",
+      "trace": "274bc1516ea84b3aac4ee7a22ee983f8",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'taskId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/crm/care/loop/task/my-today",
+      "cls": "FollowUpClosureService",
+      "trace": "562c717e4d5e4e3bbe4ffc509f398d9b",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'ownerId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/crm/care/loop/touch/list",
+      "cls": "FollowUpClosureService",
+      "trace": "c934df598ebf43cba29d411c8582bd4d",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'taskId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/crm/cross/member/lookup",
+      "cls": "CrossStoreController",
+      "trace": "3802cc6d4c5c468cab79de185c6cb396",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'phone' for method parameter type String is not present"
+    },
+    {
+      "url": "/crm/cross/rule/preview-match",
+      "cls": "CrossStoreController",
+      "trace": "1f03a69bbd8b479ba57d01635e8fde5a",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'ruleId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/crm/cross/rule/test",
+      "cls": "CrossStoreController",
+      "trace": "3be8938d2a124ea09564febf2a2d41f9",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'ruleId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/crm/package/share/list",
+      "cls": "P2FeaturesService",
+      "trace": "dcc6b83895a04607af6420f43150a1d8",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'packageOrderId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/dcep/offline/detect-double-spend",
+      "cls": "DcepOfflineTransactionController",
+      "trace": "4e639fd0da7a4415bf7cb656103b6e52",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'walletId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/device/list",
+      "cls": "DeviceManagementService",
+      "trace": "0b1335acade84e08acd238deb65dd985",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'userId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/device/session/list",
+      "cls": "DeviceManagementService",
+      "trace": "3992c65166aa4048a5bf1bcbc323a637",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'userId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/es/event/replay",
+      "cls": "EventSourcingService",
+      "trace": "7291ec41a9a54e35b4167129b083eb5b",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'aggregateType' for method parameter type String is not present"
+    },
+    {
+      "url": "/es/snapshot/latest",
+      "cls": "EventSourcingService",
+      "trace": "42d1708cadab45d89eea5320f1f0edce",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'aggregateType' for method parameter type String is not present"
+    },
+    {
+      "url": "/exp/1548/assign",
+      "cls": "P2FeaturesService",
+      "trace": "3a333f1b456f45a1b5d48880d2dbb143",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'subjectId' for method parameter type String is not present"
+    },
+    {
+      "url": "/frontend/mp/latest",
+      "cls": "FrontendTemplateService",
+      "trace": "eda8de126526492b8781c5502f815c78",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'platformCode' for method parameter type String is not present"
+    },
+    {
+      "url": "/frontend/mp/version/list",
+      "cls": "FrontendTemplateService",
+      "trace": "6479a2d73ba147c99c5b3ae077f1726f",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'platformCode' for method parameter type String is not present"
+    },
+    {
+      "url": "/gray/experiment/1548/assign",
+      "cls": "GrayReleaseController",
+      "trace": "4ef426f3ed354b65843fe66d5fffa370",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'userId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/gray/experiment/stats",
+      "cls": "GrayReleaseController",
+      "trace": "531a682b13cd4708bf4b767a864302cb",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'key' for method parameter type String is not present"
+    },
+    {
+      "url": "/gray/flag/1548/evaluate",
+      "cls": "GrayReleaseController",
+      "trace": "60242296938f47c59a591684cad12cd4",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'userId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/huabei/credit",
+      "cls": "HuabeiController",
+      "trace": "ec6534545181416db76bb10cbf98cc19",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/i18n/bundle",
+      "cls": "I18nService",
+      "trace": "1309fea7273b4a44ac6ea9c1740c7cd0",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'locale' for method parameter type String is not present"
+    },
+    {
+      "url": "/intel/forecast/list",
+      "cls": "P1RemainingService",
+      "trace": "f8d6dc572f2e4145b75ef10be97eb40e",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'storeId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/intel/price-sensitivity/curve",
+      "cls": "PriceSensitivityController",
+      "trace": "a9730a39ddb54443b55d0de5dc85319d",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'projectId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/iot/data/member/1548/trend",
+      "cls": "IotDeviceDataController",
+      "trace": "c5d70e45f16748d686a6df0ca8475833",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'dataType' for method parameter type String is not present"
+    },
+    {
+      "url": "/kiosk/stats/staff-trend",
+      "cls": "KioskService",
+      "trace": "07d4647da20643b987e8c7a6ef8a2a93",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'staffIds' for method parameter type String is not present"
+    },
+    {
+      "url": "/mapi/booking/slots",
+      "cls": "MobileApiService",
+      "trace": "66307c3e5869448393af9c012be60c84",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'storeId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/mapi/member/card",
+      "cls": "MobileApiService",
+      "trace": "66494207b35945a79c8d16c511943f2f",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/member-level/1548",
+      "cls": "MemberLevelController",
+      "trace": "787b3bb89f6a41cfadae6c4e5a652fc2",
+      "cat": "BUSINESS_ERROR(Result.error(String))",
+      "exc": "",
+      "msg": "等级不存在或无权访问"
+    },
+    {
+      "url": "/member/message/unread-count",
+      "cls": "MemberMessageController",
+      "trace": "23212f6461df41fdb3080cb6386a3d63",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/mkt/preference/by-type",
+      "cls": "ItemPreferenceController",
+      "trace": "a1630201156b4664867710a4a83eafbb",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/mkt/preference/recommend",
+      "cls": "ItemPreferenceController",
+      "trace": "431a08a52302484dbfad88885eb5ada8",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/mkt/preference/summary",
+      "cls": "ItemPreferenceController",
+      "trace": "4a744bd1b30f446e83fe436d639c0cd2",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/mkt/preference/top",
+      "cls": "ItemPreferenceController",
+      "trace": "04cf936f351440de889f0c7899ad5718",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/monitor/metric/recent",
+      "cls": "MonitorAlertService",
+      "trace": "53871202e00d4896b8b0d624ae568b7d",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'metricName' for method parameter type String is not present"
+    },
+    {
+      "url": "/open/api/v2/quota/status",
+      "cls": "OpenPlatformEnhanceService",
+      "trace": "5983f0049d744ee8bae8503ee21d1625",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'appId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/open/api/v2/secret/audit",
+      "cls": "OpenPlatformEnhanceService",
+      "trace": "d93939b0186f432791d479325541f677",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'appId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/overseas-payment/payment/select-gateway",
+      "cls": "OverseasPaymentController",
+      "trace": "f22467481b6e4bc8895c74c4ab5b8a4a",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'currency' for method parameter type String is not present"
+    },
+    {
+      "url": "/packages/1548",
+      "cls": "PackageController",
+      "trace": "ceb0c2b0b78b42d39d116f05b0b4322f",
+      "cat": "BUSINESS_ERROR(Result.error(String))",
+      "exc": "",
+      "msg": "套餐不存在"
+    },
+    {
+      "url": "/pos/experiment/quote",
+      "cls": "PosController",
+      "trace": "1872b0cec3b54ff49a2bfbd06fad577d",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/pos/orders/1548",
+      "cls": "PosController",
+      "trace": "d430ca0b02964c08b7ef5129d183fb97",
+      "cat": "BUSINESS_ERROR(Result.error(String))",
+      "exc": "",
+      "msg": "订单不存在"
+    },
+    {
+      "url": "/pos/services/1548",
+      "cls": "PosController",
+      "trace": "9cee3d11dce448a49d172242a9d60bd9",
+      "cat": "BUSINESS_ERROR(Result.error(String))",
+      "exc": "",
+      "msg": "服务不存在"
+    },
+    {
+      "url": "/push/record/list",
+      "cls": "PushNotificationService",
+      "trace": "776822474dfe4d82b45c9b444a6c6439",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'userId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/report/export/download",
+      "cls": "ReportController",
+      "trace": "96cc924dfd724f68b062ef507e74eccf",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'id' for method parameter type Long is not present"
+    },
+    {
+      "url": "/report/v2/task/1548/download",
+      "cls": "ReportV2Service",
+      "trace": "732b85a174714e00a14dc40e1bc46b4d",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'startTime' for method parameter type LocalDateTime is not present"
+    },
+    {
+      "url": "/resource/schedule/check-conflict",
+      "cls": "ResourceScheduleController",
+      "trace": "aa2f51e57d744735835129cbea2a3300",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'startTime' for method parameter type LocalDateTime is not present"
+    },
+    {
+      "url": "/resource/schedule/suggest",
+      "cls": "ResourceScheduleController",
+      "trace": "d9318cee39234369acedb19ea6bca5d0",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'serviceId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/schedule/ai/list",
+      "cls": "P1RemainingService",
+      "trace": "9f2b8268acc04e3187e64ff8da0a01bc",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'storeId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/sla/uptime/list",
+      "cls": "SlaReportService",
+      "trace": "4257a857c2fb412884844afba82d9280",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'serviceCode' for method parameter type String is not present"
+    },
+    {
+      "url": "/stock/check/1548",
+      "cls": "StockController",
+      "trace": "cf8510765efb45819e3baa5bb872ad0b",
+      "cat": "BUSINESS_ERROR(Result.error(String))",
+      "exc": "",
+      "msg": "盘点单不存在"
+    },
+    {
+      "url": "/stock/products/1548",
+      "cls": "StockController",
+      "trace": "fde59154469847f0b182ceeb06b9ed87",
+      "cat": "BUSINESS_ERROR(Result.error(String))",
+      "exc": "",
+      "msg": "商品不存在"
+    },
+    {
+      "url": "/stock/trace/1548",
+      "cls": "StockController",
+      "trace": "c870d4506e7a4b32a530858cf5ceb50f",
+      "cat": "BUSINESS_ERROR(Result.error(String))",
+      "exc": "",
+      "msg": "商品不存在"
+    },
+    {
+      "url": "/sync/member/list",
+      "cls": "MultiDeviceSyncService",
+      "trace": "2c3cb253fd4f45ad9912584413cdb5dd",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'sessionKey' for method parameter type String is not present"
+    },
+    {
+      "url": "/sys/log/context",
+      "cls": "SysLogController",
+      "trace": "a88db1994d734de9af97b61977270e92",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'id' for method parameter type Long is not present"
+    },
+    {
+      "url": "/sys/tenant/1548/stats",
+      "cls": "SysTenantController",
+      "trace": "87ec1b47b50f417b8111a5ddccf1e232",
+      "cat": "BUSINESS_ERROR(Result.error(String))",
+      "exc": "",
+      "msg": "租户不存在"
+    },
+    {
+      "url": "/technician/level/benefit/1548",
+      "cls": "LevelBenefitController",
+      "trace": "83ad9aebdd914065af101ba14d4f2fe2",
+      "cat": "BUSINESS_ERROR(Result.error(String))",
+      "exc": "",
+      "msg": "权益不存在或无权访问"
+    },
+    {
+      "url": "/technician/level/promote/evaluate",
+      "cls": "TechnicianLevelController",
+      "trace": "e1bbfd9661e2413a88f3067edfc9cb96",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'employeeId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/wallet/promotion/calc",
+      "cls": "WalletController",
+      "trace": "fd56ae2a3fe8465faca2556389264f4e",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'amount' for method parameter type BigDecimal is not present"
+    },
+    {
+      "url": "/wallet/transactions",
+      "cls": "WalletController",
+      "trace": "bfc8fa8b59274a5181fbd4f22c6a33a2",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'memberId' for method parameter type Long is not present"
+    },
+    {
+      "url": "/wx/booking/list",
+      "cls": "P3EcosystemService",
+      "trace": "e18abc5a84f34cd09e60e180c398b7e1",
+      "cat": "UNCAUGHT_EXCEPTION",
+      "exc": "org.springframework.web.bind.MissingServletRequestParameterException",
+      "msg": "Required request parameter 'appid' for method parameter type String is not present"
+    }
+  ]
+}
