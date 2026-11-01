@@ -1,0 +1,111 @@
+# Q1 修复后：/biz/booking/resource/check-conflict 与 /sync/member/list 同类 SQL 问题排查
+
+> **结论先行：两个端点都不是同类 SQL 问题，均为「探测未带必填参数」导致的假阳性 500。**
+> 修复 Q1 不涉及它们，也未修改它们的代码。
+
+## 0. 环境绑定
+
+| 项 | 值 |
+|---|---|
+| commit | `596a395`（工作区 dirty，含未提交的 Q1 修复） |
+| DB | `127.0.0.1:3307/meiyetec`（本机 MySQL 8.0.46） |
+| DB snapshot | `backup/meiyetec-post-r1r8-fix-20261030.sql`（I118 落地后基线，本次为**只读查询**，未改库） |
+| env | `audit/baseline/env.md` |
+| SQL 实跑输出 | `q1-sql-probe-final.txt`（同目录） |
+| 运行时复测 | `q1-runtime-verify-after-fix.json`（同目录，base `http://localhost:8082`） |
+| 原始探测 | `q1-two-endpoint-probe.json`（同目录，base `http://localhost:8081`） |
+
+## 1. 静态定位：两个端点的数据来源
+
+### 1.1 `GET /biz/booking/resource/check-conflict`
+
+- 位置：`backend/src/main/java/com/meiyetec/service/BookingResourceService.java:264-291`
+- 实现：`jdbc.queryForList` 直查 SQL，参数 `resourceId / bookingDate / startTime / endTime`（前 4 个为 `@RequestParam` **必填**），`excludeBookingId` 可选
+- 依赖表：`biz_booking` JOIN `booking_booking_resource`
+- 引用列（源码）：`b.id / b.booking_no / b.member_name / b.start_time / b.end_time / b.status / b.booking_date / b.deleted`、`br.booking_id / br.resource_id / br.deleted`
+
+### 1.2 `GET /sync/member/list`
+
+- 位置：`backend/src/main/java/com/meiyetec/service/MultiDeviceSyncService.java:141-147`
+- 实现：MyBatis-Plus `LambdaQueryWrapper` 查 `SyncSessionMember` 实体，参数 `sessionKey` 为 `@RequestParam` **必填**
+- 依赖表：`sync_session_member`
+
+## 2. 表与列存在性（`information_schema` 实测，见 `q1-sql-probe-final.txt` SECTION A）
+
+| 表 | 存在 | 源码引用列是否齐备 |
+|---|---|---|
+| `biz_booking` | ✅ | ✅ `booking_date / booking_no / member_name / start_time / end_time / status / deleted` 全部存在（`start_time`/`end_time` 为 `datetime`） |
+| `booking_booking_resource` | ✅ | ✅ `booking_id / resource_id / deleted` 全部存在 |
+| `sync_session_member` | ✅ | ✅ `session_key / device_id / active / joined_at / left_at / platform_code` 全部存在 |
+| `booking_waitlist_score_log` | ✅（存在，但本端点**未引用**） | — |
+| `dcep_config` | ✅（存在，但本端点**未引用**） | — |
+
+> 补充说明：`sweep-frontend-reach.tsv` 曾把这两个端点标为 `MISSING_TABLE booking_waitlist_score_log` / `MISSING_TABLE dcep_config`。实测两张表**均存在**，且这两个端点的 SQL **根本不引用**这两张表 —— 该分类是扫描脚本的**归因错误**。
+
+## 3. SQL 实跑（`q1-sql-probe-final.txt` SECTION B）
+
+| 探针 | SQL | 结果 |
+|---|---|---|
+| A | `check-conflict` 完整 SQL（resourceId=1 / 2026-10-31 / 10:00-12:00） | **执行成功，0 行**（`biz_booking` 与 `booking_booking_resource` 均为空表，COUNT=0） |
+| B | `sync_session_member WHERE session_key='probe-20261101'` | **执行成功，0 行** |
+| C | 好评率血缘查询（`crm_review` → `pos_order` → `pos_order_item`） | **执行成功**，`total=0 / good=0` |
+| G | 业绩查询（employee_id=1） | **执行成功**，`112898.00` |
+| H | 投诉查询（handler_id=1） | **执行成功**，0 |
+
+**全部 5 段 SQL 均无 `BadSqlGrammarException` / `Unknown column` / 表不存在。** 两端点不存在 R1–R5 那一类的 SQL 拼写或列漂移缺陷。
+
+## 4. 运行时复测（`q1-runtime-verify-after-fix.json`）
+
+修复 Q1 后重新打两个端点，**均 code=200**：
+
+| 端点 | 请求 | HTTP / code | body |
+|---|---|---|---|
+| `/biz/booking/resource/check-conflict` | `?resourceId=1&bookingDate=2026-10-31&startTime=10:00:00&endTime=12:00:00` | 200 / **200** | `{"conflicts":[],"conflict":false}` |
+| `/sync/member/list` | `?sessionKey=probe-20261101` | 200 / **200** | `[]` |
+
+## 5. 500 的真实根因对照（`q1-two-endpoint-probe.json`）
+
+| 探测名 | 参数 | code | 判定 |
+|---|---|---|---|
+| `conflict-as-scanned` | `resourceId=1&bookingDate=2026-10-31&startTime=2026-10-31T09:00:00` | 500 | **缺 `endTime`** → `MissingServletRequestParameterException` → `GlobalExceptionHandler.handleAny` → code 500「系统繁忙」（**I134 契约缺陷**，非 SQL 问题） |
+| `conflict-with-all-params` | 四参齐全 | 200 | ✅ |
+| `conflict-cross-tenant-probe` | 四参齐全（00:00–23:59:59） | 200 | ✅ |
+| `sync-member-as-scanned` | `?memberId=1` | 500 | **缺 `sessionKey`** → 同一 `MissingServletRequestParameterException` 路径 |
+| `sync-member-with-sessionKey` | `?sessionKey=probe-20261101` | 200 | ✅ |
+| `sync-member-nonexistent-key` | `?sessionKey=__no_such_session__` | 200 | ✅ 空结果，**不是**异常 |
+
+### 5.1 「扫描时缺参」的历史对照
+
+`.audit-tmp/i118-inv/sweep-classified.tsv` 对这两个端点的分类本就是 `PROBE_NOISE_MISSING_PARAM`（缺 `resourceId` / `startTime` / `sessionKey`），**并非** `MISSING_TABLE`。`sweep-frontend-reach.tsv` 中的 `MISSING_TABLE` 标签为脚本归因错误（见 §2 补充说明）。
+
+## 6. 判定
+
+| 端点 | 状态 | 依据 |
+|---|---|---|
+| `GET /biz/booking/resource/check-conflict` | **UNVERIFIED → 实际已 VERIFIED（功能正常）**；500 属 I134 缺参契约缺陷 | SQL 实跑通过 + 四参齐全时 code=200 |
+| `GET /sync/member/list` | **UNVERIFIED → 实际已 VERIFIED（功能正常）**；500 属 I134 缺参契约缺陷 | SQL 实跑通过 + `sessionKey` 齐全时 code=200 |
+
+**不属同类 SQL 问题** —— 与 R1–R5（`Unknown column` / 表缺失）不同类，本次 Q1 修复**未触碰**这两个端点的任何代码。
+
+## 7. 顺带发现（不在 Q1 范围，仅报告不处理）
+
+`GET /biz/booking/member-credit?memberId=1` 在修复后复测中仍 **code=500「数据库异常」**（`q1-runtime-verify-after-fix.json` 第 4 条，trace `771144da6b94475199577b418c941ee7`）。
+
+- 位置：`backend/src/main/java/com/meiyetec/service/BookingResourceService.java:736-750`
+- 代码：`SELECT ... FROM member_credit_log WHERE deleted = 0 AND member_id = ? ...`
+- `member_credit_log` 表**存在**，但 `member_credit_log.lock_until` vs 实体 `lockedUntil` 的**列名漂移**已在 `result.md` §A.5 记录为已知未处理项
+- 归入 **I134 / 已知未处理项**，本次 Q1 修复**未纳入**，状态维持不变
+
+## 8. 本次未做 / 未确认
+
+| 项 | 原因 |
+|---|---|
+| `check-conflict` 在**有真实冲突数据**下的返回结构 | `biz_booking` 与 `booking_booking_resource` 均为**空表**（COUNT=0），无法造出冲突场景；仅验证了「无冲突」分支 |
+| `excludeBookingId` 参数分支 | 需先有 booking 数据，当前库内无 |
+| `sync/member/list` 的**有数据**返回 | `sync_session_member` 内无 `sessionKey='probe-20261101'` 记录；仅验证空集分支 |
+| I134（缺参 500 → 400） | 用户 2026-10-30 指示暂缓，本次未处理 |
+| `member-credit` 500 | 不在 Q1 授权范围，仅报告 |
+
+---
+
+**证据编号**：`F140-i118-ddl-landing/q1-endpoint-triage`（本文档）、`F140-i118-ddl-landing/q1-sql-probe-final`（SQL 实跑输出）、`F140-i118-ddl-landing/q1-runtime-verify-after-fix`（运行时复测）、`F140-i118-ddl-landing/500-verify-final-victory`（全量 500 扫描终局）。

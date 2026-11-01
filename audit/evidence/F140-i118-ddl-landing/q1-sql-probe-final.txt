@@ -1,0 +1,511 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
++--------+----------------------------+
+| kind   | TABLE_NAME                 |
++--------+----------------------------+
+| EXISTS | biz_booking                |
+| EXISTS | booking_booking_resource   |
+| EXISTS | booking_resource           |
+| EXISTS | booking_waitlist_score_log |
+| EXISTS | crm_complaint_ticket       |
+| EXISTS | crm_review                 |
+| EXISTS | dcep_config                |
+| EXISTS | pos_employee               |
+| EXISTS | pos_order                  |
+| EXISTS | pos_order_item             |
+| EXISTS | sync_session_member        |
++--------+----------------------------+
++------------------+-----------------+-----------+
+| t                | COLUMN_NAME     | DATA_TYPE |
++------------------+-----------------+-----------+
+| COLS-biz_booking | booking_date    | date      |
+| COLS-biz_booking | booking_no      | varchar   |
+| COLS-biz_booking | cancel_reason   | varchar   |
+| COLS-biz_booking | cancel_time     | datetime  |
+| COLS-biz_booking | checkin_time    | datetime  |
+| COLS-biz_booking | complete_time   | datetime  |
+| COLS-biz_booking | create_time     | datetime  |
+| COLS-biz_booking | deleted         | tinyint   |
+| COLS-biz_booking | employee_id     | bigint    |
+| COLS-biz_booking | employee_name   | varchar   |
+| COLS-biz_booking | end_time        | datetime  |
+| COLS-biz_booking | guest_count     | int       |
+| COLS-biz_booking | id              | bigint    |
+| COLS-biz_booking | member_id       | bigint    |
+| COLS-biz_booking | member_name     | varchar   |
+| COLS-biz_booking | member_phone    | varchar   |
+| COLS-biz_booking | operator_id     | bigint    |
+| COLS-biz_booking | remark          | varchar   |
+| COLS-biz_booking | room_id         | bigint    |
+| COLS-biz_booking | room_name       | varchar   |
+| COLS-biz_booking | scene_mode_code | varchar   |
+| COLS-biz_booking | scene_mode_id   | bigint    |
+| COLS-biz_booking | service_item    | varchar   |
+| COLS-biz_booking | service_item_id | bigint    |
+| COLS-biz_booking | source          | tinyint   |
+| COLS-biz_booking | start_time      | datetime  |
+| COLS-biz_booking | status          | tinyint   |
+| COLS-biz_booking | store_id        | bigint    |
+| COLS-biz_booking | tenant_id       | bigint    |
+| COLS-biz_booking | update_time     | datetime  |
+| COLS-biz_booking | waitlist_id     | bigint    |
++------------------+-----------------+-----------+
++-------------------------------+---------------+-----------+
+| t                             | COLUMN_NAME   | DATA_TYPE |
++-------------------------------+---------------+-----------+
+| COLS-booking_booking_resource | booking_id    | bigint    |
+| COLS-booking_booking_resource | create_time   | datetime  |
+| COLS-booking_booking_resource | deleted       | tinyint   |
+| COLS-booking_booking_resource | id            | bigint    |
+| COLS-booking_booking_resource | quantity      | int       |
+| COLS-booking_booking_resource | resource_code | varchar   |
+| COLS-booking_booking_resource | resource_id   | bigint    |
+| COLS-booking_booking_resource | resource_name | varchar   |
+| COLS-booking_booking_resource | resource_type | varchar   |
++-------------------------------+---------------+-----------+
++-----------------+--------------------+-----------+
+| t               | COLUMN_NAME        | DATA_TYPE |
++-----------------+--------------------+-----------+
+| COLS-crm_review | anonymous          | tinyint   |
+| COLS-crm_review | brand_id           | bigint    |
+| COLS-crm_review | channel            | varchar   |
+| COLS-crm_review | content            | varchar   |
+| COLS-crm_review | create_time        | datetime  |
+| COLS-crm_review | deleted            | tinyint   |
+| COLS-crm_review | environment_rating | int       |
+| COLS-crm_review | id                 | bigint    |
+| COLS-crm_review | images             | varchar   |
+| COLS-crm_review | member_id          | bigint    |
+| COLS-crm_review | member_name        | varchar   |
+| COLS-crm_review | member_phone       | varchar   |
+| COLS-crm_review | operator_name      | varchar   |
+| COLS-crm_review | overall_rating     | int       |
+| COLS-crm_review | price_rating       | int       |
+| COLS-crm_review | reply_at           | datetime  |
+| COLS-crm_review | reply_by           | varchar   |
+| COLS-crm_review | reply_content      | varchar   |
+| COLS-crm_review | service_rating     | int       |
+| COLS-crm_review | skill_rating       | int       |
+| COLS-crm_review | source_id          | bigint    |
+| COLS-crm_review | source_no          | varchar   |
+| COLS-crm_review | source_type        | varchar   |
+| COLS-crm_review | status             | tinyint   |
+| COLS-crm_review | store_id           | bigint    |
+| COLS-crm_review | tags               | varchar   |
+| COLS-crm_review | tenant_id          | bigint    |
+| COLS-crm_review | update_time        | datetime  |
++-----------------+--------------------+-----------+
++-------------------+-----------------+-----------+
+| t                 | COLUMN_NAME     | DATA_TYPE |
++-------------------+-----------------+-----------+
+| COLS-pos_employee | avatar_url      | varchar   |
+| COLS-pos_employee | commission_rate | decimal   |
+| COLS-pos_employee | create_time     | datetime  |
+| COLS-pos_employee | deleted         | tinyint   |
+| COLS-pos_employee | department      | varchar   |
+| COLS-pos_employee | employee_code   | varchar   |
+| COLS-pos_employee | employee_level  | bigint    |
+| COLS-pos_employee | employee_name   | varchar   |
+| COLS-pos_employee | entry_date      | date      |
+| COLS-pos_employee | gender          | tinyint   |
+| COLS-pos_employee | id              | bigint    |
+| COLS-pos_employee | id_card         | varchar   |
+| COLS-pos_employee | password        | varchar   |
+| COLS-pos_employee | phone           | varchar   |
+| COLS-pos_employee | position        | varchar   |
+| COLS-pos_employee | role_ids        | varchar   |
+| COLS-pos_employee | salary          | decimal   |
+| COLS-pos_employee | status          | tinyint   |
+| COLS-pos_employee | store_id        | bigint    |
+| COLS-pos_employee | tenant_id       | bigint    |
+| COLS-pos_employee | update_time     | datetime  |
++-------------------+-----------------+-----------+
++--------------------------+---------------+-----------+
+| t                        | COLUMN_NAME   | DATA_TYPE |
++--------------------------+---------------+-----------+
+| COLS-sync_session_member | active        | tinyint   |
+| COLS-sync_session_member | device_id     | varchar   |
+| COLS-sync_session_member | id            | bigint    |
+| COLS-sync_session_member | joined_at     | datetime  |
+| COLS-sync_session_member | left_at       | datetime  |
+| COLS-sync_session_member | platform_code | varchar   |
+| COLS-sync_session_member | session_key   | varchar   |
++--------------------------+---------------+-----------+
++---------------------+------------------+-----------+
+| t                   | COLUMN_NAME      | DATA_TYPE |
++---------------------+------------------+-----------+
+| COLS-pos_order_item | create_time      | datetime  |
+| COLS-pos_order_item | deleted          | tinyint   |
+| COLS-pos_order_item | discount_amount  | decimal   |
+| COLS-pos_order_item | employee_id      | bigint    |
+| COLS-pos_order_item | employee_name    | varchar   |
+| COLS-pos_order_item | final_price      | decimal   |
+| COLS-pos_order_item | id               | bigint    |
+| COLS-pos_order_item | order_id         | bigint    |
+| COLS-pos_order_item | package_order_id | bigint    |
+| COLS-pos_order_item | package_times    | int       |
+| COLS-pos_order_item | quantity         | int       |
+| COLS-pos_order_item | remark           | varchar   |
+| COLS-pos_order_item | service_id       | bigint    |
+| COLS-pos_order_item | service_name     | varchar   |
+| COLS-pos_order_item | tenant_id        | bigint    |
+| COLS-pos_order_item | total_price      | decimal   |
+| COLS-pos_order_item | unit_price       | decimal   |
+| COLS-pos_order_item | update_time      | datetime  |
++---------------------+------------------+-----------+
++----------------+-----------------+-----------+
+| t              | COLUMN_NAME     | DATA_TYPE |
++----------------+-----------------+-----------+
+| COLS-pos_order | booking_id      | bigint    |
+| COLS-pos_order | cashier_id      | bigint    |
+| COLS-pos_order | cashier_name    | varchar   |
+| COLS-pos_order | change_amount   | decimal   |
+| COLS-pos_order | create_time     | datetime  |
+| COLS-pos_order | created_at      | datetime  |
+| COLS-pos_order | deleted         | tinyint   |
+| COLS-pos_order | discount_amount | decimal   |
+| COLS-pos_order | final_amount    | decimal   |
+| COLS-pos_order | id              | bigint    |
+| COLS-pos_order | member_id       | bigint    |
+| COLS-pos_order | member_name     | varchar   |
+| COLS-pos_order | member_phone    | varchar   |
+| COLS-pos_order | order_no        | varchar   |
+| COLS-pos_order | paid_amount     | decimal   |
+| COLS-pos_order | pay_time        | datetime  |
+| COLS-pos_order | refund_amount   | decimal   |
+| COLS-pos_order | refund_count    | int       |
+| COLS-pos_order | refund_reason   | varchar   |
+| COLS-pos_order | refund_time     | datetime  |
+| COLS-pos_order | refunded_amount | decimal   |
+| COLS-pos_order | remark          | varchar   |
+| COLS-pos_order | status          | tinyint   |
+| COLS-pos_order | store_id        | bigint    |
+| COLS-pos_order | tenant_id       | bigint    |
+| COLS-pos_order | tendered_amount | decimal   |
+| COLS-pos_order | total_amount    | decimal   |
+| COLS-pos_order | type            | tinyint   |
+| COLS-pos_order | update_time     | datetime  |
++----------------+-----------------+-----------+
+  
+================ SECTION B: RUNTIME SQL EXECUTION ================  
+mysql: [Warning] Using a password on the command line interface can be insecure.
++------------------+
+| probe            |
++------------------+
+| A-check-conflict |
++------------------+
++--------------------+
+| probe              |
++--------------------+
+| B-sync-member-list |
++--------------------+
++--------------------+
+| probe              |
++--------------------+
+| C-rating-employee1 |
++--------------------+
++-------+------+
+| total | good |
++-------+------+
+|     0 |    0 |
++-------+------+
++-------------------+
+| probe             |
++-------------------+
+| D-crm_review-dist |
++-------------------+
++-------------+--------+----------+
+| source_type | status | COUNT(*) |
++-------------+--------+----------+
+| ORDER       |      4 |        1 |
+| ORDER       |      2 |        3 |
+| STAFF       |      2 |        2 |
+| SERVICE     |      2 |        3 |
+| STORE       |      3 |        1 |
+| STORE       |      2 |        1 |
+| STAFF       |      1 |        1 |
+| STORE       |      1 |        1 |
++-------------+--------+----------+
++---------------------+
+| probe               |
++---------------------+
+| E-crm_review-sample |
++---------------------+
++----+-------------+-----------+----------------+--------+-----------+-------------+
+| id | source_type | source_id | overall_rating | status | tenant_id | member_name |
++----+-------------+-----------+----------------+--------+-----------+-------------+
+|  1 | ORDER       |      1000 |              5 |      4 |         1 | 李婧        |
+| 13 | ORDER       |      1000 |              5 |      2 |         1 | 李婧        |
+| 14 | STAFF       |      1001 |              5 |      2 |         1 | 王珊        |
+| 15 | SERVICE     |      1002 |              4 |      2 |         1 | 张婷        |
+| 16 | STORE       |      1003 |              1 |      3 |         1 | 刘芳        |
+| 17 | ORDER       |      1004 |              3 |      2 |         1 | 陈琳        |
+| 18 | STAFF       |      1005 |              5 |      2 |         1 | 赵敏        |
+| 19 | SERVICE     |      1006 |              2 |      2 |         1 | 孙洁        |
+| 20 | STORE       |      1007 |              4 |      2 |         1 | 周悦        |
+| 21 | ORDER       |      1008 |              4 |      2 |         1 | 吴倩        |
++----+-------------+-----------+----------------+--------+-----------+-------------+
++----------------+
+| probe          |
++----------------+
+| F-pos_employee |
++----------------+
++-----+--------------------------------+------------+---------------------+-----------+----------------+
+| id  | employee_name                  | entry_date | create_time         | tenant_id | employee_level |
++-----+--------------------------------+------------+---------------------+-----------+----------------+
+|   1 | 王雪梅                         | NULL       | 2026-08-14 23:19:55 |         1 |           NULL |
+|   2 | 赵晓彤                         | NULL       | 2026-08-14 23:19:55 |         1 |           NULL |
+|   3 | 孙丽华                         | NULL       | 2026-08-14 23:19:55 |         1 |           NULL |
+|   4 | 周敏                           | NULL       | 2026-08-14 23:19:55 |         1 |           NULL |
+|   5 | 张丽                           | NULL       | 2026-08-14 23:19:55 |         1 |           NULL |
+|   6 | 李娜                           | NULL       | 2026-08-14 23:19:55 |         1 |           NULL |
+| 219 | UT-3 测试员工 UT3-A-854130     | NULL       | 2026-08-15 06:42:55 |      NULL |           NULL |
+| 220 | UT-3 测试员工 UT3-B-29c9d3     | NULL       | 2026-08-15 06:42:55 |      NULL |           NULL |
+| 221 | UT-3 测试员工 UT3-A-15e0ac     | NULL       | 2026-08-15 06:42:55 |      NULL |           NULL |
+| 222 | UT-3 测试员工 UT3-B-722f3f     | NULL       | 2026-08-15 06:42:55 |      NULL |           NULL |
++-----+--------------------------------+------------+---------------------+-----------+----------------+
++--------------+
+| probe        |
++--------------+
+| G-totalSales |
++--------------+
++---------------------------------+
+| COALESCE(SUM(oi.final_price),0) |
++---------------------------------+
+|                       112898.00 |
++---------------------------------+
++-------------+
+| probe       |
++-------------+
+| H-complaint |
++-------------+
++----------+
+| COUNT(*) |
++----------+
+|        0 |
++----------+
+  
+================ SECTION C: REVIEW LINEAGE PROBE ================  
+mysql: [Warning] Using a password on the command line interface can be insecure.
++----------------------------+
+| probe                      |
++----------------------------+
+| I-review-order-lineage-hit |
++----------------------------+
++------+-------------+-----------+----------------+--------+-----------+----------+
+| id   | source_type | source_id | overall_rating | status | tenant_id | emp1_hit |
++------+-------------+-----------+----------------+--------+-----------+----------+
+|   13 | ORDER       |      1000 |              5 |      2 |         1 |        0 |
+|   14 | STAFF       |      1001 |              5 |      2 |         1 |        0 |
+|   15 | SERVICE     |      1002 |              4 |      2 |         1 |        0 |
+|   17 | ORDER       |      1004 |              3 |      2 |         1 |        0 |
+|   18 | STAFF       |      1005 |              5 |      2 |         1 |        0 |
+|   19 | SERVICE     |      1006 |              2 |      2 |         1 |        0 |
+|   20 | STORE       |      1007 |              4 |      2 |         1 |        0 |
+|   21 | ORDER       |      1008 |              4 |      2 |         1 |        0 |
+|   23 | SERVICE     |      1010 |              3 |      2 |         1 |        0 |
++------+-------------+-----------+----------------+--------+-----------+----------+
++----------------------------+
+| probe                      |
++----------------------------+
+| J-review-staff-lineage-hit |
++----------------------------+
++------+-------------+-----------+----------------+--------+------------+
+| id   | source_type | source_id | overall_rating | status | emp_exists |
++------+-------------+-----------+----------------+--------+------------+
+|   14 | STAFF       |      1001 |              5 |      2 |          0 |
+|   18 | STAFF       |      1005 |              5 |      2 |          0 |
++------+-------------+-----------+----------------+--------+------------+
++------------------+
+| probe            |
++------------------+
+| K-complaint-cols |
++------------------+
++---------------------+
+| COLUMN_NAME         |
++---------------------+
+| brand_id            |
+| complaint_type      |
+| content             |
+| create_time         |
+| deleted             |
+| dept_id             |
+| escalate_count      |
+| evidence            |
+| handler_id          |
+| handler_name        |
+| id                  |
+| level               |
+| member_id           |
+| member_name         |
+| member_phone        |
+| operator_id         |
+| operator_name       |
+| parent_id           |
+| refund_amount       |
+| resolved_at         |
+| satisfaction_note   |
+| satisfaction_rating |
+| sla_expire_at       |
+| sla_minutes         |
+| solution            |
+| solution_type       |
+| source_id           |
+| source_no           |
+| source_type         |
+| status              |
+| store_id            |
+| subject             |
+| tenant_id           |
+| ticket_no           |
+| update_time         |
++---------------------+
++-------------------+
+| probe             |
++-------------------+
+| L-pos_order-maxid |
++-------------------+
++---------+---------+----------+
+| MIN(id) | MAX(id) | COUNT(*) |
++---------+---------+----------+
+|       1 |    3936 |     1848 |
++---------+---------+----------+
++----------------------+
+| probe                |
++----------------------+
+| M-pos_employee-maxid |
++----------------------+
++---------+---------+----------+
+| MIN(id) | MAX(id) | COUNT(*) |
++---------+---------+----------+
+|       1 |     627 |      171 |
++---------+---------+----------+
++---------------------+
+| probe               |
++---------------------+
+| N-biz_booking-maxid |
++---------------------+
++---------+---------+----------+
+| MIN(id) | MAX(id) | COUNT(*) |
++---------+---------+----------+
+|    NULL |    NULL |        0 |
++---------+---------+----------+
++----------------------------+
+| probe                      |
++----------------------------+
+| O-booking_booking_resource |
++----------------------------+
++----------+
+| COUNT(*) |
++----------+
+|        0 |
++----------+
+  
+================ SECTION D: LINEAGEE HIT RATE ================  
+mysql: [Warning] Using a password on the command line interface can be insecure.
++----------------------+
+| probe                |
++----------------------+
+| P-review-any-lineage |
++----------------------+
++-------------+--------+---------+-------------------+-------------------+
+| source_type | status | reviews | order_lineage_hit | staff_lineage_hit |
++-------------+--------+---------+-------------------+-------------------+
+| ORDER       |      4 |       1 |                 0 |                 0 |
+| ORDER       |      2 |       3 |                 0 |                 0 |
+| STAFF       |      2 |       2 |                 0 |                 0 |
+| SERVICE     |      2 |       3 |                 0 |                 0 |
+| STORE       |      3 |       1 |                 0 |                 0 |
+| STORE       |      2 |       1 |                 0 |                 0 |
+| STAFF       |      1 |       1 |                 0 |                 0 |
+| STORE       |      1 |       1 |                 0 |                 0 |
++-------------+--------+---------+-------------------+-------------------+
++----------------+
+| probe          |
++----------------+
+| Q-review-total |
++----------------+
++-------+-------+
+| total | alive |
++-------+-------+
+|    24 |    13 |
++-------+-------+
++-------------------------+
+| probe                   |
++-------------------------+
+| R-pos_order_item-sample |
++-------------------------+
++------+-------------------------+--------+-----------+-------------+-------------+
+| id   | order_no                | status | tenant_id | employee_id | final_price |
++------+-------------------------+--------+-----------+-------------+-------------+
+| 2962 | PO85377189733728256     |      2 |         1 |           4 |      100.00 |
+| 2498 | PO82772980207190016     |      2 |         1 |           4 |      100.00 |
+| 2496 | PO82519795580272640     |      2 |         1 |           4 |      100.00 |
+| 2218 | TR-O-1786810473047-1165 |      2 |         1 |        NULL |      500.00 |
+| 2126 | TR-O-1786810392793-6064 |      2 |         1 |        NULL |      500.00 |
++------+-------------------------+--------+-----------+-------------+-------------+
++---------------------------------------+
+| probe                                 |
++---------------------------------------+
+| S-rating-for-employee-of-latest-order |
++---------------------------------------+
++-------------+-----------+----------+
+| employee_id | total_rev | good_rev |
++-------------+-----------+----------+
+|        NULL |         0 |        0 |
+|           1 |         0 |        0 |
+|           4 |         0 |        0 |
++-------------+-----------+----------+
+
+================================================================================
+SECTION E: crm_review.source_id 与真实业务主键的交集核实（交叉验证）
+================================================================================
+执行时间：2026-11-01 02:11 (UTC+8)  DB: 127.0.0.1:3307/meiyetec  只读查询
+
+背景：附录 B §B.3.1 判定「现存 crm_review 的 source_id 与 pos_order / pos_employee 真实 id 无交集」。
+本次用两种独立方式交叉验证该结论。
+
+--- E.1 直接区间交集核实 ---------------------------------------------------
+[pos_order-1000-1011]      c=0   ids=NULL
+[pos_order_item-1000-1011] c=0
+[pos_employee-1000-1011]   c=0
+[crm_review-source-1000-1011] c=24   <- 24 条评价的 source_id 落在 1000-1011
+
+结论：crm_review.source_id 集中在 1000-1011（24/24 条），
+      而 pos_order / pos_order_item / pos_employee 在该区间【0 条记录】。
+
+--- E.2 逐条血缘命中核实（status=2 已发布，deleted=0）--------------------------
+source_type=ORDER:
+  source_id=1000  order_exists=0  order_item_exists=0
+  source_id=1004  order_exists=0  order_item_exists=0
+  source_id=1008  order_exists=0  order_item_exists=0
+source_type=STAFF:
+  source_id=1001  emp_exists=0
+  source_id=1005  emp_exists=0
+
+结论：两条血缘（①ORDER→pos_order→pos_order_item.employee_id
+      ②STAFF→pos_employee.id）在当前库数据下【命中 0 条】。
+
+--- E.3 全库 id 区间扫描（独立脚本，排除 source_id 命中假设）-------------------
+按主键 id BETWEEN 1000 AND 1011 扫描全部 BASE TABLE，命中表：
+  crm_ltv_snapshot      = 12
+  crm_sync_log         = 12
+  marketing_touch_log   = 12
+  sys_log               = 12
+  sys_role_permission   = 12
+  trace_span            = 12
+
+【pos_order / pos_order_item / pos_employee / biz_booking 均未出现在命中列表中】
+=> 即便不依赖 crm_review 的 source_id，直接按主键区间扫描也证实：
+   1000-1011 区间在评价血缘的目标表里根本不存在任何记录。
+
+--- E.4 最终判定 ----------------------------------------------------------
+§B.3.1 结论【成立且被独立验证】。
+根因是数据侧：crm_review 的 source_id 由 CrmReviewController.demoSeed()
+（CrmReviewController.java:322-323，setSourceId((long)(1000 + i))）生成的
+演示数据，与业务真实主键空间不重合。
+这是【数据种子问题】，不是 EmployeeMetricSupport 的 SQL 缺陷。
+
+修复后好评率实测为 0 是「绝不可硬编码」口径的正确表现：
+宁可记 0（真实反映无评价可评），也不伪造 85 分。
+
+状态：PARTIAL-NON-BLOCKER。需在评价数据与订单/员工打通后复测非零取值。

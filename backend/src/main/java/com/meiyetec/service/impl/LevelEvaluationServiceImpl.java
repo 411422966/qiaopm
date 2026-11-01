@@ -10,6 +10,7 @@ import com.meiyetec.mapper.LevelEvaluationMapper;
 import com.meiyetec.mapper.PosOrderMapper;
 import com.meiyetec.service.LevelEvaluationService;
 import com.meiyetec.service.TechnicianLevelService;
+import com.meiyetec.util.EmployeeMetricSupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -159,19 +160,17 @@ public class LevelEvaluationServiceImpl extends ServiceImpl<LevelEvaluationMappe
             return metrics;
         }
 
-        // 1. 当前等级
+        // 1. 当前等级 + 员工姓名（前端 technician/evaluation.vue 消费 employeeName / currentLevelName）
         Long currentLevelId = employee.getEmployeeLevel();
         metrics.put("currentLevelId", currentLevelId);
+        metrics.put("employeeName", employee.getEmployeeName());
+        TechnicianLevel currentLevel = currentLevelId == null
+                ? null : technicianLevelService.getById(currentLevelId);
+        metrics.put("currentLevelName", currentLevel == null ? null : currentLevel.getLevelName());
 
-        // 2. 服务月数（从入职日期算到今天）
-        Integer serviceMonths = 0;
-        if (employee.getEntryDate() != null) {
-            long months = ChronoUnit.MONTHS.between(
-                    employee.getEntryDate().atStartOfDay(),
-                    LocalDate.now().atStartOfDay());
-            serviceMonths = (int) Math.max(0, months);
-        }
-        metrics.put("serviceMonths", serviceMonths);
+        // 2. 服务月数（入职日期 entry_date 优先，缺失回落建档时间 create_time）
+        metrics.put("serviceMonths", EmployeeMetricSupport.CalculateServiceMonths(
+                employee.getEntryDate(), employee.getCreateTime()));
 
         // 3. 业绩 (累计已完成订单 final_amount，按 pos_order_item.employee_id 过滤)
         BigDecimal totalSales = BigDecimal.ZERO;
@@ -196,33 +195,40 @@ public class LevelEvaluationServiceImpl extends ServiceImpl<LevelEvaluationMappe
         }
         metrics.put("totalSales", totalSales);
 
-        // 4. 好评率：取自 booking 完成态的评价（如表存在）；无数据回落 0
+        // 4. 好评率：统一走 EmployeeMetricSupport（真实客户评价表 crm_review，无任何硬编码兜底，
+        //    匹配不到评价一律记 0）。血缘两条，均带租户隔离：
+        //      ① 订单评价 source_type='ORDER' → source_id = pos_order.id → 该订单项的服务员工
+        //      ② 员工评价 source_type='STAFF' → source_id = pos_employee.id（直接评价该员工）
         BigDecimal ratingScore = BigDecimal.ZERO;
         try {
-            Number avg = jdbc.queryForObject(
-                "SELECT COALESCE(AVG(rating), 0) FROM booking_review " +
-                "WHERE employee_id = ? AND deleted = 0",
-                Number.class, employeeId);
-            // 好评率 = (rating/5) * 100
-            if (avg != null && avg.doubleValue() > 0) {
-                ratingScore = BigDecimal.valueOf(Math.round(avg.doubleValue() / 5.0 * 1000.0) / 10.0);
-            }
+            ratingScore = EmployeeMetricSupport.CalculateRatingScore(jdbc, employeeId, employee.getTenantId());
         } catch (Exception e) {
-            // booking_review 不存在时静默回落
-            ratingScore = new BigDecimal("85.0");
+            log.warn("[M08] calculate ratingScore failed for employee={}: {}", employeeId, e.getMessage());
         }
         metrics.put("ratingScore", ratingScore);
 
-        // 5. 投诉率：complaint_ticket 关联此员工的工单 / 完成订单数
+        // 5. 投诉率：crm_complaint_ticket 关联此员工的工单数 / 完成订单数（同样带租户隔离）
         BigDecimal complaintRate = BigDecimal.ZERO;
         try {
-            Number complaints = jdbc.queryForObject(
-                "SELECT COUNT(*) FROM crm_complaint_ticket WHERE handler_id = ? AND deleted = 0",
-                Number.class, employeeId);
-            Number totalOrders = jdbc.queryForObject(
-                "SELECT COUNT(*) FROM pos_order WHERE status = 2 AND deleted = 0 " +
-                "AND EXISTS (SELECT 1 FROM pos_order_item WHERE order_id = pos_order.id AND employee_id = ? AND deleted = 0)",
-                Number.class, employeeId);
+            Long tenantId = employee.getTenantId();
+            List<Object> complaintArgs = new ArrayList<>();
+            complaintArgs.add(employeeId);
+            String complaintSql = "SELECT COUNT(*) FROM crm_complaint_ticket WHERE handler_id = ? AND deleted = 0 ";
+            if (tenantId != null) {
+                complaintSql += "AND tenant_id = ? ";
+                complaintArgs.add(tenantId);
+            }
+            Number complaints = jdbc.queryForObject(complaintSql, Number.class, complaintArgs.toArray());
+
+            List<Object> orderArgs = new ArrayList<>();
+            orderArgs.add(employeeId);
+            String orderSql = "SELECT COUNT(*) FROM pos_order WHERE status = 2 AND deleted = 0 " +
+                    "AND EXISTS (SELECT 1 FROM pos_order_item WHERE order_id = pos_order.id AND employee_id = ? AND deleted = 0) ";
+            if (tenantId != null) {
+                orderSql += "AND tenant_id = ? ";
+                orderArgs.add(tenantId);
+            }
+            Number totalOrders = jdbc.queryForObject(orderSql, Number.class, orderArgs.toArray());
             long c = complaints == null ? 0 : complaints.longValue();
             long tot = totalOrders == null ? 0 : totalOrders.longValue();
             if (tot > 0) {

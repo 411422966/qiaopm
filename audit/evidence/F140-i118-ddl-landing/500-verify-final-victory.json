@@ -1,0 +1,671 @@
+{
+  "ts": "2026-10-30T17:05:54.410Z",
+  "results": [
+    {
+      "grp": "C1",
+      "url": "/ai/recommend?memberId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "a3804d3ed11e4cc0aa8b77361fa9834c",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"items\":[],\"algorithm\":\"COLLAB-V1\",\"score\":0.8500,\"cacheHit\":true},\"traceId\":\"a3804d3ed11e4cc0aa8b77361fa9834c\",\"timestamp\":\"2026-10-31 01:05:21\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/attendance/leave/my?employeeId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "788d40b6bbf343bfb0a3b918d1f2779d",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"788d40b6bbf343bfb0a3b918d1f2779d\",\"timestamp\":\"2026-10-31 01:05:21\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/attendance/leave/pending-count?storeId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "4e11a1f78f9b43a6bd115e8cc6d012b7",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":0,\"traceId\":\"4e11a1f78f9b43a6bd115e8cc6d012b7\",\"timestamp\":\"2026-10-31 01:05:22\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/attendance/monthly-report?employeeId=1&year=2026&month=10",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "5110a8adc59c4ccebe30b6e79173c73e",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"earlyCount\":0,\"totalWorkMinutes\":0,\"total\":0,\"month\":10,\"year\":2026,\"lateCount\":0},\"traceId\":\"5110a8adc59c4ccebe30b6e79173c73e\",\"timestamp\":\"2026-10-31 01:05:23\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/attendance/today?employeeId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "a3c5b13c0e0445298666ff3c17049ca4",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"lateMinutes\":0,\"hasCheckedOut\":false,\"checkOutTime\":null,\"isLate\":false,\"checkInTime\":null,\"checkInStatus\":null,\"isEarlyLeave\":false,\"hasCheckedIn\":false,\"workMin"
+    },
+    {
+      "grp": "C1",
+      "url": "/biz/booking/member-credit?memberId=1",
+      "http": 200,
+      "code": 500,
+      "msg": "数据库异常",
+      "trace": "778fd88c70f1454cb01eb9df469e77ca",
+      "body": "{\"code\":500,\"message\":\"数据库异常\",\"data\":null,\"traceId\":\"778fd88c70f1454cb01eb9df469e77ca\",\"timestamp\":\"2026-10-31 01:05:25\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/biz/booking/resource/available?serviceItemId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "0b61dc3b1544457d8fd1f5ba397c8c76",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"0b61dc3b1544457d8fd1f5ba397c8c76\",\"timestamp\":\"2026-10-31 01:05:25\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/biz/booking/resource/available-slots?resourceId=1&bookingDate=2026-10-31",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "382aef6d9a714c158651da7ea2514d54",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"slots\":[\"10:00\",\"10:30\",\"11:00\",\"11:30\",\"12:00\",\"12:30\",\"13:00\",\"13:30\",\"14:00\",\"14:30\",\"15:00\",\"15:30\",\"16:00\",\"16:30\",\"17:00\",\"17:30\",\"18:00\",\"18:30\",\"19:00\",\"1"
+    },
+    {
+      "grp": "C1",
+      "url": "/biz/booking/resource/check-conflict?resourceId=1&bookingDate=2026-10-31&startTime=2026-10-31T09:00:00",
+      "http": 200,
+      "code": 500,
+      "msg": "系统繁忙，请稍后重试",
+      "trace": "af5e09ca0147451c8787c754ca615ef5",
+      "body": "{\"code\":500,\"message\":\"系统繁忙，请稍后重试\",\"data\":null,\"traceId\":\"af5e09ca0147451c8787c754ca615ef5\",\"timestamp\":\"2026-10-31 01:05:25\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/blockchain/record/1548?recordType=order",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "5e7146053bf44de4a48728bb8d825d4d",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":null,\"traceId\":\"5e7146053bf44de4a48728bb8d825d4d\",\"timestamp\":\"2026-10-31 01:05:26\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/bnpl/credit?provider=affirm&phone=13800000000",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "baf9151333714454bf4e68ae43fcc299",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"provider\":\"affirm\",\"phone\":\"13800000000\",\"creditLimit\":2414,\"availableLimit\":2414,\"supportedPeriods\":[3,6,12],\"feeRate\":0.05,\"status\":\"APPROVED\",\"queryTime\":\"2026"
+    },
+    {
+      "grp": "C1",
+      "url": "/booking/available?employeeId=1&date=2026-10-31",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "2277459c2e114040990e194de5d5f4ad",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"2277459c2e114040990e194de5d5f4ad\",\"timestamp\":\"2026-10-31 01:05:26\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/cloud/discovery?serviceCode=order",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "a3481663e5814151aab1e80e40f8259d",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"a3481663e5814151aab1e80e40f8259d\",\"timestamp\":\"2026-10-31 01:05:27\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/cloud/health/recent?instanceId=i-1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "8b7e40c9d98e476999d1436f9dcf9adb",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"8b7e40c9d98e476999d1436f9dcf9adb\",\"timestamp\":\"2026-10-31 01:05:27\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/complaint/escalate/list?ticketId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "135d6f071b9647e9b5155aae08310deb",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[{\"id\":1,\"ticketId\":1,\"fromAssignee\":null,\"toAssignee\":\"manager\",\"escalateReason\":\"[RESOLVE] 解决超时自动升级 (SLA:P1)\",\"escalatedAt\":\"2026-09-09T17:08:37\",\"acceptedAt\":nul"
+    },
+    {
+      "grp": "C1",
+      "url": "/crm/care/loop/note/list?taskId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "c3d10acdc9074f21873272533e7bb281",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"c3d10acdc9074f21873272533e7bb281\",\"timestamp\":\"2026-10-31 01:05:28\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/crm/care/loop/task/my-today?ownerId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "a20f9b92a9b4450bbdc6b7494319cace",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[{\"id\":4,\"task_no\":\"T1787127848358C\",\"task_type\":\"EXPIRE\",\"member_id\":1,\"member_name\":null,\"member_phone\":null,\"subject\":\"套餐到期提醒：您的套餐即将到期\",\"priority\":3,\"status\":2,\""
+    },
+    {
+      "grp": "C1",
+      "url": "/crm/care/loop/touch/list?taskId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "ad5d3bd6887945348d8ca917ae9502b9",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"ad5d3bd6887945348d8ca917ae9502b9\",\"timestamp\":\"2026-10-31 01:05:28\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/crm/cross/member/lookup?phone=13800000000",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "3a27ea98950448ffb93aee650e7da4b9",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":null,\"traceId\":\"3a27ea98950448ffb93aee650e7da4b9\",\"timestamp\":\"2026-10-31 01:05:29\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/crm/cross/rule/preview-match?ruleId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "ef02c473e1054b2693983e4aae3db869",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"ef02c473e1054b2693983e4aae3db869\",\"timestamp\":\"2026-10-31 01:05:30\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/crm/cross/rule/test?ruleId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "模拟完成",
+      "trace": "8bedd855fb6b497dadc2c065b6348ea1",
+      "body": "{\"code\":200,\"message\":\"模拟完成\",\"data\":{\"ruleId\":1,\"ruleName\":\"美业品牌默认跨店规则\",\"enabled\":1,\"hit\":true,\"typeAllowed\":true,\"crossFee\":0,\"netAmount\":null,\"sourceStoreId\":null,\"targetStoreId\":null},\"traceId\":\"8b"
+    },
+    {
+      "grp": "C1",
+      "url": "/crm/package/share/list?packageOrderId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "dd8ae7a19f2349e3801bd938015086a3",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"dd8ae7a19f2349e3801bd938015086a3\",\"timestamp\":\"2026-10-31 01:05:31\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/dcep/offline/detect-double-spend?walletId=1&offlineCert=CERT001",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "f6f36fd53f944c4e94db806add19e629",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":false,\"traceId\":\"f6f36fd53f944c4e94db806add19e629\",\"timestamp\":\"2026-10-31 01:05:31\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/device/list?userId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "50318693dbc847f09e4876333163022f",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"50318693dbc847f09e4876333163022f\",\"timestamp\":\"2026-10-31 01:05:32\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/device/session/list?userId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "8dafbe45af9045a88b6e9826911570f8",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"8dafbe45af9045a88b6e9826911570f8\",\"timestamp\":\"2026-10-31 01:05:32\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/es/event/replay?aggregateType=order&aggregateId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "d42897f975914205ae5133b133dfe355",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"d42897f975914205ae5133b133dfe355\",\"timestamp\":\"2026-10-31 01:05:32\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/es/snapshot/latest?aggregateType=order&aggregateId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "7731896bbdbd4c9f886409b5de9c8fb4",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":null,\"traceId\":\"7731896bbdbd4c9f886409b5de9c8fb4\",\"timestamp\":\"2026-10-31 01:05:33\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/exp/1548/assign?subjectId=1",
+      "http": 200,
+      "code": 404,
+      "msg": "资源不存在: 实验不存在",
+      "trace": "ca48de17d7234ec4969d820d58b76f5e",
+      "body": "{\"code\":404,\"message\":\"资源不存在: 实验不存在\",\"data\":null,\"traceId\":\"ca48de17d7234ec4969d820d58b76f5e\",\"timestamp\":\"2026-10-31 01:05:33\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/frontend/mp/latest?platformCode=mp",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "8ff0056b20b54b7db805a4ace284a6d8",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":null,\"traceId\":\"8ff0056b20b54b7db805a4ace284a6d8\",\"timestamp\":\"2026-10-31 01:05:33\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/frontend/mp/version/list?platformCode=mp",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "87c5b6e29c3a4bb18e74c96a8a49a4b0",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"87c5b6e29c3a4bb18e74c96a8a49a4b0\",\"timestamp\":\"2026-10-31 01:05:33\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/gray/experiment/1548/assign?userId=1",
+      "http": 200,
+      "code": 404,
+      "msg": "资源不存在: 实验不存在",
+      "trace": "4e1ef6cdb9294d6783466b2f93da2353",
+      "body": "{\"code\":404,\"message\":\"资源不存在: 实验不存在\",\"data\":null,\"traceId\":\"4e1ef6cdb9294d6783466b2f93da2353\",\"timestamp\":\"2026-10-31 01:05:34\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/gray/experiment/stats?key=k1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "d900a1f9d11a4a268b013fa64406cc5d",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"expKey\":\"k1\",\"variantStats\":[],\"totalUsers\":0},\"traceId\":\"d900a1f9d11a4a268b013fa64406cc5d\",\"timestamp\":\"2026-10-31 01:05:34\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/gray/flag/1548/evaluate?userId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "258c91719d6e4be18f42ff98f564d8cc",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"flagKey\":\"1548\",\"userId\":1,\"enabled\":false,\"reason\":\"not_match\",\"detail\":\"no_flag\",\"evaluatorMode\":\"IN_MEMORY\"},\"traceId\":\"258c91719d6e4be18f42ff98f564d8cc\",\"time"
+    },
+    {
+      "grp": "C1",
+      "url": "/huabei/credit?memberId=1&phone=13800000000",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "8bd06307de3b4becb9e9308792f0a1a3",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"memberId\":1,\"phone\":\"13800000000\",\"zmScore\":564,\"creditLevel\":\"较差\",\"creditLimit\":56400,\"usedLimit\":0,\"availableLimit\":56400,\"queryTime\":\"2026-10-31T01:05:34.78660"
+    },
+    {
+      "grp": "C1",
+      "url": "/i18n/bundle?locale=zh-CN",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "197546a345a84d70aed59b04e7ce354b",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{},\"traceId\":\"197546a345a84d70aed59b04e7ce354b\",\"timestamp\":\"2026-10-31 01:05:35\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/intel/forecast/list?storeId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "e5b594fc6d4949dc9c9088dc99bf2a5f",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"records\":[]},\"traceId\":\"e5b594fc6d4949dc9c9088dc99bf2a5f\",\"timestamp\":\"2026-10-31 01:05:35\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/intel/price-sensitivity/curve?projectId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "f01b767a2e6e4967af42fb796b430355",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"projectId\":1,\"source\":\"POS_HISTORY\",\"points\":[{\"variant\":null,\"isControl\":null,\"discountPercent\":0.00,\"discountAmount\":0.000000,\"originalPrice\":822.642857,\"finalP"
+    },
+    {
+      "grp": "C1",
+      "url": "/iot/data/member/1548/trend?dataType=order&startTime=2026-10-01T00:00:00&endTime=2026-10-31T00:00:00",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "b780ed70c156420a989696ec2faeaa11",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"b780ed70c156420a989696ec2faeaa11\",\"timestamp\":\"2026-10-31 01:05:36\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/kiosk/stats/staff-trend?staffIds=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "3afffc778f9941f4b4903c45b3671a0b",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"period\":\"week\",\"fromDate\":\"2026-10-25\",\"toDate\":\"2026-10-31\",\"staffIds\":[1],\"rows\":[{\"date\":\"2026-10-25\",\"total\":0,\"finished\":0,\"finishRate\":0.0,\"perStaff\":[{\"sta"
+    },
+    {
+      "grp": "C1",
+      "url": "/mapi/booking/slots?storeId=1&serviceId=1&date=2026-10-31",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "b8afeccad81a40f3b234eec74eeabb43",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[{\"time\":\"09:00\",\"available\":true},{\"time\":\"09:30\",\"available\":true},{\"time\":\"10:00\",\"available\":true},{\"time\":\"10:30\",\"available\":true},{\"time\":\"11:00\",\"available\""
+    },
+    {
+      "grp": "C1",
+      "url": "/mapi/member/card?memberId=1",
+      "http": 200,
+      "code": 404,
+      "msg": "资源不存在: 会员不存在",
+      "trace": "a211b324b1604c08818e122457611376",
+      "body": "{\"code\":404,\"message\":\"资源不存在: 会员不存在\",\"data\":null,\"traceId\":\"a211b324b1604c08818e122457611376\",\"timestamp\":\"2026-10-31 01:05:37\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/member/message/unread-count?memberId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "5fd5853736ea48608cb61c6511ee2588",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":0,\"traceId\":\"5fd5853736ea48608cb61c6511ee2588\",\"timestamp\":\"2026-10-31 01:05:37\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/mkt/preference/by-type?memberId=1&itemType=service",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "0cc63258314648fbbb594c2f55b9de66",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"0cc63258314648fbbb594c2f55b9de66\",\"timestamp\":\"2026-10-31 01:05:38\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/mkt/preference/recommend?memberId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "7ef9d2f21cf64508b38d4afcaa1ac712",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"7ef9d2f21cf64508b38d4afcaa1ac712\",\"timestamp\":\"2026-10-31 01:05:38\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/mkt/preference/summary?memberId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "3eef48c3724946e9a41e500c1ae34217",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"topServices\":[],\"uniqueServiceCount\":0,\"avgPreferenceScore\":0.0},\"traceId\":\"3eef48c3724946e9a41e500c1ae34217\",\"timestamp\":\"2026-10-31 01:05:38\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/mkt/preference/top?memberId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "9f4766dc69614c8fb23341301243dc70",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"9f4766dc69614c8fb23341301243dc70\",\"timestamp\":\"2026-10-31 01:05:38\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/monitor/metric/recent?metricName=cpu",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "b4eebe8e6baa432a956d7d89227e26f0",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"b4eebe8e6baa432a956d7d89227e26f0\",\"timestamp\":\"2026-10-31 01:05:38\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/open/api/v2/quota/status?appId=1",
+      "http": 200,
+      "code": 500,
+      "msg": "数据库异常",
+      "trace": "3d9cbab3d03a4431949165b69a94958b",
+      "body": "{\"code\":500,\"message\":\"数据库异常\",\"data\":null,\"traceId\":\"3d9cbab3d03a4431949165b69a94958b\",\"timestamp\":\"2026-10-31 01:05:39\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/open/api/v2/secret/audit?appId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "a8bfea58c0bd4a00b121f2d06f59add9",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"a8bfea58c0bd4a00b121f2d06f59add9\",\"timestamp\":\"2026-10-31 01:05:39\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/overseas-payment/payment/select-gateway?currency=CNY&amount=100",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "09aeb4bc8f6045d29c65cfde1f176bfa",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":\"applePayAdapter\",\"traceId\":\"09aeb4bc8f6045d29c65cfde1f176bfa\",\"timestamp\":\"2026-10-31 01:05:39\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/pos/experiment/quote?memberId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "当前无进行中实验",
+      "trace": "bd4e35aee5014901b9099984585a27d3",
+      "body": "{\"code\":200,\"message\":\"当前无进行中实验\",\"data\":{\"active\":false},\"traceId\":\"bd4e35aee5014901b9099984585a27d3\",\"timestamp\":\"2026-10-31 01:05:40\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/report/export/download?id=1",
+      "http": 404,
+      "code": "n/a",
+      "msg": "(non-json)",
+      "trace": "",
+      "body": ""
+    },
+    {
+      "grp": "C1",
+      "url": "/report/v2/task/1548/download?startTime=2026-10-01T00:00:00",
+      "http": 200,
+      "code": 500,
+      "msg": "任务不存在",
+      "trace": "09fad0d00cf64ed68c972023f0ff3b88",
+      "body": "{\"code\":500,\"message\":\"任务不存在\",\"data\":null,\"traceId\":\"09fad0d00cf64ed68c972023f0ff3b88\",\"timestamp\":\"2026-10-31 01:05:41\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/resource/schedule/check-conflict?startTime=2026-10-31T09:00:00&endTime=2026-10-31T10:00:00&resourceId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "60935109bf3e44759da60796edec12b8",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"hasRoomConflict\":false,\"hasEmployeeConflict\":false,\"hasDualEmployeeConflict\":false,\"roomConflicts\":[],\"employeeConflicts\":[],\"hasConflict\":false,\"message\":\"无冲突\"},"
+    },
+    {
+      "grp": "C1",
+      "url": "/resource/schedule/suggest?serviceId=1&startTime=2026-10-31T09:00:00&endTime=2026-10-31T10:00:00",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "7260f580bebf473691049025617a9161",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[{\"roomId\":1,\"roomName\":\"VIP1号房\",\"primaryEmployeeId\":1,\"primaryEmployeeName\":null,\"assistantEmployeeId\":null,\"assistantEmployeeName\":null,\"score\":80,\"reason\":\"服务[基础"
+    },
+    {
+      "grp": "C1",
+      "url": "/schedule/ai/list?storeId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "40cf7f0229054251ae1978bb3984a6d6",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"total\":0,\"records\":[]},\"traceId\":\"40cf7f0229054251ae1978bb3984a6d6\",\"timestamp\":\"2026-10-31 01:05:43\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/sla/uptime/list?serviceCode=order",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "5faf71bcae194fc6bef5097cc355fde7",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"5faf71bcae194fc6bef5097cc355fde7\",\"timestamp\":\"2026-10-31 01:05:43\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/sync/member/list?memberId=1",
+      "http": 200,
+      "code": 500,
+      "msg": "系统繁忙，请稍后重试",
+      "trace": "0cd551324d5d4decbdbd3f7c89e3210b",
+      "body": "{\"code\":500,\"message\":\"系统繁忙，请稍后重试\",\"data\":null,\"traceId\":\"0cd551324d5d4decbdbd3f7c89e3210b\",\"timestamp\":\"2026-10-31 01:05:43\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/sys/log/context?id=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "c28bb63073984a12bec0fe19974a68ed",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":[],\"traceId\":\"c28bb63073984a12bec0fe19974a68ed\",\"timestamp\":\"2026-10-31 01:05:44\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/technician/level/promote/evaluate?employeeId=1",
+      "http": 200,
+      "code": 500,
+      "msg": "数据库异常",
+      "trace": "489424d611e142fab7c384de4d702dee",
+      "body": "{\"code\":500,\"message\":\"数据库异常\",\"data\":null,\"traceId\":\"489424d611e142fab7c384de4d702dee\",\"timestamp\":\"2026-10-31 01:05:44\"}"
+    },
+    {
+      "grp": "C1",
+      "url": "/wallet/promotion/calc?amount=100",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "6cdcc85d274849f0a997ed02da39f0c5",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"gift\":0,\"activeNow\":false,\"total\":100,\"recharge\":100,\"rule\":\"无赠送\",\"matchedStartTime\":null,\"matchedPromotionId\":null,\"matchedEndTime\":null},\"traceId\":\"6cdcc85d2748"
+    },
+    {
+      "grp": "C1",
+      "url": "/wallet/transactions?memberId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "82743abd1d074a9b8331773a446330de",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"total\":28,\"pages\":2,\"current\":1,\"size\":20,\"records\":[{\"id\":3687,\"tenantId\":1,\"memberId\":1,\"type\":1,\"amount\":30.00,\"balanceBefore\":4462.00,\"balanceAfter\":4492.00,\""
+    },
+    {
+      "grp": "C1",
+      "url": "/wx/booking/list?appid=wx1&openid=oABC123",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "3e0663bf866d4a7e9c1314ec678da326",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"total\":0,\"records\":[]},\"traceId\":\"3e0663bf866d4a7e9c1314ec678da326\",\"timestamp\":\"2026-10-31 01:05:46\"}"
+    },
+    {
+      "grp": "C2",
+      "url": "/booking/1",
+      "http": 200,
+      "code": 500,
+      "msg": "预约不存在",
+      "trace": "65bd51135aa6416c93d2d69f1e1d704e",
+      "body": "{\"code\":500,\"message\":\"预约不存在\",\"data\":null,\"traceId\":\"65bd51135aa6416c93d2d69f1e1d704e\",\"timestamp\":\"2026-10-31 01:05:46\"}"
+    },
+    {
+      "grp": "C2",
+      "url": "/member-level/1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "a85ec85ec494499b9a8beb12e8763e49",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"id\":1,\"levelCode\":\"LEVEL_PURPLE\",\"levelName\":\"紫钻会员\",\"levelIcon\":null,\"minPoints\":0,\"maxPoints\":999,\"discountRate\":0.95,\"birthdayGift\":null,\"birthdayDiscount\":1.00"
+    },
+    {
+      "grp": "C2",
+      "url": "/packages/1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "436f50990bc94ff38a62de7660bdcf7a",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"id\":1,\"tenantId\":1,\"name\":\"面部基础护理 5 次卡\",\"code\":\"PKG-FACE-05\",\"category\":\"面部护理\",\"cover\":null,\"description\":\"深层清洁 + 保湿护理，5 次一疗程\",\"totalTimes\":5,\"price\":599.00,\"cost"
+    },
+    {
+      "grp": "C2",
+      "url": "/pos/orders/1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "cc1373fe714444ce8c1078ac08ab7578",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"id\":1,\"tenantId\":1,\"storeId\":1,\"orderNo\":\"PO20260809511531\",\"memberId\":1,\"memberName\":\"李雅琳\",\"memberPhone\":\"13800138001\",\"bookingId\":null,\"type\":1,\"totalAmount\":0."
+    },
+    {
+      "grp": "C2",
+      "url": "/pos/services/1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "5187efc83d394aa9b9d5837181621e39",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"id\":1,\"tenantId\":1,\"storeId\":null,\"serviceCode\":\"SV0001\",\"serviceName\":\"基础面部护理\",\"categoryId\":null,\"unitPrice\":280.00,\"memberPrice\":198.00,\"unit\":\"次\",\"duration\":60"
+    },
+    {
+      "grp": "C2",
+      "url": "/stock/check/1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "1d07a93cfa874979a17341cbfce173ec",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"check\":{\"id\":1,\"tenantId\":1,\"storeId\":1,\"checkNo\":\"CHK20260814231633\",\"checkDate\":\"2026-08-14\",\"totalItems\":6,\"diffItems\":0,\"profitQty\":0,\"lossQty\":0,\"operatorId\""
+    },
+    {
+      "grp": "C2",
+      "url": "/stock/products/1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "2e760e44db114e978b2ae528cc06ad15",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"id\":1,\"tenantId\":1,\"storeId\":1,\"productCode\":\"SP-BOT-001\",\"productName\":\"玻尿酸精华液\",\"category\":\"耗材\",\"spec\":\"30ml/瓶\",\"unit\":\"瓶\",\"costPrice\":80.00,\"salePrice\":198.00,\""
+    },
+    {
+      "grp": "C2",
+      "url": "/stock/trace/1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "ec848356f38940e39297c4f8d39d3f63",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"product\":{\"id\":1,\"tenantId\":1,\"storeId\":1,\"productCode\":\"SP-BOT-001\",\"productName\":\"玻尿酸精华液\",\"category\":\"耗材\",\"spec\":\"30ml/瓶\",\"unit\":\"瓶\",\"costPrice\":80.00,\"salePric"
+    },
+    {
+      "grp": "C2",
+      "url": "/sys/tenant/1/stats",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "cfb4e9311dfc4d6baed437d36eea092f",
+      "body": "{\"code\":200,\"message\":\"操作成功\",\"data\":{\"tenantId\":1,\"tenantName\":\"默认租户\",\"tenantCode\":\"default\",\"status\":1,\"expireAt\":null,\"expired\":false,\"userTotal\":5,\"userActive\":5,\"userInactive\":0},\"traceId\":\"cfb4e9"
+    },
+    {
+      "grp": "C2",
+      "url": "/technician/level/benefit/1",
+      "http": 200,
+      "code": 500,
+      "msg": "权益不存在或无权访问",
+      "trace": "4daef01f6ff74e44baef5e842008c256",
+      "body": "{\"code\":500,\"message\":\"权益不存在或无权访问\",\"data\":null,\"traceId\":\"4daef01f6ff74e44baef5e842008c256\",\"timestamp\":\"2026-10-31 01:05:53\"}"
+    },
+    {
+      "grp": "C2",
+      "url": "",
+      "http": 404,
+      "code": "n/a",
+      "msg": "No message available",
+      "trace": "",
+      "body": "{\"timestamp\":\"2026-10-31 01:05:54\",\"status\":404,\"error\":\"Not Found\",\"message\":\"No message available\",\"path\":\"/\"}"
+    }
+  ]
+}

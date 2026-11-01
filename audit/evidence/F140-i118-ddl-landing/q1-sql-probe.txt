@@ -1,0 +1,14 @@
+﻿# Q1 SQL 实跑验证 — 2026-11-01
+# DB: 127.0.0.1:3307/meiyetec
+
+## 1. 好评率来源表 crm_review 分布（deleted=0）
+
+## 2. 评价->订单->订单项员工 血缘（employee_id=1，source_type='ORDER'）
+
+## 3. 业绩来源（employee_id=1）
+
+## 4. 员工档案（entry_date 缺失 -> 回落 create_time）
+
+## 5. promote 落库 SQL 探针（事务内 INSERT 后 ROLLBACK）
+
+## 6. 排查：check-conflict 与 sync-member-list 依赖表存在性与查询可执行性

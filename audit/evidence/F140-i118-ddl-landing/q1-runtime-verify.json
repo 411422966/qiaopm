@@ -1,0 +1,60 @@
+{
+  "ts": "2026-10-31T17:16:03.686Z",
+  "base": "http://localhost:8081",
+  "results": [
+    {
+      "name": "Q1-promote-evaluate",
+      "url": "/technician/level/promote/evaluate?employeeId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "0e24f9333ae0488e8378fb4e9fb1e455",
+      "body": "{\"employeeId\":1,\"employeeName\":\"王雪梅\",\"currentLevelId\":null,\"currentLevelCode\":null,\"currentLevelName\":null,\"nextLevelCode\":\"T1\",\"nextLevelName\":\"实习技师\",\"nextLevelId\":5,\"totalSales\":112898,\"requiredSales\":0,\"salesOk\":true,\"ratingRate\":0,\"requiredRating\":0,\"ratingOk\":true,\"monthsOfService\":0,\"requiredMonths\":0,\"monthsOk\":true,\"eligible\":true,\"reason\":\"满足全部晋升条件\"}"
+    },
+    {
+      "name": "Q1-level-eval-list",
+      "url": "/technician/level/evaluation/list?employeeId=1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "53b22404df314aac8d9e3221b73c8fd7",
+      "body": "[]"
+    },
+    {
+      "name": "Q1-level-eval-metrics",
+      "url": "/technician/level/evaluation/metrics/1",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "0aa780d270e74390b1b405d884e48754",
+      "body": "{\"currentLevelName\":null,\"employeeName\":\"王雪梅\",\"currentLevelId\":null,\"totalSales\":112898,\"complaintRate\":0,\"serviceMonths\":2,\"ratingScore\":0}"
+    },
+    {
+      "name": "Q1-member-credit",
+      "url": "/biz/booking/member-credit?memberId=1",
+      "http": 200,
+      "code": 500,
+      "msg": "数据库异常",
+      "trace": "8decdd23fe0f4c0d889c2a5555e1649b",
+      "body": "null"
+    },
+    {
+      "name": "CHECK-conflict",
+      "url": "/biz/booking/resource/check-conflict?resourceId=1&bookingDate=2026-10-31&startTime=10:00:00&endTime=12:00:00",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "673a3744d39d422caf5a9283efb473bc",
+      "body": "{\"conflicts\":[],\"conflict\":false}"
+    },
+    {
+      "name": "CHECK-sync-member-list",
+      "url": "/sync/member/list?sessionKey=probe-20261101",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "710edfa069124ee89e3e140d92795531",
+      "body": "[]"
+    }
+  ]
+}

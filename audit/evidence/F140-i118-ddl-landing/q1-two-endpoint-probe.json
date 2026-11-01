@@ -1,0 +1,60 @@
+{
+  "ts": "2026-10-31T17:47:38.086Z",
+  "base": "http://localhost:8081",
+  "results": [
+    {
+      "name": "conflict-as-scanned",
+      "url": "/biz/booking/resource/check-conflict?resourceId=1&bookingDate=2026-10-31&startTime=2026-10-31T09:00:00",
+      "http": 200,
+      "code": 500,
+      "msg": "系统繁忙，请稍后重试",
+      "trace": "f18c3534060441d5a004ca879075e8ea",
+      "body": "null"
+    },
+    {
+      "name": "conflict-with-all-params",
+      "url": "/biz/booking/resource/check-conflict?resourceId=1&bookingDate=2026-10-31&startTime=10:00:00&endTime=12:00:00",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "b58dc6d9f8f94151a878e85bdd79eaf3",
+      "body": "{\"conflicts\":[],\"conflict\":false}"
+    },
+    {
+      "name": "conflict-cross-tenant-probe",
+      "url": "/biz/booking/resource/check-conflict?resourceId=1&bookingDate=2026-10-31&startTime=00:00:00&endTime=23:59:59",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "377418ad5e624c6a9787e1bb963ce038",
+      "body": "{\"conflicts\":[],\"conflict\":false}"
+    },
+    {
+      "name": "sync-member-as-scanned",
+      "url": "/sync/member/list?memberId=1",
+      "http": 200,
+      "code": 500,
+      "msg": "系统繁忙，请稍后重试",
+      "trace": "955396157ede42c5bbf814146583ca55",
+      "body": "null"
+    },
+    {
+      "name": "sync-member-with-sessionKey",
+      "url": "/sync/member/list?sessionKey=probe-20261101",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "c40deff46a454b6c8c9bc2023921858f",
+      "body": "[]"
+    },
+    {
+      "name": "sync-member-nonexistent-key",
+      "url": "/sync/member/list?sessionKey=__no_such_session__",
+      "http": 200,
+      "code": 200,
+      "msg": "操作成功",
+      "trace": "9097ad8a472c466eb184d193b32ec490",
+      "body": "[]"
+    }
+  ]
+}
