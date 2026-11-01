@@ -1,0 +1,957 @@
+{
+  "generatedAt": "2026-11-01T16:54:32.821Z",
+  "baselineCommit": "5c43426",
+  "afterCommit": "210a4d0",
+  "before": {
+    "ts": "2026-11-01T14:26:48.660Z",
+    "total": 865,
+    "code500": 74,
+    "codeDist": {
+      "200": 642,
+      "400": 1,
+      "404": 82,
+      "500": 74,
+      "": 46,
+      "n/a": 20
+    }
+  },
+  "after": {
+    "ts": "2026-11-01T16:24:20.018Z",
+    "total": 865,
+    "code500": 11,
+    "codeDist": {
+      "200": 642,
+      "400": 64,
+      "404": 82,
+      "500": 11,
+      "": 46,
+      "n/a": 20
+    }
+  },
+  "fixedCount": 63,
+  "fixed": [
+    {
+      "url": "/ai/recommend",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: memberId"
+      }
+    },
+    {
+      "url": "/attendance/leave/my",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: employeeId"
+      }
+    },
+    {
+      "url": "/attendance/leave/pending-count",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: storeId"
+      }
+    },
+    {
+      "url": "/attendance/monthly-report",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: employeeId"
+      }
+    },
+    {
+      "url": "/attendance/today",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: employeeId"
+      }
+    },
+    {
+      "url": "/biz/booking/member-credit",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: memberId"
+      }
+    },
+    {
+      "url": "/biz/booking/resource/available",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: serviceItemId"
+      }
+    },
+    {
+      "url": "/biz/booking/resource/available-slots",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: resourceId"
+      }
+    },
+    {
+      "url": "/biz/booking/resource/check-conflict",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: resourceId"
+      }
+    },
+    {
+      "url": "/blockchain/record/1548",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: recordType"
+      }
+    },
+    {
+      "url": "/bnpl/credit",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: provider"
+      }
+    },
+    {
+      "url": "/booking/available",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: employeeId"
+      }
+    },
+    {
+      "url": "/cloud/discovery",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: serviceCode"
+      }
+    },
+    {
+      "url": "/cloud/health/recent",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: instanceId"
+      }
+    },
+    {
+      "url": "/complaint/escalate/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: ticketId"
+      }
+    },
+    {
+      "url": "/crm/care/loop/note/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: taskId"
+      }
+    },
+    {
+      "url": "/crm/care/loop/task/my-today",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: ownerId"
+      }
+    },
+    {
+      "url": "/crm/care/loop/touch/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: taskId"
+      }
+    },
+    {
+      "url": "/crm/cross/member/lookup",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: phone"
+      }
+    },
+    {
+      "url": "/crm/cross/rule/preview-match",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: ruleId"
+      }
+    },
+    {
+      "url": "/crm/cross/rule/test",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: ruleId"
+      }
+    },
+    {
+      "url": "/crm/package/share/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: packageOrderId"
+      }
+    },
+    {
+      "url": "/dcep/offline/detect-double-spend",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: walletId"
+      }
+    },
+    {
+      "url": "/device/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: userId"
+      }
+    },
+    {
+      "url": "/device/session/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: userId"
+      }
+    },
+    {
+      "url": "/es/event/replay",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: aggregateType"
+      }
+    },
+    {
+      "url": "/es/snapshot/latest",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: aggregateType"
+      }
+    },
+    {
+      "url": "/exp/1548/assign",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: subjectId"
+      }
+    },
+    {
+      "url": "/frontend/mp/latest",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: platformCode"
+      }
+    },
+    {
+      "url": "/frontend/mp/version/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: platformCode"
+      }
+    },
+    {
+      "url": "/gray/experiment/1548/assign",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: userId"
+      }
+    },
+    {
+      "url": "/gray/experiment/stats",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: key"
+      }
+    },
+    {
+      "url": "/gray/flag/1548/evaluate",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: userId"
+      }
+    },
+    {
+      "url": "/huabei/credit",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: memberId"
+      }
+    },
+    {
+      "url": "/i18n/bundle",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: locale"
+      }
+    },
+    {
+      "url": "/intel/forecast/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: storeId"
+      }
+    },
+    {
+      "url": "/intel/price-sensitivity/curve",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: projectId"
+      }
+    },
+    {
+      "url": "/iot/data/member/1548/trend",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: dataType"
+      }
+    },
+    {
+      "url": "/kiosk/stats/staff-trend",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: staffIds"
+      }
+    },
+    {
+      "url": "/mapi/booking/slots",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: storeId"
+      }
+    },
+    {
+      "url": "/mapi/member/card",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: memberId"
+      }
+    },
+    {
+      "url": "/member/message/unread-count",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: memberId"
+      }
+    },
+    {
+      "url": "/mkt/preference/by-type",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: memberId"
+      }
+    },
+    {
+      "url": "/mkt/preference/recommend",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: memberId"
+      }
+    },
+    {
+      "url": "/mkt/preference/summary",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: memberId"
+      }
+    },
+    {
+      "url": "/mkt/preference/top",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: memberId"
+      }
+    },
+    {
+      "url": "/monitor/metric/recent",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: metricName"
+      }
+    },
+    {
+      "url": "/open/api/v2/quota/status",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: appId"
+      }
+    },
+    {
+      "url": "/open/api/v2/secret/audit",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: appId"
+      }
+    },
+    {
+      "url": "/overseas-payment/payment/select-gateway",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: currency"
+      }
+    },
+    {
+      "url": "/pos/experiment/quote",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: memberId"
+      }
+    },
+    {
+      "url": "/push/record/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: userId"
+      }
+    },
+    {
+      "url": "/report/export/download",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: id"
+      }
+    },
+    {
+      "url": "/resource/schedule/check-conflict",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: startTime"
+      }
+    },
+    {
+      "url": "/resource/schedule/suggest",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: serviceId"
+      }
+    },
+    {
+      "url": "/schedule/ai/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: storeId"
+      }
+    },
+    {
+      "url": "/sla/uptime/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: serviceCode"
+      }
+    },
+    {
+      "url": "/sync/member/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: sessionKey"
+      }
+    },
+    {
+      "url": "/sys/log/context",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: id"
+      }
+    },
+    {
+      "url": "/technician/level/promote/evaluate",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: employeeId"
+      }
+    },
+    {
+      "url": "/wallet/promotion/calc",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: amount"
+      }
+    },
+    {
+      "url": "/wallet/transactions",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: memberId"
+      }
+    },
+    {
+      "url": "/wx/booking/list",
+      "before": {
+        "http": 200,
+        "bc": 500,
+        "msg": "系统繁忙，请稍后重试"
+      },
+      "after": {
+        "http": 200,
+        "bc": 400,
+        "msg": "缺少必填参数: appid"
+      }
+    }
+  ],
+  "still500Count": 11,
+  "still500": [
+    {
+      "url": "/booking/1548",
+      "cls": "BookingController",
+      "file": "D:\\QiaoPM\\backend\\src\\main\\java\\com\\meiyetec\\controller\\BookingController.java",
+      "http": 200,
+      "bc": 500,
+      "msg": "预约不存在",
+      "trace": "8196d6bea35942bebc3e8bdd339e9a02"
+    },
+    {
+      "url": "/member-level/1548",
+      "cls": "MemberLevelController",
+      "file": "D:\\QiaoPM\\backend\\src\\main\\java\\com\\meiyetec\\controller\\MemberLevelController.java",
+      "http": 200,
+      "bc": 500,
+      "msg": "等级不存在或无权访问",
+      "trace": "787b3bb89f6a41cfadae6c4e5a652fc2"
+    },
+    {
+      "url": "/packages/1548",
+      "cls": "PackageController",
+      "file": "D:\\QiaoPM\\backend\\src\\main\\java\\com\\meiyetec\\controller\\PackageController.java",
+      "http": 200,
+      "bc": 500,
+      "msg": "套餐不存在",
+      "trace": "ceb0c2b0b78b42d39d116f05b0b4322f"
+    },
+    {
+      "url": "/pos/orders/1548",
+      "cls": "PosController",
+      "file": "D:\\QiaoPM\\backend\\src\\main\\java\\com\\meiyetec\\controller\\PosController.java",
+      "http": 200,
+      "bc": 500,
+      "msg": "订单不存在",
+      "trace": "d430ca0b02964c08b7ef5129d183fb97"
+    },
+    {
+      "url": "/pos/services/1548",
+      "cls": "PosController",
+      "file": "D:\\QiaoPM\\backend\\src\\main\\java\\com\\meiyetec\\controller\\PosController.java",
+      "http": 200,
+      "bc": 500,
+      "msg": "服务不存在",
+      "trace": "9cee3d11dce448a49d172242a9d60bd9"
+    },
+    {
+      "url": "/report/v2/task/1548/download",
+      "cls": "ReportV2Service",
+      "file": "D:\\QiaoPM\\backend\\src\\main\\java\\com\\meiyetec\\service\\ReportV2Service.java",
+      "http": 200,
+      "bc": 500,
+      "msg": "任务不存在",
+      "trace": "732b85a174714e00a14dc40e1bc46b4d"
+    },
+    {
+      "url": "/stock/check/1548",
+      "cls": "StockController",
+      "file": "D:\\QiaoPM\\backend\\src\\main\\java\\com\\meiyetec\\controller\\StockController.java",
+      "http": 200,
+      "bc": 500,
+      "msg": "盘点单不存在",
+      "trace": "cf8510765efb45819e3baa5bb872ad0b"
+    },
+    {
+      "url": "/stock/products/1548",
+      "cls": "StockController",
+      "file": "D:\\QiaoPM\\backend\\src\\main\\java\\com\\meiyetec\\controller\\StockController.java",
+      "http": 200,
+      "bc": 500,
+      "msg": "商品不存在",
+      "trace": "fde59154469847f0b182ceeb06b9ed87"
+    },
+    {
+      "url": "/stock/trace/1548",
+      "cls": "StockController",
+      "file": "D:\\QiaoPM\\backend\\src\\main\\java\\com\\meiyetec\\controller\\StockController.java",
+      "http": 200,
+      "bc": 500,
+      "msg": "商品不存在",
+      "trace": "c870d4506e7a4b32a530858cf5ceb50f"
+    },
+    {
+      "url": "/sys/tenant/1548/stats",
+      "cls": "SysTenantController",
+      "file": "D:\\QiaoPM\\backend\\src\\main\\java\\com\\meiyetec\\controller\\SysTenantController.java",
+      "http": 200,
+      "bc": 500,
+      "msg": "租户不存在",
+      "trace": "87ec1b47b50f417b8111a5ddccf1e232"
+    },
+    {
+      "url": "/technician/level/benefit/1548",
+      "cls": "LevelBenefitController",
+      "file": "D:\\QiaoPM\\backend\\src\\main\\java\\com\\meiyetec\\controller\\LevelBenefitController.java",
+      "http": 200,
+      "bc": 500,
+      "msg": "权益不存在或无权访问",
+      "trace": "83ad9aebdd914065af101ba14d4f2fe2"
+    }
+  ],
+  "new500Count": 0,
+  "new500": []
+}
