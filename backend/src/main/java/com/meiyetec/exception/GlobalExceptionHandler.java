@@ -6,9 +6,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.stream.Collectors;
 
@@ -38,6 +41,24 @@ public class GlobalExceptionHandler {
         return ResponseEntity.ok(Result.error(BizCode.BAD_REQUEST.code, msg));
     }
 
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<Result<Void>> handleMissingParam(MissingServletRequestParameterException e) {
+        log.warn("[MissingParam] {}", e.getMessage());
+        return ResponseEntity.ok(Result.error(BizCode.BAD_REQUEST.code, "缺少必填参数: " + e.getParameterName()));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Result<Void>> handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+        log.warn("[TypeMismatch] {}", e.getMessage());
+        return ResponseEntity.ok(Result.error(BizCode.BAD_REQUEST.code, "参数类型错误: " + e.getName()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Result<Void>> handleUnreadableBody(HttpMessageNotReadableException e) {
+        log.warn("[UnreadableBody] {}", e.getMessage());
+        return ResponseEntity.ok(Result.error(BizCode.BAD_REQUEST.code, "请求体格式错误，无法解析"));
+    }
+
     @ExceptionHandler(OptimisticLockingFailureException.class)
     public ResponseEntity<Result<Void>> handleOptimistic(OptimisticLockingFailureException e) {
         log.warn("[OptimisticLock] {}", e.getMessage());
@@ -52,8 +73,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Result<Void>> handleRuntime(RuntimeException e) {
-        log.warn("[RuntimeException] {}", e.getMessage());
-        return ResponseEntity.ok(Result.error(BizCode.SYSTEM_ERROR.code, e.getMessage()));
+        log.error("[RuntimeException]", e);
+        return ResponseEntity.ok(Result.error(BizCode.SYSTEM_ERROR));
     }
 
     @ExceptionHandler(Exception.class)
