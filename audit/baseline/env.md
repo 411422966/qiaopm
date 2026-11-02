@@ -11,10 +11,14 @@
 | 项 | 值 |
 |---|---|
 | 分支 | `main` |
-| HEAD commit | `656caa72341c96d1b2e703dde993603dda9eebe1` |
-| commit 短 SHA | `656caa7` |
+| HEAD commit | `03173da0f72c4e0066fa407f96d083601ac1643c` |
+| commit 短 SHA | `03173da` |
 | 仓库根 | `D:\QiaoPM` |
 | 工作树状态 | dirty（详见 `git status`） |
+
+> 说明：HEAD 基线于 2026-11-02 14:52 (UTC+8) 刷新，原为 `656caa7`。
+> 本次更新对应提交 `03173da`（C2 契约缺陷全量修复，59 处记录不存在统一返回 404）。
+> 下方"第 6 节 当前 git 状态摘要"仍为 `656caa7` 时点的快照，属历史记录，未同步刷新。
 
 > 说明：本仓库当前不是干净 working tree。大量 EXT-* 增量 + 营销模块改造在未提交状态
 > （MktChannel / MktJourney / MktTemplate / MktTouchTask / MktConversion 控制器 + MarketActivity 下线 +
