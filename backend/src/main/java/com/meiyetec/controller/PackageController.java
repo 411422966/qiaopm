@@ -111,7 +111,7 @@ public class PackageController {
     public Result<PackageItem> detail(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PackageItem p = packageItemService.getById(id);
-        if (p == null) return Result.error("套餐不存在");
+        if (p == null) return Result.error(BizCode.NOT_FOUND, "套餐不存在");
         if (tenantId != null && p.getTenantId() != null && !p.getTenantId().equals(tenantId))
             return Result.error(BizCode.FORBIDDEN, "无权访问该套餐");
         p.setStatusLabel(statusLabel(p.getStatus()));
@@ -168,7 +168,7 @@ public class PackageController {
             return Result.success("套餐创建成功", p);
         } else {
             PackageItem p = packageItemService.getById(dto.getId());
-            if (p == null) return Result.error("套餐不存在");
+            if (p == null) return Result.error(BizCode.NOT_FOUND, "套餐不存在");
             if (tenantId != null && p.getTenantId() != null && !p.getTenantId().equals(tenantId))
                 return Result.error(BizCode.FORBIDDEN, "无权修改该套餐");
             p.setName(dto.getName());
@@ -205,12 +205,12 @@ public class PackageController {
             return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
         }
         Member member = memberService.getById(dto.getMemberId());
-        if (member == null) return Result.error("会员不存在");
+        if (member == null) return Result.error(BizCode.NOT_FOUND, "会员不存在");
         if (member.getStatus() != null && member.getStatus() != 1) {
             return Result.error("会员已冻结，不可购买");
         }
         PackageItem p = packageItemService.getById(dto.getPackageId());
-        if (p == null) return Result.error("套餐不存在");
+        if (p == null) return Result.error(BizCode.NOT_FOUND, "套餐不存在");
         // S-5: 财务接口 tenant 隔离 — Package 必须归属当前租户
         if (tenantId != null && p.getTenantId() != null && !tenantId.equals(p.getTenantId())) {
             throw new BusinessException(BizCode.TENANT_DENIED, "无权购买该套餐（跨租户）");
@@ -366,7 +366,7 @@ public class PackageController {
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(required = false) Integer status) {
         Long tenantId = TenantContextHolder.get().getTenantId();
-        if (memberService.getById(memberId) == null) return Result.error("会员不存在");
+        if (memberService.getById(memberId) == null) return Result.error(BizCode.NOT_FOUND, "会员不存在");
         Page<PackageOrder> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<PackageOrder> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(PackageOrder::getMemberId, memberId);
@@ -823,7 +823,7 @@ public class PackageController {
     public Result<PackageOrder> extend(@PathVariable Long orderId,
                                        @RequestParam(defaultValue = "30") Integer days) {
         PackageOrder order = orderService.getById(orderId);
-        if (order == null) return Result.error("套餐订单不存在");
+        if (order == null) return Result.error(BizCode.NOT_FOUND, "套餐订单不存在");
         if (order.getStatus() == null || order.getStatus() != ORDER_NORMAL) {
             return Result.error("仅「正常」状态的订单可续期");
         }
@@ -884,7 +884,7 @@ public class PackageController {
             return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
         }
         PackageOrder order = orderService.getById(orderId);
-        if (order == null) return Result.error("套餐订单不存在");
+        if (order == null) return Result.error(BizCode.NOT_FOUND, "套餐订单不存在");
         if (order.getStatus() == null || order.getStatus() != ORDER_NORMAL) {
             return Result.error("仅「正常」状态的订单可退款（当前状态：" + ordeStatusLabel(order.getStatus()) + "）");
         }
@@ -1144,7 +1144,7 @@ public class PackageController {
 
         // 1. 校验原套餐
         PackageOrder src = orderService.getById(dto.getFromOrderId());
-        if (src == null) return Result.error("原套餐订单不存在");
+        if (src == null) return Result.error(BizCode.NOT_FOUND, "原套餐订单不存在");
         if (src.getStatus() == null || src.getStatus() != ORDER_NORMAL) {
             return Result.error("仅「正常」状态的套餐可升级（当前状态：" + ordeStatusLabel(src.getStatus()) + "）");
         }
@@ -1154,7 +1154,7 @@ public class PackageController {
 
         // 2. 校验目标套餐
         PackageItem toPkg = packageItemService.getById(dto.getToPackageId());
-        if (toPkg == null) return Result.error("目标套餐不存在");
+        if (toPkg == null) return Result.error(BizCode.NOT_FOUND, "目标套餐不存在");
         if (toPkg.getStatus() != null && toPkg.getStatus() != 1) {
             return Result.error("目标套餐已下架");
         }
@@ -1296,7 +1296,7 @@ public class PackageController {
             return Result.error("拆分子项不能为空");
         }
         PackageOrder order = orderService.getById(dto.getOrderId());
-        if (order == null) return Result.error("套餐订单不存在");
+        if (order == null) return Result.error(BizCode.NOT_FOUND, "套餐订单不存在");
         if (order.getStatus() == null || order.getStatus() != ORDER_NORMAL) {
             return Result.error("仅「正常」状态的订单可核销");
         }
@@ -1385,7 +1385,7 @@ public class PackageController {
     public Result<Void> delete(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PackageItem p = packageItemService.getById(id);
-        if (p == null) return Result.error("套餐不存在");
+        if (p == null) return Result.error(BizCode.NOT_FOUND, "套餐不存在");
         if (tenantId != null && p.getTenantId() != null && !p.getTenantId().equals(tenantId))
             return Result.error(BizCode.FORBIDDEN, "无权删除该套餐");
 

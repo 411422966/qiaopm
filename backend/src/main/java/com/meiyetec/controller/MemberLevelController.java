@@ -7,6 +7,7 @@ import com.meiyetec.dto.MemberLevelDTO;
 import com.meiyetec.dto.PageQueryDTO;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.MemberLevel;
+import com.meiyetec.exception.BizCode;
 import com.meiyetec.service.MemberLevelService;
 import com.meiyetec.util.PageResult;
 import com.meiyetec.util.Result;
@@ -86,7 +87,7 @@ public class MemberLevelController {
     @RequirePermission("member:level:list")
     public Result<MemberLevel> getById(@PathVariable Long id) {
         MemberLevel l = requireLevel(id);
-        if (l == null) return Result.error("等级不存在或无权访问");
+        if (l == null) return Result.error(BizCode.NOT_FOUND, "等级不存在或无权访问");
         return Result.success(l);
     }
 
@@ -106,7 +107,7 @@ public class MemberLevelController {
     public Result<Void> update(@Valid @RequestBody MemberLevelDTO dto) {
         if (dto.getId() == null) return Result.error("ID不能为空");
         MemberLevel level = requireLevel(dto.getId());
-        if (level == null) return Result.error("等级不存在或无权访问");
+        if (level == null) return Result.error(BizCode.NOT_FOUND, "等级不存在或无权访问");
         org.springframework.beans.BeanUtils.copyProperties(dto, level);
         memberLevelService.updateById(level);
         return Result.success("更新成功", null);
@@ -116,7 +117,7 @@ public class MemberLevelController {
     @RequirePermission("member:level:edit")
     public Result<Void> delete(@PathVariable Long id) {
         MemberLevel level = requireLevel(id);
-        if (level == null) return Result.error("等级不存在或无权访问");
+        if (level == null) return Result.error(BizCode.NOT_FOUND, "等级不存在或无权访问");
         memberLevelService.removeById(id);
         return Result.success("删除成功", null);
     }

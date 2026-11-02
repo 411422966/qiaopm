@@ -111,7 +111,7 @@ public class PosController {
     public Result<BizService> serviceDetail(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         BizService svc = serviceMapper.selectById(id);
-        if (svc == null) return Result.error("服务不存在");
+        if (svc == null) return Result.error(BizCode.NOT_FOUND, "服务不存在");
         if (tenantId != null && svc.getTenantId() != null && !svc.getTenantId().equals(tenantId))
             return Result.error(BizCode.FORBIDDEN, "无权访问该服务");
         return Result.success(svc);
@@ -128,7 +128,7 @@ public class PosController {
         if (tenantId == null) return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
         // 验证会员
         Member member = memberService.getById(dto.getMemberId());
-        if (member == null) return Result.error("会员不存在");
+        if (member == null) return Result.error(BizCode.NOT_FOUND, "会员不存在");
 
         // 创建订单
         PosOrder order = new PosOrder();
@@ -182,7 +182,7 @@ public class PosController {
     public Result<PosOrder> addItem(@PathVariable Long id, @RequestBody PosOrderCreateDTO.ItemDTO itemDto) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder order = orderMapper.selectById(id);
-        if (order == null) return Result.error("订单不存在");
+        if (order == null) return Result.error(BizCode.NOT_FOUND, "订单不存在");
         if (tenantId != null && order.getTenantId() != null && !order.getTenantId().equals(tenantId))
             return Result.error(BizCode.FORBIDDEN, "无权操作该订单");
         if (order.getStatus() != 1) return Result.error("订单状态不允许修改");
@@ -281,7 +281,7 @@ public class PosController {
     public Result<PosOrder> removeItem(@PathVariable Long id, @PathVariable Long itemId) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder order = orderMapper.selectById(id);
-        if (order == null) return Result.error("订单不存在");
+        if (order == null) return Result.error(BizCode.NOT_FOUND, "订单不存在");
         if (tenantId != null && order.getTenantId() != null && !order.getTenantId().equals(tenantId))
             return Result.error(BizCode.FORBIDDEN, "无权操作该订单");
         if (order.getStatus() != 1) return Result.error("订单状态不允许修改");
@@ -296,7 +296,7 @@ public class PosController {
                                           @RequestBody Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder order = orderMapper.selectById(id);
-        if (order == null) return Result.error("订单不存在");
+        if (order == null) return Result.error(BizCode.NOT_FOUND, "订单不存在");
         if (tenantId != null && order.getTenantId() != null && !order.getTenantId().equals(tenantId))
             return Result.error(BizCode.FORBIDDEN, "无权操作该订单");
         if (order.getStatus() != 1) return Result.error("订单状态不允许修改");
@@ -384,7 +384,7 @@ public class PosController {
             @RequestBody Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder order = orderMapper.selectById(id);
-        if (order == null) return Result.error("订单不存在");
+        if (order == null) return Result.error(BizCode.NOT_FOUND, "订单不存在");
         if (tenantId != null && order.getTenantId() != null && !order.getTenantId().equals(tenantId))
             return Result.error(BizCode.FORBIDDEN, "无权操作该订单");
         if (order.getStatus() != 1) return Result.error("订单状态不允许修改");
@@ -405,7 +405,7 @@ public class PosController {
 
         // 积分余额检查
         Member member = memberService.getById(memberId);
-        if (member == null) return Result.error("会员不存在");
+        if (member == null) return Result.error(BizCode.NOT_FOUND, "会员不存在");
         Integer currentPoints = member.getPoints() == null ? 0 : member.getPoints();
         if (currentPoints < pointsToUse) {
             return Result.error("积分不足，当前 " + currentPoints + " 分，需要 " + pointsToUse + " 分");
@@ -473,7 +473,7 @@ public class PosController {
     public Result<Map<String, Object>> pay(@PathVariable Long id, @RequestBody PosPayDTO payDto) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder order = orderMapper.selectById(id);
-        if (order == null) return Result.error("订单不存在");
+        if (order == null) return Result.error(BizCode.NOT_FOUND, "订单不存在");
         if (tenantId != null && order.getTenantId() != null && !order.getTenantId().equals(tenantId))
             return Result.error(BizCode.FORBIDDEN, "无权支付该订单");
         if (order.getStatus() != 1) return Result.error("订单状态不允许支付");
@@ -848,7 +848,7 @@ public class PosController {
                                     @RequestBody Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder order = orderMapper.selectById(id);
-        if (order == null) return Result.error("订单不存在");
+        if (order == null) return Result.error(BizCode.NOT_FOUND, "订单不存在");
         if (tenantId != null && order.getTenantId() != null && !order.getTenantId().equals(tenantId))
             return Result.error(BizCode.FORBIDDEN, "无权退款该订单");
         if (order.getStatus() != 2) return Result.error("只能退款已支付订单");
@@ -909,7 +909,7 @@ public class PosController {
     public Result<PosOrder> voidOrder(@PathVariable Long id, @RequestBody(required = false) Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder order = orderMapper.selectById(id);
-        if (order == null) return Result.error("订单不存在");
+        if (order == null) return Result.error(BizCode.NOT_FOUND, "订单不存在");
         if (tenantId != null && order.getTenantId() != null && !order.getTenantId().equals(tenantId))
             return Result.error(BizCode.FORBIDDEN, "无权作废该订单");
         if (order.getStatus() != 1) return Result.error("只能撤销未支付订单");
@@ -925,7 +925,7 @@ public class PosController {
     public Result<PosOrder> orderDetail(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         PosOrder o = loadOrderFull(id);
-        if (o == null) return Result.error("订单不存在");
+        if (o == null) return Result.error(BizCode.NOT_FOUND, "订单不存在");
         if (tenantId != null && o.getTenantId() != null && !o.getTenantId().equals(tenantId))
             return Result.error(BizCode.FORBIDDEN, "无权访问该订单");
         return Result.success(o);

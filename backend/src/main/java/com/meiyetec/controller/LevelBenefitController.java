@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.LevelBenefit;
 import com.meiyetec.entity.MemberLevel;
+import com.meiyetec.exception.BizCode;
 import com.meiyetec.service.LevelBenefitService;
 import com.meiyetec.service.MemberLevelService;
 import com.meiyetec.util.Result;
@@ -70,7 +71,7 @@ public class LevelBenefitController {
     @RequirePermission("employee:level:benefit")
     public Result<LevelBenefit> getById(@PathVariable Long id) {
         LevelBenefit b = requireBenefit(id);
-        if (b == null) return Result.error("权益不存在或无权访问");
+        if (b == null) return Result.error(BizCode.NOT_FOUND, "权益不存在或无权访问");
         return Result.success(b);
     }
 
@@ -81,7 +82,7 @@ public class LevelBenefitController {
         if (tid != null && benefit.getLevelId() != null) {
             MemberLevel level = memberLevelService.getById(benefit.getLevelId());
             if (level == null || !tid.equals(level.getTenantId())) {
-                return Result.error("等级不存在或无权访问");
+                return Result.error(BizCode.NOT_FOUND, "等级不存在或无权访问");
             }
         }
         setTenantId(benefit);
@@ -93,7 +94,7 @@ public class LevelBenefitController {
     @RequirePermission("employee:level:benefit")
     public Result<Void> update(@PathVariable Long id, @RequestBody LevelBenefit benefit) {
         LevelBenefit existing = requireBenefit(id);
-        if (existing == null) return Result.error("权益不存在或无权访问");
+        if (existing == null) return Result.error(BizCode.NOT_FOUND, "权益不存在或无权访问");
         benefit.setId(id);
         setTenantId(benefit);
         levelBenefitService.updateById(benefit);
@@ -104,7 +105,7 @@ public class LevelBenefitController {
     @RequirePermission("employee:level:benefit")
     public Result<Void> delete(@PathVariable Long id) {
         LevelBenefit b = requireBenefit(id);
-        if (b == null) return Result.error("权益不存在或无权访问");
+        if (b == null) return Result.error(BizCode.NOT_FOUND, "权益不存在或无权访问");
         levelBenefitService.removeById(id);
         return Result.success("删除成功", null);
     }
@@ -116,7 +117,7 @@ public class LevelBenefitController {
         if (tid != null) {
             MemberLevel level = memberLevelService.getById(levelId);
             if (level == null || !tid.equals(level.getTenantId())) {
-                return Result.error("等级不存在或无权访问");
+                return Result.error(BizCode.NOT_FOUND, "等级不存在或无权访问");
             }
         }
         levelBenefitService.batchSave(levelId, benefits, tid);

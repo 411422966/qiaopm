@@ -9,6 +9,7 @@ import com.meiyetec.entity.Employee;
 import com.meiyetec.entity.Store;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.EmployeeSchedule;
+import com.meiyetec.exception.BizCode;
 import com.meiyetec.entity.Room;
 import com.meiyetec.mapper.StoreMapper;
 import com.meiyetec.security.TenantContextHolder;
@@ -215,9 +216,9 @@ public class BookingController {
             @RequestParam(required = false) String reason) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Booking b = bookingService.getById(id);
-        if (b == null) return Result.error("预约不存在");
+        if (b == null) return Result.error(BizCode.NOT_FOUND, "预约不存在");
         if (tenantId != null && !tenantId.equals(b.getTenantId())) {
-            return Result.error("预约不存在");
+            return Result.error(BizCode.NOT_FOUND, "预约不存在");
         }
         // 状态机校验
         Map<Integer, Set<Integer>> allowed = new HashMap<>();
@@ -242,9 +243,9 @@ public class BookingController {
     public Result<Booking> checkin(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Booking b = bookingService.getById(id);
-        if (b == null) return Result.error("预约不存在");
+        if (b == null) return Result.error(BizCode.NOT_FOUND, "预约不存在");
         if (tenantId != null && !tenantId.equals(b.getTenantId())) {
-            return Result.error("预约不存在");
+            return Result.error(BizCode.NOT_FOUND, "预约不存在");
         }
         if (b.getStatus() != 2) return Result.error("仅已确认的预约可以签到");
         b.setStatus(3);
@@ -260,9 +261,9 @@ public class BookingController {
     public Result<Booking> complete(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Booking b = bookingService.getById(id);
-        if (b == null) return Result.error("预约不存在");
+        if (b == null) return Result.error(BizCode.NOT_FOUND, "预约不存在");
         if (tenantId != null && !tenantId.equals(b.getTenantId())) {
-            return Result.error("预约不存在");
+            return Result.error(BizCode.NOT_FOUND, "预约不存在");
         }
         if (b.getStatus() != 3) return Result.error("仅已签到的预约可以完成");
         b.setStatus(4);
@@ -277,9 +278,9 @@ public class BookingController {
     public Result<Booking> detail(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Booking b = bookingService.getById(id);
-        if (b == null) return Result.error("预约不存在");
+        if (b == null) return Result.error(BizCode.NOT_FOUND, "预约不存在");
         if (tenantId != null && !tenantId.equals(b.getTenantId())) {
-            return Result.error("预约不存在");
+            return Result.error(BizCode.NOT_FOUND, "预约不存在");
         }
         return Result.success(b);
     }
@@ -291,9 +292,9 @@ public class BookingController {
     public Result<Booking> update(@PathVariable Long id, @RequestBody Booking body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Booking old = bookingService.getById(id);
-        if (old == null) return Result.error("预约不存在");
+        if (old == null) return Result.error(BizCode.NOT_FOUND, "预约不存在");
         if (tenantId != null && !tenantId.equals(old.getTenantId())) {
-            return Result.error("预约不存在");
+            return Result.error(BizCode.NOT_FOUND, "预约不存在");
         }
         // 仅允许修改部分字段
         if (body.getMemberId() != null) old.setMemberId(body.getMemberId());
@@ -367,9 +368,9 @@ public class BookingController {
     public Result<Void> delete(@PathVariable Long id) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Booking b = bookingService.getById(id);
-        if (b == null) return Result.error("预约不存在");
+        if (b == null) return Result.error(BizCode.NOT_FOUND, "预约不存在");
         if (tenantId != null && !tenantId.equals(b.getTenantId())) {
-            return Result.error("预约不存在");
+            return Result.error(BizCode.NOT_FOUND, "预约不存在");
         }
         if (b.getStatus() != 1 && b.getStatus() != 5) {
             return Result.error("仅待确认/已取消可以删除");

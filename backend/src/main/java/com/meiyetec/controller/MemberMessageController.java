@@ -4,6 +4,7 @@ import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.entity.MemberMessage;
+import com.meiyetec.exception.BizCode;
 import com.meiyetec.mapper.MemberMessageMapper;
 import com.meiyetec.security.TenantContextHolder;
 import com.meiyetec.util.PageResult;
@@ -87,7 +88,7 @@ public class MemberMessageController {
     @RequirePermission("member:message:edit")
     public Result<Void> markRead(@PathVariable Long id) {
         MemberMessage msg = messageMapper.selectById(id);
-        if (msg == null) return Result.error("消息不存在");
+        if (msg == null) return Result.error(BizCode.NOT_FOUND, "消息不存在");
         if (msg.getIsRead() != null && msg.getIsRead()) {
             return Result.success("已读", null); // 幂等
         }

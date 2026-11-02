@@ -108,7 +108,7 @@ public class StockController {
     public Result<StockProduct> productDetail(@PathVariable Long id) {
         Long tid = tenantId();
         StockProduct p = productMapper.selectById(id);
-        if (p == null || !tid.equals(p.getTenantId())) return Result.error("商品不存在");
+        if (p == null || !tid.equals(p.getTenantId())) return Result.error(BizCode.NOT_FOUND, "商品不存在");
         return Result.success(p);
     }
 
@@ -159,7 +159,7 @@ public class StockController {
     public Result<StockProduct> updateProduct(@PathVariable Long id, @RequestBody StockProduct p) {
         Long tid = tenantId();
         StockProduct old = productMapper.selectById(id);
-        if (old == null || !tid.equals(old.getTenantId())) return Result.error("商品不存在");
+        if (old == null || !tid.equals(old.getTenantId())) return Result.error(BizCode.NOT_FOUND, "商品不存在");
         p.setId(id);
         p.setProductCode(old.getProductCode()); // 编码不可改
         p.setTenantId(tid);
@@ -172,7 +172,7 @@ public class StockController {
     public Result<Void> deleteProduct(@PathVariable Long id) {
         Long tid = tenantId();
         StockProduct p = productMapper.selectById(id);
-        if (p == null || !tid.equals(p.getTenantId())) return Result.error("商品不存在");
+        if (p == null || !tid.equals(p.getTenantId())) return Result.error(BizCode.NOT_FOUND, "商品不存在");
         // 检查是否有库存
         Long inv = inventoryMapper.selectCount(new LambdaQueryWrapper<StockInventory>()
                 .eq(StockInventory::getProductId, id).gt(StockInventory::getQuantity, 0));
@@ -1010,7 +1010,7 @@ public class StockController {
     public Result<Map<String, Object>> checkDetail(@PathVariable Long id) {
         Long tid = tenantId();
         StockCheck check = checkMapper.selectById(id);
-        if (check == null || !tid.equals(check.getTenantId())) return Result.error("盘点单不存在");
+        if (check == null || !tid.equals(check.getTenantId())) return Result.error(BizCode.NOT_FOUND, "盘点单不存在");
 
         // 简化方案：从 stock_record remark 里匹配 "盘点 {checkNo}"
         String sql = "SELECT r.*, p.product_code, p.product_name, p.unit " +
@@ -1516,7 +1516,7 @@ public class StockController {
     public Result<Map<String, Object>> trace(@PathVariable Long productId) {
         Long tid = tenantId();
         StockProduct p = productMapper.selectById(productId);
-        if (p == null || !tid.equals(p.getTenantId())) return Result.error("商品不存在");
+        if (p == null || !tid.equals(p.getTenantId())) return Result.error(BizCode.NOT_FOUND, "商品不存在");
         List<StockInventory> invs = inventoryMapper.selectList(new LambdaQueryWrapper<StockInventory>()
                 .eq(StockInventory::getProductId, productId)
                 .eq(StockInventory::getTenantId, tid)

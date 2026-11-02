@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.dto.TenantStatsDTO;
 import com.meiyetec.entity.SysTenant;
+import com.meiyetec.exception.BizCode;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.service.SysTenantConfigService;
 import com.meiyetec.service.SysTenantService;
@@ -79,7 +80,7 @@ public class SysTenantController {
     public Result<Void> changeStatus(@PathVariable Long id, @PathVariable Integer status) {
         SysTenant t = service.getById(id);
         if (t == null) {
-            return Result.error("租户不存在");
+            return Result.error(BizCode.NOT_FOUND, "租户不存在");
         }
         // 启用时校验是否已过期
         if (status == 1 && t.getExpireAt() != null && !t.getExpireAt().isEmpty()) {
@@ -102,7 +103,7 @@ public class SysTenantController {
     @RequirePermission("sys:tenant:list")
     public Result<TenantStatsDTO> stats(@PathVariable Long id) {
         TenantStatsDTO dto = service.getStats(id);
-        if (dto == null) return Result.error("租户不存在");
+        if (dto == null) return Result.error(BizCode.NOT_FOUND, "租户不存在");
         return Result.success(dto);
     }
 

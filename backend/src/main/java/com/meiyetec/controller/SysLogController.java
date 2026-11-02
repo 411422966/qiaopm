@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.SysLog;
+import com.meiyetec.exception.BizCode;
 import com.meiyetec.service.SysLogService;
 import com.meiyetec.util.Result;
 import com.meiyetec.util.SysLogAnomalyVO;
@@ -253,7 +254,7 @@ public class SysLogController {
             @RequestParam(defaultValue = "10") Integer minutes,
             @RequestParam(defaultValue = "50") Integer limit) {
         SysLog center = service.getById(id);
-        if (center == null) return Result.error("日志不存在");
+        if (center == null) return Result.error(BizCode.NOT_FOUND, "日志不存在");
         return Result.success(service.contextByUser(center.getUsername(), id, minutes, limit));
     }
 

@@ -5,6 +5,7 @@ import com.meiyetec.entity.ReportExportTask;
 import com.meiyetec.entity.ReportMetricCaliber;
 import com.meiyetec.entity.ReportMetricSnapshot;
 import com.meiyetec.exception.BizCode;
+import com.meiyetec.exception.BusinessException;
 import com.meiyetec.mapper.ReportExportTaskMapper;
 import com.meiyetec.mapper.ReportMetricCaliberMapper;
 import com.meiyetec.mapper.ReportMetricSnapshotMapper;
@@ -562,10 +563,10 @@ public class ReportV2Service {
     public ResponseEntity<byte[]> download(@PathVariable Long id) throws Exception {
         Long tenantId = TenantContextHolder.get().getTenantId();
         ReportExportTask t = taskMapper.selectById(id);
-        if (t == null) throw new RuntimeException("任务不存在");
-        if (!Objects.equals(t.getTenantId(), tenantId)) throw new RuntimeException("无权下载");
-        if (t.getStatus() == null || t.getStatus() != 3) throw new RuntimeException("任务未完成");
-        if (t.getFilePath() == null) throw new RuntimeException("文件未生成");
+        if (t == null) throw new BusinessException(BizCode.NOT_FOUND, "任务不存在");
+        if (!Objects.equals(t.getTenantId(), tenantId)) throw new BusinessException(BizCode.FORBIDDEN, "无权下载");
+        if (t.getStatus() == null || t.getStatus() != 3) throw new BusinessException(BizCode.CONFLICT, "任务未完成");
+        if (t.getFilePath() == null) throw new BusinessException(BizCode.NOT_FOUND, "文件未生成");
 
         Path p = Paths.get(t.getFilePath());
         byte[] bytes = Files.readAllBytes(p);

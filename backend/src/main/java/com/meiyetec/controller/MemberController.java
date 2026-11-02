@@ -8,6 +8,7 @@ import com.meiyetec.dto.MemberBatchTagDTO;
 import com.meiyetec.dto.MemberDTO;
 import com.meiyetec.dto.PageQueryDTO;
 import com.meiyetec.entity.*;
+import com.meiyetec.exception.BizCode;
 import com.meiyetec.mapper.PosOrderItemMapper;
 import com.meiyetec.mapper.PosOrderMapper;
 import com.meiyetec.mapper.PosPaymentMapper;
@@ -321,7 +322,7 @@ public class MemberController {
             @RequestParam(required = false, defaultValue = "1") Integer pageNum,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         Member member = requireMember(id);
-        if (member == null) return Result.error("会员不存在或无权访问");
+        if (member == null) return Result.error(BizCode.NOT_FOUND, "会员不存在或无权访问");
         // 防止一次拉太多
         int ps = Math.min(Math.max(pageSize, 1), 100);
         Page<PosOrder> page = new Page<>(pageNum, ps);
@@ -342,7 +343,7 @@ public class MemberController {
     @RequirePermission("member:list")
     public Result<Map<String, Object>> getById(@PathVariable Long id) {
         Member member = requireMember(id);
-        if (member == null) return Result.error("会员不存在或无权访问");
+        if (member == null) return Result.error(BizCode.NOT_FOUND, "会员不存在或无权访问");
         fillExtras(Collections.singletonList(member));
         MemberProfile profile = profileService.getOne(
             new LambdaQueryWrapper<MemberProfile>().eq(MemberProfile::getMemberId, id));
@@ -390,7 +391,7 @@ public class MemberController {
     public Result<Void> update(@Valid @RequestBody MemberDTO dto) {
         if (dto.getId() == null) return Result.error("ID不能为空");
         Member m = requireMember(dto.getId());
-        if (m == null) return Result.error("会员不存在或无权访问");
+        if (m == null) return Result.error(BizCode.NOT_FOUND, "会员不存在或无权访问");
         Member samePhone = memberService.getOne(
             new LambdaQueryWrapper<Member>().eq(Member::getPhone, dto.getPhone())
                 .ne(Member::getId, dto.getId()));
@@ -405,7 +406,7 @@ public class MemberController {
     @RequirePermission("member:delete")
     public Result<Void> delete(@PathVariable Long id) {
         Member m = requireMember(id);
-        if (m == null) return Result.error("会员不存在或无权访问");
+        if (m == null) return Result.error(BizCode.NOT_FOUND, "会员不存在或无权访问");
         memberService.removeById(id);
         jdbc.update("DELETE FROM crm_member_tag_rel WHERE member_id = ?", id);
         jdbc.update("DELETE FROM crm_member_profile WHERE member_id = ?", id);
@@ -416,7 +417,7 @@ public class MemberController {
     @RequirePermission("member:freeze")
     public Result<Void> freeze(@PathVariable Long id) {
         Member m = requireMember(id);
-        if (m == null) return Result.error("会员不存在或无权访问");
+        if (m == null) return Result.error(BizCode.NOT_FOUND, "会员不存在或无权访问");
         m.setStatus(2);
         memberService.updateById(m);
         return Result.success("已冻结", null);
@@ -426,7 +427,7 @@ public class MemberController {
     @RequirePermission("member:freeze")
     public Result<Void> unfreeze(@PathVariable Long id) {
         Member m = requireMember(id);
-        if (m == null) return Result.error("会员不存在或无权访问");
+        if (m == null) return Result.error(BizCode.NOT_FOUND, "会员不存在或无权访问");
         m.setStatus(1);
         memberService.updateById(m);
         return Result.success("已解冻", null);
@@ -436,7 +437,7 @@ public class MemberController {
     @RequirePermission("member:profile")
     public Result<Void> saveProfile(@PathVariable Long id, @RequestBody MemberProfile profile) {
         Member m = requireMember(id);
-        if (m == null) return Result.error("会员不存在或无权访问");
+        if (m == null) return Result.error(BizCode.NOT_FOUND, "会员不存在或无权访问");
         Long tid = tenantId();
         profile.setMemberId(id);
         profile.setTenantId(tid);
@@ -654,7 +655,7 @@ public class MemberController {
     @RequirePermission("member:list")
     public Result<Map<String, Object>> tabs(@PathVariable Long id) {
         Member m = requireMember(id);
-        if (m == null) return Result.error("会员不存在或无权访问");
+        if (m == null) return Result.error(BizCode.NOT_FOUND, "会员不存在或无权访问");
         Map<String, Object> data = new HashMap<>();
         data.put("consumeRecords", Collections.emptyList());
         data.put("bookings", Collections.emptyList());
