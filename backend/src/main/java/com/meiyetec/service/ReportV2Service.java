@@ -16,13 +16,15 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
@@ -61,6 +63,18 @@ public class ReportV2Service {
 
     @Autowired
     private JdbcTemplate jdbc;
+
+    /**
+     * 导出执行器（独立 Bean）。
+     *
+     * <p>@Async 依赖 Spring AOP 代理，同类内部直接调用会绕过代理导致 @Async 失效
+     * （导出会同步阻塞 HTTP 请求线程）。ReportV2Service 本身是 @RestController，
+     * 在其自身上加 @Async 会引入 CGLIB 代理影响 MVC handler 识别，
+     * 因此把异步派发拆到独立 Bean。</p>
+     */
+    @Autowired
+    @Lazy
+    private ReportExportExecutor exportExecutor;
 
     // 内存中并发限制（线程池轻量起步）
     private static final AtomicInteger RUNNING = new AtomicInteger(0);
@@ -320,32 +334,65 @@ public class ReportV2Service {
         taskMapper.insert(t);
 
         // 提交异步执行
-        submitAsync(t.getId());
+        // 注意：必须在事务提交后再派发，否则异步线程可能读不到尚未提交的 task 记录
+        // （executeExport 里 selectById 返回 null → 任务永远停在 status=1「处理中」）。
+        dispatchAfterCommit(t.getId());
 
         return Result.success("任务已创建", t);
     }
 
     /**
-     * 提交异步任务
+     * 事务提交后派发异步导出任务。
+     *
+     * <p>createTask 带 @Transactional，任务行在事务提交前对其它连接不可见。
+     * 若直接在事务内调用 @Async 方法，异步线程 selectById 可能查不到记录，
+     * 导致任务永远卡在 status=1。</p>
      */
-    @org.springframework.scheduling.annotation.Async
+    private void dispatchAfterCommit(Long taskId) {
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    // 通过独立 Bean 派发，@Async 才会真正生效
+                    exportExecutor.submitAsync(taskId);
+                }
+            });
+        } else {
+            exportExecutor.submitAsync(taskId);
+        }
+    }
+
+    /**
+     * 提交异步任务（派发到独立 Bean，确保 @Async 真正生效）。
+     *
+     * <p>不能在本类内直接调用 @Async 方法：同类内部调用会绕过 Spring AOP 代理，
+     * @Async 形同虚设 → 导出被同步执行在 HTTP 请求线程里，请求长时间挂起、
+     * 任务状态长时间停在「处理中」。</p>
+     */
     public void submitAsync(Long taskId) {
+        exportExecutor.submitAsync(taskId);
+    }
+
+    /**
+     * 实际执行导出（由 {@link ReportExportExecutor} 在异步线程中调用）。
+     *
+     * <p>租户 ID 取自任务记录本身（t.getTenantId()），不依赖 ThreadLocal，
+     * 因此异步线程无需重建租户上下文，也不存在串档风险。</p>
+     */
+    public void executeExport(Long taskId) {
         if (RUNNING.incrementAndGet() > MAX_RUNNING) {
             RUNNING.decrementAndGet();
             jdbc.update("UPDATE report_export_task SET status = 4, error_msg = '系统繁忙，请稍后重试' WHERE id = ?", taskId);
             return;
         }
         try {
-            executeExport(taskId);
+            doExport(taskId);
         } finally {
             RUNNING.decrementAndGet();
         }
     }
 
-    /**
-     * 实际执行（生产可以拆 @Async；此处直接同步调用，由调用方控制并发）
-     */
-    public void executeExport(Long taskId) {
+    private void doExport(Long taskId) {
         ReportExportTask t = taskMapper.selectById(taskId);
         if (t == null) return;
         try {
@@ -375,14 +422,28 @@ public class ReportV2Service {
         }
     }
 
+    /**
+     * 按报表编码取数。
+     *
+     * 各分支支持的"门店过滤列"不同，必须逐分支声明，不能无条件拼 AND store_id = ?：
+     *  - SALES      → pos_order.store_id        （有）
+     *  - MEMBER     → crm_member.store_id       （有）
+     *  - COMMISSION → commission_record.store_id（有）
+     *  - PAY        → pos_payment 无 store_id 列 → 不支持门店过滤
+     *  - PRODUCT    → pos_order_item 无 store_id 列 → 门店过滤走 pos_order.store_id，
+     *                且必须拼在 GROUP BY 之前（拼在 ORDER BY 之后是 SQL 语法错）
+     */
     private List<Map<String, Object>> collectRows(ReportExportTask t) {
         LocalDate s = t.getDateRangeStart() == null ? LocalDate.now().minusDays(30) : t.getDateRangeStart();
         LocalDate e = t.getDateRangeEnd() == null ? LocalDate.now() : t.getDateRangeEnd();
         LocalDateTime sDt = s.atStartOfDay();
         LocalDateTime eDt = e.atTime(23, 59, 59);
         List<Object> args = new ArrayList<>(List.of(t.getTenantId(), sDt, eDt));
+        String code = t.getReportCode();
         String sql;
-        switch (t.getReportCode()) {
+        String storeColumn = null;
+        String groupBy = "";
+        switch (code) {
             case "SALES":
                 sql =
                     "SELECT order_no, DATE(pay_time) AS date, member_id, member_name, " +
@@ -392,18 +453,22 @@ public class ReportV2Service {
                     "FROM pos_order " +
                     "WHERE tenant_id = ? AND deleted = 0 " +
                     "  AND status IN (3,4) AND pay_time BETWEEN ? AND ? ";
+                storeColumn = "store_id";
                 break;
             case "PAY":
                 sql =
-                    "SELECT p.order_no, p.method AS pay_method, p.amount, p.status, p.pay_time, p.transaction_id AS transaction_no " +
+                    "SELECT p.payment_no AS order_no, p.method AS pay_method, p.amount, p.status, p.pay_time, p.transaction_id AS transaction_no " +
                     "FROM pos_payment p " +
                     "WHERE p.tenant_id = ? AND p.deleted = 0 AND p.pay_time BETWEEN ? AND ? ";
+                // pos_payment 无 store_id 列 → 不支持门店过滤
+                storeColumn = null;
                 break;
             case "MEMBER":
                 sql =
                     "SELECT member_no, name, phone, gender, level_id, balance, points, total_consume, " +
-                    "       DATE(created_at) AS reg_date " +
-                    "FROM crm_member WHERE tenant_id = ? AND deleted = 0 AND created_at BETWEEN ? AND ? ";
+                    "       DATE(create_time) AS reg_date " +
+                    "FROM crm_member WHERE tenant_id = ? AND deleted = 0 AND create_time BETWEEN ? AND ? ";
+                storeColumn = "store_id";
                 break;
             case "COMMISSION":
                 sql =
@@ -412,6 +477,7 @@ public class ReportV2Service {
                     "       commission_amount, status, business_time " +
                     "FROM commission_record " +
                     "WHERE tenant_id = ? AND deleted = 0 AND business_time BETWEEN ? AND ? ";
+                storeColumn = "store_id";
                 break;
             case "PRODUCT":
                 sql =
@@ -419,17 +485,19 @@ public class ReportV2Service {
                     "       SUM(i.final_price) AS total_amount " +
                     "FROM pos_order_item i JOIN pos_order o ON o.id = i.order_id " +
                     "WHERE o.tenant_id = ? AND o.deleted = 0 AND i.deleted = 0 AND o.status IN (3,4) " +
-                    "  AND o.pay_time BETWEEN ? AND ? " +
-                    "GROUP BY i.service_id, i.service_name ORDER BY total_amount DESC";
+                    "  AND o.pay_time BETWEEN ? AND ? ";
+                storeColumn = "o.store_id";
+                groupBy = " GROUP BY i.service_id, i.service_name ORDER BY total_amount DESC";
                 break;
             default:
-                throw new RuntimeException("未知报表编码: " + t.getReportCode());
+                throw new RuntimeException("未知报表编码: " + code);
         }
-        if (t.getStoreId() != null) {
-            sql += "AND store_id = ? ";
+        if (t.getStoreId() != null && storeColumn != null) {
+            sql += "AND " + storeColumn + " = ? ";
             args.add(t.getStoreId());
         }
-        if (!"PRODUCT".equals(t.getReportCode())) {
+        sql += groupBy;
+        if (!"PRODUCT".equals(code)) {
             sql += "ORDER BY id DESC LIMIT 50000";
         } else {
             sql += " LIMIT 5000";

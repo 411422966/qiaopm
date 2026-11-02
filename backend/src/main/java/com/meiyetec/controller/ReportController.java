@@ -330,7 +330,15 @@ public class ReportController {
     public Result<List<Map<String, Object>>> bizDaily(@RequestParam(required = false) Long storeId,
                                                       @RequestParam(defaultValue = "30") int days) {
         if (days <= 0 || days > 365) days = 30;
-        Long t = tid();
+        return queryBizDaily(storeId, days, tid());
+    }
+
+    /**
+     * 营业日报取数（租户 ID 显式入参）。
+     * 异步导出线程没有 ThreadLocal 上下文，必须由调用方显式传入租户，否则会串档。
+     */
+    private Result<List<Map<String, Object>>> queryBizDaily(Long storeId, int days, Long tenantId) {
+        Long t = tenantId;
 
         LambdaQueryWrapper<PosOrder> q = new LambdaQueryWrapper<>();
         q.eq(PosOrder::getTenantId, t);
@@ -634,7 +642,12 @@ public class ReportController {
     public Result<List<Map<String, Object>>> bizMonthly(@RequestParam(required = false) Long storeId,
                                                         @RequestParam(defaultValue = "12") int months) {
         if (months <= 0 || months > 60) months = 12;
-        Long t = tid();
+        return queryBizMonthly(storeId, months, tid());
+    }
+
+    /** 营业月报取数（租户 ID 显式入参，供异步导出线程使用）。 */
+    private Result<List<Map<String, Object>>> queryBizMonthly(Long storeId, int months, Long tenantId) {
+        Long t = tenantId;
 
         LambdaQueryWrapper<PosOrder> q = new LambdaQueryWrapper<>();
         q.eq(PosOrder::getTenantId, t);
@@ -677,7 +690,12 @@ public class ReportController {
     @GetMapping("/member/analysis")
     @RequirePermission("report:biz:list")
     public Result<Map<String, Object>> memberAnalysis(@RequestParam(required = false) Long storeId) {
-        Long t = tid();
+        return queryMemberAnalysis(storeId, tid());
+    }
+
+    /** 会员分析取数（租户 ID 显式入参，供异步导出线程使用）。 */
+    private Result<Map<String, Object>> queryMemberAnalysis(Long storeId, Long tenantId) {
+        Long t = tenantId;
         LambdaQueryWrapper<Member> mq = new LambdaQueryWrapper<>();
         mq.eq(Member::getTenantId, t);
         if (storeId != null) mq.eq(Member::getStoreId, storeId);
@@ -709,7 +727,12 @@ public class ReportController {
     public Result<List<Map<String, Object>>> employeePerformance(@RequestParam(required = false) Long storeId,
                                                                   @RequestParam(defaultValue = "30") int days) {
         if (days <= 0 || days > 365) days = 30;
-        Long t = tid();
+        return queryEmployeePerformance(storeId, days, tid());
+    }
+
+    /** 员工绩效取数（租户 ID 显式入参，供异步导出线程使用）。 */
+    private Result<List<Map<String, Object>>> queryEmployeePerformance(Long storeId, int days, Long tenantId) {
+        Long t = tenantId;
 
         LambdaQueryWrapper<PosOrder> q = new LambdaQueryWrapper<>();
         q.eq(PosOrder::getTenantId, t);
@@ -747,7 +770,12 @@ public class ReportController {
     public Result<List<Map<String, Object>>> payTypeBreakdown(@RequestParam(required = false) Long storeId,
                                                                @RequestParam(defaultValue = "30") int days) {
         if (days <= 0 || days > 365) days = 30;
-        Long t = tid();
+        return queryPayTypeBreakdown(storeId, days, tid());
+    }
+
+    /** 销售汇总（按支付方式）取数（租户 ID 显式入参，供异步导出线程使用）。 */
+    private Result<List<Map<String, Object>>> queryPayTypeBreakdown(Long storeId, int days, Long tenantId) {
+        Long t = tenantId;
 
         LambdaQueryWrapper<PosPayment> q = new LambdaQueryWrapper<>();
         q.eq(PosPayment::getTenantId, t);
@@ -885,17 +913,20 @@ public class ReportController {
         exportLogMapper.insert(log);
 
         Long logId = log.getId();
+        // 异步线程没有 ThreadLocal 租户上下文，tenantId 必须在同步代码中提取后按参数传入，
+        // 否则异步线程内调用 tid() 会拿到空上下文兜底值 → 串档导出别家租户数据。
+        final Long tenantId = t;
         CompletableFuture.runAsync(() -> {
             try {
-                byte[] data = buildExportFileData(type, dateRange);
-                int rows = (int) Math.min(Integer.MAX_VALUE, countRows(type, dateRange));
+                byte[] data = buildExportFileData(type, dateRange, tenantId);
+                int rows = (int) Math.min(Integer.MAX_VALUE, countRows(type, dateRange, tenantId));
                 String path = saveFile(data, logId);
                 jdbc.update("UPDATE report_export_log SET status=2,row_count=?,file_size=?,finished_at=NOW(),file_path=? WHERE id=? AND tenant_id=?",
-                        rows, (long) data.length, path, logId, t);
+                        rows, (long) data.length, path, logId, tenantId);
             } catch (Exception e) {
                 String msg = e.getClass().getSimpleName() + ": " + e.getMessage();
                 jdbc.update("UPDATE report_export_log SET status=3,error_msg=?,finished_at=NOW() WHERE id=? AND tenant_id=?",
-                        msg, logId, t);
+                        msg, logId, tenantId);
             }
         });
 
@@ -928,7 +959,7 @@ public class ReportController {
             data = Files.readAllBytes(Paths.get(log.getFilePath()));
             displayName = log.getName() + ".xlsx";
         } else {
-            data = buildExportFileData(log.getType(), log.getDateRange());
+            data = buildExportFileData(log.getType(), log.getDateRange(), t);
             displayName = (log.getName() != null ? log.getName() : "报表") + "_" + System.currentTimeMillis() + ".xlsx";
         }
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -940,7 +971,7 @@ public class ReportController {
         }
     }
 
-    private byte[] buildExportFileData(Integer type, String dateRange) throws IOException {
+    private byte[] buildExportFileData(Integer type, String dateRange, Long tenantId) throws IOException {
         try (Workbook wb = new XSSFWorkbook()) {
             Sheet sheet = wb.createSheet("报表");
             Row header = sheet.createRow(0);
@@ -949,7 +980,7 @@ public class ReportController {
                 Cell c = header.createCell(i);
                 c.setCellValue(headers[i]);
             }
-            List<String[]> rows = getExportRows(type, dateRange);
+            List<String[]> rows = getExportRows(type, dateRange, tenantId);
             for (int r = 0; r < rows.size(); r++) {
                 Row row = sheet.createRow(r + 1);
                 String[] arr = rows.get(r);
@@ -965,8 +996,8 @@ public class ReportController {
         }
     }
 
-    private long countRows(Integer type, String dateRange) {
-        return getExportRows(type, dateRange).size();
+    private long countRows(Integer type, String dateRange, Long tenantId) {
+        return getExportRows(type, dateRange, tenantId).size();
     }
 
     private String[] getExportHeaders(Integer type) {
@@ -979,12 +1010,17 @@ public class ReportController {
         };
     }
 
-    private List<String[]> getExportRows(Integer type, String dateRange) {
+    /**
+     * 组装导出明细行。
+     * tenantId 必须显式传入：异步导出线程没有 ThreadLocal 租户上下文，
+     * 若在此处调用 tid()，会拿到空上下文兜底值 1L → 串档导出别家租户数据。
+     */
+    private List<String[]> getExportRows(Integer type, String dateRange, Long tenantId) {
         int days = parseDays(dateRange);
         List<String[]> rows = new ArrayList<>();
         try {
             if (type == null || type == 1) {
-                Result<List<Map<String, Object>>> r = bizDaily(null, days);
+                Result<List<Map<String, Object>>> r = queryBizDaily(null, days, tenantId);
                 if (r.getCode() == 200 && r.getData() != null) {
                     double total = r.getData().stream()
                             .filter(m -> m.get("revenue") != null)
@@ -1009,7 +1045,7 @@ public class ReportController {
                 }
             } else if (type == 2) {
                 int months = Math.max(1, days / 30);
-                Result<List<Map<String, Object>>> r = bizMonthly(null, months);
+                Result<List<Map<String, Object>>> r = queryBizMonthly(null, months, tenantId);
                 if (r.getCode() == 200 && r.getData() != null) {
                     double total = r.getData().stream()
                             .filter(m -> m.get("revenue") != null)
@@ -1027,7 +1063,7 @@ public class ReportController {
                     }
                 }
             } else if (type == 3) {
-                Result<Map<String, Object>> r = memberAnalysis(null);
+                Result<Map<String, Object>> r = queryMemberAnalysis(null, tenantId);
                 if (r.getCode() == 200 && r.getData() != null) {
                     Map<String, Long> byLevel = (Map<String, Long>) r.getData().get("byLevel");
                     if (byLevel != null) byLevel.forEach((k, v) ->
@@ -1037,7 +1073,7 @@ public class ReportController {
                             rows.add(new String[]{"门店", k, String.valueOf(v)}));
                 }
             } else if (type == 4) {
-                Result<List<Map<String, Object>>> r = employeePerformance(null, days);
+                Result<List<Map<String, Object>>> r = queryEmployeePerformance(null, days, tenantId);
                 if (r.getCode() == 200 && r.getData() != null) {
                     for (Map<String, Object> m : r.getData()) {
                         rows.add(new String[]{
@@ -1049,7 +1085,7 @@ public class ReportController {
                     }
                 }
             } else if (type == 5) {
-                Result<List<Map<String, Object>>> r = payTypeBreakdown(null, days);
+                Result<List<Map<String, Object>>> r = queryPayTypeBreakdown(null, days, tenantId);
                 if (r.getCode() == 200 && r.getData() != null) {
                     for (Map<String, Object> m : r.getData()) {
                         rows.add(new String[]{
