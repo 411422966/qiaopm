@@ -231,7 +231,6 @@ import { BarChart, LineChart } from 'echarts/charts'
 import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import { sysApi } from '@/api/sys'
-import request from '@/api/request'
 
 echarts.use([BarChart, LineChart, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer])
 
@@ -354,14 +353,9 @@ watch([onlyFail], () => { load(1) })
 async function onExport() {
   exporting.value = true
   try {
-    const query: any = buildParams()
-    const usp = new URLSearchParams()
-    Object.keys(query).forEach(k => usp.append(k, String(query[k])))
-    const realUrl = '/sys/login-log/export?' + usp.toString()
-    const token = (request as any).defaults?.headers?.common?.Authorization
-    const res = await fetch(realUrl, { headers: token ? { Authorization: token } : {} })
-    if (!res.ok) throw new Error('导出失败')
-    const blob = await res.blob()
+    const params = buildParams()
+    const res: any = await sysApi.loginLogExport(params)
+    const blob = res.data as Blob
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
     a.download = `sys_login_log_${Date.now()}.csv`

@@ -161,6 +161,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import stockApi from '@/api/stock'
+import http from '@/utils/http'
 import { orderApi } from '@/api/pos'
 import { employeeApi } from '@/api/basic'
 
@@ -248,17 +249,28 @@ const viewOrder = async (orderId: number) => {
   } catch { ElMessage.error('加载订单失败') }
 }
 
-const exportExcel = () => {
-  ElMessage.success('正在生成导出文件，请稍候…')
-  // 直接走后端 CSV 接口，保持与入库/盘点导出口径一致
-  const params = new URLSearchParams()
-  Object.entries(filter.value).forEach(([k, v]) => { if (v != null) params.append(k, String(v)) })
-  if (dateRange.value?.length === 2) {
-    params.append('dateFrom', dateRange.value[0])
-    params.append('dateTo', dateRange.value[1])
+const exportExcel = async () => {
+  try {
+    const params: any = {}
+    Object.entries(filter.value).forEach(([k, v]) => { if (v != null) params[k] = v })
+    if (dateRange.value?.length === 2) {
+      params.dateFrom = dateRange.value[0]
+      params.dateTo = dateRange.value[1]
+    }
+    const res: any = await http.get('/stock/consumption/export', {
+      params,
+      responseType: 'blob'
+    })
+    const blob = res.data as Blob
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `库存消耗记录_${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(a.href)
+    ElMessage.success('已导出')
+  } catch (e: any) {
+    ElMessage.error('导出失败：' + (e?.message || '未知错误'))
   }
-  const url = `/api/stock/consumption/export?${params.toString()}`
-  window.open(url, '_blank')
 }
 
 const summaries = ({ columns, data }: any) => {

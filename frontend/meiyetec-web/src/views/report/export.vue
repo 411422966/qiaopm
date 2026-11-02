@@ -146,6 +146,7 @@ import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Download, Document, CircleCheck, DataAnalysis, Coin, Loading } from '@element-plus/icons-vue'
 import { reportApi } from '@/api/report'
+import http from '@/utils/http'
 
 const rows = ref<any[]>([])
 const total = ref(0)
@@ -237,25 +238,24 @@ async function submit() {
   }
 }
 
-function downloadAgain(row: any) {
-  const token = localStorage.getItem('token') || ''
-  const url = reportApi.exportDownload(row.id)
-  fetch(url, { headers: { Authorization: 'Bearer ' + token } })
-    .then(r => {
-      if (!r.ok) throw new Error('HTTP ' + r.status)
-      return r.blob()
+async function downloadAgain(row: any) {
+  try {
+    const res: any = await http.get('/report/export/download', {
+      params: { id: row.id },
+      responseType: 'blob'
     })
-    .then(blob => {
-      const objectUrl = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = objectUrl
-      a.download = (row.name || '报表') + '.xlsx'
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(objectUrl)
-    })
-    .catch(e => ElMessage.error('下载失败：' + e.message))
+    const blob = res.data as Blob
+    const objectUrl = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = objectUrl
+    a.download = (row.name || '报表') + '.xlsx'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(objectUrl)
+  } catch (e: any) {
+    ElMessage.error('下载失败：' + (e?.message || '未知错误'))
+  }
 }
 
 function showError(row: any) {

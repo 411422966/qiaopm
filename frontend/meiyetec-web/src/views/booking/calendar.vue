@@ -270,6 +270,7 @@ import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Calendar, ArrowLeft, ArrowRight, Plus, Printer, Download } from '@element-plus/icons-vue'
 import { bookingApi } from '@/api/booking'
+import http from '@/utils/http'
 import BookingForm from './booking-form.vue'
 import BookingList from './list.vue'
 
@@ -496,24 +497,24 @@ const printToday = () => {
 }
 
 // ===== 导出 CSV =====
-const exportCsv = () => {
-  const token = localStorage.getItem('token') || ''
+const exportCsv = async () => {
   // 选默认范围：本周
   const arr = weekDayList.value
-  const url = `/api/booking/export?startDate=${arr[0].date}&endDate=${arr[6].date}&token=${encodeURIComponent(token)}`
-  // 后端过滤器基于 Spring Security JWT；这里用 token 走 axios 时会带上，但 a 标签下载不带 header
-  // 改用 fetch + blob
-  fetch(url, { headers: { 'Authorization': token } })
-    .then(r => r.blob())
-    .then(blob => {
-      const a = document.createElement('a')
-      a.href = URL.createObjectURL(blob)
-      a.download = `预约列表_${todayStr.value}.csv`
-      a.click()
-      URL.revokeObjectURL(a.href)
-      ElMessage.success('已导出 CSV')
+  try {
+    const res: any = await http.get('/booking/export', {
+      params: { startDate: arr[0].date, endDate: arr[6].date },
+      responseType: 'blob'
     })
-    .catch(err => ElMessage.error('导出失败：' + err.message))
+    const blob = res.data as Blob
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `预约列表_${todayStr.value}.csv`
+    a.click()
+    URL.revokeObjectURL(a.href)
+    ElMessage.success('已导出 CSV')
+  } catch (err: any) {
+    ElMessage.error('导出失败：' + (err?.message || '未知错误'))
+  }
 }
 const quickCreate = (e: any, hour?: number) => {
   // P2-13：30 分钟精度，取最近的下个整点或半点

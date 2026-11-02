@@ -43,6 +43,7 @@ export interface SysLogExportQuery {
   username?: string
   module?: string
   action?: string
+  keyword?: string
   status?: number
   startTime?: string
   endTime?: string
@@ -127,13 +128,9 @@ export const sysApi = {
     request.get('/sys/log/page', { params: { pageNum, pageSize, ...params } }),
   logDelete: (id: number) => request.delete(`/sys/log/${id}`),
   logClear: (days: number) => request.delete('/sys/log/clear', { data: { days } }),
-  logExportUrl: (params: SysLogExportQuery) => {
-    const q = new URLSearchParams()
-    Object.entries(params).forEach(([k, v]) => {
-      if (v !== undefined && v !== null && v !== '') q.append(k, String(v))
-    })
-    return `/sys/log/export?${q.toString()}`
-  },
+  /** 系统日志导出：走 axios blob，调用方从 res.data 取 Blob */
+  logExport: (params: SysLogExportQuery & { fields?: string }) =>
+    request.get('/sys/log/export', { params, responseType: 'blob' }),
   logStats: () => request.get('/sys/log/stats'),
   logTrend: (days = 7) => request.get('/sys/log/trend', { params: { days } }),
   logAnomaly: (days = 7, top = 5) => request.get('/sys/log/anomaly', { params: { days, top } }),
@@ -155,7 +152,9 @@ export const sysApi = {
   loginLogSearch: (params: any = {}) => request.get('/sys/login-log/search', { params }),
   loginLogDelete: (id: number) => request.delete(`/sys/login-log/${id}`),
   loginLogClear: (days: number) => request.post('/sys/login-log/clear', null, { params: { days } }),
-  loginLogExportUrl: () => '/sys/login-log/export',
+  /** 登录日志导出：走 axios blob，调用方从 res.data 取 Blob */
+  loginLogExport: (params: any = {}) =>
+    request.get('/sys/login-log/export', { params, responseType: 'blob' }),
   loginLogClearUrl: () => '/sys/login-log/clear',
   loginLogDeleteUrl: (id: number) => `/sys/login-log/${id}`,
   // 日志保留

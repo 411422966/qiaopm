@@ -33,12 +33,13 @@ export const treatmentApi = {
   deletePlan: (id: number) => request.delete<void>(`/biz/treatment/plan/${id}`),
 
   // 方案导出 Excel
+  // 注意：request 拦截器对 blob 请求原样返回 response，Blob 需从 res.data 取
   exportPlan: (params?: { storeId?: number; keyword?: string; status?: number }) =>
-    request.get<Blob>('/biz/treatment/plan/export', { params, responseType: 'blob' }),
+    request.get('/biz/treatment/plan/export', { params, responseType: 'blob' }).then(r => r.data as Blob),
 
   // 方案导入模板下载
   planImportTemplate: () =>
-    request.get<Blob>('/biz/treatment/plan/template', { responseType: 'blob' }),
+    request.get('/biz/treatment/plan/template', { responseType: 'blob' }).then(r => r.data as Blob),
 
   // 方案批量导入
   importPlan: (file: File) => {
@@ -78,5 +79,5 @@ export const treatmentApi = {
 
   /** 进度导出 Excel */
   exportProgress: (params?: { memberId?: number; status?: number }) =>
-    request.get<Blob>('/biz/treatment/progress/export', { params, responseType: 'blob' })
+    request.get('/biz/treatment/progress/export', { params, responseType: 'blob' }).then(r => r.data as Blob)
 }

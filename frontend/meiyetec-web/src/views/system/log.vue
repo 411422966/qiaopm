@@ -572,20 +572,16 @@ async function onSearchExport() {
   searchExporting.value = true
   try {
     const query: SysLogExportQuery = {
-      q: searchQ.value || undefined,
+      keyword: searchQ.value || undefined,
       module: searchModule.value || undefined,
       action: searchAction.value || undefined,
       status: searchStatus.value,
       startTime: searchDateRange.value?.[0],
       endTime: searchDateRange.value?.[1]
     } as any
-    const url = sysApi.logExportUrl(query)
     const fields = checkedCols.value.join(',')
-    const realUrl = url + (url.includes('?') ? '&' : '?') + 'fields=' + encodeURIComponent(fields)
-    const token = (request as any).defaults?.headers?.common?.Authorization
-    const res = await fetch(realUrl, { headers: token ? { Authorization: token } : {} })
-    if (!res.ok) throw new Error('导出失败')
-    const blob = await res.blob()
+    const res: any = await sysApi.logExport({ ...query, fields })
+    const blob = res.data as Blob
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
     a.download = `sys_log_search_${Date.now()}.csv`
@@ -793,13 +789,9 @@ async function onExport() {
     else if (filter.status !== undefined) query.status = filter.status
     if (filter.startTime) query.startTime = filter.startTime
     if (filter.endTime) query.endTime = filter.endTime
-    const url = sysApi.logExportUrl(query)
     const fields = checkedCols.value.join(',')
-    const realUrl = url + (url.includes('?') ? '&' : '?') + 'fields=' + encodeURIComponent(fields)
-    const token = (request as any).defaults?.headers?.common?.Authorization
-    const res = await fetch(realUrl, { headers: token ? { Authorization: token } : {} })
-    if (!res.ok) throw new Error('导出失败')
-    const blob = await res.blob()
+    const res: any = await sysApi.logExport({ ...query, fields })
+    const blob = res.data as Blob
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
     a.download = `sys_log_${Date.now()}.csv`

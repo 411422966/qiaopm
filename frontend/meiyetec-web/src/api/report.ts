@@ -69,10 +69,7 @@ export const reportApi = {
   exportList: (pageNum = 1, pageSize = 20, type?: number, status?: number) =>
     request.get('/report/export/list', { params: { pageNum, pageSize, type, status } }),
   exportCreate: (data: { name: string; type: number; dateRange: string }) =>
-    request.post('/report/export/create', data),
-  exportDownload: (id: number) => `/report/export/download?id=${id}`,
-  exportDownloadUrl: (type: number, dateRange = 'last_30_days') =>
-    `/report/export/download?type=${type}&dateRange=${dateRange}`
+    request.post('/report/export/create', data)
 }
 
 export default reportApi

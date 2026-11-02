@@ -177,6 +177,7 @@ import { Plus, Download, Printer, Search, View, CircleCheck, Promotion, Select, 
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { bookingApi } from '@/api/booking'
 import { memberApi, employeeApi } from '@/api/basic'
+import http from '@/utils/http'
 import BookingForm from './booking-form.vue'
 
 const STATUS: any = { 1: '待确认', 2: '已确认', 3: '已签到', 4: '已完成', 5: '已取消', 6: '爽约' }
@@ -276,18 +277,18 @@ const showDetail = (row: any) => { detail.value = row; detailVisible.value = tru
 const reload = async () => { detailVisible.value = false; await load() }
 
 const exportCsv = async () => {
-  const token = localStorage.getItem('token') || ''
-  const params = new URLSearchParams()
+  const params: any = {}
   if (filterRange.value) {
-    params.set('startDate', filterRange.value[0])
-    params.set('endDate', filterRange.value[1])
+    params.startDate = filterRange.value[0]
+    params.endDate = filterRange.value[1]
   }
-  if (filterStatus.value) params.set('status', String(filterStatus.value))
-  const url = `/api/booking/export?${params.toString()}`
+  if (filterStatus.value) params.status = filterStatus.value
   try {
-    const r = await fetch(url, { headers: { 'Authorization': token } })
-    if (!r.ok) throw new Error('HTTP ' + r.status)
-    const blob = await r.blob()
+    const res: any = await http.get('/booking/export', {
+      params,
+      responseType: 'blob'
+    })
+    const blob = res.data as Blob
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
     a.download = `预约列表_${new Date().toISOString().slice(0,10)}.csv`

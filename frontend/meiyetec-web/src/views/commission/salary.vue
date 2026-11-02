@@ -173,7 +173,7 @@ async function exportExcel() {
   try {
     ElMessage.info('正在导出...')
     const res: any = await commissionApi.salaryExport({ ...filter.value })
-    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+    const blob = new Blob([res.data as Blob], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url

@@ -234,6 +234,7 @@ import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { ArrowRight } from '@element-plus/icons-vue'
 import stockApi from '@/api/stock'
+import http from '@/utils/http'
 
 const featureEnabled = ref(true)
 const loading = ref(false)
@@ -367,12 +368,26 @@ const loadReplenish = async () => {
   }
 }
 
-const exportReplenish = () => {
+const exportReplenish = async () => {
   if (!replenishList.value.length) { ElMessage.info('暂无数据可导出'); return }
-  const params = new URLSearchParams()
-  params.append('days', String(replenishOpts.value.days))
-  params.append('safetyDays', String(replenishOpts.value.safetyDays))
-  window.open(`/api/stock/alert/replenish/export?${params.toString()}`, '_blank')
+  try {
+    const res: any = await http.get('/stock/alert/replenish/export', {
+      params: {
+        days: replenishOpts.value.days,
+        safetyDays: replenishOpts.value.safetyDays
+      },
+      responseType: 'blob'
+    })
+    const blob = res.data as Blob
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `补货建议_${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(a.href)
+    ElMessage.success('已导出')
+  } catch (e: any) {
+    ElMessage.error('导出失败：' + (e?.message || '未知错误'))
+  }
 }
 
 const quickInboundFromReplenish = (row: any) => {

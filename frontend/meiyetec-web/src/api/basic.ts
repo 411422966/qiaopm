@@ -56,25 +56,16 @@ export const memberApi = {
   saveProfile: (id: number, data: any) => request.post(`/member/${id}/profile`, data),
   batchTag: (data: any) => request.post('/member/batch/tag', data),
   batchOperation: (data: any) => request.post('/member/batch/operation', data),
-  exportCsv: async (params: any): Promise<Blob> => {
-    const qs = new URLSearchParams()
-    Object.keys(params || {}).forEach(k => {
-      if (params[k] !== undefined && params[k] !== null && params[k] !== '') {
-        qs.append(k, String(params[k]))
-      }
+  exportCsv: async (params: any): Promise<{ blob: Blob; filename: string }> => {
+    const res: any = await request.get('/member/export', {
+      params: params || {},
+      responseType: 'blob'
     })
-    const token = localStorage.getItem('token') || ''
-    const url = '/member/export' + (qs.toString() ? '?' + qs.toString() : '')
-    const res = await fetch(url, {
-      method: 'GET',
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    if (!res.ok) throw new Error(`导出失败 HTTP ${res.status}`)
-    const blob = await res.blob()
-    // 解析文件名
-    const dispo = res.headers.get('Content-Disposition') || ''
+    const blob = res.data as Blob
+    // 从 Content-Disposition 解析文件名（axios blob 响应需从 headers 取）
+    const dispo: string = res.headers?.['content-disposition'] || ''
     const m = dispo.match(/filename\*?=(?:UTF-8'')?["']?([^";]+)/i)
-    return { blob, filename: m ? decodeURIComponent(m[1]) : 'members.csv' } as any
+    return { blob, filename: m ? decodeURIComponent(m[1]) : 'members.csv' }
   },
   import: (formData: FormData) => request.post('/member/import', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }

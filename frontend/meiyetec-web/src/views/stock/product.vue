@@ -659,8 +659,18 @@ const openImportDialog = () => {
   importDialog.value = true
 }
 
-const downloadTemplate = () => {
-  window.open('/api/stock/products/import-template', '_blank')
+const downloadTemplate = async () => {
+  try {
+    const res: any = await stockApi.productImportTemplate()
+    const blob = res.data as Blob
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = '商品导入模板.csv'
+    a.click()
+    URL.revokeObjectURL(a.href)
+  } catch (e: any) {
+    ElMessage.error('模板下载失败：' + (e?.message || '未知错误'))
+  }
 }
 
 /** 简易 CSV 解析（支持双引号转义） */

@@ -79,6 +79,11 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response: AxiosResponse) => {
     const res = response.data
+    // 文件下载（blob）不走 envelope 解包：后端返回的是二进制流，没有 code/data 信封。
+    // 原样返回 response，调用方用 res.data 拿到 Blob（与普通请求 res.data = 业务载荷 的语义一致）。
+    if (response.config?.responseType === 'blob' || res instanceof Blob) {
+      return response
+    }
     if (res && res.traceId) {
       sessionStorage.setItem('traceId', res.traceId)
     }
