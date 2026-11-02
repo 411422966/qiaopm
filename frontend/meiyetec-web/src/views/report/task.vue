@@ -95,7 +95,7 @@ const loading = ref(false)
 async function loadData() {
   loading.value = true
   try {
-    const r = await http.get('/report/task/page', { params: filter })
+    const r = await http.get('/report/v2/task/page', { params: filter })
     rows.value = r.data?.records || []
     total.value = r.data?.total || 0
   } finally {
@@ -128,7 +128,7 @@ function refresh() { loadData() }
 
 async function download(row: any) {
   try {
-    const res = await http.get(`/report/task/${row.id}/download`, { responseType: 'blob' })
+    const res = await http.get(`/report/v2/task/${row.id}/download`, { responseType: 'blob' })
     const blob = new Blob([res.data], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -144,7 +144,7 @@ async function download(row: any) {
 
 async function cancel(row: any) {
   await ElMessageBox.confirm(`取消任务 ${row.taskNo}？`, '提示', { type: 'warning' })
-  await http.post(`/report/task/${row.id}/cancel`)
+  await http.post(`/report/v2/task/${row.id}/cancel`)
   ElMessage.success('已取消')
   loadData()
 }

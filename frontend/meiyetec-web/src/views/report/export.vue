@@ -181,17 +181,24 @@ function formatSize(b: number) {
   return `${n.toFixed(1)} ${units[i]}`
 }
 
+/**
+ * 静默拉取列表（轮询用，不弹错误、不触发 loading 遮罩）
+ */
+async function fetchList() {
+  const res: any = await reportApi.exportList(pageNum.value, pageSize.value, filter.type ?? undefined, filter.status ?? undefined)
+  rows.value = res.data.records || []
+  total.value = res.data.total
+  const meta = res.data.meta || {}
+  totalCount.value = meta.totalCount || 0
+  successCount.value = meta.successCount || 0
+  totalRowsCount.value = meta.totalRows || 0
+  totalSizeBytes.value = meta.totalSize || 0
+}
+
 async function load() {
   loading.value = true
   try {
-    const res: any = await reportApi.exportList(pageNum.value, pageSize.value, filter.type ?? undefined, filter.status ?? undefined)
-    rows.value = res.data.records || []
-    total.value = res.data.total
-    const meta = res.data.meta || {}
-    totalCount.value = meta.totalCount || 0
-    successCount.value = meta.successCount || 0
-    totalRowsCount.value = meta.totalRows || 0
-    totalSizeBytes.value = meta.totalSize || 0
+    await fetchList()
   } catch (e: any) {
     ElMessage.error(e.message || '加载失败')
   } finally {
@@ -220,8 +227,9 @@ async function submit() {
     await reportApi.exportCreate(form)
     ElMessage.success('导出任务已创建，处理中...')
     formVisible.value = false
-    // 刷新列表 + 保持当前筛选
-    load()
+    // 刷新列表 + 保持当前筛选，并重新开启轮询以跟踪新任务状态
+    await load()
+    startPolling()
   } catch (e: any) {
     ElMessage.error(e.message || '创建失败')
   } finally {
@@ -258,20 +266,36 @@ async function retryExport(row: any) {
   try {
     await reportApi.exportCreate({ name: row.name + ' (重试)', type: row.type, dateRange: row.dateRange })
     ElMessage.success('已重新创建任务')
-    load()
+    await load()
+    startPolling()
   } catch (e: any) {
     ElMessage.error(e.message || '重试失败')
   }
 }
 
 let pollTimer: any = null
+// 连续多少次轮询没观察到"处理中"任务后停止轮询。
+// 不用"一次没有就停"，否则新建任务后列表还没刷新就会自杀式停止。
+const POLL_MAX_IDLE = 5
+let pollIdleCount = 0
+
 function startPolling() {
   stopPolling()
-  pollTimer = setInterval(() => {
-    if (rows.value.some(r => r.status === 1)) {
-      load()
+  pollIdleCount = 0
+  pollTimer = setInterval(async () => {
+    try {
+      await fetchList()
+    } catch {
+      // 轮询失败忽略，等下一轮
+    }
+    const hasRunning = rows.value.some(r => r.status === 1)
+    if (hasRunning) {
+      pollIdleCount = 0
     } else {
-      stopPolling()
+      pollIdleCount += 1
+      if (pollIdleCount >= POLL_MAX_IDLE) {
+        stopPolling()
+      }
     }
   }, 3000)
 }
