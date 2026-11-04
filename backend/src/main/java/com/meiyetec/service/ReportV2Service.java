@@ -1,5 +1,6 @@
 package com.meiyetec.service;
 
+import com.meiyetec.annotation.RequirePermission;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.entity.ReportExportTask;
 import com.meiyetec.entity.ReportMetricCaliber;
@@ -92,6 +93,7 @@ public class ReportV2Service {
      * 支持 reportCode：SALES / PAY / MEMBER / COMMISSION
      */
     @GetMapping("/dashboard")
+    @RequirePermission("report:dashboard")
     public Result<Map<String, Object>> dashboard(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) String startDate,
@@ -205,6 +207,7 @@ public class ReportV2Service {
     }
 
     @GetMapping("/sales/daily")
+    @RequirePermission("report:biz:list")
     public Result<List<Map<String, Object>>> salesDaily(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) String startDate,
@@ -230,6 +233,7 @@ public class ReportV2Service {
     }
 
     @GetMapping("/product/top")
+    @RequirePermission("report:biz:list")
     public Result<List<Map<String, Object>>> topProducts(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) String startDate,
@@ -255,6 +259,7 @@ public class ReportV2Service {
     }
 
     @GetMapping("/employee/commission")
+    @RequirePermission("report:biz:list")
     public Result<List<Map<String, Object>>> employeeCommission(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) String startDate,
@@ -286,6 +291,7 @@ public class ReportV2Service {
      * 创建导出任务（< 500ms 返回）
      */
     @PostMapping("/task")
+    @RequirePermission("report:export:add")
     @Transactional(rollbackFor = Exception.class)
     public Result<ReportExportTask> createTask(@RequestBody Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -564,6 +570,7 @@ public class ReportV2Service {
      * 任务列表
      */
     @GetMapping("/task/page")
+    @RequirePermission("report:task")
     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> taskPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -607,6 +614,7 @@ public class ReportV2Service {
     }
 
     @GetMapping("/task/{id}")
+    @RequirePermission("report:task")
     public Result<ReportExportTask> taskDetail(@PathVariable Long id) {
         ReportExportTask t = taskMapper.selectById(id);
         if (t == null) return Result.error(BizCode.NOT_FOUND, "任务不存在");
@@ -614,6 +622,7 @@ public class ReportV2Service {
     }
 
     @PostMapping("/task/{id}/cancel")
+    @RequirePermission("report:task")
     public Result<Void> cancelTask(@PathVariable Long id) {
         ReportExportTask t = taskMapper.selectById(id);
         if (t == null) return Result.error(BizCode.NOT_FOUND, "任务不存在");
@@ -628,6 +637,7 @@ public class ReportV2Service {
      * 下载文件
      */
     @GetMapping("/task/{id}/download")
+    @RequirePermission("report:export:download")
     public ResponseEntity<byte[]> download(@PathVariable Long id) throws Exception {
         Long tenantId = TenantContextHolder.get().getTenantId();
         ReportExportTask t = taskMapper.selectById(id);
@@ -655,6 +665,7 @@ public class ReportV2Service {
      * 一次计算所有指标 → 写快照表
      */
     @PostMapping("/snapshot/run")
+    @RequirePermission("report:caliber:edit")
     @Transactional(rollbackFor = Exception.class)
     public Result<Map<String, Object>> runSnapshot(@RequestBody Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -720,6 +731,7 @@ public class ReportV2Service {
     }
 
     @GetMapping("/snapshot/list")
+    @RequirePermission("report:caliber")
     public Result<List<Map<String, Object>>> snapshotList(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate) {
@@ -737,6 +749,7 @@ public class ReportV2Service {
     }
 
     @GetMapping("/caliber/list")
+    @RequirePermission("report:caliber")
     public Result<List<ReportMetricCaliber>> caliberList() {
         return Result.success(caliberMapper.selectList(
                 new LambdaQueryWrapper<ReportMetricCaliber>().orderByAsc(ReportMetricCaliber::getCategory)));
@@ -746,6 +759,7 @@ public class ReportV2Service {
      * 单一指标查询（低耗时直查）
      */
     @GetMapping("/caliber/{key}/query")
+    @RequirePermission("report:caliber")
     public Result<Map<String, Object>> queryCaliber(
             @PathVariable String key,
             @RequestParam(required = false) Long storeId,
