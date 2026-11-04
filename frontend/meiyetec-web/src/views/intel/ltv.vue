@@ -827,7 +827,7 @@ async function submitNewModel() {
   if (!newForm.modelName.trim()) return ElMessage.warning('请填写模型名称')
   newModelLoading.value = true
   try {
-    await http.post('/intel/ltv/model/create', newForm)
+    await http.post('/intel/ltv/model', newForm)
     ElMessage.success('模型创建并训练中，请稍后查看进度')
     newModelVisible.value = false
     loadModels()

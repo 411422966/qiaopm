@@ -82,7 +82,13 @@
         <el-table-column label="操作" width="280" fixed="right">
           <template #default="{ row }">
             <el-button link type="primary" @click="openEdit(row)">编辑</el-button>
-            <el-button link type="success" @click="openPermission(row)">分配权限</el-button>
+            <!-- [SHELL-INTENTIONAL] 角色权限分配功能未实现：
+                 后端 RbacController 仅有 /auth/me/permissions、/auth/me/menu、/sys/role/list
+                 及 POST/PUT/DELETE /sys/role 五个路由，没有 /sys/role/{id}/permissions，
+                 RbacService 也没有按 roleId 读写权限的方法（实测 GET/PUT 均 404）。
+                 在后端补齐接口前，本入口暂时注释，避免用户点击报错。
+                 详见 audit/issues/I124-authz-code-system-split.md -->
+            <!-- <el-button link type="success" @click="openPermission(row)">分配权限</el-button> -->
             <el-button
               v-if="!builtIn(row)"
               link type="danger"

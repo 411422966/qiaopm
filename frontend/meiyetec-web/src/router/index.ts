@@ -143,7 +143,10 @@ const routes: RouteRecordRaw[] = [
       { path: 'mkt/pricing', name: 'MktPricing', component: () => import('@/views/mkt/pricing.vue'), meta: { title: '动态定价', requiresAuth: true, permission: 'mkt:pricing' } },
       // M12-05 业务策略统一下发
       { path: 'm12/dispatch', name: 'M12Dispatch', component: () => import('@/views/m12/dispatch/index.vue'), meta: { title: '业务策略下发', requiresAuth: true, permission: 'mkt:dispatch' } },
-      { path: 'intel/rfm', name: 'IntelRfm', component: () => import('@/views/intel/rfm.vue'), meta: { title: 'RFM 分群', requiresAuth: true, permission: 'crm:rfm' } },
+      // [SHELL-INTENTIONAL] RFM 分群为幽灵功能：后端 RfmController 不存在，
+      // api/rfm.ts 的 13 个端点全部 404（详见 audit/issues/I124-authz-code-system-split.md）。
+      // 路由暂时摘除，待后端实现后恢复。
+      // { path: 'intel/rfm', name: 'IntelRfm', component: () => import('@/views/intel/rfm.vue'), meta: { title: 'RFM 分群', requiresAuth: true, permission: 'crm:rfm' } },
       { path: 'intel/ltv', name: 'IntelLtv', component: () => import('@/views/intel/ltv.vue'), meta: { title: 'LTV 预测', requiresAuth: true, permission: 'crm:tag' } },
       // M15-03 价格敏感度
       { path: 'intel/price-sensitivity', name: 'IntelPriceSensitivity', component: () => import('@/views/intel/price-sensitivity.vue'), meta: { title: '价格敏感度', requiresAuth: true, permission: 'crm:tag' } },
@@ -162,7 +165,10 @@ const routes: RouteRecordRaw[] = [
       { path: 'iot', name: 'Iot', component: () => import('@/views/iot/index.vue'), meta: { title: 'IoT 设备管理', requiresAuth: true, permission: 'dev:access' } },
       { path: 'kiosk', name: 'Kiosk', component: () => import('@/views/kiosk/index.vue'), meta: { title: '自助 Kiosk', requiresAuth: true, permission: 'booking:list' } },
       { path: 'complication', name: 'Complication', component: () => import('@/views/complication/index.vue'), meta: { title: '并发症 SOP', requiresAuth: true, permission: 'mh:consent' } },
-      { path: 'cohort', name: 'Cohort', component: () => import('@/views/cohort/index.vue'), meta: { title: 'Cohort 队列', requiresAuth: true, permission: 'crm:rfm' } },
+      // [SHELL-INTENTIONAL] Cohort 队列随 RFM 幽灵功能一并暂时摘除。
+      // 注意：后端 CohortController 实际存在且接口可用，本摘除仅按用户 2026-11-04 决策执行，
+      // 可随时恢复（详见 audit/issues/I124-authz-code-system-split.md）。
+      // { path: 'cohort', name: 'Cohort', component: () => import('@/views/cohort/index.vue'), meta: { title: 'Cohort 队列', requiresAuth: true, permission: 'crm:rfm' } },
       { path: 'gdpr', name: 'Gdpr', component: () => import('@/views/gdpr/index.vue'), meta: { title: 'GDPR 合规', requiresAuth: true, permission: 'dev:access' } },
       { path: 'hipaa', name: 'Hipaa', component: () => import('@/views/hipaa/index.vue'), meta: { title: 'HIPAA 加固', requiresAuth: true, permission: 'dev:access' } },
       { path: 'pos-device', name: 'PosDevice', component: () => import('@/views/pos-device/index.vue'), meta: { title: '海外 POS', requiresAuth: true, permission: 'pay:order' } },

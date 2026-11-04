@@ -267,3 +267,60 @@ env 见 `audit/baseline/env.md` /
 3. **`init_commission_engine.sql` 等脚本是否曾被 apply 到当前 DB 未确认** —— 其 `sys_permission(code,name,module,type)`
    列名与实际表结构 `permission_code/permission_name/parent_id` 不符，apply 应失败
 4. **`sys_menu_permission` 的 110 条菜单绑定中，冒号码仅 15 条、点号 78 条、裸码 17 条** —— 菜单侧确实以点号为主
+
+---
+
+## 10. 批次 A（CRM 客户运营 + 数据洞察）落地记录 — 2026-11-04
+
+> 状态：**PARTIAL**（批次 A 范围已修复并落库；发现 A/B 两处功能缺失已按用户决策降级处理，未补后端）
+> 落盘脚本：`backup/batch2-a/fix-batch2a.sql` / `fix-batch2a-verify.sql` / `fix-batch2a-rollback.sql`
+> 目标码范围：55 个 = 后端注解码 43 个（`crm:*` 40 + `report:*` 3）+ 前端路由守卫码 12 个（新建）
+
+### 10.1 已完成项
+
+| 项 | 内容 | 证据 |
+|---|---|---|
+| 新建 12 个前端守卫码 | `crm:follow-up` / `crm:follow-plan` / `crm:care:suggestion` / `crm:detection` / `crm:style:library` / `crm:complaint` / `crm:review` / `crm:review-tpl` / `crm:cross-rule` / `crm:cross-record` / `crm:rfm` / `crm:tag`，`permission_type='button'`、`parent_id=1206` | `fix-batch2a-verify.sql` V1 = 12 |
+| 角色绑定矩阵 | ADMIN 55 / BOSS 34 / MANAGER 54 / CLERK 4 / OPERATOR 0 | `fix-batch2a-verify.sql` V3 |
+| 幂等性 | 重跑 fix 脚本，`sys_permission` 总数 476、`sys_role_permission` 总数 813 均不变 | V6 |
+| 点号菜单码未破坏 | 10 条 `crm.*` 菜单码全部保留，`deleted=0` | V7 |
+| 前端路径漂移修复 5 处 | `views/report/caliber.vue:74,81,86,105` 改 `/report/v2/*`；`views/intel/ltv.vue:830` 改 `/intel/ltv/model` | 源码 |
+| RFM / Cohort 路由摘除 | `router/index.ts` 注释 `/intel/rfm` 与 `/cohort`；`components/Layout.vue` 菜单同步隐藏 | 源码 |
+
+角色矩阵依据（用户 2026-11-04 拍板）：
+- BOSS 保持**只读**，不含 `crm:care:follow:task:edit`
+- MANAGER 在只读基础上追加 20 个写操作码，**含 `report:rfm:batch:run`**
+- `crm:rfm` 仅绑定 ADMIN —— 前端 RFM/Cohort 路由已摘除，授权不可达页面无意义
+
+### 10.2 发现 A：角色权限分配接口后端缺失 — SHELL-INTENTIONAL
+
+- 现象：`frontend/meiyetec-web/src/api/rbac.ts:39,41` 的 `GET/PUT /sys/role/{id}/permissions` 实测 **404**
+- 根因：`controller/RbacController.java` 仅有 5 个路由（`/auth/me/permissions`、`/auth/me/menu`、`/sys/role/list`、POST/PUT/DELETE `/sys/role`）；
+  `service/RbacService` 无按 `roleId` 读写权限的方法
+- 性质：**后端功能缺失，不是路径漂移**（与批次 A 的路径漂移问题性质不同）
+- 用户决策：本批次**不补后端**（属新功能开发），仅将 `views/system/role.vue` 的「分配权限」按钮及其调用注释掉
+- 遗留：角色→权限的**可视化配置**能力目前完全不可用，只能靠 SQL 维护；建议单独立项补 `RbacController` + `RbacService` 端点
+
+### 10.3 发现 B：RFM 幽灵功能 — SHELL-INTENTIONAL
+
+- 现象：`frontend/meiyetec-web/src/api/rfm.ts` 的 13 个端点全部 **404**
+  （`/intel/rfm/segment/overview`、`/compute/{id}`、`/tag/member/{id}`、`/member/{id}/history`、
+  `/dict/list`、`/segment/{code}/members`、`/segment/list`、`/model/list`、`/batch/history`、
+  `/batch/compute`、`/tag`、`/dict`、`/segment`）
+- 根因：后端仅存在 `RfmBatchController`（4 个端点，权限码 `report:rfm:batch:run`）+ `RfmSeedController`；
+  文件头自述的 `RfmController` **不存在**。该前端文件来自 commit `a414f95`「recover: 从工作区重建」（NTFS 损坏恢复）
+- 性质：**整页幽灵功能** —— 前端有完整 UI（分群概览 / 单会员计算 / 批量 / 标签字典 4 个 Tab），后端无对应实现
+- 用户决策：标记 SHELL，从路由与侧边栏摘除，避免用户点击报错
+- 连带说明：`/cohort` 前端页面一并摘除，但**后端 `CohortController` 实际存在且接口可用**（权限码 `crm:cohort:list` / `crm:cohort:edit`），
+  本次摘除仅按用户决策执行，**可随时恢复**（前端 `api/cohort.ts` 的 6 个端点实测均 200）
+- 遗留：RFM 分群是数据洞察的核心能力，建议列入后续批次补齐后端 `RfmController`（12 个端点）
+
+### 10.4 本批次结论
+
+| Feature | 状态 | 依据 |
+|---|---|---|
+| F-CRM-PERM-ALIGN（CRM 角色权限对齐） | **VERIFIED** | DB 计数矩阵 + 幂等重跑 + 点号码完整性核对 |
+| F-REPORT-CALIBER-PATH（报表口径页路径） | **VERIFIED**（源码）+ 待浏览器实测 | 5 处路径改 `/report/v2/*`，前端 vite build 通过 |
+| F-ROLE-PERM-UI（角色权限分配 UI） | **SHELL-INTENTIONAL** | 后端端点缺失，按决策注释入口 |
+| F-RFM-SEGMENT（RFM 分群） | **SHELL-INTENTIONAL** | 13 端点全 404，路由/菜单已摘除 |
+| F-COHORT-ANALYSIS（Cohort 队列） | **SHELL-INTENTIONAL** | 按决策一并摘除，后端能力完好可恢复 |

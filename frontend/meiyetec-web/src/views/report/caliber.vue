@@ -71,19 +71,19 @@ const queryDialog = reactive<any>({ visible: false, caliber: null, result: null 
 const queryPeriod = ref<any>([])
 
 async function loadData() {
-  const r = await http.get('/report/caliber/list')
+  const r = await http.get('/report/v2/caliber/list')
   let list = r.data || []
   if (filter.category) list = list.filter((x: any) => x.category === filter.category)
   rows.value = list
 }
 
 async function loadSnapshot() {
-  const r = await http.get('/report/snapshot/list')
+  const r = await http.get('/report/v2/snapshot/list')
   snapshots.value = r.data || []
 }
 
 async function runSnapshot() {
-  const r = await http.post('/report/snapshot/run', {})
+  const r = await http.post('/report/v2/snapshot/run', {})
   ElMessage.success(`已生成快照：${r.data.updatedCount} 个指标`)
   loadSnapshot()
 }
@@ -102,7 +102,7 @@ async function runQuery() {
     params.startDate = queryPeriod.value[0]
     params.endDate = queryPeriod.value[1]
   }
-  const r = await http.get(`/report/caliber/${queryDialog.caliber.metricKey}/query`, { params })
+  const r = await http.get(`/report/v2/caliber/${queryDialog.caliber.metricKey}/query`, { params })
   queryDialog.result = JSON.stringify(r.data?.result || [], null, 2)
 }
 

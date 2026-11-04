@@ -213,7 +213,8 @@ const fallbackMenus: MenuItem[] = [
       { path: 'care/review-tpl', title: '评价模板', icon: Document },
       { path: '/crm/cross-rule', title: '跨店规则', icon: Connection },
       { path: '/crm/cross-record', title: '跨店核销', icon: Document },
-      { path: '/intel/rfm', title: 'RFM 分群', icon: Filter },
+      // [SHELL-INTENTIONAL] RFM 分群为幽灵功能，路由已摘除，菜单同步隐藏
+      // { path: '/intel/rfm', title: 'RFM 分群', icon: Filter },
       { path: '/intel/ltv', title: 'LTV 预测', icon: TrendCharts }
     ]
   },
@@ -297,7 +298,8 @@ const fallbackMenus: MenuItem[] = [
       { path: '/iot', title: 'IoT 设备管理', icon: Monitor },
       { path: '/kiosk', title: '自助 Kiosk', icon: Postcard },
       { path: '/complication', title: '并发症 SOP', icon: FirstAidKit },
-      { path: '/cohort', title: 'Cohort 队列', icon: DataBoard },
+      // [SHELL-INTENTIONAL] Cohort 队列随 RFM 幽灵功能一并隐藏
+      // { path: '/cohort', title: 'Cohort 队列', icon: DataBoard },
       { path: '/gdpr', title: 'GDPR 合规', icon: Lock },
       { path: '/hipaa', title: 'HIPAA 加固', icon: Lock },
       { path: '/pos-device', title: '海外 POS', icon: CreditCard },
