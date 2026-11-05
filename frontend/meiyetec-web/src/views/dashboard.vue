@@ -85,7 +85,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :xs="24" :sm="12" :md="6">
+      <el-col v-if="canViewStockAlert" :xs="24" :sm="12" :md="6">
         <el-card shadow="hover" class="kpi-card" :class="alertStats.total > 0 ? 'kpi-red' : 'kpi-green'" @click="$router.push('/stock/alert')">
           <div class="kpi-icon"><el-icon><WarningFilled /></el-icon></div>
           <div class="kpi-body">
@@ -183,9 +183,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { Money, UserFilled, Wallet, Coin, ChatDotRound, WarningFilled, TrendCharts } from '@element-plus/icons-vue'
 import { memberApi, bookingApi, careApi, stockApi, reportApi } from '@/api/basic'
+import { usePermissionStore } from '@/stores/permission'
+
+const permissionStore = usePermissionStore()
+// 库存预警接口 /stock/alert/stats 需要 stock:alert 权限码，
+// 无权限角色（如 BOSS / CLERK）不应触发请求，否则后端返回 403
+const canViewStockAlert = computed(() => permissionStore.hasPermission('stock:alert'))
 
 const stats = ref<any>({})
 const recentTxns = ref<any[]>([])
@@ -254,6 +260,7 @@ const loadCareStats = async () => {
 }
 
 const loadAlertStats = async () => {
+  if (!canViewStockAlert.value) return
   try {
     const res: any = await stockApi.alertStats()
     alertStats.value = res?.data || {}
