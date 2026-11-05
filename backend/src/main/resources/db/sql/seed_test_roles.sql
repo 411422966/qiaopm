@@ -31,12 +31,27 @@ SET @TENANT_ID = 1;
 
 -- ② 插入 4 个测试用户
 -- 密码统一为 '123456'（与 admin 账号共用 hash，方便 e2e 登录）
-INSERT IGNORE INTO sys_user (tenant_id, username, password, real_name, phone, status, create_time, update_time)
+-- ★ store_id = 1（I128-d 修复）：4 个测试账号若 store_id 为 NULL，
+--   RbacContextLoader.java:136-139 归并出的 storeIds 为空集，
+--   DataScopeService.java:50-53 会写入 store_id = -9999 → 非 admin 角色页面全空。
+--   门店 1 = pos_store.id=1（美业SaaS示范店 / STORE001），执行前须确认该门店存在。
+INSERT IGNORE INTO sys_user (tenant_id, username, password, real_name, phone, status, store_id, create_time, update_time)
 VALUES
-(@TENANT_ID, 'clerk01',    @BCRYPT_123456, '测试店员', '13800000001', 1, NOW(), NOW()),
-(@TENANT_ID, 'manager01',  @BCRYPT_123456, '测试店长', '13800000002', 1, NOW(), NOW()),
-(@TENANT_ID, 'boss01',     @BCRYPT_123456, '测试老板', '13800000003', 1, NOW(), NOW()),
-(@TENANT_ID, 'operator01', @BCRYPT_123456, '测试运营', '13800000004', 1, NOW(), NOW());
+(@TENANT_ID, 'clerk01',    @BCRYPT_123456, '测试店员', '13800000001', 1, 1, NOW(), NOW()),
+(@TENANT_ID, 'manager01',  @BCRYPT_123456, '测试店长', '13800000002', 1, 1, NOW(), NOW()),
+(@TENANT_ID, 'boss01',     @BCRYPT_123456, '测试老板', '13800000003', 1, 1, NOW(), NOW()),
+(@TENANT_ID, 'operator01', @BCRYPT_123456, '测试运营', '13800000004', 1, 1, NOW(), NOW());
+
+-- ②-b 幂等回填：INSERT IGNORE 对「已存在但 store_id 为 NULL」的行不会更新，
+--      故对存量 4 个账号补一次 UPDATE（同样带门店存在性守卫）
+UPDATE sys_user u
+JOIN pos_store s ON s.id = 1 AND s.deleted = 0 AND s.status = 1 AND s.tenant_id = u.tenant_id
+SET u.store_id = s.id
+WHERE u.tenant_id = @TENANT_ID
+  AND u.deleted = 0
+  AND u.username IN ('clerk01','manager01','boss01','operator01')
+  AND u.store_id IS NULL;
+SELECT 'backfilled_test_user_store_id' AS phase, ROW_COUNT() AS affected;
 
 -- ③ 绑定角色（CLERK / MANAGER / BOSS / OPERATOR）
 INSERT IGNORE INTO sys_user_role (user_id, role_id)
@@ -65,9 +80,10 @@ WHERE u.username = 'admin'      AND r.role_code = 'ADMIN';
 
 -- ⑤ 验证
 SELECT '=== 测试用户 + 角色 ===' AS '';
-SELECT u.username, u.real_name, r.role_code
+SELECT u.username, u.real_name, u.store_id, r.role_code
 FROM sys_user u
 LEFT JOIN sys_user_role ur ON ur.user_id = u.id
 LEFT JOIN sys_role r ON r.id = ur.role_id
 WHERE u.username IN ('clerk01', 'manager01', 'boss01', 'operator01', 'admin')
 ORDER BY u.username, r.role_code;
+-- 期望：4 个测试账号 store_id = 1；admin store_id = NULL（admin 走 ALL 范围，不受门店过滤影响）

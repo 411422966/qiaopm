@@ -191,11 +191,19 @@
 
 注释与实现相反比数据错误更隐蔽 —— 后续维护者若按注释理解，会误判多角色用户的实际可见范围。建议单独立 issue 修正注释（属业务代码，本次未改动）。
 
-### 6.2 测试账号 store_id 全为 NULL
+### 6.2 测试账号 store_id 全为 NULL（**已由 I128-d 修复，2026-11-05**）
 
 `clerk01`(900003) / `manager01`(900004) / `boss01`(900005) / `operator01`(900006) 的 `sys_user.store_id` 均为 NULL，导致这些非 admin 角色在 STORE 范围下 `storeIds` 为空集，`applyStoreScope` 写入 `store_id = -9999`，实际查不到门店数据。
 
-建议单开 issue 修复测试种子数据（补 `store_id` 或 `sys_role_data_scope.data_scope_value`）。
+**处置结果**：已新建 `backup/i128/fix-test-user-store.sql` + `fix-test-user-store-rollback.sql`，把 4 个账号的 `store_id` 更新为 `pos_store.id = 1`（美业SaaS示范店 / STORE001，`status=1`、`deleted=0`、`tenant_id=1`，为当前唯一有效门店）。实测 `affected = 4`，admin（`store_id` 仍为 NULL，走 `dataScope=ALL`）未被误伤；归并后 `effective_store_filter` 由 `EMPTY->-9999` 变为 `IN(1)`。同步在 `backend/src/main/resources/db/sql/seed_test_roles.sql` 的 INSERT 中补上 `store_id = 1` 并追加幂等回填 UPDATE，避免重置数据库后复现。
+
+### 6.3 BOSS / OPERATOR 维持 STORE（用户决策，2026-11-05）
+
+`sys_role_data_scope` 中 BOSS(role_id=6) / OPERATOR(role_id=7) 的 `remark` 写「老板可见全部门店」「运营可见全部门店」，但 `data_scope = 'STORE'` 且 `data_scope_value = NULL` —— 注释语义与实现不一致。
+
+**决策：维持现状（仍为 STORE），不改为 BRAND / ALL。** 当前多门店数据不完整，BOSS/OPERATOR 暂按 STORE 处理，等未来补齐门店数据后，再由业务确认是否放宽至 BRAND 或 ALL。
+
+依据：`pos_store` 仅 1 家有效门店（`id=1`），其余 5 行全部 `deleted = 1`；放宽为 ALL/BRAND 在当前数据下不产生实际收益，反而重新引入 I128-c 修复的越权敞口（`manager01` 跨租户放行即由此类配置引发）。此外 BOSS/OPERATOR 可见范围随门店数据补齐需重新评估 —— 见 `audit/issues/I128-e-member-null-store.md`（`crm_member` 369 行 `store_id` NULL，暂不修）。
 
 ---
 
@@ -207,6 +215,15 @@
 | `backup/i128/fix-i128-c-verify.sql` | 新增（89 行，验证脚本 A–H 段） |
 | `backup/i128/pre-fix-scope-snapshot-20261105.sql` | 新增（mysqldump 修复前全表快照） |
 | `audit/issues/I128-c-scope-overprivilege.md` | 新增（本文件） |
+
+**后续批次产出**（不属于 I128-c 本身，列此便于追溯）：
+
+| 文件 | 批次 | 变更 |
+|---|---|---|
+| `backup/i128/fix-test-user-store.sql` | I128-d | 新增（测试账号 `store_id` 修复脚本） |
+| `backup/i128/fix-test-user-store-rollback.sql` | I128-d | 新增（回滚脚本） |
+| `backend/src/main/resources/db/sql/seed_test_roles.sql` | I128-d | 修改（seed INSERT 补 `store_id = 1` + 幂等回填） |
+| `audit/issues/I128-e-member-null-store.md` | I128-e | 新增（`crm_member.store_id` 缺失登记，暂不修） |
 
 **未改动**：任何 Java / Vue 业务代码；`docs/governance/*.md`、`audit/baseline/*.md`、`audit/issues/issue-register.md`、`PROJECT_ACCEPTANCE_EVIDENCE.md`、`.gitignore` 全部未触碰。
 
