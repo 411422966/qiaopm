@@ -63,3 +63,14 @@
 - `stock_product.unit` / `complication_sop.responsible_role` / `biz_spa_scene_mode.*` / `industry_template.*` / `mh_drug_device.specification` → 需权威源
 - `backend/src/main/resources/db/sql/` 剩余 146 个 `.sql` 补 `SET NAMES utf8mb4`
 - `audit/issues/I140-ai-enhance-blood-line-drift.md` → 已登记，未修
+
+## 6. 验证范围声明
+
+- ✅ **已实跑验证**：数据库层 —— 预览 / 事务级 ROLLBACK 预演 / 正式执行 / verify / 幂等复跑，
+  全部为真实 `mysql` 客户端执行输出，证据即本目录文件。
+- ⛔ **未执行**：应用层（HTTP 接口）复验 —— 本次会话内没有可用的有效登录凭据
+  （`admin` 账号密码非 `admin123`，`/auth/login` 返回 `5810 密码错误`；本地 `tokens.json` 中的历史 token 已失效）。
+  因此**未**声称"前端列表已显示中文"这类应用层结论。
+- 本修复的数据源即应用读取的同一张表（`biz_service_item.service_name` 等），
+  应用层读取路径未做任何改动（本次提交不含任何 Java 代码改动）。
+
