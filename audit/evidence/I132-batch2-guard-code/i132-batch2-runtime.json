@@ -1,0 +1,305 @@
+{
+ "apiBase": "http://localhost:8080",
+ "generatedAt": "2026-11-06T09:01:36.101Z",
+ "users": {
+  "admin": {
+   "permCount": 316,
+   "hasStar": true,
+   "guardCodes": {
+    "market:coupon:list": true,
+    "market:point:list": true,
+    "market:activity:list": true,
+    "package:list": true,
+    "biz:service-item:list": true,
+    "biz.treatment-plan": true
+   }
+  },
+  "boss01": {
+   "permCount": 150,
+   "hasStar": false,
+   "guardCodes": {
+    "market:coupon:list": true,
+    "market:point:list": true,
+    "market:activity:list": true,
+    "package:list": true,
+    "biz:service-item:list": true,
+    "biz.treatment-plan": true
+   }
+  },
+  "manager01": {
+   "permCount": 199,
+   "hasStar": false,
+   "guardCodes": {
+    "market:coupon:list": true,
+    "market:point:list": true,
+    "market:activity:list": true,
+    "package:list": true,
+    "biz:service-item:list": true,
+    "biz.treatment-plan": true
+   }
+  }
+ },
+ "guardCodes": {},
+ "cases": [
+  {
+   "route": "/market/coupon",
+   "path": "/mkt/coupon/batch/page",
+   "method": "POST",
+   "requirePermission": "mkt:coupon",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    }
+   }
+  },
+  {
+   "route": "/market/coupon",
+   "path": "/mkt/coupon/page?pageNum=1&pageSize=5",
+   "method": "GET",
+   "requirePermission": "mkt:coupon",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    }
+   }
+  },
+  {
+   "route": "/market/points",
+   "path": "/mkt/points/rule/list",
+   "method": "GET",
+   "requirePermission": "mkt:points",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    }
+   }
+  },
+  {
+   "route": "/market/activity",
+   "path": "/mkt/promotion/page?pageNum=1&pageSize=5",
+   "method": "GET",
+   "requirePermission": "mkt:promotion",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    }
+   }
+  },
+  {
+   "route": "/package/list",
+   "path": "/packages?pageNum=1&pageSize=5",
+   "method": "GET",
+   "requirePermission": "package:list",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    }
+   }
+  },
+  {
+   "route": "/package/list",
+   "path": "/packages/stats",
+   "method": "GET",
+   "requirePermission": "package:list",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    }
+   }
+  },
+  {
+   "route": "/package/member-orders",
+   "path": "/packages/members/recent-with-orders?limit=5",
+   "method": "GET",
+   "requirePermission": "package:list",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    }
+   }
+  },
+  {
+   "route": "/biz/service-item",
+   "path": "/biz/service/item/page?pageNum=1&pageSize=5",
+   "method": "GET",
+   "requirePermission": "(无 @RequirePermission)",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    }
+   }
+  },
+  {
+   "route": "/biz/service-item",
+   "path": "/biz/service/category/list?status=1",
+   "method": "GET",
+   "requirePermission": "(无 @RequirePermission)",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    }
+   }
+  },
+  {
+   "route": "/biz/treatment-plan",
+   "path": "/biz/service/item/page?pageNum=1&pageSize=5&status=1",
+   "method": "GET",
+   "requirePermission": "(无 @RequirePermission)",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    }
+   }
+  }
+ ]
+}

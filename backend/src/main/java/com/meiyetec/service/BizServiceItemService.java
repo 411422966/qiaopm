@@ -2,6 +2,7 @@ package com.meiyetec.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.BizServiceCategory;
 import com.meiyetec.exception.BizCode;
 import com.meiyetec.exception.BusinessException;
@@ -42,6 +43,7 @@ public class BizServiceItemService {
     // ==================== 分类 ====================
 
     @GetMapping("/category/list")
+    @RequirePermission("biz:service-item:list")
     public Result<List<BizServiceCategory>> categoryList(@RequestParam(required = false) Integer status) {
         Long tenantId = currentTenantId();
         LambdaQueryWrapper<BizServiceCategory> q = new LambdaQueryWrapper<>();
@@ -52,6 +54,7 @@ public class BizServiceItemService {
     }
 
     @GetMapping("/category/page")
+    @RequirePermission("biz:service-item:list")
     public Result<Page<BizServiceCategory>> categoryPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -69,6 +72,7 @@ public class BizServiceItemService {
     }
 
     @PostMapping("/category")
+    @RequirePermission("biz:service-item:edit")
     public Result<BizServiceCategory> createCategory(@RequestBody BizServiceCategory c) {
         if (c.getCategoryCode() == null || c.getCategoryCode().isEmpty())
             return Result.error(BizCode.BAD_REQUEST, "分类编码必填");
@@ -87,6 +91,7 @@ public class BizServiceItemService {
     }
 
     @PutMapping("/category/{id}")
+    @RequirePermission("biz:service-item:edit")
     public Result<BizServiceCategory> updateCategory(@PathVariable Long id, @RequestBody BizServiceCategory c) {
         BizServiceCategory old = categoryMapper.selectById(id);
         if (old == null) return Result.error(BizCode.NOT_FOUND, "分类不存在");
@@ -97,6 +102,7 @@ public class BizServiceItemService {
     }
 
     @DeleteMapping("/category/{id}")
+    @RequirePermission("biz:service-item:edit")
     public Result<Void> deleteCategory(@PathVariable Long id) {
         BizServiceCategory old = categoryMapper.selectById(id);
         if (old == null) return Result.error(BizCode.NOT_FOUND, "分类不存在");
@@ -110,6 +116,7 @@ public class BizServiceItemService {
     // ==================== 服务项目 ====================
 
     @GetMapping("/item/page")
+    @RequirePermission("biz:service-item:list")
     public Result<Page<Map<String, Object>>> itemPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -158,6 +165,7 @@ public class BizServiceItemService {
     }
 
     @GetMapping("/item/{id}")
+    @RequirePermission("biz:service-item:list")
     public Result<Map<String, Object>> itemDetail(@PathVariable Long id) {
         com.meiyetec.entity.BizServiceItem item = itemMapper.selectById(id);
         if (item == null) return Result.error(BizCode.NOT_FOUND, "项目不存在");
@@ -173,6 +181,7 @@ public class BizServiceItemService {
     }
 
     @PostMapping("/item")
+    @RequirePermission("biz:service-item:edit")
     public Result<com.meiyetec.entity.BizServiceItem> createItem(@RequestBody com.meiyetec.entity.BizServiceItem p) {
         if (p.getServiceCode() == null || p.getServiceCode().isEmpty())
             return Result.error(BizCode.BAD_REQUEST, "项目编码必填");
@@ -191,6 +200,7 @@ public class BizServiceItemService {
     }
 
     @PutMapping("/item/{id}")
+    @RequirePermission("biz:service-item:edit")
     public Result<com.meiyetec.entity.BizServiceItem> updateItem(@PathVariable Long id,
             @RequestBody com.meiyetec.entity.BizServiceItem p) {
         com.meiyetec.entity.BizServiceItem old = itemMapper.selectById(id);
@@ -207,6 +217,7 @@ public class BizServiceItemService {
     }
 
     @DeleteMapping("/item/{id}")
+    @RequirePermission("biz:service-item:edit")
     public Result<Void> deleteItem(@PathVariable Long id) {
         com.meiyetec.entity.BizServiceItem old = itemMapper.selectById(id);
         if (old == null) return Result.error(BizCode.NOT_FOUND, "项目不存在");
@@ -245,6 +256,7 @@ public class BizServiceItemService {
      * 给项目添加一个耗材绑定（同 product+service 唯一）
      */
     @PostMapping("/item/{id}/material")
+    @RequirePermission("biz:service-item:edit")
     public Result<Map<String, Object>> addMaterial(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         Long productId = ((Number) body.get("productId")).longValue();
         java.math.BigDecimal quantity = new java.math.BigDecimal(body.get("quantity").toString());
@@ -275,6 +287,7 @@ public class BizServiceItemService {
     }
 
     @DeleteMapping("/item/{id}/material/{productId}")
+    @RequirePermission("biz:service-item:edit")
     public Result<Void> removeMaterial(@PathVariable Long id, @PathVariable Long productId) {
         jdbc.update("UPDATE biz_service_material SET deleted = 1 WHERE service_id = ? AND product_id = ?",
                 id, productId);
@@ -285,6 +298,7 @@ public class BizServiceItemService {
     // ==================== 导出 XLSX（R2.1-A T-A14 + T-A16 升级） ====================
 
     @GetMapping("/item/export")
+    @RequirePermission("biz:service-item:list")
     public ResponseEntity<byte[]> exportItem(
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) Long categoryId,
@@ -350,6 +364,7 @@ public class BizServiceItemService {
      * 下载导入模板
      */
     @GetMapping("/item/template")
+    @RequirePermission("biz:service-item:list")
     public ResponseEntity<byte[]> itemImportTemplate() throws Exception {
         String[] headers = {"项目编码*", "项目名称*", "分类编码", "标准价", "会员价", "时长(分钟)*",
                             "单位", "排序", "状态(启用/停用)", "描述", "SOP"};
@@ -370,6 +385,7 @@ public class BizServiceItemService {
      * 批量导入服务项目
      */
     @PostMapping("/item/import")
+    @RequirePermission("biz:service-item:edit")
     public Result<Map<String, Object>> importItem(@RequestParam("file") org.springframework.web.multipart.MultipartFile file) throws Exception {
         Long tenantId = currentTenantId();
         if (file == null || file.isEmpty()) return Result.error(BizCode.BAD_REQUEST, "请上传文件");

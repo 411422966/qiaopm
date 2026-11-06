@@ -1,0 +1,597 @@
+{
+ "apiBase": "http://localhost:8080",
+ "generatedAt": "2026-11-06T09:11:51.862Z",
+ "probeId": 99999999,
+ "cases": [
+  {
+   "group": "package",
+   "route": "/package/member-orders",
+   "path": "/packages/purchase",
+   "method": "POST",
+   "requirePermission": "package:purchase",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 400,
+     "msg": "购买价格不能为空",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 400,
+     "msg": "购买价格不能为空",
+     "verdict": "ERROR"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 400,
+     "msg": "购买价格不能为空",
+     "verdict": "ERROR"
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 400,
+     "msg": "购买价格不能为空",
+     "verdict": "ERROR"
+    }
+   }
+  },
+  {
+   "group": "package",
+   "route": "/package/member-orders",
+   "path": "/packages/redeem",
+   "method": "POST",
+   "requirePermission": "package:redeem",
+   "results": {
+    "admin": {
+     "http": 404,
+     "code": 404,
+     "msg": "资源不存在: 套餐订单不存在",
+     "verdict": "NOT_FOUND"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:redeem",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:redeem",
+     "verdict": "DENIED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:redeem",
+     "verdict": "DENIED"
+    }
+   }
+  },
+  {
+   "group": "package",
+   "route": "/package/member-orders",
+   "path": "/packages/order/99999999/freeze?freeze=true",
+   "method": "POST",
+   "requirePermission": "package:freeze",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 套餐订单不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:freeze",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:freeze",
+     "verdict": "DENIED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:freeze",
+     "verdict": "DENIED"
+    }
+   }
+  },
+  {
+   "group": "package",
+   "route": "/package/member-orders",
+   "path": "/packages/order/99999999/suspend",
+   "method": "POST",
+   "requirePermission": "package:suspend",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 套餐订单不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:suspend",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:suspend",
+     "verdict": "DENIED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:suspend",
+     "verdict": "DENIED"
+    }
+   }
+  },
+  {
+   "group": "package",
+   "route": "/package/member-orders",
+   "path": "/packages/order/99999999/resume",
+   "method": "POST",
+   "requirePermission": "package:suspend",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 套餐订单不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:suspend",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:suspend",
+     "verdict": "DENIED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:suspend",
+     "verdict": "DENIED"
+    }
+   }
+  },
+  {
+   "group": "package",
+   "route": "/package/member-orders",
+   "path": "/packages/order/99999999/refund",
+   "method": "POST",
+   "requirePermission": "package:refund",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 套餐订单不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:refund",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:refund",
+     "verdict": "DENIED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:refund",
+     "verdict": "DENIED"
+    }
+   }
+  },
+  {
+   "group": "package",
+   "route": "/package/member-orders",
+   "path": "/packages/order/99999999/transfer",
+   "method": "POST",
+   "requirePermission": "package:transfer",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 套餐订单不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:transfer",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:transfer",
+     "verdict": "DENIED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:transfer",
+     "verdict": "DENIED"
+    }
+   }
+  },
+  {
+   "group": "package",
+   "route": "/package/list",
+   "path": "/packages",
+   "method": "POST",
+   "requirePermission": "package:add",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 400,
+     "msg": "套餐名称不能为空; 价格不能为空",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 400,
+     "msg": "价格不能为空; 套餐名称不能为空",
+     "verdict": "ERROR"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 400,
+     "msg": "套餐名称不能为空; 价格不能为空",
+     "verdict": "ERROR"
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 400,
+     "msg": "价格不能为空; 套餐名称不能为空",
+     "verdict": "ERROR"
+    }
+   }
+  },
+  {
+   "group": "package",
+   "route": "/package/list",
+   "path": "/packages/99999999",
+   "method": "DELETE",
+   "requirePermission": "package:delete",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 套餐不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:delete",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:delete",
+     "verdict": "DENIED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:delete",
+     "verdict": "DENIED"
+    }
+   }
+  },
+  {
+   "group": "biz-service-item",
+   "route": "/biz/service-item",
+   "path": "/biz/service-item",
+   "method": "POST",
+   "requirePermission": "biz:service-item:edit (别名控制器)",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "创建成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：biz:service-item:edit",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：biz:service-item:edit",
+     "verdict": "DENIED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：biz:service-item:edit",
+     "verdict": "DENIED"
+    }
+   }
+  },
+  {
+   "group": "biz-service-item",
+   "route": "/biz/service-item",
+   "path": "/biz/service-item/99999999",
+   "method": "PUT",
+   "requirePermission": "biz:service-item:edit (别名控制器)",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：biz:service-item:edit",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：biz:service-item:edit",
+     "verdict": "DENIED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：biz:service-item:edit",
+     "verdict": "DENIED"
+    }
+   }
+  },
+  {
+   "group": "biz-service-item",
+   "route": "/biz/service-item",
+   "path": "/biz/service/item",
+   "method": "POST",
+   "requirePermission": "无 @RequirePermission (前端实际调用)",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 409,
+     "msg": "数据冲突: 项目编码已存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 409,
+     "msg": "数据冲突: 项目编码已存在",
+     "verdict": "ERROR"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 409,
+     "msg": "数据冲突: 项目编码已存在",
+     "verdict": "ERROR"
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 409,
+     "msg": "数据冲突: 项目编码已存在",
+     "verdict": "ERROR"
+    }
+   }
+  },
+  {
+   "group": "biz-service-item",
+   "route": "/biz/service-item",
+   "path": "/biz/service/item/99999999",
+   "method": "PUT",
+   "requirePermission": "无 @RequirePermission (前端实际调用)",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    }
+   }
+  },
+  {
+   "group": "biz-service-item",
+   "route": "/biz/service-item",
+   "path": "/biz/service/item/99999999",
+   "method": "DELETE",
+   "requirePermission": "无 @RequirePermission (前端实际调用)",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    }
+   }
+  },
+  {
+   "group": "biz-service-item",
+   "route": "/biz/service-item",
+   "path": "/biz/service/item/99999999/material",
+   "method": "POST",
+   "requirePermission": "无 @RequirePermission (前端 BOM 绑定)",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    }
+   }
+  },
+  {
+   "group": "stock",
+   "route": "/biz/service-item",
+   "path": "/stock/page?pageNum=1&pageSize=200&status=1",
+   "method": "GET",
+   "requirePermission": "stock:list (前端 /stock/page)",
+   "results": {
+    "admin": {
+     "http": 404,
+     "msg": "No message available",
+     "verdict": "NOT_FOUND"
+    },
+    "boss01": {
+     "http": 404,
+     "msg": "No message available",
+     "verdict": "NOT_FOUND"
+    },
+    "manager01": {
+     "http": 404,
+     "msg": "No message available",
+     "verdict": "NOT_FOUND"
+    },
+    "clerk01": {
+     "http": 404,
+     "msg": "No message available",
+     "verdict": "NOT_FOUND"
+    }
+   }
+  },
+  {
+   "group": "stock",
+   "route": "/biz/service-item",
+   "path": "/stock/products/page?pageNum=1&pageSize=200",
+   "method": "GET",
+   "requirePermission": "stock:product:list",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：stock:product:list",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：stock:product:list",
+     "verdict": "DENIED"
+    }
+   }
+  },
+  {
+   "group": "stock",
+   "route": "/biz/service-item",
+   "path": "/stock/consumption/bom/99999999",
+   "method": "GET",
+   "requirePermission": "stock:consumption",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：stock:consumption",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：stock:consumption",
+     "verdict": "DENIED"
+    }
+   }
+  }
+ ]
+}

@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-10-28（补登 I131/I132/TD-006）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-06（补登 I137）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -47,7 +47,7 @@
 | I112 | I112 — issue-register.md 中文永久损坏 | Open | [I112-issue-register-mojibake.md](I112-issue-register-mojibake.md) |
 | I113 | I113 — compile_impls.ps1 使用 -Encoding ascii 写文件 | Open | [I113-ascii-encoding-risk.md](I113-ascii-encoding-risk.md) |
 | I114 | I114 — Java class 覆盖 .git/objects 的根因排查 | Fixed | [I114-class-overwrites-git-objects.md](I114-class-overwrites-git-objects.md) |
-| I115 | I115 — 权限注解覆盖率不足（P0） | Fixed | [I115-permission-coverage-gap.md](I115-permission-coverage-gap.md) |
+| I115 | I115 — 权限注解覆盖率不足（P0） | PARTIAL | [I115-permission-coverage-gap.md](I115-permission-coverage-gap.md) |
 | I116 | I116 — 备份恢复演练证据缺失（P0） | Closed | [I116-backup-drill-evidence-gap.md](I116-backup-drill-evidence-gap.md) |
 | I117 | I117 — DataScopeInterceptor 覆盖路径不全（P0） | Open | [I117-datascope-coverage-gap.md](I117-datascope-coverage-gap.md) |
 | I118 | I118 — 132 张表的 DDL 缺失但实体/Mapper/Controller 完整（P0） | Open | [I118-missing-ddl-132-tables.md](I118-missing-ddl-132-tables.md) |
@@ -65,9 +65,11 @@
 | I130 | I130 — MySQL 8.0 不支持 ADD COLUMN IF NOT EXISTS，历史迁移脚本中存在多处使用 | Open | [I130-mysql-add-column-if-not-exists-incompatible.md](I130-mysql-add-column-if-not-exists-incompatible.md) |
 | I131 | I131 — PackageItem 实体缺 deleted 字段（软删除隐患），Controller 从不写 createBy | Open | [I131-packageitem-missing-deleted-and-createby.md](I131-packageitem-missing-deleted-and-createby.md) |
 | I132 | I132 — 收银台前端未传入 tenderedAmount，找零功能未接入 UI | Open | [I132-pos-checkout-missing-tendered-ui.md](I132-pos-checkout-missing-tendered-ui.md) |
+| I137 | I137 — 前端路由守卫码与后端权限注解系统性错配：服务项目越权写入 + 套餐按钮假打通 + BOM 端点 404（🔴 高） | Open | [I137-guard-code-fake-through.md](I137-guard-code-fake-through.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
 
 - **I119**：代码+数据已修复，运行时晋升验证待补。
+- **I115**：BizServiceItemService 22 个端点零 @RequirePermission，实测 operator01 可越权写入。详见 I137-P0。
 - **I127**：事故件 `before-batch1-20261025-180825.sql` 已改名为 `.UNUSABLE` 保留为证据，不恢复；根因（PS 5.1 `>` 重定向）已消除，正确备份方式（容器内 dump + `docker cp`）已验证可恢复。

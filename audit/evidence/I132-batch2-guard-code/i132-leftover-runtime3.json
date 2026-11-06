@@ -1,0 +1,155 @@
+{
+ "apiBase": "http://localhost:8080",
+ "generatedAt": "2026-11-06T09:16:05.607Z",
+ "probeId": 99999999,
+ "cases": [
+  {
+   "path": "/biz/service/item/99999999",
+   "method": "PUT",
+   "requirePermission": "无 @RequirePermission",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "operator01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    }
+   }
+  },
+  {
+   "path": "/biz/service/item/99999999",
+   "method": "DELETE",
+   "requirePermission": "无 @RequirePermission",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "operator01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    }
+   }
+  },
+  {
+   "path": "/biz/service/item/99999999/material",
+   "method": "POST",
+   "requirePermission": "无 @RequirePermission",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    },
+    "operator01": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 项目不存在",
+     "verdict": "ERROR"
+    }
+   }
+  },
+  {
+   "path": "/biz/service/item/page?pageNum=1&pageSize=1",
+   "method": "GET",
+   "requirePermission": "无 @RequirePermission",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    },
+    "operator01": {
+     "http": 200,
+     "code": 200,
+     "msg": "操作成功",
+     "verdict": "ALLOWED"
+    }
+   }
+  }
+ ]
+}

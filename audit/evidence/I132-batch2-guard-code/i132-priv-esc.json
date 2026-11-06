@@ -1,0 +1,51 @@
+{
+ "apiBase": "http://localhost:8080",
+ "generatedAt": "2026-11-06T09:29:30.936Z",
+ "serviceCode": "AUDIT_PROBE_I132",
+ "steps": [
+  {
+   "label": "operator01 POST /biz/service/item",
+   "http": 200,
+   "code": 200,
+   "msg": "创建成功",
+   "verdict": "ALLOWED"
+  },
+  {
+   "label": "operator01 PUT /biz/service/item/{id}",
+   "http": 200,
+   "code": 200,
+   "msg": "更新成功",
+   "verdict": "ALLOWED"
+  },
+  {
+   "label": "operator01 DELETE /biz/service/item/{id}",
+   "http": 200,
+   "code": 200,
+   "msg": "删除成功",
+   "verdict": "ALLOWED"
+  },
+  {
+   "label": "operator01 POST /biz/service-item (别名)",
+   "http": 403,
+   "code": 403,
+   "msg": "权限不足: 需要权限码：biz:service-item:edit",
+   "verdict": "DENIED"
+  },
+  {
+   "label": "admin POST /biz/service-item (别名)",
+   "http": 200,
+   "code": 200,
+   "msg": "创建成功",
+   "verdict": "ALLOWED"
+  },
+  {
+   "label": "admin DELETE /biz/service/item/{id} (清理)",
+   "http": 200,
+   "code": 404,
+   "msg": "资源不存在: 项目不存在",
+   "verdict": "ERROR"
+  }
+ ],
+ "createdId": 24,
+ "createdByOperator": true
+}

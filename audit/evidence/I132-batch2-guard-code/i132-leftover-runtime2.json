@@ -1,0 +1,147 @@
+{
+ "apiBase": "http://localhost:8080",
+ "generatedAt": "2026-11-06T09:14:03.557Z",
+ "probeId": 99999999,
+ "note": "body 合法但 ID 不存在，用于穿透 @Valid 校验层判定鉴权",
+ "cases": [
+  {
+   "path": "/packages",
+   "method": "POST",
+   "body": {
+    "id": 99999999,
+    "name": "audit-probe",
+    "price": 1
+   },
+   "requirePermission": "package:add (更新分支, id 不存在)",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 套餐不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:add",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:add",
+     "verdict": "DENIED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:add",
+     "verdict": "DENIED"
+    }
+   }
+  },
+  {
+   "path": "/packages/purchase",
+   "method": "POST",
+   "body": {
+    "memberId": 99999999,
+    "packageId": 99999999,
+    "price": 1
+   },
+   "requirePermission": "package:purchase",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 会员不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:purchase",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:purchase",
+     "verdict": "DENIED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:purchase",
+     "verdict": "DENIED"
+    }
+   }
+  },
+  {
+   "path": "/packages/redeem-split",
+   "method": "POST",
+   "body": {
+    "orderId": 99999999,
+    "times": 1
+   },
+   "requirePermission": "package:redeem",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 400,
+     "msg": "拆分子项不能为空",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 200,
+     "code": 400,
+     "msg": "拆分子项不能为空",
+     "verdict": "ERROR"
+    },
+    "manager01": {
+     "http": 200,
+     "code": 400,
+     "msg": "拆分子项不能为空",
+     "verdict": "ERROR"
+    },
+    "clerk01": {
+     "http": 200,
+     "code": 400,
+     "msg": "拆分子项不能为空",
+     "verdict": "ERROR"
+    }
+   }
+  },
+  {
+   "path": "/packages/order/99999999/extend?days=1",
+   "method": "POST",
+   "body": {},
+   "requirePermission": "package:edit",
+   "results": {
+    "admin": {
+     "http": 200,
+     "code": 404,
+     "msg": "资源不存在: 套餐订单不存在",
+     "verdict": "ERROR"
+    },
+    "boss01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:edit",
+     "verdict": "DENIED"
+    },
+    "manager01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:edit",
+     "verdict": "DENIED"
+    },
+    "clerk01": {
+     "http": 403,
+     "code": 403,
+     "msg": "权限不足: 需要权限码：package:edit",
+     "verdict": "DENIED"
+    }
+   }
+  }
+ ]
+}
