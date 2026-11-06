@@ -1,0 +1,484 @@
+﻿meiyetec-api  | Picked up JAVA_TOOL_OPTIONS: -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom -Djava.net.preferIPv4Stack=true
+meiyetec-api  | Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+meiyetec-api  | 23:44:37,270 |-INFO in ch.qos.logback.classic.LoggerContext[default] - This is logback-classic version 1.4.11
+meiyetec-api  | 23:44:37,277 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Here is a list of configurators discovered as a service, by rank: 
+meiyetec-api  | 23:44:37,277 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 -   org.springframework.boot.logging.logback.RootLogLevelConfigurator
+meiyetec-api  | 23:44:37,277 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - They will be invoked in order until ExecutionStatus.DO_NOT_INVOKE_NEXT_IF_ANY is returned.
+meiyetec-api  | 23:44:37,277 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Constructed configurator of type class org.springframework.boot.logging.logback.RootLogLevelConfigurator
+meiyetec-api  | 23:44:37,286 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - org.springframework.boot.logging.logback.RootLogLevelConfigurator.configure() call lasted 1 milliseconds. ExecutionStatus=INVOKE_NEXT_IF_ANY
+meiyetec-api  | 23:44:37,286 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Trying to configure with ch.qos.logback.classic.joran.SerializedModelConfigurator
+meiyetec-api  | 23:44:37,289 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Constructed configurator of type class ch.qos.logback.classic.joran.SerializedModelConfigurator
+meiyetec-api  | 23:44:37,313 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback-test.scmo]
+meiyetec-api  | 23:44:37,315 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback.scmo]
+meiyetec-api  | 23:44:37,315 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - ch.qos.logback.classic.joran.SerializedModelConfigurator.configure() call lasted 26 milliseconds. ExecutionStatus=INVOKE_NEXT_IF_ANY
+meiyetec-api  | 23:44:37,315 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Trying to configure with ch.qos.logback.classic.util.DefaultJoranConfigurator
+meiyetec-api  | 23:44:37,316 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Constructed configurator of type class ch.qos.logback.classic.util.DefaultJoranConfigurator
+meiyetec-api  | 23:44:37,317 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback-test.xml]
+meiyetec-api  | 23:44:37,319 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback.xml]
+meiyetec-api  | 23:44:37,319 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - ch.qos.logback.classic.util.DefaultJoranConfigurator.configure() call lasted 3 milliseconds. ExecutionStatus=INVOKE_NEXT_IF_ANY
+meiyetec-api  | 23:44:37,319 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Trying to configure with ch.qos.logback.classic.BasicConfigurator
+meiyetec-api  | 23:44:37,323 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Constructed configurator of type class ch.qos.logback.classic.BasicConfigurator
+meiyetec-api  | 23:44:37,323 |-INFO in ch.qos.logback.classic.BasicConfigurator@683dbc2c - Setting up default configuration.
+meiyetec-api  | 23:44:37,356 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - ch.qos.logback.classic.BasicConfigurator.configure() call lasted 33 milliseconds. ExecutionStatus=NEUTRAL
+meiyetec-api  | 23:44:38,149 |-INFO in ch.qos.logback.core.joran.spi.ConfigurationWatchList@68267da0 - URL [jar:file:/app/app.jar!/BOOT-INF/classes!/logback-spring.xml] is not of type file
+meiyetec-api  | 23:44:38,247 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [CONSOLE]
+meiyetec-api  | 23:44:38,247 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.ConsoleAppender]
+meiyetec-api  | 23:44:38,251 |-INFO in ch.qos.logback.core.model.processor.ImplicitModelHandler - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+meiyetec-api  | 23:44:38,268 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [FILE]
+meiyetec-api  | 23:44:38,268 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.rolling.RollingFileAppender]
+meiyetec-api  | 23:44:38,279 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@40075281 - No compression will be used
+meiyetec-api  | 23:44:38,280 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@40075281 - Will use the pattern logs/meiyetec.%d{yyyy-MM-dd}.%i.log for the active file
+meiyetec-api  | 23:44:38,300 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@6ff29830 - The date pattern is 'yyyy-MM-dd' from file name pattern 'logs/meiyetec.%d{yyyy-MM-dd}.%i.log'.
+meiyetec-api  | 23:44:38,300 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@6ff29830 - Roll-over at midnight.
+meiyetec-api  | 23:44:38,307 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@6ff29830 - Setting initial period to 2026-11-06T15:44:38.307Z
+meiyetec-api  | 23:44:38,308 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@6ff29830 - SizeAndTimeBasedFNATP is deprecated. Use SizeAndTimeBasedRollingPolicy instead
+meiyetec-api  | 23:44:38,308 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@6ff29830 - For more information see http://logback.qos.ch/manual/appenders.html#SizeAndTimeBasedRollingPolicy
+meiyetec-api  | 23:44:38,309 |-INFO in ch.qos.logback.core.model.processor.ImplicitModelHandler - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+meiyetec-api  | 23:44:38,312 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[FILE] - Active log file name: logs/meiyetec.log
+meiyetec-api  | 23:44:38,313 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[FILE] - File property is set to [logs/meiyetec.log]
+meiyetec-api  | 23:44:38,314 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [ERROR_FILE]
+meiyetec-api  | 23:44:38,314 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.rolling.RollingFileAppender]
+meiyetec-api  | 23:44:38,316 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@1781241150 - No compression will be used
+meiyetec-api  | 23:44:38,316 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@1781241150 - Will use the pattern logs/meiyetec-error.%d{yyyy-MM-dd}.%i.log for the active file
+meiyetec-api  | 23:44:38,316 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@313b2ea6 - The date pattern is 'yyyy-MM-dd' from file name pattern 'logs/meiyetec-error.%d{yyyy-MM-dd}.%i.log'.
+meiyetec-api  | 23:44:38,316 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@313b2ea6 - Roll-over at midnight.
+meiyetec-api  | 23:44:38,317 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@313b2ea6 - Setting initial period to 2026-11-06T15:44:38.317Z
+meiyetec-api  | 23:44:38,317 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@313b2ea6 - SizeAndTimeBasedFNATP is deprecated. Use SizeAndTimeBasedRollingPolicy instead
+meiyetec-api  | 23:44:38,317 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@313b2ea6 - For more information see http://logback.qos.ch/manual/appenders.html#SizeAndTimeBasedRollingPolicy
+meiyetec-api  | 23:44:38,318 |-INFO in ch.qos.logback.core.model.processor.ImplicitModelHandler - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+meiyetec-api  | 23:44:38,319 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[ERROR_FILE] - Active log file name: logs/meiyetec-error.log
+meiyetec-api  | 23:44:38,319 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[ERROR_FILE] - File property is set to [logs/meiyetec-error.log]
+meiyetec-api  | 23:44:38,319 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [BIZ_FILE]
+meiyetec-api  | 23:44:38,319 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.rolling.RollingFileAppender]
+meiyetec-api  | 23:44:38,320 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@793138072 - No compression will be used
+meiyetec-api  | 23:44:38,320 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@793138072 - Will use the pattern logs/meiyetec-biz.%d{yyyy-MM-dd}.log for the active file
+meiyetec-api  | 23:44:38,321 |-INFO in c.q.l.core.rolling.DefaultTimeBasedFileNamingAndTriggeringPolicy - The date pattern is 'yyyy-MM-dd' from file name pattern 'logs/meiyetec-biz.%d{yyyy-MM-dd}.log'.
+meiyetec-api  | 23:44:38,321 |-INFO in c.q.l.core.rolling.DefaultTimeBasedFileNamingAndTriggeringPolicy - Roll-over at midnight.
+meiyetec-api  | 23:44:38,322 |-INFO in c.q.l.core.rolling.DefaultTimeBasedFileNamingAndTriggeringPolicy - Setting initial period to 2026-11-06T15:44:38.322Z
+meiyetec-api  | 23:44:38,322 |-INFO in ch.qos.logback.core.model.processor.ImplicitModelHandler - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+meiyetec-api  | 23:44:38,326 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[BIZ_FILE] - Active log file name: logs/meiyetec-biz.log
+meiyetec-api  | 23:44:38,326 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[BIZ_FILE] - File property is set to [logs/meiyetec-biz.log]
+meiyetec-api  | 23:44:38,326 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting level of logger [com.meiyetec.service.IdempotencyService] to DEBUG
+meiyetec-api  | 23:44:38,326 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@548e6d58 - Propagating DEBUG level on Logger[com.meiyetec.service.IdempotencyService] onto the JUL framework
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting additivity of logger [com.meiyetec.service.IdempotencyService] to false
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [BIZ_FILE] to Logger[com.meiyetec.service.IdempotencyService]
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [CONSOLE] to Logger[com.meiyetec.service.IdempotencyService]
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting level of logger [com.meiyetec.service.impl.PointServiceImpl] to DEBUG
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@548e6d58 - Propagating DEBUG level on Logger[com.meiyetec.service.impl.PointServiceImpl] onto the JUL framework
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting additivity of logger [com.meiyetec.service.impl.PointServiceImpl] to false
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [BIZ_FILE] to Logger[com.meiyetec.service.impl.PointServiceImpl]
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [CONSOLE] to Logger[com.meiyetec.service.impl.PointServiceImpl]
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting level of logger [com.meiyetec.mapper] to DEBUG
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@548e6d58 - Propagating DEBUG level on Logger[com.meiyetec.mapper] onto the JUL framework
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting additivity of logger [com.meiyetec.mapper] to false
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [CONSOLE] to Logger[com.meiyetec.mapper]
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [DOMESTIC_PAY_FILE]
+meiyetec-api  | 23:44:38,329 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.rolling.RollingFileAppender]
+meiyetec-api  | 23:44:38,330 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@1648001170 - No compression will be used
+meiyetec-api  | 23:44:38,330 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@1648001170 - Will use the pattern logs/domestic-pay.%d{yyyy-MM-dd}.%i.log for the active file
+meiyetec-api  | 23:44:38,330 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@a1cdc6d - The date pattern is 'yyyy-MM-dd' from file name pattern 'logs/domestic-pay.%d{yyyy-MM-dd}.%i.log'.
+meiyetec-api  | 23:44:38,330 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@a1cdc6d - Roll-over at midnight.
+meiyetec-api  | 23:44:38,331 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@a1cdc6d - Setting initial period to 2026-11-06T15:44:38.331Z
+meiyetec-api  | 23:44:38,331 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@a1cdc6d - SizeAndTimeBasedFNATP is deprecated. Use SizeAndTimeBasedRollingPolicy instead
+meiyetec-api  | 23:44:38,331 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@a1cdc6d - For more information see http://logback.qos.ch/manual/appenders.html#SizeAndTimeBasedRollingPolicy
+meiyetec-api  | 23:44:38,331 |-INFO in ch.qos.logback.core.model.processor.ImplicitModelHandler - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+meiyetec-api  | 23:44:38,332 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[DOMESTIC_PAY_FILE] - Active log file name: logs/domestic-pay.log
+meiyetec-api  | 23:44:38,332 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[DOMESTIC_PAY_FILE] - File property is set to [logs/domestic-pay.log]
+meiyetec-api  | 23:44:38,332 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting level of logger [com.meiyetec.cn.domestic] to INFO
+meiyetec-api  | 23:44:38,332 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@548e6d58 - Propagating INFO level on Logger[com.meiyetec.cn.domestic] onto the JUL framework
+meiyetec-api  | 23:44:38,332 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting additivity of logger [com.meiyetec.cn.domestic] to false
+meiyetec-api  | 23:44:38,332 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [DOMESTIC_PAY_FILE] to Logger[com.meiyetec.cn.domestic]
+meiyetec-api  | 23:44:38,332 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [CONSOLE] to Logger[com.meiyetec.cn.domestic]
+meiyetec-api  | 23:44:38,333 |-INFO in ch.qos.logback.classic.model.processor.RootLoggerModelHandler - Setting level of ROOT logger to INFO
+meiyetec-api  | 23:44:38,333 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@548e6d58 - Propagating INFO level on Logger[ROOT] onto the JUL framework
+meiyetec-api  | 23:44:38,333 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [CONSOLE] to Logger[ROOT]
+meiyetec-api  | 23:44:38,333 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [FILE] to Logger[ROOT]
+meiyetec-api  | 23:44:38,333 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [ERROR_FILE] to Logger[ROOT]
+meiyetec-api  | 23:44:38,333 |-INFO in ch.qos.logback.core.model.processor.DefaultProcessor@175b9425 - End of configuration.
+meiyetec-api  | 23:44:38,333 |-INFO in org.springframework.boot.logging.logback.SpringBootJoranConfigurator@3098cf3b - Registering current configuration as safe fallback point
+meiyetec-api  | 
+meiyetec-api  | 
+meiyetec-api  |   .   ____          _            __ _ _
+meiyetec-api  |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+meiyetec-api  | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+meiyetec-api  |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+meiyetec-api  |   '  |____| .__|_| |_|_| |_\__, | / / / /
+meiyetec-api  |  =========|_|==============|___/=/_/_/_/
+meiyetec-api  |  :: Spring Boot ::                (v3.1.5)
+meiyetec-api  | 
+meiyetec-api  | 2026-11-06 23:44:38.375 [background-preinit] INFO  o.h.validator.internal.util.Version [traceId=] [tenant=] [order=] [pay=] HV000001: Hibernate Validator 8.0.1.Final
+meiyetec-api  | 2026-11-06 23:44:38.455 [main] INFO  com.meiyetec.MeiyetecApplication [traceId=] [tenant=] [order=] [pay=] Starting MeiyetecApplication v1.0.0 using Java 17.0.20.1 with PID 7 (/app/app.jar started by meiyetec in /app)
+meiyetec-api  | 2026-11-06 23:44:38.459 [main] INFO  com.meiyetec.MeiyetecApplication [traceId=] [tenant=] [order=] [pay=] The following 1 profile is active: "prod"
+meiyetec-api  | 2026-11-06 23:44:41.523 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [traceId=] [tenant=] [order=] [pay=] Multiple Spring Data modules found, entering strict repository configuration mode
+meiyetec-api  | 2026-11-06 23:44:41.526 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [traceId=] [tenant=] [order=] [pay=] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+meiyetec-api  | 2026-11-06 23:44:41.613 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [traceId=] [tenant=] [order=] [pay=] Finished Spring Data repository scanning in 67 ms. Found 0 Redis repository interfaces.
+meiyetec-api  | 2026-11-06 23:44:43.398 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer [traceId=] [tenant=] [order=] [pay=] Tomcat initialized with port(s): 8080 (http)
+meiyetec-api  | 2026-11-06 23:44:43.410 [main] INFO  o.a.coyote.http11.Http11NioProtocol [traceId=] [tenant=] [order=] [pay=] Initializing ProtocolHandler ["http-nio-8080"]
+meiyetec-api  | 2026-11-06 23:44:43.412 [main] INFO  o.a.catalina.core.StandardService [traceId=] [tenant=] [order=] [pay=] Starting service [Tomcat]
+meiyetec-api  | 2026-11-06 23:44:43.412 [main] INFO  o.a.catalina.core.StandardEngine [traceId=] [tenant=] [order=] [pay=] Starting Servlet engine: [Apache Tomcat/10.1.15]
+meiyetec-api  | 2026-11-06 23:44:43.537 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] [traceId=] [tenant=] [order=] [pay=] Initializing Spring embedded WebApplicationContext
+meiyetec-api  | 2026-11-06 23:44:43.541 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext [traceId=] [tenant=] [order=] [pay=] Root WebApplicationContext: initialization completed in 4980 ms
+meiyetec-api  | Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+meiyetec-api  | 2026-11-06 23:44:45.262 [main] INFO  o.f.c.i.license.VersionPrinter [traceId=] [tenant=] [order=] [pay=] Flyway Community Edition 9.16.3 by Redgate
+meiyetec-api  | 2026-11-06 23:44:45.262 [main] INFO  o.f.c.i.license.VersionPrinter [traceId=] [tenant=] [order=] [pay=] See release notes here: https://rd.gt/416ObMi
+meiyetec-api  | 2026-11-06 23:44:45.263 [main] INFO  o.f.c.i.license.VersionPrinter [traceId=] [tenant=] [order=] [pay=] 
+meiyetec-api  | 2026-11-06 23:44:45.291 [main] INFO  com.zaxxer.hikari.HikariDataSource [traceId=] [tenant=] [order=] [pay=] HikariPool-1 - Starting...
+meiyetec-api  | 2026-11-06 23:44:45.569 [main] INFO  com.zaxxer.hikari.pool.HikariPool [traceId=] [tenant=] [order=] [pay=] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4e22368c
+meiyetec-api  | 2026-11-06 23:44:45.572 [main] INFO  com.zaxxer.hikari.HikariDataSource [traceId=] [tenant=] [order=] [pay=] HikariPool-1 - Start completed.
+meiyetec-api  | 2026-11-06 23:44:45.620 [main] INFO  o.f.c.i.d.base.BaseDatabaseType [traceId=] [tenant=] [order=] [pay=] Database: jdbc:mysql://mysql:3306/meiyetec (MySQL 8.0)
+meiyetec-api  | 2026-11-06 23:44:45.690 [main] INFO  o.f.core.internal.command.DbValidate [traceId=] [tenant=] [order=] [pay=] Successfully validated 2 migrations (execution time 00:00.037s)
+meiyetec-api  | 2026-11-06 23:44:45.709 [main] INFO  o.f.core.internal.command.DbMigrate [traceId=] [tenant=] [order=] [pay=] Current version of schema `meiyetec`: 2
+meiyetec-api  | 2026-11-06 23:44:45.710 [main] INFO  o.f.core.internal.command.DbMigrate [traceId=] [tenant=] [order=] [pay=] Schema `meiyetec` is up to date. No migration necessary.
+meiyetec-api  | 2026-11-06 23:44:46.446 [main] INFO  c.m.b.BookingConfirmationTemplateResolver [traceId=] [tenant=] [order=] [pay=] [I18N-TPL] warmup done, locales=[zh-CN, zh-TW, en-US, ja-JP, ko-KR, fr-FR]
+meiyetec-api  | 2026-11-06 23:44:46.622 [main] INFO  c.m.c.d.adapter.AlipayV4Adapter [traceId=] [tenant=] [order=] [pay=] [CN-ALIPAY] PROD mode 鈥?AlipayClient initialized, gateway=https://openapi.alipaydev.com/gateway.do, appId=2021000000000000
+meiyetec-api  | 2026-11-06 23:44:46.632 [main] WARN  c.m.c.d.adapter.WechatPayV3Adapter [traceId=] [tenant=] [order=] [pay=] [CN-WECHAT] SANDBOX mode enabled 鈥?鍑嵁鏈厤缃垨 env-mode=sandbox锛屾墍鏈?prepay/query/refund 灏嗚繑鍥?mock 缁撴灉锛堜粎渚涜仈璋冿級
+meiyetec-api  | 2026-11-06 23:44:46.641 [main] INFO  c.m.c.d.DomesticPayChannelRouter [traceId=] [tenant=] [order=] [pay=] [CN-DOMESTIC] register adapter: ALIPAY (鏀粯瀹?
+meiyetec-api  | 2026-11-06 23:44:46.641 [main] INFO  c.m.c.d.DomesticPayChannelRouter [traceId=] [tenant=] [order=] [pay=] [CN-DOMESTIC] register adapter: WECHAT_PAY (寰俊鏀粯锛堟矙绠憋級)
+meiyetec-api  | 2026-11-06 23:44:46.641 [main] INFO  c.m.c.d.DomesticPayChannelRouter [traceId=] [tenant=] [order=] [pay=] [CN-DOMESTIC] router initialized with 2 adapter(s): [WECHAT_PAY, ALIPAY]
+meiyetec-api  | 2026-11-06 23:44:46.745 [main] INFO  c.m.config.FlywayAutoBaseliner [traceId=] [tenant=] [order=] [pay=] [FLYWAY] flyway_schema_history already exists 鈫?skip auto-baseline
+meiyetec-api  | 2026-11-06 23:44:47.543 [main] INFO  c.m.payment.bnpl.MockBnplProvider [traceId=] [tenant=] [order=] [pay=] [BNPL-MOCK] Initialized as fallback provider: MOCK
+meiyetec-api  | 2026-11-06 23:44:47.545 [main] INFO  c.m.payment.bnpl.BnplProviderRouter [traceId=] [tenant=] [order=] [pay=] [BNPL-ROUTER] Registered provider: AFTERPAY (AfterpayBnplProvider) isConfigured=false
+meiyetec-api  | 2026-11-06 23:44:47.545 [main] INFO  c.m.payment.bnpl.BnplProviderRouter [traceId=] [tenant=] [order=] [pay=] [BNPL-ROUTER] Registered provider: KLARNA (KlarnaBnplProvider) isConfigured=false
+meiyetec-api  | 2026-11-06 23:44:47.546 [main] INFO  c.m.payment.bnpl.BnplProviderRouter [traceId=] [tenant=] [order=] [pay=] [BNPL-ROUTER] Registered provider: MOCK (MockBnplProvider) isConfigured=false
+meiyetec-api  | 2026-11-06 23:44:47.546 [main] INFO  c.m.payment.bnpl.BnplProviderRouter [traceId=] [tenant=] [order=] [pay=] [BNPL-ROUTER] Initialized with 3 providers: [AFTERPAY, KLARNA, MOCK]
+meiyetec-api  | 2026-11-06 23:44:47.566 [main] INFO  o.s.b.f.a.AutowiredAnnotationBeanPostProcessor [traceId=] [tenant=] [order=] [pay=] Autowired annotation should only be used on methods with parameters: public void com.meiyetec.util.IdGenerator.init()
+meiyetec-api  | 2026-11-06 23:44:50.602 [main] INFO  c.m.f.InMemoryFeatureFlagEvaluator [traceId=] [tenant=] [order=] [pay=] [AI-006] FeatureFlag 鍒濆鍔犺浇锛歝ount=0, lastPollTime=2026-11-06T23:44:50.602161406
+meiyetec-api  | 2026-11-06 23:44:50.902 [main] INFO  com.meiyetec.iot.IotProtocolRouter [traceId=] [tenant=] [order=] [pay=] [IOT-ROUTER] Registered adapter: protocolCode=http (HttpDeviceAdapter)
+meiyetec-api  | 2026-11-06 23:44:50.903 [main] INFO  com.meiyetec.iot.IotProtocolRouter [traceId=] [tenant=] [order=] [pay=] [IOT-ROUTER] Registered adapter: protocolCode=massage_chair (MassageChairAdapter)
+meiyetec-api  | 2026-11-06 23:44:50.903 [main] INFO  com.meiyetec.iot.IotProtocolRouter [traceId=] [tenant=] [order=] [pay=] [IOT-ROUTER] Registered adapter: protocolCode=mqtt (MqttDeviceAdapter)
+meiyetec-api  | 2026-11-06 23:44:50.903 [main] INFO  com.meiyetec.iot.IotProtocolRouter [traceId=] [tenant=] [order=] [pay=] [IOT-ROUTER] Registered adapter: protocolCode=skin_analyzer (SkinAnalyzerAdapter)
+meiyetec-api  | 2026-11-06 23:44:53.047 [main] INFO  o.pf4j.DefaultPluginStatusProvider [traceId=] [tenant=] [order=] [pay=] Enabled plugins: []
+meiyetec-api  | 2026-11-06 23:44:53.047 [main] INFO  o.pf4j.DefaultPluginStatusProvider [traceId=] [tenant=] [order=] [pay=] Disabled plugins: []
+meiyetec-api  | 2026-11-06 23:44:53.054 [main] INFO  org.pf4j.DefaultPluginManager [traceId=] [tenant=] [order=] [pay=] PF4J version 3.10.0 in 'deployment' mode
+meiyetec-api  | 2026-11-06 23:44:53.055 [main] INFO  c.m.plugin.PluginRuntimeService [traceId=] [tenant=] [order=] [pay=] [PLUGIN] 鎻掍欢杩愯鏃跺凡灏辩华锛屾牴鐩綍锛?opt/plugins
+meiyetec-api  | 2026-11-06 23:44:54.435 [main] INFO  c.m.dcep.crypto.SmCryptoConfig [traceId=] [tenant=] [order=] [pay=] [DCEP-03] SmCryptoProvider 鍒濆鍖栵細浣跨敤 BouncyCastle 杞欢瀹炵幇锛堝紑鍙戣仈璋冪敤锛?meiyetec-api  | 2026-11-06 23:44:55.150 [main] INFO  c.m.d.o.UniversalOperatorDcepAdapter [traceId=] [tenant=] [order=] [pay=] [DCEP-Universal] 鍚姩瀹屾垚锛宔nabled operators: [], supported protocols: [REST, NETTY_LONG]
+meiyetec-api  | 2026-11-06 23:44:57.258 [main] WARN  c.meiyetec.dcep.impl.AbcDcepAdapter [traceId=] [tenant=] [order=] [pay=] [DCEP-ABC] prepay() not yet implemented, order=DCEP-PROBE-a7b43ae3
+meiyetec-api  | 2026-11-06 23:44:57.260 [main] WARN  c.meiyetec.dcep.impl.CcbDcepAdapter [traceId=] [tenant=] [order=] [pay=] [DCEP-CCB] prepay() not yet implemented, channel=DCEP-CCB order=DCEP-PROBE-32196397
+meiyetec-api  | 2026-11-06 23:44:57.261 [main] WARN  c.meiyetec.dcep.impl.IcbcDcepAdapter [traceId=] [tenant=] [order=] [pay=] [DCEP-ICBC] prepay() not yet implemented, order=DCEP-PROBE-74d5e93d
+meiyetec-api  | 2026-11-06 23:44:57.312 [main] INFO  c.m.dcep.impl.SandboxDcepAdapter [traceId=] [tenant=] [order=] [pay=] [DCEP-SANDBOX] prepay OK: order=DCEP-PROBE-2f6942fe prepayId=SP1793979897261E83EBADE amount=0 expires=2026-11-07T00:14:57.265151873
+meiyetec-api  | 2026-11-06 23:44:57.312 [main] INFO  com.meiyetec.service.DcepService [traceId=] [tenant=] [order=] [pay=] [DCEP] mode=prod 鍚姩锛岃嚦灏?1 涓摱琛?adapter 宸插鎺ワ紝DCEP 杩愯鏃跺彲鐢?meiyetec-api  | 2026-11-06 23:44:59.031 [main] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] init enabled=true pushEnabled=true scanInterval=60000ms thresholds=INFO:5min WARN:15min CRITICAL:30min
+meiyetec-api  | 2026-11-06 23:45:01.395 [main] INFO  c.m.s.ReportExportFileCleanupService [traceId=] [tenant=] [order=] [pay=] [CLEANUP] 鍚姩娓呯悊鎺㈡煡: exportDir=/tmp/meiyetec-reports, retentionDays=7 澶?meiyetec-api  | 2026-11-06 23:45:01.395 [main] INFO  c.m.s.ReportExportFileCleanupService [traceId=] [tenant=] [order=] [pay=] [CLEANUP] 鍚姩娓呯悊: 鐩綍涓嶅瓨鍦? 璺宠繃
+meiyetec-api  | 2026-11-06 23:45:01.651 [main] WARN  c.m.d.hardware.ble.StubBleGattClient [traceId=] [tenant=] [order=] [pay=] [DCEP-04] BleGattClient 鏈厤缃紝浣跨敤 StubBleGattClient锛堜粎 dev / 鑱旇皟鐢級銆傜湡瀹炵‖浠舵帴鍏ユ椂闇€瀹炵幇 BleGattClient 骞舵爣娉?@Primary銆?meiyetec-api  | 2026-11-06 23:45:01.768 [perm-auto-register] INFO  c.m.security.PermissionAutoRegistrar [traceId=] [tenant=] [order=] [pay=] [PermAutoRegister] 鍚姩鏈熸壂鎻忓畬鎴愶紝鏂板/鏇存柊 0 涓潈闄愮爜
+meiyetec-api  | 2026-11-06 23:45:03.176 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver [traceId=] [tenant=] [order=] [pay=] Exposing 3 endpoint(s) beneath base path '/actuator'
+meiyetec-api  | 2026-11-06 23:45:03.460 [main] INFO  o.a.coyote.http11.Http11NioProtocol [traceId=] [tenant=] [order=] [pay=] Starting ProtocolHandler ["http-nio-8080"]
+meiyetec-api  | 2026-11-06 23:45:03.484 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer [traceId=] [tenant=] [order=] [pay=] Tomcat started on port(s): 8080 (http) with context path ''
+meiyetec-api  | 2026-11-06 23:45:03.514 [scheduling-1] INFO  c.m.m.e.ComplaintSlaAutoEscalationJob [traceId=] [tenant=] [order=] [pay=] [M9.5-ComplaintSLA] SLA 瓒呮椂妫€鏌ュ紑濮?meiyetec-api  | 2026-11-06 23:45:03.524 [main] INFO  com.meiyetec.MeiyetecApplication [traceId=] [tenant=] [order=] [pay=] Started MeiyetecApplication in 25.945 seconds (process running for 26.837)
+meiyetec-api  | 2026-11-06 23:45:03.724 [scheduling-1] INFO  c.m.m.e.ComplaintSlaAutoEscalationJob [traceId=] [tenant=] [order=] [pay=] [M9.5-ComplaintSLA] 妫€鏌ュ畬鎴? 宸ュ崟鏁?10 绉熸埛鏁?1 鍗囩骇鏁?0 cost=210ms
+meiyetec-api  | 2026-11-06 23:45:07.380 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] [traceId=] [tenant=] [order=] [pay=] Initializing Spring DispatcherServlet 'dispatcherServlet'
+meiyetec-api  | 2026-11-06 23:45:07.381 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet [traceId=] [tenant=] [order=] [pay=] Initializing Servlet 'dispatcherServlet'
+meiyetec-api  | 2026-11-06 23:45:07.388 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet [traceId=] [tenant=] [order=] [pay=] Completed initialization in 6 ms
+meiyetec-api  | 2026-11-06 23:45:07.971 [http-nio-8080-exec-1] INFO  o.s.s.a.AnnotationAsyncExecutionInterceptor [traceId=653e36b82d7b497cae4ed2f0df1e5e2e] [tenant=] [order=] [pay=] More than one TaskExecutor bean found within the context, and none is named 'taskExecutor'. Mark one of them as primary or name it 'taskExecutor' (possibly as an alias) in order to use it for async processing: [reportExportExecutorPool, taskScheduler]
+meiyetec-api  | 2026-11-06 23:45:33.502 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK01, fallback to ops
+meiyetec-api  | 2026-11-06 23:45:33.511 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 涓嶅彲瑙ｆ瀽涓?memberId锛堢郴缁?缁勭骇閫氶亾锛夛紝璺宠繃绔欏唴淇℃寔涔呭寲锛坈hannelType=IN_APP scene=null锛?meiyetec-api  | 2026-11-06 23:45:33.512 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK01 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+meiyetec-api  | 2026-11-06 23:45:33.518 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_1786899816844, fallback to ops
+meiyetec-api  | 2026-11-06 23:45:33.519 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 涓嶅彲瑙ｆ瀽涓?memberId锛堢郴缁?缁勭骇閫氶亾锛夛紝璺宠繃绔欏唴淇℃寔涔呭寲锛坈hannelType=IN_APP scene=null锛?meiyetec-api  | 2026-11-06 23:45:33.520 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_1786899816844 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+meiyetec-api  | 2026-11-06 23:45:33.527 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_1786899843571, fallback to ops
+meiyetec-api  | 2026-11-06 23:45:33.528 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 涓嶅彲瑙ｆ瀽涓?memberId锛堢郴缁?缁勭骇閫氶亾锛夛紝璺宠繃绔欏唴淇℃寔涔呭寲锛坈hannelType=IN_APP scene=null锛?meiyetec-api  | 2026-11-06 23:45:33.529 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_1786899843571 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+meiyetec-api  | 2026-11-06 23:45:33.533 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901346918, fallback to ops
+meiyetec-api  | 2026-11-06 23:45:33.534 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 涓嶅彲瑙ｆ瀽涓?memberId锛堢郴缁?缁勭骇閫氶亾锛夛紝璺宠繃绔欏唴淇℃寔涔呭寲锛坈hannelType=IN_APP scene=null锛?meiyetec-api  | 2026-11-06 23:45:33.535 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786901346918 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+meiyetec-api  | 2026-11-06 23:45:33.542 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901428847, fallback to ops
+meiyetec-api  | 2026-11-06 23:45:33.543 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 涓嶅彲瑙ｆ瀽涓?memberId锛堢郴缁?缁勭骇閫氶亾锛夛紝璺宠繃绔欏唴淇℃寔涔呭寲锛坈hannelType=IN_APP scene=null锛?meiyetec-api  | 2026-11-06 23:45:33.544 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786901428847 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+meiyetec-api  | 2026-11-06 23:45:33.548 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901480172, fallback to ops
+meiyetec-api  | 2026-11-06 23:45:33.549 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 涓嶅彲瑙ｆ瀽涓?memberId锛堢郴缁?缁勭骇閫氶亾锛夛紝璺宠繃绔欏唴淇℃寔涔呭寲锛坈hannelType=IN_APP scene=null锛?meiyetec-api  | 2026-11-06 23:45:33.550 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786901480172 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+meiyetec-api  | 2026-11-06 23:45:33.557 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901531974, fallback to ops
+meiyetec-api  | 2026-11-06 23:45:33.558 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 涓嶅彲瑙ｆ瀽涓?memberId锛堢郴缁?缁勭骇閫氶亾锛夛紝璺宠繃绔欏唴淇℃寔涔呭寲锛坈hannelType=IN_APP scene=null锛?meiyetec-api  | 2026-11-06 23:45:33.559 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786901531974 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+meiyetec-api  | 2026-11-06 23:45:33.563 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786960202644, fallback to ops
+meiyetec-api  | 2026-11-06 23:45:33.564 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 涓嶅彲瑙ｆ瀽涓?memberId锛堢郴缁?缁勭骇閫氶亾锛夛紝璺宠繃绔欏唴淇℃寔涔呭寲锛坈hannelType=IN_APP scene=null锛?meiyetec-api  | 2026-11-06 23:45:33.565 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786960202644 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+meiyetec-api  | 2026-11-06 23:45:33.571 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786960300234, fallback to ops
+meiyetec-api  | 2026-11-06 23:45:33.573 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 涓嶅彲瑙ｆ瀽涓?memberId锛堢郴缁?缁勭骇閫氶亾锛夛紝璺宠繃绔欏唴淇℃寔涔呭寲锛坈hannelType=IN_APP scene=null锛?meiyetec-api  | 2026-11-06 23:45:33.574 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786960300234 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+meiyetec-api  | 2026-11-06 23:45:33.580 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1787581091714, fallback to ops
+meiyetec-api  | 2026-11-06 23:45:33.580 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 涓嶅彲瑙ｆ瀽涓?memberId锛堢郴缁?缁勭骇閫氶亾锛夛紝璺宠繃绔欏唴淇℃寔涔呭寲锛坈hannelType=IN_APP scene=null锛?meiyetec-api  | 2026-11-06 23:45:33.581 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1787581091714 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+meiyetec-api  | 2026-11-06 23:46:03.466 [scheduling-1] INFO  c.m.job.BlockchainIntegrityCheckJob [traceId=] [tenant=] [order=] [pay=] [BlockchainIntegrityCheckJob] 寮€濮嬮摼瀹屾暣鎬ф牎楠?..
+meiyetec-api  | 2026-11-06 23:46:03.472 [scheduling-1] INFO  c.m.job.BlockchainIntegrityCheckJob [traceId=] [tenant=] [order=] [pay=] [BlockchainIntegrityCheckJob] 閾?meiyetec-main 瀹屾暣锛? 鍧楋級
+meiyetec-api  | 2026-11-06 23:46:03.474 [scheduling-1] INFO  c.m.job.BlockchainIntegrityCheckJob [traceId=] [tenant=] [order=] [pay=] [BlockchainIntegrityCheckJob] 閾?meiyetec-cosmetic 瀹屾暣锛? 鍧楋級
+meiyetec-api  | 2026-11-06 23:46:03.480 [scheduling-1] INFO  c.m.job.BlockchainIntegrityCheckJob [traceId=] [tenant=] [order=] [pay=] [BlockchainIntegrityCheckJob] 閾?meiyetec-drug 瀹屾暣锛? 鍧楋級
+meiyetec-api  | 2026-11-06 23:46:03.482 [scheduling-1] INFO  c.m.job.BlockchainIntegrityCheckJob [traceId=] [tenant=] [order=] [pay=] [BlockchainIntegrityCheckJob] 閾?meiyetec-device 瀹屾暣锛? 鍧楋級
+meiyetec-api  | 2026-11-06 23:46:03.482 [scheduling-1] INFO  c.m.job.BlockchainIntegrityCheckJob [traceId=] [tenant=] [order=] [pay=] [BlockchainIntegrityCheckJob] 閾惧畬鏁存€ф牎楠屽畬鎴?meiyetec-api  | 2026-11-06 23:46:46.983 [http-nio-8080-exec-1] WARN  c.m.exception.GlobalExceptionHandler [traceId=ea8c9b96effb4ffead8d1c4777224c01] [tenant=] [order=] [pay=] [UnreadableBody] JSON parse error: Unexpected character ('u' (code 117)): was expecting double-quote to start field name
+meiyetec-api  | 2026-11-06 23:47:41.832 [http-nio-8080-exec-1] WARN  c.m.service.BizServiceItemService [traceId=78deb28057624de0a6aa138e6b838ed7] [tenant=] [order=] [pay=] [Import] 鏈嶅姟椤圭洰瀵煎叆瑙ｆ瀽澶辫触 file=tmp-bad.xlsx err=No valid entries or contents found, this is not a valid OOXML (Office Open XML) file
+meiyetec-api  | 2026-11-06 23:48:30.548 [http-nio-8080-exec-8] WARN  c.m.service.BizServiceItemService [traceId=12a15f382a9c4ccf9f417bc7f0245112] [tenant=] [order=] [pay=] [Import] 鏈嶅姟椤圭洰瀵煎叆瑙ｆ瀽澶辫触 file=tmp-template-unique.xlsx err=No valid entries or contents found, this is not a valid OOXML (Office Open XML) file
+meiyetec-api  | 2026-11-06 23:49:07.287 [http-nio-8080-exec-3] WARN  c.m.exception.GlobalExceptionHandler [traceId=58caea4d55cb4a86b54bac197b595fbf] [tenant=] [order=] [pay=] [UnreadableBody] JSON parse error: Cannot deserialize value of type `java.lang.Integer` from String "鍚敤": not a valid `java.lang.Integer` value
+meiyetec-api  | 2026-11-06 23:49:25.145 [http-nio-8080-exec-6] WARN  c.m.exception.GlobalExceptionHandler [traceId=8c955c7d89d94f57b80269ff718bea71] [tenant=] [order=] [pay=] [UnreadableBody] JSON parse error: Cannot deserialize value of type `java.lang.Integer` from String "鍚敤": not a valid `java.lang.Integer` value
+meiyetec-api  | 2026-11-06 23:53:38.071 [http-nio-8080-exec-10] WARN  c.m.exception.GlobalExceptionHandler [traceId=8f249d34945843efabfaa97fa0355d91] [tenant=] [order=] [pay=] [TypeMismatch] Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; For input string: "list"
+meiyetec-api  | 2026-11-06 23:54:31.272 [http-nio-8080-exec-8] WARN  c.m.service.BizServiceItemService [traceId=5b10ccd6bfef44aa892b17941a4163cc] [tenant=] [order=] [pay=] [Import] 鏈嶅姟椤圭洰瀵煎叆瑙ｆ瀽澶辫触 file=tmp-notexcel-f143.xlsx err=No valid entries or contents found, this is not a valid OOXML (Office Open XML) file
+meiyetec-api  | 2026-11-06 23:54:31.377 [http-nio-8080-exec-10] WARN  c.m.service.BizServiceItemService [traceId=09a5611f02474978a35fa9b77b1e80ef] [tenant=] [order=] [pay=] [Import] 鏈嶅姟椤圭洰瀵煎叆瑙ｆ瀽澶辫触 file=tmp-template-f143.xlsx err=No valid entries or contents found, this is not a valid OOXML (Office Open XML) file
+meiyetec-api  | 2026-11-06 23:56:07.091 [http-nio-8080-exec-5] WARN  c.m.service.BizServiceItemService [traceId=fd2c85f463354c4699c6a6234e161657] [tenant=] [order=] [pay=] [Import] 鏈嶅姟椤圭洰瀵煎叆瑙ｆ瀽澶辫触 file=tmp-notexcel-f143.xlsx err=No valid entries or contents found, this is not a valid OOXML (Office Open XML) file
+meiyetec-api  | 2026-11-06 23:56:27.840 [http-nio-8080-exec-4] ERROR c.m.exception.GlobalExceptionHandler [traceId=7b67e807cf5c4e25bd4fb3e7c45fada5] [tenant=] [order=] [pay=] [DBError]
+meiyetec-api  | org.springframework.dao.DataIntegrityViolationException: 
+meiyetec-api  | ### Error updating database.  Cause: com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'description' at row 1
+meiyetec-api  | ### The error may exist in com/meiyetec/mapper/BizServiceItemMapper.java (best guess)
+meiyetec-api  | ### The error may involve com.meiyetec.mapper.BizServiceItemMapper.insert-Inline
+meiyetec-api  | ### The error occurred while setting parameters
+meiyetec-api  | ### SQL: INSERT INTO biz_service_item  ( tenant_id, store_id, service_code, service_name,  unit_price,   duration, unit, description,   status, sort_order, create_time, update_time )  VALUES (  ?, ?, ?, ?,  ?,   ?, ?, ?,   ?, ?, ?, ?  )
+meiyetec-api  | ### Cause: com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'description' at row 1
+meiyetec-api  | ; Data truncation: Data too long for column 'description' at row 1
+meiyetec-api  | 	at org.springframework.jdbc.support.SQLStateSQLExceptionTranslator.doTranslate(SQLStateSQLExceptionTranslator.java:110)
+meiyetec-api  | 	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:73)
+meiyetec-api  | 	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:82)
+meiyetec-api  | 	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:82)
+meiyetec-api  | 	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:92)
+meiyetec-api  | 	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:439)
+meiyetec-api  | 	at jdk.proxy2/jdk.proxy2.$Proxy110.insert(Unknown Source)
+meiyetec-api  | 	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:272)
+meiyetec-api  | 	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:59)
+meiyetec-api  | 	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:152)
+meiyetec-api  | 	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)
+meiyetec-api  | 	at jdk.proxy2/jdk.proxy2.$Proxy132.insert(Unknown Source)
+meiyetec-api  | 	at com.meiyetec.service.BizServiceItemService.createItem(BizServiceItemService.java:200)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+meiyetec-api  | 	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+meiyetec-api  | 	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+meiyetec-api  | 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+meiyetec-api  | 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:751)
+meiyetec-api  | 	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:89)
+meiyetec-api  | 	at com.meiyetec.security.PermissionAspect.check(PermissionAspect.java:48)
+meiyetec-api  | 	at jdk.internal.reflect.GeneratedMethodAccessor140.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+meiyetec-api  | 	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:637)
+meiyetec-api  | 	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:627)
+meiyetec-api  | 	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:71)
+meiyetec-api  | 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:173)
+meiyetec-api  | 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:751)
+meiyetec-api  | 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+meiyetec-api  | 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+meiyetec-api  | 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:751)
+meiyetec-api  | 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:703)
+meiyetec-api  | 	at com.meiyetec.service.BizServiceItemService$$SpringCGLIB$$0.createItem(<generated>)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+meiyetec-api  | 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+meiyetec-api  | 	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+meiyetec-api  | 	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+meiyetec-api  | 	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+meiyetec-api  | 	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+meiyetec-api  | 	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+meiyetec-api  | 	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+meiyetec-api  | 	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+meiyetec-api  | 	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+meiyetec-api  | 	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+meiyetec-api  | 	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+meiyetec-api  | 	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+meiyetec-api  | 	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at com.meiyetec.log.LogContextFilter.doFilterInternal(LogContextFilter.java:62)
+meiyetec-api  | 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at com.meiyetec.config.TracingFilter.doFilter(TracingFilter.java:70)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+meiyetec-api  | 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+meiyetec-api  | 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at com.meiyetec.config.TraceFilter.doFilterInternal(TraceFilter.java:32)
+meiyetec-api  | 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109)
+meiyetec-api  | 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+meiyetec-api  | 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+meiyetec-api  | 	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+meiyetec-api  | 	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+meiyetec-api  | 	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+meiyetec-api  | 	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+meiyetec-api  | 	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+meiyetec-api  | 	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+meiyetec-api  | 	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+meiyetec-api  | 	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+meiyetec-api  | 	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+meiyetec-api  | 	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+meiyetec-api  | 	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+meiyetec-api  | 	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+meiyetec-api  | 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+meiyetec-api  | 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+meiyetec-api  | 	at java.base/java.lang.Thread.run(Unknown Source)
+meiyetec-api  | Caused by: com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'description' at row 1
+meiyetec-api  | 	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+meiyetec-api  | 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+meiyetec-api  | 	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:354)
+meiyetec-api  | 	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+meiyetec-api  | 	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+meiyetec-api  | 	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:48)
+meiyetec-api  | 	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:75)
+meiyetec-api  | 	at jdk.internal.reflect.GeneratedMethodAccessor89.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+meiyetec-api  | 	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:61)
+meiyetec-api  | 	at jdk.proxy2/jdk.proxy2.$Proxy215.update(Unknown Source)
+meiyetec-api  | 	at org.apache.ibatis.executor.SimpleExecutor.doUpdate(SimpleExecutor.java:50)
+meiyetec-api  | 	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)
+meiyetec-api  | 	at org.apache.ibatis.executor.CachingExecutor.update(CachingExecutor.java:76)
+meiyetec-api  | 	at jdk.internal.reflect.GeneratedMethodAccessor88.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+meiyetec-api  | 	at org.apache.ibatis.plugin.Invocation.proceed(Invocation.java:49)
+meiyetec-api  | 	at com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor.intercept(MybatisPlusInterceptor.java:106)
+meiyetec-api  | 	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:59)
+meiyetec-api  | 	at jdk.proxy2/jdk.proxy2.$Proxy214.update(Unknown Source)
+meiyetec-api  | 	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)
+meiyetec-api  | 	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:184)
+meiyetec-api  | 	at jdk.internal.reflect.GeneratedMethodAccessor87.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+meiyetec-api  | 	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:425)
+meiyetec-api  | 	... 95 common frames omitted
+meiyetec-api  | 2026-11-06 23:56:40.799 [http-nio-8080-exec-7] ERROR c.m.exception.GlobalExceptionHandler [traceId=2e2902525a874c4bb503275a51be16de] [tenant=] [order=] [pay=] [DBError]
+meiyetec-api  | org.springframework.dao.DataIntegrityViolationException: 
+meiyetec-api  | ### Error updating database.  Cause: com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'description' at row 1
+meiyetec-api  | ### The error may exist in com/meiyetec/mapper/BizServiceItemMapper.java (best guess)
+meiyetec-api  | ### The error may involve com.meiyetec.mapper.BizServiceItemMapper.insert-Inline
+meiyetec-api  | ### The error occurred while setting parameters
+meiyetec-api  | ### SQL: INSERT INTO biz_service_item  ( tenant_id, store_id, service_code, service_name,  unit_price,   duration, unit, description,   status, sort_order, create_time, update_time )  VALUES (  ?, ?, ?, ?,  ?,   ?, ?, ?,   ?, ?, ?, ?  )
+meiyetec-api  | ### Cause: com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'description' at row 1
+meiyetec-api  | ; Data truncation: Data too long for column 'description' at row 1
+meiyetec-api  | 	at org.springframework.jdbc.support.SQLStateSQLExceptionTranslator.doTranslate(SQLStateSQLExceptionTranslator.java:110)
+meiyetec-api  | 	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:73)
+meiyetec-api  | 	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:82)
+meiyetec-api  | 	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:82)
+meiyetec-api  | 	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:92)
+meiyetec-api  | 	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:439)
+meiyetec-api  | 	at jdk.proxy2/jdk.proxy2.$Proxy110.insert(Unknown Source)
+meiyetec-api  | 	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:272)
+meiyetec-api  | 	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:59)
+meiyetec-api  | 	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:152)
+meiyetec-api  | 	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)
+meiyetec-api  | 	at jdk.proxy2/jdk.proxy2.$Proxy132.insert(Unknown Source)
+meiyetec-api  | 	at com.meiyetec.service.BizServiceItemService.createItem(BizServiceItemService.java:200)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+meiyetec-api  | 	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+meiyetec-api  | 	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+meiyetec-api  | 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+meiyetec-api  | 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:751)
+meiyetec-api  | 	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:89)
+meiyetec-api  | 	at com.meiyetec.security.PermissionAspect.check(PermissionAspect.java:48)
+meiyetec-api  | 	at jdk.internal.reflect.GeneratedMethodAccessor140.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+meiyetec-api  | 	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:637)
+meiyetec-api  | 	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:627)
+meiyetec-api  | 	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:71)
+meiyetec-api  | 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:173)
+meiyetec-api  | 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:751)
+meiyetec-api  | 	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+meiyetec-api  | 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+meiyetec-api  | 	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:751)
+meiyetec-api  | 	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:703)
+meiyetec-api  | 	at com.meiyetec.service.BizServiceItemService$$SpringCGLIB$$0.createItem(<generated>)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+meiyetec-api  | 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+meiyetec-api  | 	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+meiyetec-api  | 	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+meiyetec-api  | 	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+meiyetec-api  | 	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+meiyetec-api  | 	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+meiyetec-api  | 	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+meiyetec-api  | 	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+meiyetec-api  | 	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+meiyetec-api  | 	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+meiyetec-api  | 	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+meiyetec-api  | 	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+meiyetec-api  | 	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at com.meiyetec.log.LogContextFilter.doFilterInternal(LogContextFilter.java:62)
+meiyetec-api  | 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at com.meiyetec.config.TracingFilter.doFilter(TracingFilter.java:70)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+meiyetec-api  | 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+meiyetec-api  | 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at com.meiyetec.config.TraceFilter.doFilterInternal(TraceFilter.java:32)
+meiyetec-api  | 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109)
+meiyetec-api  | 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+meiyetec-api  | 	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+meiyetec-api  | 	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+meiyetec-api  | 	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+meiyetec-api  | 	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+meiyetec-api  | 	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+meiyetec-api  | 	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+meiyetec-api  | 	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+meiyetec-api  | 	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+meiyetec-api  | 	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+meiyetec-api  | 	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+meiyetec-api  | 	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+meiyetec-api  | 	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+meiyetec-api  | 	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+meiyetec-api  | 	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+meiyetec-api  | 	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+meiyetec-api  | 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+meiyetec-api  | 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+meiyetec-api  | 	at java.base/java.lang.Thread.run(Unknown Source)
+meiyetec-api  | Caused by: com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'description' at row 1
+meiyetec-api  | 	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+meiyetec-api  | 	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+meiyetec-api  | 	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:354)
+meiyetec-api  | 	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+meiyetec-api  | 	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+meiyetec-api  | 	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:48)
+meiyetec-api  | 	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:75)
+meiyetec-api  | 	at jdk.internal.reflect.GeneratedMethodAccessor89.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+meiyetec-api  | 	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:61)
+meiyetec-api  | 	at jdk.proxy2/jdk.proxy2.$Proxy215.update(Unknown Source)
+meiyetec-api  | 	at org.apache.ibatis.executor.SimpleExecutor.doUpdate(SimpleExecutor.java:50)
+meiyetec-api  | 	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)
+meiyetec-api  | 	at org.apache.ibatis.executor.CachingExecutor.update(CachingExecutor.java:76)
+meiyetec-api  | 	at jdk.internal.reflect.GeneratedMethodAccessor88.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+meiyetec-api  | 	at org.apache.ibatis.plugin.Invocation.proceed(Invocation.java:49)
+meiyetec-api  | 	at com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor.intercept(MybatisPlusInterceptor.java:106)
+meiyetec-api  | 	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:59)
+meiyetec-api  | 	at jdk.proxy2/jdk.proxy2.$Proxy214.update(Unknown Source)
+meiyetec-api  | 	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)
+meiyetec-api  | 	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:184)
+meiyetec-api  | 	at jdk.internal.reflect.GeneratedMethodAccessor87.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+meiyetec-api  | 	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+meiyetec-api  | 	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:425)
+meiyetec-api  | 	... 95 common frames omitted

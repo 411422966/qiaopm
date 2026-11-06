@@ -1,0 +1,99 @@
+{
+  "featureId": "F143",
+  "issueId": "I138",
+  "title": "文件上传接口 500 MultipartException 修复前后对比",
+  "verifiedAt": "2026-11-06 23:44 - 23:57 (+08:00)",
+  "env": {
+    "backend": "http://localhost:8080 （容器 meiyetec-api，镜像 meiyetec/api:dev，23:44 重建后 healthy）",
+    "db": "meiyetec@127.0.0.1:3307 （MySQL 8.0.46）— 见 audit/evidence/db-snapshot.md",
+    "envDoc": "audit/evidence/env.md",
+    "token": "admin / SUPER_ADMIN + ADMIN，登录于 2026-11-06T23:46:57+08:00",
+    "apiPathNote": "直连容器端口 8080 无 /api 前缀；/api 前缀由 nginx 转发时才有，见 frontend/meiyetec-web/nginx.conf:41-42"
+  },
+  "rootCause": {
+    "chain": [
+      "LogContextFilter.doFilterInternal 对所有请求 new CachedBodyRequestWrapper(request)",
+      "CachedBodyRequestWrapper 构造器内 request.getInputStream() 全量读取并关闭输入流",
+      "DispatcherServlet.checkMultipart → StandardMultipartHttpServletRequest.parseRequest → request.getParts() 读到已关闭的流",
+      "Tomcat 抛 IOException → Spring 包装为 MultipartException: Failed to parse multipart servlet request",
+      "GlobalExceptionHandler.handleRuntime 兜底 → ERROR 日志 + Result.error(SYSTEM_ERROR) → 表现为 500"
+    ],
+    "primaryFiles": [
+      "backend/src/main/java/com/meiyetec/log/LogContextFilter.java",
+      "backend/src/main/java/com/meiyetec/security/CachedBodyRequestWrapper.java"
+    ],
+    "secondaryFiles": [
+      "backend/src/main/java/com/meiyetec/exception/GlobalExceptionHandler.java",
+      "backend/src/main/java/com/meiyetec/service/BizServiceItemService.java",
+      "backend/src/main/java/com/meiyetec/service/BizTreatmentService.java"
+    ]
+  },
+  "before": {
+    "endpoint": "POST /biz/service/item/import",
+    "httpStatus": 200,
+    "body": { "code": 500, "message": "系统繁忙，请稍后重试" },
+    "serverLog": "ERROR c.m.exception.GlobalExceptionHandler [traceId=32ad5bcd1353414d9648b332b01c9248] org.springframework.web.multipart.MultipartException: Failed to parse multipart servlet request",
+    "stackKeyFrame": "at com.meiyetec.log.LogContextFilter.doFilterInternal(LogContextFilter.java:54)",
+    "evidence": "before-01-multipart-exception-stack.txt"
+  },
+  "after": {
+    "emptyFile": {
+      "file": "tmp-empty-f143.xlsx（0 字节）",
+      "httpStatus": 200,
+      "body": { "code": 400, "message": "请求参数错误: 请上传文件" },
+      "serverLog": "无 ERROR（file.isEmpty() 早于解析返回）",
+      "evidence": "after-01-empty-file.json"
+    },
+    "notExcelContent": {
+      "file": "tmp-notexcel-f143.xlsx（文本内容但 .xlsx 后缀）",
+      "httpStatus": 200,
+      "body": { "code": 400, "message": "请求参数错误: 文件格式错误，请使用 .xlsx 模板文件上传" },
+      "serverLog": "WARN c.m.service.BizServiceItemService [Import] 服务项目导入解析失败 file=tmp-notexcel-f143.xlsx err=No valid entries or contents found, this is not a valid OOXML (Office Open XML) file",
+      "evidence": "after-02-not-excel.json"
+    },
+    "validTemplate": {
+      "file": "tmp-template-f143.xlsx（真实模板，示例编码改为 F143SV003 / F143SV004 保证唯一）",
+      "httpStatus": 200,
+      "body": {
+        "code": 200,
+        "message": "导入完成，成功 2 条，失败 0 条",
+        "data": { "total": 2, "success": 2, "failed": 0, "errors": [] }
+      },
+      "serverLog": "无 ERROR",
+      "evidence": "after-03-valid-template.json"
+    },
+    "multipartExceptionCountInLogs": 0,
+    "logEvidence": "after-06-container-logs.txt"
+  },
+  "regression": {
+    "jsonPost": {
+      "endpoint": "POST /biz/service/item",
+      "body": "{\"serviceCode\":\"F143JSON001\",\"serviceName\":\"F143 JSON回归\",\"unitPrice\":88.00,\"duration\":45,\"unit\":\"次\",\"status\":1}",
+      "result": "code=200 创建成功（id=40）",
+      "conclusion": "变更 A 未误伤 JSON body 缓存：@RequestBody 解析正常",
+      "evidence": "after-04-json-regression.json"
+    },
+    "jsonBodyOverLimit": {
+      "endpoint": "POST /biz/service/item",
+      "bodySizeBytes": 300146,
+      "limitBytes": 262144,
+      "result": "code=200 创建成功（id=41）",
+      "conclusion": "变更 B 生效：超过 256KB 的 JSON 请求体不再被截断，Jackson 完整解析（额外的 300KB 字段被忽略）；修复前会被截断成非法 JSON 而解析失败",
+      "evidence": "after-05-json-over-256kb.json"
+    },
+    "jsonBodyOverLimitFieldTooLong": {
+      "endpoint": "POST /biz/service/item",
+      "bodySizeBytes": 300132,
+      "result": "code=500 数据库异常（description varchar(500) 超长）",
+      "conclusion": "请求体已完整到达业务层与数据库层（而非被截断后解析失败），失败原因是字段长度约束，与本次修复无关",
+      "evidence": "after-05b-json-over-256kb-field-too-long.json"
+    },
+    "cleanup": "验证产生的服务项目 id=34/35/38/39/40/41 已通过业务接口 DELETE 软删除（uk_tenant_code 唯一键不含 deleted，软删后编码仍被占用，见遗留项 L2）"
+  },
+  "securityCompromise": {
+    "scenario": "Content-Length 未知（chunked 传输）或超过 256KB 的请求不再缓存 body",
+    "impact": "DataScopeInterceptor 无法从这类 JSON body 读取 tenantId/storeId，退回只校验 header（X-Tenant-Id / X-Store-Id）与 query 参数",
+    "rationale": "多租户隔离不依赖 body —— body 里的 tenantId/storeId 本就不可信，正式数据范围以 Token 解析出的 RbacContext（dataScope / storeIds）为准",
+    "recordedIn": "audit/issues/I138-multipart-upload-500.md §6 安全折衷"
+  }
+}

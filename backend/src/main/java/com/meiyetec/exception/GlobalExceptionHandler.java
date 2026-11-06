@@ -12,6 +12,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
 
 import java.util.stream.Collectors;
 
@@ -57,6 +58,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Result<Void>> handleUnreadableBody(HttpMessageNotReadableException e) {
         log.warn("[UnreadableBody] {}", e.getMessage());
         return ResponseEntity.ok(Result.error(BizCode.BAD_REQUEST.code, "请求体格式错误，无法解析"));
+    }
+
+    /**
+     * 文件上传类异常（multipart 解析失败 / 请求不是 multipart 请求）：
+     * 属于用户可纠正的错误，返回 400 业务提示，不再当成 500 系统故障。
+     */
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<Result<Void>> handleMultipart(MultipartException e) {
+        log.warn("[MultipartError] {}", e.getMessage());
+        return ResponseEntity.ok(Result.error(BizCode.BAD_REQUEST.code, "文件上传失败，请重新选择文件上传"));
     }
 
     @ExceptionHandler(OptimisticLockingFailureException.class)

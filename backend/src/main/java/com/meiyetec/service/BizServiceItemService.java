@@ -11,6 +11,7 @@ import com.meiyetec.util.Keys;
 import com.meiyetec.util.Result;
 import com.meiyetec.util.XlsxExportUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -32,6 +33,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/biz/service")
 @RequiredArgsConstructor
+@Slf4j
 public class BizServiceItemService {
 
     private final BizServiceCategoryMapper categoryMapper;
@@ -405,7 +407,14 @@ public class BizServiceItemService {
         headerMap.put("description", "描述");
         headerMap.put("sop", "SOP");
 
-        List<Map<String, Object>> rows = XlsxExportUtil.importRows(file.getInputStream(), headerMap);
+        List<Map<String, Object>> rows;
+        try {
+            rows = XlsxExportUtil.importRows(file.getInputStream(), headerMap);
+        } catch (Exception e) {
+            // POI 解析异常（NotOfficeXmlFileException / InvalidFormatException / 空文件等）
+            log.warn("[Import] 服务项目导入解析失败 file={} err={}", filename, e.getMessage());
+            return Result.error(BizCode.BAD_REQUEST, "文件格式错误，请使用 .xlsx 模板文件上传");
+        }
         if (rows.isEmpty()) return Result.error(BizCode.BAD_REQUEST, "模板无数据");
 
         // 一次性查分类映射 categoryCode → id
