@@ -2,7 +2,7 @@
 
 > **状态**：Fixed（2026-11-06，23:44 容器重建 → 23:49 首验通过 → 23:57 证据重跑复核通过）
 > **证据**：`audit/evidence/F143-multipart-upload/`（修复前堆栈 + 修复后 3 场景响应 + JSON 回归 + 大报文回归 + 前后对比 JSON + 容器日志 + README 复现步骤）
-> **绑定**：基线 commit `44679f7`（修复前代码状态）/ 修复 commit 见 §7 / DB `meiyetec@127.0.0.1:3307`（MySQL 8.0.46）/ env `audit/evidence/env.md`、快照 `audit/evidence/db-snapshot.md`
+> **绑定**：基线 commit `44679f7`（修复前代码状态）/ 修复 commit `1b0f86a` / DB `meiyetec@127.0.0.1:3307`（MySQL 8.0.46）/ env `audit/evidence/env.md`、快照 `audit/evidence/db-snapshot.md`
 > **关联**：I137 §P0 备注（"属独立缺陷，本批不修，需另开 issue 单" → 本单即该 issue 单）
 
 ---
@@ -109,7 +109,7 @@
 | 2026-11-06 23:53 | 复核发现证据文件 UTF-8 编码损坏，重跑三场景 + JSON 回归，证据以原始字节重写 |
 | 2026-11-06 23:56 | 三场景复跑通过（空文件 400 / 非 Excel 400 / 真模板 200 成功 2 条） |
 | 2026-11-06 23:57 | JSON 回归 + 300KB 大报文回归通过；验证数据软删清理 |
-| 2026-11-06 23:58 | 证据落盘 `audit/evidence/F143-multipart-upload/`（含 README.md 复现步骤）；提交（commit hash 见文件头） |
+| 2026-11-06 23:58 | 证据落盘 `audit/evidence/F143-multipart-upload/`（含 README.md 复现步骤）；提交 `1b0f86a` fix(security): 修复 Multipart 上传 500，优化 body 缓存策略（I138） |
 
 ---
 
