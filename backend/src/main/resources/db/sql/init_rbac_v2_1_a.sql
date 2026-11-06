@@ -3,6 +3,13 @@
 -- 2026-08-08
 -- ============================================
 
+-- I128-b 根因加固：种子/迁移文件必须显式声明客户端字符集。
+-- 缺 SET NAMES 时，mysql 客户端按自身默认字符集（容器内为 latin1，Windows 上可能为 GBK）
+-- 解释本文件的 UTF-8 字节，落库即为乱码（历史事故：fix_menu_chinese_encoding.sql 修复的
+-- 118 条 '????'，以及 2026-08-13 种子批次的 101 行业务表乱码）。
+-- 参见 audit/issues/I128-b-charset-remaining.md §8
+SET NAMES utf8mb4;
+
 -- 1. 项目分类
 DROP TABLE IF EXISTS biz_service_category;
 CREATE TABLE biz_service_category (

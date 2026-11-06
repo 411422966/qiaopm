@@ -1,0 +1,27 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+col	mojibake_left
+biz_service_item.service_name	0
+biz_service_item.unit	0
+biz_service_category.category_name	0
+biz_treatment_plan.plan_name	0
+biz_treatment_plan.description	0
+id	service_code	service_name	unit
+1	SV001	基础面部清洁	次
+9	SV009	身体按摩 60 分钟	次
+22	SV022	测试待上线服务	次
+id	category_code	category_name
+1	FACE	面部护理
+2	BODY	美体塑形
+3	TATTOO	纹绣美瞳
+4	HEAD	头部SPA
+5	OTHER	其他
+id	plan_code	plan_name
+1	TP001	焕颜亮白 10 次套餐
+25	TP025	乳腺疏通 6 次（停用）
+26	TP026	测试方案（停用）
+col	back_to_mojibake
+biz_service_item.service_name	22
+biz_service_item.unit	22
+biz_service_category.category_name	5
+biz_treatment_plan.plan_name	26
+biz_treatment_plan.description	26

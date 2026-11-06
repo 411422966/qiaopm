@@ -1,0 +1,209 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+col	mojibake_rows
+biz_service_item.service_name	22
+biz_service_item.unit	22
+biz_service_category.category_name	5
+biz_treatment_plan.plan_name	26
+biz_treatment_plan.description	26
+id	code	current_value	target_value
+1	SV001	åŸºç¡€é¢éƒ¨æ¸…æ´	基础面部清洁
+id	code	current_value	target_value
+2	SV002	æ·±å±‚è¡¥æ°´æŠ¤ç†	深层补水护理
+id	code	current_value	target_value
+3	SV003	æŠ—çš±ç´§è‡´æå‡	抗皱紧致提升
+id	code	current_value	target_value
+4	SV004	çŽ»å°¿é…¸å¯¼å…¥	玻尿酸导入
+id	code	current_value	target_value
+5	SV005	ç¾Žç™½æ·¡æ–‘	美白淡斑
+id	code	current_value	target_value
+6	SV006	ç²‰åˆºæ¸…ç†	粉刺清理
+id	code	current_value	target_value
+7	SV007	ç»å…¸ç¾Žä½“å¡‘å½¢	经典美体塑形
+id	code	current_value	target_value
+8	SV008	çº¤ä½“ç˜¦èº«	纤体瘦身
+id	code	current_value	target_value
+9	SV009	èº«ä½“æŒ‰æ‘© 60 åˆ†é’Ÿ	身体按摩 60 分钟
+id	code	current_value	target_value
+10	SV010	éŸ©å¼åŠæ°¸ä¹…çœ‰	韩式半永久眉
+id	code	current_value	target_value
+11	SV011	éŸ©å¼åŠæ°¸ä¹…ç¾Žçž³çº¿	韩式半永久美瞳线
+id	code	current_value	target_value
+12	SV012	çœ‰æ¯›çº¹ç»£	眉毛纹绣
+id	code	current_value	target_value
+13	SV013	å¤´éƒ¨ SPA ç»å…¸	头部 SPA 经典
+id	code	current_value	target_value
+14	SV014	å¤´éƒ¨ SPA æ·±åº¦	头部 SPA 深度
+id	code	current_value	target_value
+15	SV015	å¤´éƒ¨åˆ®ç—§	头部刮痧
+id	code	current_value	target_value
+16	SV016	çƒ­çŽ›å‰	热玛吉
+id	code	current_value	target_value
+17	SV017	å…‰å­å«©è‚¤	光子嫩肤
+id	code	current_value	target_value
+18	SV018	ç‚¹é˜µæ¿€å…‰	点阵激光
+id	code	current_value	target_value
+19	SV019	æ³¨å°„çŽ»å°¿é…¸	注射玻尿酸
+id	code	current_value	target_value
+20	SV020	ç˜¦è„¸é’ˆ	瘦脸针
+id	code	current_value	target_value
+21	SV021	ä¹³è…ºç–é€š	乳腺疏通
+id	code	current_value	target_value
+22	SV022	æµ‹è¯•å¾…ä¸Šçº¿æœåŠ¡	测试待上线服务
+id	code	current_value	target_value
+1	SV001	æ¬¡	次
+id	code	current_value	target_value
+2	SV002	æ¬¡	次
+id	code	current_value	target_value
+3	SV003	æ¬¡	次
+id	code	current_value	target_value
+4	SV004	æ¬¡	次
+id	code	current_value	target_value
+5	SV005	æ¬¡	次
+id	code	current_value	target_value
+6	SV006	æ¬¡	次
+id	code	current_value	target_value
+7	SV007	æ¬¡	次
+id	code	current_value	target_value
+8	SV008	æ¬¡	次
+id	code	current_value	target_value
+9	SV009	æ¬¡	次
+id	code	current_value	target_value
+10	SV010	æ¬¡	次
+id	code	current_value	target_value
+11	SV011	æ¬¡	次
+id	code	current_value	target_value
+12	SV012	æ¬¡	次
+id	code	current_value	target_value
+13	SV013	æ¬¡	次
+id	code	current_value	target_value
+14	SV014	æ¬¡	次
+id	code	current_value	target_value
+15	SV015	æ¬¡	次
+id	code	current_value	target_value
+16	SV016	æ¬¡	次
+id	code	current_value	target_value
+17	SV017	æ¬¡	次
+id	code	current_value	target_value
+18	SV018	æ¬¡	次
+id	code	current_value	target_value
+19	SV019	æ¬¡	次
+id	code	current_value	target_value
+20	SV020	æ¬¡	次
+id	code	current_value	target_value
+21	SV021	æ¬¡	次
+id	code	current_value	target_value
+22	SV022	æ¬¡	次
+id	code	current_value	target_value
+1	FACE	é¢éƒ¨æŠ¤ç†	面部护理
+id	code	current_value	target_value
+2	BODY	ç¾Žä½“å¡‘å½¢	美体塑形
+id	code	current_value	target_value
+3	TATTOO	çº¹ç»£ç¾Žçž³	纹绣美瞳
+id	code	current_value	target_value
+4	HEAD	å¤´éƒ¨SPA	头部SPA
+id	code	current_value	target_value
+5	OTHER	å…¶ä»–	其他
+id	code	current_value	target_value
+1	TP001	ç„•é¢œäº®ç™½ 10 æ¬¡å¥—é¤	焕颜亮白 10 次套餐
+id	code	current_value	target_value
+2	TP002	ç´§è‡´ææ‹‰ç–—ç¨‹	紧致提拉疗程
+id	code	current_value	target_value
+3	TP003	è¡¥æ°´ç»å…¸ 6 æ¬¡	补水经典 6 次
+id	code	current_value	target_value
+4	TP004	æ·±å±‚æ¸…æ´ 8 æ¬¡å¡	深层清洁 8 次卡
+id	code	current_value	target_value
+5	TP005	ç²‰åˆºæ¸…ç† 5 æ¬¡	粉刺清理 5 次
+id	code	current_value	target_value
+6	TP006	ç¾Žä½“å¡‘å½¢ 12 æ¬¡	美体塑形 12 次
+id	code	current_value	target_value
+7	TP007	çº¤ä½“ç˜¦èº« 10 æ¬¡	纤体瘦身 10 次
+id	code	current_value	target_value
+8	TP008	å…¨èº«æŒ‰æ‘© 10 æ¬¡å¡	全身按摩 10 次卡
+id	code	current_value	target_value
+9	TP009	éŸ©å¼åŠæ°¸ä¹…çœ‰	韩式半永久眉
+id	code	current_value	target_value
+10	TP010	ç¾Žçž³çº¿	美瞳线
+id	code	current_value	target_value
+11	TP011	çº¹çœ‰	纹眉
+id	code	current_value	target_value
+12	TP012	å¤´éƒ¨ SPA ç»å…¸ 6 æ¬¡	头部 SPA 经典 6 次
+id	code	current_value	target_value
+13	TP013	å¤´éƒ¨ SPA æ·±åº¦ 4 æ¬¡	头部 SPA 深度 4 次
+id	code	current_value	target_value
+14	TP014	å¤´éƒ¨åˆ®ç—§ 8 æ¬¡	头部刮痧 8 次
+id	code	current_value	target_value
+15	TP015	çƒ­çŽ›å‰å¹´åº¦å¥—é¤	热玛吉年度套餐
+id	code	current_value	target_value
+16	TP016	å…‰å­å«©è‚¤ 6 æ¬¡	光子嫩肤 6 次
+id	code	current_value	target_value
+17	TP017	ç‚¹é˜µæ¿€å…‰ 4 æ¬¡	点阵激光 4 次
+id	code	current_value	target_value
+18	TP018	æ³¨å°„çŽ»å°¿é…¸ 2 æ¬¡	注射玻尿酸 2 次
+id	code	current_value	target_value
+19	TP019	ç˜¦è„¸é’ˆ 3 æ¬¡	瘦脸针 3 次
+id	code	current_value	target_value
+20	TP020	ç„•é¢œä¿æ¹¿æœˆå¡	焕颜保湿月卡
+id	code	current_value	target_value
+21	TP021	ç¾Žä½“å­£åº¦å¡	美体季度卡
+id	code	current_value	target_value
+22	TP022	æ·±å±‚æ¸…æ´ 12 æ¬¡	深层清洁 12 次
+id	code	current_value	target_value
+23	TP023	ç„•é¢œäº®ç™½å­£åº¦å¡	焕颜亮白季度卡
+id	code	current_value	target_value
+24	TP024	å¡‘å½¢åŠå¹´å¡	塑形半年卡
+id	code	current_value	target_value
+25	TP025	ä¹³è…ºç–é€š 6 æ¬¡ï¼ˆåœç”¨ï¼‰	乳腺疏通 6 次（停用）
+id	code	current_value	target_value
+26	TP026	æµ‹è¯•æ–¹æ¡ˆï¼ˆåœç”¨ï¼‰	测试方案（停用）
+id	code	current_value	target_value
+1	TP001	é’ˆå¯¹è‰²æ–‘ã€æš—æ²‰ï¼Œå«ç¾Žç™½æ·¡æ–‘ 10 æ¬¡	针对色斑、暗沉，含美白淡斑 10 次
+id	code	current_value	target_value
+2	TP002	æŠ—çš±ç´§è‡´ 12 æ¬¡ï¼Œé…åˆå®¶å±…äº§å“	抗皱紧致 12 次，配合家居产品
+id	code	current_value	target_value
+3	TP003	çŽ»å°¿é…¸å¯¼å…¥ 6 æ¬¡	玻尿酸导入 6 次
+id	code	current_value	target_value
+4	TP004	åŸºç¡€é¢éƒ¨æ¸…æ´ 8 æ¬¡	基础面部清洁 8 次
+id	code	current_value	target_value
+5	TP005	ç²‰åˆºæ¸…+æ¶ˆç‚Ž 5 æ¬¡	粉刺清+消炎 5 次
+id	code	current_value	target_value
+6	TP006	ç»å…¸ç¾Žä½“å¡‘å½¢å®Œæ•´å‘¨æœŸ	经典美体塑形完整周期
+id	code	current_value	target_value
+7	TP007	çº¤ä½“ 10 æ¬¡ + é£Ÿè°±	纤体 10 次 + 食谱
+id	code	current_value	target_value
+8	TP008	èº«ä½“æŒ‰æ‘© 60 åˆ†é’Ÿ 10 æ¬¡	身体按摩 60 分钟 10 次
+id	code	current_value	target_value
+9	TP009	ä¸€æ¬¡æ€§é¡¹ç›®ï¼ˆé»˜è®¤ 1 æ¬¡ï¼‰	一次性项目（默认 1 次）
+id	code	current_value	target_value
+10	TP010	åŠæ°¸ä¹…ç¾Žçž³çº¿	半永久美瞳线
+id	code	current_value	target_value
+11	TP011	çº¹çœ‰	纹眉
+id	code	current_value	target_value
+12	TP012	å¤´éƒ¨ SPA 6 æ¬¡	头部 SPA 6 次
+id	code	current_value	target_value
+13	TP013	å¤´éƒ¨ SPA æ·±åº¦	头部 SPA 深度
+id	code	current_value	target_value
+14	TP014	å¤´éƒ¨åˆ®ç—§ 8 æ¬¡	头部刮痧 8 次
+id	code	current_value	target_value
+15	TP015	çƒ­çŽ›å‰ 4 æ¬¡/å¹´	热玛吉 4 次/年
+id	code	current_value	target_value
+16	TP016	å…‰å­å«©è‚¤ 6 æ¬¡	光子嫩肤 6 次
+id	code	current_value	target_value
+17	TP017	ç‚¹é˜µæ¿€å…‰ 4 æ¬¡	点阵激光 4 次
+id	code	current_value	target_value
+18	TP018	çŽ»å°¿é…¸æ³¨å°„ 2 æ¬¡	玻尿酸注射 2 次
+id	code	current_value	target_value
+19	TP019	ç˜¦è„¸é’ˆ 3 æ¬¡	瘦脸针 3 次
+id	code	current_value	target_value
+20	TP020	çŽ»å°¿é…¸å¯¼å…¥ 4 æ¬¡/æœˆ	玻尿酸导入 4 次/月
+id	code	current_value	target_value
+21	TP021	èº«ä½“æŒ‰æ‘© å­£åº¦	身体按摩 季度
+id	code	current_value	target_value
+22	TP022	åŸºç¡€æ¸…æ´ 12 æ¬¡/å¹´	基础清洁 12 次/年
+id	code	current_value	target_value
+23	TP023	ç¾Žç™½æ·¡æ–‘å­£åº¦å¡	美白淡斑季度卡
+id	code	current_value	target_value
+24	TP024	ç¾Žä½“å¡‘å½¢ 24 æ¬¡	美体塑形 24 次
+id	code	current_value	target_value
+25	TP025	æš‚æ—¶ä¸‹æž¶	暂时下架
+id	code	current_value	target_value
+26	TP026	å ä½æ–¹æ¡ˆ	占位方案

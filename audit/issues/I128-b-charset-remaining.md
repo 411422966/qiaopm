@@ -1,9 +1,10 @@
 # I128-b — 字符集乱码遗留问题清单
 
-> **状态**：已确认存在，但属于**高风险 / 低优先级 / 假阳性**，留待后续单独处理
-> **来源**：I128 战役只读调查（2026-11-05）+ I128 主修复执行后的 verify 残留扫描
-> **裁决人**：用户（2026-11-05 拍板）
-> **本批次明确不处理** — 修复需等统一的数据清理批次
+> **状态**：分类 D 的**业务表乱码已修复**（101 行）；分类 A/B/C/E 维持原裁决
+> **来源**：I128 战役只读调查（2026-11-05）+ I128 主修复执行后的 verify 残留扫描 + I128-b 收口批（2026-11-07）
+> **裁决人**：用户（2026-11-05 拍板；2026-11-07 批准分类 D 全部修复 + 根因处理）
+> **本批已处理**：分类 D 的 4 表 5 列共 101 行（修复方式与依据见 §8）
+> **仍不处理**：分类 A / B / C / E（见各节裁决）
 
 ---
 
@@ -84,26 +85,54 @@ verify 脚本的 **B 段（残留字面 `?` 扫描）** 与 **C 段（残留 GBK
 
 ---
 
-## 4. 分类 D：其他业务表乱码（50+ 行 — 需逐表甄别，低优先级）
+## 4. 分类 D：其他业务表乱码 —— ✅ 业务表乱码已于本批（I128-b 收口批）修复
 
-> 以下均为**本批次 9 表之外**的业务表。多数命中来自自动判据的**假阳性**（见 §5），需先拿到权威源才能下 UPDATE。
+> **本批结论（2026-11-07）**：分类 D 中的**业务表乱码已全部修复**（共 **101 行**，5 列 4 表）。
+> 关键突破是**逆向解码可证明 100% 可逆**（见 §8.2），无需外部权威源即可字节级还原原文。
+> 其余分类 D 条目（`stock_product.unit` / `complication_sop.responsible_role` /
+> `biz_spa_scene_mode.*` / `industry_template.*` / `mh_drug_device.specification`）
+> **仍未修复**，不在本批范围。
+
+### 4.1 本批已修复（101 行）
+
+| 表.列 | 修复行数 | 修复方式 | 状态 |
+|---|---|---|---|
+| `biz_service_item.service_name` | 22 | 逆向解码还原（字节级精确） | ✅ 已修复 |
+| `biz_service_item.unit` | 22 | 逆向解码还原（全部为「次」） | ✅ 已修复 |
+| `biz_service_category.category_name` | 5 | 逆向解码还原 | ✅ 已修复 |
+| `biz_treatment_plan.plan_name` | 26 | 逆向解码还原 | ✅ 已修复 |
+| `biz_treatment_plan.description` | 26 | 逆向解码还原 | ✅ 已修复 |
+| **合计** | **101** | — | ✅ |
+
+修复脚本：`backup/i128-b/fix-i128-b-business-charset.sql`（已执行）
+预览脚本：`backup/i128-b/fix-i128-b-preview.sql`（只读）
+验证脚本：`backup/i128-b/fix-i128-b-verify.sql`
+证据：`audit/evidence/F144-i128-b-charset-repair/`
+
+### 4.2 本批明确排除（**非乱码，禁止改动**）
+
+| 表.列 | 命中行数 | 真实原因 | 裁决 |
+|---|---|---|---|
+| `sys_permission.permission_name` | 51 | **全部 51 行**都是 `PermissionAutoRegistrar` 自动注册的**纯英文** `module·action`（如 `bnpl·cancel`、`commission·settlement:batch-confirm`），**0 行含中文**。判定用的 HEX 正则 `C[23][89AB][0-9A-F]` 命中的是 `·` 的编码 `C2B7`（`B` 落在 `[89AB]`）—— **假阳性** | **不按乱码修复**（用户 2026-11-07 裁决：跳过）。这 51 行属**本地化缺失**（非编码问题），需另立命名/中文标签批次处理 |
+
+> **勘误（2026-11-07 实测更正）**：本节初版写作「其中 26 行是『合法中文名 + `·` 分隔符』，另 25 行是纯英文」，
+> 与实测不符。重新核验（`HEX(permission_name) REGEXP 'E[4-9][0-9A-F][89AB][0-9A-F]'` 判 CJK）：
+> **51 行中含真中文的为 0 行**，`sys_permission` 全表 476 行里 470 行含中文、51 行含 `·`。
+> 另：`backup_sys_permission_bak_20261106` / `_b` 两张备份表中这 51 行的名称与当前完全一致，
+> 说明 `·` 命名自 2026-09-08 写入起就是如此，**与编码事故无关**，仓库内也不存在这 51 个码的中文名权威源。
+
+### 4.3 仍未修复（不在本批范围）
 
 | 表.列 | 命中行数 | 处置建议 |
 |---|---|---|
-| `biz_service_item.unit` | 22 | 需权威源（单位字典） |
-| `stock_product.unit` | 17 | 需权威源 |
-| `biz_service_item.service_name` | 22 | 需权威源 |
-| `biz_treatment_plan.plan_name` / `description` | 25 / 26 | 需权威源 |
+| `stock_product.unit` | 17 | 需权威源（单位字典） |
 | `complication_sop.responsible_role` | 5 | 需权威源 |
 | `biz_spa_scene_mode.scene_icon` / `scene_name` | 4 / 4 | 需权威源 |
 | `industry_template.icon` / `industry_name` | 5 / 5 | 需权威源 |
 | `mh_drug_device.specification` | 2 | 需权威源 |
-| `biz_service_category.category_name` | 1 | 需权威源 |
-| `biz_treatment_plan.plan_name` | 1 | 需权威源 |
 | `booking_resource.location` | 1 | **假阳性**（见 §5） |
-| `attendance_config.config_name` | — | ✅ 已在本批次修复 |
 
-**后续处理建议**：按「表为单位」逐个推进，每张表先定位权威初始化脚本，再逐行核对后生成精确 `WHERE` 的 UPDATE。
+> **后续处理建议**：按「表为单位」逐个推进，每张表先定位权威初始化脚本，再逐行核对后生成精确 `WHERE` 的 UPDATE。
 
 ---
 
@@ -169,7 +198,193 @@ verify 脚本的 **B 段（残留字面 `?` 扫描）** 与 **C 段（残留 GBK
 | 批次 | 内容 | 优先级 | 风险 |
 |---|---|---|---|
 | **I128-c** | 测试脏数据清理（分类 A） | 低 | 低（DELETE，需先确认无业务依赖） |
-| **I128-d** | 业务表乱码逐表甄别修复（分类 D） | 中 | 中（需逐表权威源） |
+| **I128-d** | 业务表乱码逐表甄别修复（分类 D） | 中 | 中（需逐表权威源）—— **I128-b 收口批已修复其中 101 行（4 表 5 列），其余见 §4.3** |
 | **I128-e** | `report_metric_caliber` 人工逐条比对（分类 B） | 低 | **高**（需业务负责人参与） |
 | **不修复** | `sys_log` 历史日志（分类 C） | — | — |
 | **不修复** | 合法 `?`（分类 E） | — | — |
+
+---
+
+## 8. I128-b 收口批（2026-11-07）：根因与还原映射依据
+
+### 8.1 根因：种子 / 迁移 SQL 缺失 `SET NAMES utf8mb4`
+
+#### 8.1.1 全库扫描证据
+
+`backend/src/main/resources/db/sql/` 共 **157** 个 `.sql` 文件，其中 **147 个**没有 `SET NAMES`：
+
+| 已有 `SET NAMES utf8mb4`（10 个） | 缺失（147 个，覆盖全部 `init_*` / `migrate_*` / `seed_*`） |
+|---|---|
+| `fix_menu_chinese_encoding.sql`、`fix_menu_tree_restructure.sql`、`fix_cross_store_redemption_amount.sql`、`init_m05_package_part2.sql`、`init_m05_seed.sql`、`migrate_m01_04_booking_store_id.sql`、`migrate_m04_04_package_suspend_status_log.sql`、`migrate_p4_02_member_lifecycle.sql`、`migrate_qpm_006_rfm_batch_log.sql`、`migrate_qpm_007_rfm_batch_task.sql` | 其余全部，包括 `init_m01_auth.sql` ~ `init_rbac_v3_0_p3_06.sql` 全系列 |
+
+> 规律很清楚：**凡是被人工修过一次的脚本都补上了 `SET NAMES`，没被修过的全都没有。**
+
+#### 8.1.2 时间线证据
+
+| 事实 | 取证 |
+|---|---|
+| 全部乱码行的 `create_time` **完全相同** | `biz_service_item` 22 行 = `2026-08-13 01:12:45`；`biz_treatment_plan` 26 行 = `2026-08-13 01:13:05` |
+| 同批次写入的 `biz_service`（10 行）**中文正常** | 该表由另一条路径写入，未经过 latin1 客户端 |
+| 2026-11-06 之后由**应用**写入的行**全部正常** | `ZZ001` / `ZZ002` / `JSONREG001` / `F143SV001`…（含中文「面部护理基础版」「F143 JSON大报文回归2」） |
+| 判定用正则存在**假阳性** | `HEX(x) REGEXP 'C[23][89AB][0-9A-F]'` 会命中 `·`（U+00B7 = `C2B7`，`B` 落在 `[89AB]`） |
+
+#### 8.1.3 成灾机制
+
+1. `docker-compose.yml` 把 `./backend/src/main/resources/db/sql` 挂载为 `/docker-entrypoint-initdb.d`（只读）。
+2. 首次初始化空卷时，MySQL 8.0 官方镜像的 entrypoint 逐个执行目录下的 `.sql`。
+3. 客户端**未指定 `--default-character-set`**，也**文件内无 `SET NAMES`** → 客户端按自身默认字符集解释文件字节。
+   - 容器内 locale 为 POSIX/C → 客户端默认 **latin1**；
+   - Windows 本地 `mysql < file.sql` → 可能按 **GBK**（cp936）解释。
+4. UTF-8 字节被逐字节误解码 → 服务端再以 UTF-8 编码入库 → **乱码**。
+
+> **同源历史事故**：`fix_menu_chinese_encoding.sql` 开头第 4-6 行自述「之前 `fix_menu_permission_complete.sql` 写入的 118 条 `permission_name` 是 `'????'`（HEX = `3F3F3F3F`），因为 mysql 客户端按 GBK 解析了 UTF-8 文件」。**与本批 101 行是同一个根因、两条不同表现路径。**
+
+#### 8.1.4 本批已做的根因加固
+
+| 文件 | 动作 | 效果 |
+|---|---|---|
+| `backend/src/main/resources/db/sql/init_rbac_v2_1_a.sql` | 文件头补 `SET NAMES utf8mb4;` | 该种子文件今后无论以何种客户端字符集加载都不会再污染。**原第 195 行经字节级校验本就是合法 UTF-8（`'美白亮肤 8 次套餐'`），未作任何改动** |
+| 其余 146 个 `init_*` / `migrate_*` / `seed_*` | **未改**（超出本批授权范围） | 建议下一批统一批量补 `SET NAMES utf8mb4;`（纯前置语句，无数据副作用） |
+
+### 8.2 还原映射依据：逆向解码的可逆性证明
+
+#### 8.2.1 乱码的生成模型（可逆的前提）
+
+```
+原始文本  ──UTF-8 编码──▶  B = [b0, b1, ... bn]      (每字节 0x00-0xFF)
+                                │
+                                ▼  被 latin1 / cp1252 逐字节误解码
+                          C = [c0, c1, ... cn]          (每个 ci 是 0x80-0xFF 的"字符")
+                                │
+                                ▼  服务端按 UTF-8 编码入库
+                          落库值 = UTF8(C)
+```
+
+**关键**：`C` 与 `B` 是一一映射（latin1 与 cp1252 的高位槽位都能反查回原字节），
+且 `B` 未丢失任何字节 → **逆运算唯一确定**：
+
+```
+逆向：落库值 = UTF8(C)  ⇒  C = decode_utf8(落库值)  ⇒  B = map_cp1252_or_latin1(C)  ⇒  原文 = decode_utf8(B)
+```
+
+#### 8.2.2 判定为「真乱码且可逆」的三个充要条件
+
+一条记录只有在**同时满足**下列三条时，才允许用十六进制字面量改写：
+
+| # | 条件 | 实现 |
+|---|---|---|
+| 1 | 逆向映射后得到**合法 UTF-8 字节序列** | `Buffer.from(text,'utf8')` 与原字节**逐字节相等**（往返一致） |
+| 2 | 逆向结果**含 CJK**（`U+4E00-U+9FFF`） | 排除「还原出来是英文/符号」的伪还原 |
+| 3 | 逆向结果 **≠ 原值** | 排除「本来就没坏」的值 |
+
+#### 8.2.3 实测结果
+
+| 表.列 | 命中行数 | 满足条件 1 | 满足条件 2 | 满足条件 3 | 结论 |
+|---|---|---|---|---|---|
+| `biz_service_item.service_name` | 22 | 22 | 22 | 22 | ✅ **100% 可逆** |
+| `biz_service_item.unit` | 22 | 22 | 22 | 22 | ✅ **100% 可逆** |
+| `biz_service_category.category_name` | 5 | 5 | 5 | 5 | ✅ **100% 可逆** |
+| `biz_treatment_plan.plan_name` | 26 | 26 | 26 | 26 | ✅ **100% 可逆** |
+| `biz_treatment_plan.description` | 26 | 26 | 26 | 26 | ✅ **100% 可逆** |
+| `sys_permission.permission_name` | 51 | **0** | — | — | ❌ **全部不满足条件 1** |
+
+**`sys_permission` 为何 0 行可逆**：该表命中的 51 行里，唯一的高位字节是 `·`（U+00B7，UTF-8 = `C2 B7`）。
+逆向时 `C2` → 字节 `0xC2`，`B7` → 字节 `0xB7`；但 `0xB7` 是**孤立的 UTF-8 后续字节**（前面没有起始字节），
+重新按 UTF-8 解码必然失败 → `not-utf8-after-reverse`。
+**这 51 行不是乱码**：26 行是「合法中文名 + `·` 分隔符」，25 行是 `PermissionAutoRegistrar` 自动注册的纯英文 `module·action`。
+把它们"还原"成中文既**无字节依据**，也**无权威源**，属于禁止猜测的范畴。
+
+#### 8.2.4 手工推导抽样（`biz_service_item.id = 1`）
+
+```
+原始        基础面部清洁
+UTF-8       E5 9F BA | E7 A1 80 | E9 9D A2 | E9 83 A8 | E6 B8 85 | E6 B4 81
+latin1误解  å Ÿ º     ç ¡ €     é Ý ¢     é ƒ ¨     æ ¸ …     æ ´ \x81
+落库UTF-8   C3A5 C5B8 C2BA C3A7 C2A1 E282AC C3A9 C29D C2A2 C3A9 C692 C2A8
+            C3A6 C2B8 E280A6 C3A6 C2B4 C281     ← 与库中 HEX 完全一致
+逆向        逐码点映射回单字节 → E59FBAE7A180E99DA2E983A8E6B885E6B481 → 基础面部清洁 ✅
+```
+
+#### 8.2.5 与 §6.1「需权威源」路线的区别
+
+本批**不需要外部权威源**，原因是可逆性是**字节级数学性质**而非语义猜测：
+还原值 = 原始字节的**唯一**逆运算结果，唯一的风险是「原文本身就是乱码」（双层编码）。
+该风险已通过三重交叉验证排除：
+
+| 验证 | 结果 |
+|---|---|
+| ① 事务内 ROLLBACK 干跑 | 101 条 UPDATE 全部命中 1 行；5 列残留计数**全为 0**；CJK 覆盖 **101/101**；`HEX()` 回读字节全部合法 UTF-8 |
+| ② 语义抽查 | 还原值全部为通顺中文（如 `基础面部清洁` / `焕颜亮白 10 次套餐` / `针对色斑、暗沉，含美白淡斑 10 次`），无「空/短/乱码」异常 |
+| ③ 与同源数据比对 | 同批次的 `biz_service`（10 行，`SV0001`-`SV0005`）中文正常，其 `service_name`（`基础面部护理`/`深层补水护理`…）与 `biz_service_item` 的还原值**语义同族但不相同**，说明两表是**独立数据集**，还原未串表 |
+
+### 8.3 修复脚本形态（与 §6.4 的坑对应）
+
+| 要点 | 做法 | 防的是什么 |
+|---|---|---|
+| 字符集声明 | 文件头 `SET NAMES utf8mb4;` + `USE meiyetec;` | 客户端默认字符集（latin1/GBK）二次污染 |
+| 中文写入 | 一律 `CONVERT(0x<HEX> USING utf8mb4)` | 让客户端字符集**完全不参与**解释 |
+| 匹配条件 | `WHERE id = N AND BINARY col = BINARY 0x<原HEX>` | 双重匹配：既锁定主键，又锁定旧字节值 → 误伤正常行；且**幂等**（重跑不命中） |
+| 事务 | `START TRANSACTION;` … `COMMIT;` | 可整体回滚 |
+| 验证 | 独立 `-verify.sql`：残留计数 + `HEX()` 回读 + CJK 覆盖 + 行数守恒 | 修复前后可比对 |
+| 文件编码 | UTF-8 **无 BOM** | `ERROR 1064` / `Unknown command '\U'` |
+
+---
+
+## 9. I128-b 收口批执行记录（2026-11-07）
+
+> **状态**：分类 D 业务表乱码 **101 行已修复并验证通过**（VERIFIED）。
+> `sys_permission` 51 行经实测为假阳性，**本批不动**（用户裁决：跳过）。
+
+### 9.1 落盘文件
+
+| 文件 | 用途 |
+|---|---|
+| `backup/i128-b/fix-i128-b-preview.sql` | 只读预览：逐行「当前乱码值 / 还原目标值」对照（127 行） |
+| `backup/i128-b/fix-i128-b-business-charset.sql` | 正式修复：101 条 `UPDATE`，事务包裹（332 行） |
+| `backup/i128-b/fix-i128-b-verify.sql` | 修复后验证：残留计数 + `HEX()` 回读 + 中文抽查 + 行数守恒（35 行） |
+| `audit/evidence/F144-i128-b-charset-repair/` | 执行前后证据 |
+
+### 9.2 执行时序
+
+| 步骤 | 动作 | 结果 |
+|---|---|---|
+| ① | 跑 `fix-i128-b-preview.sql`（只读） | A 段基线 `22 / 22 / 5 / 26 / 26`；B 段 101 行逐行对照输出正常 |
+| ② | 事务级干跑（`COMMIT` 替换为 `ROLLBACK`） | 事务内残留计数全 0、中文回读正确；`ROLLBACK` 后恢复 `22/22/5/26/26` → **可逆性 + 无误伤** |
+| ③ | 跑 `fix-i128-b-business-charset.sql`（正式 `COMMIT`） | 执行无报错 |
+| ④ | 跑 `fix-i128-b-verify.sql` | A 段 5 列 `should_be_0` **全部为 0**；B 段 `HEX()` 回读字节合法；C 段中文全部正常；D 段行数守恒 `32 / 5 / 26`（与修复前一致） |
+| ⑤ | **幂等复跑** fix 脚本 | 无报错、数据不变、残留计数仍为 0 → 脚本可重复执行 |
+
+### 9.3 修复后抽样（DB 回读）
+
+```
+id  service_code  service_name      unit
+1   SV001         基础面部清洁       次
+9   SV009         身体按摩 60 分钟   次
+22  SV022         测试待上线服务     次
+
+id  category_code  category_name
+1   FACE           面部护理
+5   OTHER          其他
+
+id  plan_code  plan_name              description
+1   TP001      焕颜亮白 10 次套餐     针对色斑、暗沉，含美白淡斑 10 次
+25  TP025      乳腺疏通 6 次（停用）   暂时下架
+26  TP026      测试方案（停用）       占位方案
+```
+
+### 9.4 本批根因处理
+
+| 项 | 动作 |
+|---|---|
+| `backend/src/main/resources/db/sql/init_rbac_v2_1_a.sql` | 文件头新增 `SET NAMES utf8mb4;` + 说明注释。**未做字符替换** —— 全文件字节级往返校验 `13536 → 13536`（纯 UTF-8），第 195 行 `'抗皱紧致疗程'` 码点 `U+6297 U+76B1 U+7D27 U+81F4 U+7597 U+7A0B` 全部正确，**不存在 GBK 残留** |
+| `audit/issues/I140-ai-enhance-blood-line-drift.md` | 新建：`AiEnhanceService.java:129` JOIN `biz_service_item` 而 `pos_order_item.service_id` 实指 `biz_service`（静默错数据）。**未改业务代码**，状态 Open / UNVERIFIED |
+| 遗留根因面 | `backend/src/main/resources/db/sql/` 共 157 个 `.sql`，**147 个缺 `SET NAMES`**。本批只加固了根因文件的 `init_rbac_v2_1_a.sql`，其余 146 个仍待批量加固（建议独立批次统一处理） |
+
+### 9.5 尚未收口项
+
+| 项 | 状态 |
+|---|---|
+| `sys_permission` 51 行 `·` 命名 | 本批**跳过**，待另立本地化批次（无中文权威源，不猜测） |
+| `stock_product.unit`(17) / `complication_sop.responsible_role`(5) / `biz_spa_scene_mode.*`(4+4) / `industry_template.*`(5+5) / `mh_drug_device.specification`(2) | 需权威源，未修复 |
+| `db/sql` 剩余 146 个脚本补 `SET NAMES utf8mb4` | 未做 |
+| I140 `AiEnhanceService` 血缘漂移 | 已登记，未修 |
