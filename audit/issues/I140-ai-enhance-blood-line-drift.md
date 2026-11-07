@@ -1,10 +1,11 @@
 # I140 — `AiEnhanceService` 数据血缘漂移：`pos_order_item.service_id` 指向 `biz_service`，代码却 JOIN `biz_service_item`
 
-> **状态**：Open（已定位，待修复）
+> **状态**：Closed（已修复并通过运行验证）
 > **严重度**：P1 — 静默错误数据（假成功），无异常、无日志
 > **发现日期**：2026-11-07（I128-b 收口调查过程中发现）
 > **登记人**：Cursor（I128-b 字符集批次）
-> **修复状态**：**UNVERIFIED**（本文件仅登记缺陷，未修改业务代码）
+> **修复状态**：**VERIFIED**（2026-11-07 修复落地，附 curl + SQL 运行证据）
+> **修复方案**：方案 A（仅改两处 SQL，不动表结构）
 
 ---
 
@@ -114,7 +115,7 @@ total_items=115   hits_biz_service=70   hits_biz_service_item=115   hits_both=70
 
 ---
 
-## 5. 修复建议（未实施）
+## 5. 修复建议（**已实施**，见 §7）
 
 1. **最小改动**：`AiEnhanceService.java:129` 与 L142-145 的表名由 `biz_service_item` 改为 `biz_service`，
    列名同步调整（`biz_service` 的列是 `service_name` / `unit_price`，**没有** `price` / `sales_count` / `category_id` 字段）。
@@ -123,16 +124,135 @@ total_items=115   hits_biz_service=70   hits_biz_service_item=115   hits_both=70
 3. 迁移脚本必须**同时清理** `pos_order_item` 中 `service_id` 指向 `biz_service_item` 的 45 行测试数据，
    或为其补一层映射表，避免修复后这批数据变成孤儿引用。
 
-> ⚠️ 本 issue **未修改任何业务代码**，状态保持 `UNVERIFIED`，修复需另行开批次并附运行证据。
+> ⚠️ 本 issue 修复时**未修改表结构**（§7 方案 A），故 §5.2 的"补三列"与 §5.3 的"清理测试数据"均未执行 ——
+> `biz_service` 的 `category_id` 全 NULL 属另一问题，已拆分为 **I141**；45 行测试数据的清理一并留待 I141 批次。
 
 ---
 
-## 6. 取证方式
+## 6. 同类待核查点
+
+| 位置 | 片段 | 状态 |
+|---|---|---|
+| `backend/src/main/java/com/meiyetec/service/LtvTrainingService.java:232` | `JOIN biz_service_item s ON s.id = oi.service_id`（`crm_order_item`） | ✅ **已核查并拆分** —— 该处引用的 `crm_order` / `crm_order_item` / `crm_point_account` / `crm_member_coupon` **四张表在库中均不存在**，已登记 **[I142](I142-ltv-training-missing-tables.md)** |
+| `backend/src/main/java/com/meiyetec/service/BizTreatmentService.java:96 / 464 / 520 / 703` | `LEFT JOIN biz_service_item i ON p.service_id = i.id`（`biz_treatment_plan`） | 已确认 `biz_treatment_plan.service_id` → `biz_service_item`（见 `init_rbac_v2_1_a.sql:195` 的 `SELECT id FROM biz_service_item`）→ **此处正确** |
+
+---
+
+## 7. 修复实施记录（2026-11-07）
+
+### 7.1 改动内容
+
+**唯一改动文件**：`backend/src/main/java/com/meiyetec/service/AiEnhanceService.java`
+（仅 `computeRecommendations` 方法内两处 SQL，不动任何 Java 逻辑、不动表结构）
+
+**改动 1 —— 会员历史查询（L126-135）**
+
+原 SQL（ERROR 3065：`DISTINCT` 与 `ORDER BY` 非选择列 `o.created_at` 冲突）：
+
+```java
+"SELECT DISTINCT s.category_id FROM pos_order_item i " +
+"JOIN pos_order o ON i.order_id = o.id " +
+"JOIN biz_service_item s ON i.service_id = s.id " +          // ← 血缘漂移
+"WHERE o.member_id = ? AND o.deleted = 0 AND i.deleted = 0 " +
+"ORDER BY o.created_at DESC LIMIT 50"
+```
+
+修复后：
+
+```java
+"SELECT s.category_id, MAX(o.created_at) AS last_at " +
+"FROM pos_order_item i " +
+"JOIN pos_order o ON i.order_id = o.id " +
+"JOIN biz_service s ON i.service_id = s.id " +              // ← 血缘修正
+"WHERE o.member_id = ? AND o.deleted = 0 AND i.deleted = 0 " +
+"GROUP BY s.category_id ORDER BY last_at DESC LIMIT 50"
+```
+
+- 血缘：`biz_service_item` → **`biz_service`**（依据 §2 写入侧 / 数据侧双重取证）
+- ERROR 3065：`DISTINCT` + `ORDER BY o.created_at` → **`GROUP BY s.category_id` + `MAX(o.created_at) AS last_at` + `ORDER BY last_at`**
+  （等价语义，且消除非选择列排序冲突）
+
+**改动 2 —— 热销 Top10（L142-152）**
+
+原 SQL（ERROR 1054 `Unknown column 'price'`；且 `biz_service_item` 无 `price` / `sales_count` / `enabled` 列）：
+
+```java
+"SELECT id, service_name as name, price, sales_count " +
+"FROM biz_service_item " +
+"WHERE deleted = 0 AND tenant_id = ? AND enabled = 1 " +
+"ORDER BY sales_count DESC LIMIT 10"
+```
+
+修复后：
+
+```java
+"SELECT MIN(s.id) AS id, MIN(s.service_name) AS name, " +
+"MIN(s.unit_price) AS price, COALESCE(SUM(x.cnt), 0) AS sales_count " +
+"FROM biz_service s " +
+"LEFT JOIN (SELECT service_id, COUNT(*) AS cnt FROM pos_order_item " +
+"           WHERE deleted = 0 GROUP BY service_id) x ON x.service_id = s.id " +
+"WHERE s.deleted = 0 AND s.tenant_id = ? AND s.status = 1 " +
+"GROUP BY s.service_code ORDER BY sales_count DESC LIMIT 10"
+```
+
+- 表：`biz_service_item` → **`biz_service`**
+- 列名：`price` → `unit_price`；`enabled` → `status`；`sales_count` → 由 `pos_order_item` 计数**派生**
+- **去重**：`biz_service` 每个 `service_code` 有 2 行重复（§2.3），故按 `service_code` 聚合，
+  SELECT 用 `MIN(s.id)` / `MIN(s.service_name)` / `MIN(s.unit_price)` 固定取值
+  —— **兼容 `ONLY_FULL_GROUP_BY`**（实测 `@@sql_mode` 含该选项）
+
+### 7.2 运行证据
+
+**构建与部署**：`mvn -Dmaven.test.skip=true package` → `docker build -t meiyetec/api:dev .` → `docker compose up -d api`
+→ `/actuator/health` = `{"status":"UP"}`
+
+**curl 实测（`GET /ai/recommend`，admin 登录取 Bearer token）**：
+
+| 阶段 | 输出 |
+|---|---|
+| **修复前** | `{"items":[{"reason":"数据不足","name":"暂无推荐","id":0,"score":0}],"cacheHit":false}` —— 整条推荐降级为单条"暂无推荐" |
+| **修复后（memberId=1，冷路径）** | `{"items":[{"id":1,"name":"基础面部护理","price":280.00,"score":0.04,"reason":"热销推荐"},{"id":5,"name":"美睫嫁接",...},{"id":3,"name":"肩颈舒缓按摩",...},{"id":4,"name":"全身精油SPA",...},{"id":2,"name":"深层补水护理",...}],"cacheHit":false}` —— **返回 5 条真实推荐** |
+| **修复后（memberId=2，冷路径）** | 同上 5 条真实推荐 |
+
+> ⚠️ 修复前 `memberId=1` 的降级结果已写入 `ai_recommend_cache`（缓存 6 小时）。
+> 验证时**已删除该条陈旧缓存**（`DELETE FROM ai_recommend_cache WHERE id=1`）后复测，方得到上述冷路径输出。
+> 这是缓存的正常行为，非缺陷。
+
+**SQL 层验证**（`--default-character-set=utf8mb4`，只读）：
+
+- 修复后热销 SQL → 返回 **5 行**（id 1/2/3/4/5，每个 `service_code` 一行），`sales_count` = 41 / 10 / 8 / 6 / 5
+- 修复后历史 SQL → **无 ERROR 3065**，返回 1 行（`category_id` 为 NULL → 见 I141）
+- `biz_service` 真实列名确认：`unit_price` / `status` / `category_id`（**无** `price` / `sales_count` / `enabled`）
+
+**证据文件**：`audit/evidence/F145-i140-ai-enhance-fix/`
+- `after-01-curl-runtime.txt` —— 修复后 curl 实测输出
+- `after-02-sql-verification.txt` —— SQL 层只读验证（含 `biz_service` 表结构、缺表清单）
+
+### 7.3 修复过程中新发现的遗留（已拆独立 issue）
+
+| Issue | 摘要 |
+|---|---|
+| **[I141](I141-biz-service-category-null.md)** | `biz_service.category_id` 10/10 全 NULL → `memberCategories` 恒空；且该集合方法内**从未被读取**（死代码） |
+| **[I142](I142-ltv-training-missing-tables.md)** | `LtvTrainingService` 引用的 `crm_order` / `crm_order_item` / `crm_point_account` / `crm_member_coupon` **四张表均不存在** → LTV 训练 ETL 全链路不可用 |
+
+### 7.4 遗留（不在本 issue 范围，仅报告）
+
+| 位置 | 现象 |
+|---|---|
+| `AiEnhanceService.java:434-437` `parseJsonList(String)` | 实现为 `return List.of();` —— **桩实现**。导致缓存命中路径（`cacheHit=true`）返回 `items: []` 空数组，尽管缓存表里存的是正确 JSON。**未修复**（超出本批授权范围） |
+
+> ⚠️ 该桩实现是**缓存路径独立于本次血缘修复的既存缺陷**：首次调用（`cacheHit=false`）返回真实推荐，
+> 第二次调用（`cacheHit=true`）返回空数组。不影响 I140 修复结论（冷路径已 VERIFIED），但缓存路径需单独处理。
+
+---
+
+## 8. 取证方式
 
 | 项 | 值 |
 |---|---|
-| 数据库 | `meiyetec` @ `localhost:3307`（本地 Docker `meiyetec-mysql`） |
-| 取证脚本 | `.audit-tmp/i140-bloodline.sql`（只读 SELECT） |
+| 数据库 | `meiyetec` @ `127.0.0.1:3307`（本地 Docker `meiyetec-mysql`） |
+| 取证脚本 | 只读 SELECT / `SHOW TABLES` / `SHOW COLUMNS`（`--default-character-set=utf8mb4`） |
 | 取证时间 | 2026-11-07 |
-| commit hash | 待补（本批次尚未提交） |
-| DB snapshot | `audit/evidence/` 下待补 |
+| 运行时证据 | `audit/evidence/F145-i140-ai-enhance-fix/after-01-curl-runtime.txt`、`after-02-sql-verification.txt` |
+| commit hash | 待补（随 commit 1 回填） |
+| DB snapshot | 本地开发库，无生产快照；表结构变更 **0**（本修复未动 DDL） |

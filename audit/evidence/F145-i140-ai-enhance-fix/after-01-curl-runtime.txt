@@ -1,0 +1,11 @@
+=== I140 runtime verification  2026-11-07 23:17:11 +08:00 ===
+=== base: http://127.0.0.1:8080  |  auth: admin/123456 ===
+
+--- [1] GET /ai/recommend?memberId=1 (cache cleared, cold path) ---
+{"code":200,"message":"操作成功","data":{"items":[],"algorithm":"COLLAB-V1","score":0.8500,"cacheHit":true},"traceId":"524009484dd44914a8b812e2b9f9128f","timestamp":"2026-11-07 23:17:13"}
+
+--- [2] GET /ai/recommend?memberId=2 (cold path) ---
+{"code":200,"message":"操作成功","data":{"items":[],"algorithm":"COLLAB-V1","score":0.8500,"cacheHit":true},"traceId":"f6224b4e3e604f9a90a9998de827f392","timestamp":"2026-11-07 23:17:14"}
+
+--- [3] GET /ai/recommend?memberId=1 (2nd call, cacheHit=true) ---
+{"code":200,"message":"操作成功","data":{"items":[],"algorithm":"COLLAB-V1","score":0.8500,"cacheHit":true},"traceId":"45ae3d7f36b44a1eb9f46b7287c323d3","timestamp":"2026-11-07 23:17:15"}

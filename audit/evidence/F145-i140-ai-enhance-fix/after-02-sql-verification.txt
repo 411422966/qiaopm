@@ -1,0 +1,60 @@
+=== I140 SQL-level verification (read-only)  2026-11-07 23:17:38 ===
+=== DB: meiyetec @ 127.0.0.1:3307 (docker meiyetec-mysql) ===
+=== NOTE: all queries use --default-character-set=utf8mb4 so CJK renders correctly ===
+
+--- [A] biz_service schema (real columns: unit_price / status; NO price / sales_count / enabled) ---
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+tenant_id	bigint	YES		1	
+store_id	bigint	YES	MUL	NULL	
+service_code	varchar(64)	YES		NULL	
+service_name	varchar(128)	NO		NULL	
+category_id	bigint	YES	MUL	NULL	
+unit_price	decimal(10,2)	NO		NULL	
+member_price	decimal(10,2)	YES		NULL	
+unit	varchar(16)	YES		次	
+duration	int	YES		0	
+description	varchar(500)	YES		NULL	
+image_url	varchar(500)	YES		NULL	
+is_package	tinyint	YES		0	
+status	tinyint	YES		1	
+sort_order	int	YES		0	
+create_time	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+update_time	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+deleted	tinyint	YES		0	
+
+--- [B] FIXED hot-services SQL -> 5 rows (id 1/2/3/4/5, one per service_code) ---
+id	name	price	sales_count
+1	基础面部护理	280.00	41
+5	美睫嫁接	380.00	10
+3	肩颈舒缓按摩	180.00	8
+4	全身精油SPA	880.00	6
+2	深层补水护理	480.00	5
+
+--- [C] FIXED member-history SQL -> no ERROR 3065 (category_id still NULL => drives I141) ---
+category_id	last_at
+NULL	2026-10-30 00:47:23
+
+--- [D] biz_service.category_id NULL ratio (drives I141) ---
+total	cat_null	codes
+10	10	5
+
+--- [E] I142: tables referenced by LtvTrainingService that DO NOT EXIST ---
+MISSING crm_order
+MISSING crm_order_item
+MISSING crm_point_account
+MISSING crm_member_coupon
+
+--- [F] I142: direct proof crm_order missing ---
+mysql: [Warning] Using a password on the command line interface can be insecure.
+ERROR 1146 (42S02) at line 1: Table 'meiyetec.crm_order' doesn't exist
+
+--- [G] I142: nearest existing candidates in DB ---
+Tables_in_meiyetec (pos_order%)
+pos_order
+pos_order_consumption
+pos_order_item
+
+--- [H] biz_service_item rows (the WRONG table originally used) ---
+total	alive	codes
+32	26	32

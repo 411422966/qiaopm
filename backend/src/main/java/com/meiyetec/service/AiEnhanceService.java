@@ -124,11 +124,12 @@ public class AiEnhanceService {
             Set<Long> memberCategories = new HashSet<>();
             try {
                 List<Map<String, Object>> history = jdbc.queryForList(
-                    "SELECT DISTINCT s.category_id FROM pos_order_item i " +
+                    "SELECT s.category_id, MAX(o.created_at) AS last_at " +
+                    "FROM pos_order_item i " +
                     "JOIN pos_order o ON i.order_id = o.id " +
-                    "JOIN biz_service_item s ON i.service_id = s.id " +
+                    "JOIN biz_service s ON i.service_id = s.id " +
                     "WHERE o.member_id = ? AND o.deleted = 0 AND i.deleted = 0 " +
-                    "ORDER BY o.created_at DESC LIMIT 50",
+                    "GROUP BY s.category_id ORDER BY last_at DESC LIMIT 50",
                     memberId);
                 for (Map<String, Object> h : history) {
                     if (h.get("category_id") != null)
@@ -138,11 +139,16 @@ public class AiEnhanceService {
                 log.debug("会员历史查询失败：{}", e.getMessage());
             }
 
-            // 2) 热销 top 10（按 sales_count 倒序）
-            String sql = "SELECT id, service_name as name, price, sales_count " +
-                    "FROM biz_service_item " +
-                    "WHERE deleted = 0 AND tenant_id = ? AND enabled = 1 " +
-                    "ORDER BY sales_count DESC LIMIT 10";
+            // 2) 热销 top 10（按销量倒序；sales_count 由 pos_order_item 派生）
+            //    biz_service 每个 service_code 存在重复行，按 service_code 聚合并用 MIN() 固定取值，
+            //    以兼容 ONLY_FULL_GROUP_BY。
+            String sql = "SELECT MIN(s.id) AS id, MIN(s.service_name) AS name, " +
+                    "MIN(s.unit_price) AS price, COALESCE(SUM(x.cnt), 0) AS sales_count " +
+                    "FROM biz_service s " +
+                    "LEFT JOIN (SELECT service_id, COUNT(*) AS cnt FROM pos_order_item " +
+                    "           WHERE deleted = 0 GROUP BY service_id) x ON x.service_id = s.id " +
+                    "WHERE s.deleted = 0 AND s.tenant_id = ? AND s.status = 1 " +
+                    "GROUP BY s.service_code ORDER BY sales_count DESC LIMIT 10";
             List<Map<String, Object>> hot = jdbc.queryForList(sql, tenantId);
             for (Map<String, Object> h : hot) {
                 Map<String, Object> item = new LinkedHashMap<>();
