@@ -4,6 +4,8 @@
 -- ============================================
 
 -- 1) Table counts
+SET NAMES utf8mb4;
+
 SELECT 'commission_rule' AS tbl, COUNT(*) AS cnt FROM commission_rule WHERE deleted=0
 UNION ALL
 SELECT 'commission_record', COUNT(*) FROM commission_record WHERE deleted=0

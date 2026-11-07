@@ -3,6 +3,8 @@
 -- PosPayment: 记录每笔 cash 支付的实收金额和找零金额
 
 -- 1. pos_order 表新增字段
+SET NAMES utf8mb4;
+
 ALTER TABLE pos_order
     ADD COLUMN IF NOT EXISTS tendered_amount DECIMAL(12,2) DEFAULT NULL COMMENT '现金实收金额（本次支付中 cash 的实收总额）' AFTER refund_count,
     ADD COLUMN IF NOT EXISTS change_amount  DECIMAL(12,2) DEFAULT NULL COMMENT '找零金额 = tendered_amount - 实付 cash 金额';

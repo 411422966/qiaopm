@@ -4,6 +4,8 @@
 -- ============================================================
 
 -- 充值审核申请单
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS crm_recharge_audit (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
     tenant_id       BIGINT  NOT NULL COMMENT '租户ID',

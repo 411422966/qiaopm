@@ -5,6 +5,8 @@
 -- ============================================
 
 -- 1. biz_service_material_group
+SET NAMES utf8mb4;
+
 ALTER TABLE biz_service_material_group
     ADD COLUMN tenant_id BIGINT DEFAULT NULL COMMENT '所属租户ID' AFTER id;
 

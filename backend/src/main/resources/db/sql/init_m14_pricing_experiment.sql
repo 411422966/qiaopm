@@ -4,6 +4,8 @@
 -- ================================================================
 
 -- 1. 定价实验配置
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS pricing_experiment;
 CREATE TABLE pricing_experiment (
     id                      BIGINT AUTO_INCREMENT PRIMARY KEY,

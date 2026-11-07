@@ -16,6 +16,8 @@
 -- ----------------------------------------------------------------------------
 -- 1. lbs_technician 扩展：技能标签 JSON / 当前路线容量 / 服务区域 ID
 -- ----------------------------------------------------------------------------
+SET NAMES utf8mb4;
+
 ALTER TABLE lbs_technician
     ADD COLUMN IF NOT EXISTS skill_tags VARCHAR(512) DEFAULT NULL COMMENT '技能标签 JSON（数组）',
     ADD COLUMN IF NOT EXISTS skill_levels JSON DEFAULT NULL COMMENT '技能等级 {"美甲":5,"美睫":3}',

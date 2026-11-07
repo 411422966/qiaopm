@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 款式库
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_style_library;
 CREATE TABLE biz_style_library (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

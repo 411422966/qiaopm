@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 考勤配置表
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS attendance_config;
 CREATE TABLE attendance_config (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

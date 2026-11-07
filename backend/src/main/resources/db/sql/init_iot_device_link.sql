@@ -8,6 +8,8 @@
 -- ============================================
 -- 1. IoT 设备联动关系
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS iot_device_link;
 CREATE TABLE iot_device_link (
     id                  BIGINT AUTO_INCREMENT PRIMARY KEY,

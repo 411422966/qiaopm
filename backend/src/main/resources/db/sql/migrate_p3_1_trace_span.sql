@@ -5,6 +5,8 @@
 -- 2026-08-16
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS trace_span;
 CREATE TABLE trace_span (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

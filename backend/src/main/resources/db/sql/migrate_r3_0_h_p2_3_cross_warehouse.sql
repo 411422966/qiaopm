@@ -7,6 +7,8 @@
 -- 2026-08-14
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS wms_warehouse_threshold;
 CREATE TABLE wms_warehouse_threshold (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

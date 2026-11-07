@@ -4,6 +4,8 @@
 -- ============================================
 
 -- 1. 营销活动主表（满减/折扣/买赠/付费优惠券）
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS mkt_promotion;
 CREATE TABLE mkt_promotion (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

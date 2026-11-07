@@ -3,6 +3,8 @@
 -- 2026-08-03
 -- ============================================
 
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS `commission_rule` (
   `id` bigint PRIMARY KEY AUTO_INCREMENT,
   `tenant_id` bigint NOT NULL DEFAULT 1,

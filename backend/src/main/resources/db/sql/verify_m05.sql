@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 SELECT 'crm_package' AS tbl, COUNT(*) AS cnt FROM crm_package
 UNION ALL SELECT 'crm_package_order', COUNT(*) FROM crm_package_order
 UNION ALL SELECT 'crm_package_redemption', COUNT(*) FROM crm_package_redemption;

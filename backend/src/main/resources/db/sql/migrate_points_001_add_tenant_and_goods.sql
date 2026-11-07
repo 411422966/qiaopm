@@ -4,6 +4,8 @@
 -- ============================================
 
 -- 1. market_point_record
+SET NAMES utf8mb4;
+
 DROP PROCEDURE IF EXISTS migrate_p1;
 DELIMITER //
 CREATE PROCEDURE migrate_p1()

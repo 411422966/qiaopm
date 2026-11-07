@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 效期预警规则表
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_expiry_alert_rule;
 CREATE TABLE biz_expiry_alert_rule (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

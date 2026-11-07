@@ -8,6 +8,8 @@
 -- -------------------------------------------------------
 -- P2-MONEY-001：BNPL 先买后付（Klarna / Afterpay）
 -- -------------------------------------------------------
+SET NAMES utf8mb4;
+
 INSERT IGNORE INTO feature_flag (tenant_id, flag_key, flag_name, description, enabled, rollout_percent, whitelist, blacklist, user_rule, start_at, end_at, owner)
 VALUES (1, 'bnpl-klarna-enabled', 'BNPL-Klarna 支付通道', '开启后用户可在结账页选择 Klarna 分期付款（仅在 bnpl.klarna.client-id 配好后生效）', 1, 20, NULL, NULL, 'USER_ID', '2026-09-01 00:00:00', '2026-12-31 23:59:59', 'p2-money');
 

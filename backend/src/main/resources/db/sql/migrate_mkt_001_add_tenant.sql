@@ -3,6 +3,8 @@
 -- 2026-08-26
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP PROCEDURE IF EXISTS migrate_mkt_001;
 DELIMITER //
 CREATE PROCEDURE migrate_mkt_001()

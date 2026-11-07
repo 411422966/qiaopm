@@ -18,6 +18,8 @@
 --
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 DROP PROCEDURE IF EXISTS migrate_mkt_002_rollback;
 DELIMITER //
 CREATE PROCEDURE migrate_mkt_002_rollback()

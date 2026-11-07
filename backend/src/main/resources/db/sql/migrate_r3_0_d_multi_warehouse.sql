@@ -8,6 +8,8 @@
 --   4. 演示数据：每个门店默认一个"主仓"
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS wms_warehouse;
 CREATE TABLE wms_warehouse (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

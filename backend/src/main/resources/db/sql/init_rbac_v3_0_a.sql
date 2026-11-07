@@ -6,6 +6,8 @@
 -- ============================================
 -- 1. 品牌表（新增）
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS mkt_brand;
 CREATE TABLE mkt_brand (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

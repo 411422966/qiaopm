@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. IoT 设备档案
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_iot_device;
 CREATE TABLE biz_iot_device (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

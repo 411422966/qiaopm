@@ -4,6 +4,8 @@
 -- ============================================
 
 -- 1. 提成规则版本化（每改一次生成一条快照）
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS commission_rule_version;
 CREATE TABLE commission_rule_version (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

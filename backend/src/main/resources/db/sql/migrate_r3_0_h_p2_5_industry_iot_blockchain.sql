@@ -9,6 +9,8 @@
 -- 2026-08-14
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS industry_template;
 CREATE TABLE industry_template (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

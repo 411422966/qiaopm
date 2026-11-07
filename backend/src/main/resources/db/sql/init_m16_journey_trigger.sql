@@ -4,6 +4,8 @@
 -- ================================================================
 
 -- 1. 触发器规则
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS mkt_journey_trigger;
 CREATE TABLE mkt_journey_trigger (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

@@ -2,6 +2,8 @@
 -- Batch 4 + Batch 5 缺失表补齐（meiyetec 库）
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS kiosk_device (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   tenant_id BIGINT NOT NULL DEFAULT 1,

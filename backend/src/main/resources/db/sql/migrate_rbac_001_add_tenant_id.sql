@@ -7,6 +7,8 @@
 -- --------------------------------------------------------
 -- 1. sys_role：添加 tenant_id（平台级角色为 NULL，租户角色为 tenantId）
 -- --------------------------------------------------------
+SET NAMES utf8mb4;
+
 ALTER TABLE sys_role
     ADD COLUMN tenant_id BIGINT DEFAULT NULL COMMENT '所属租户（平台级角色为NULL）'
     AFTER status;

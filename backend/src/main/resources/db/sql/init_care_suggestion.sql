@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 护理建议模板表
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_care_suggestion_template;
 CREATE TABLE biz_care_suggestion_template (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

@@ -6,6 +6,8 @@
 -- ============================================
 
 -- 1. crm_integration：扩展 Salesforce OAuth2 JWT Bearer Flow 所需字段
+SET NAMES utf8mb4;
+
 ALTER TABLE crm_integration
     ADD COLUMN sync_token              VARCHAR(255) DEFAULT NULL COMMENT '平台 sync token（增量同步游标）',
     ADD COLUMN sync_schedule           VARCHAR(64)  DEFAULT '0 */30 * * * *' COMMENT 'cron 表达式（默认 30 分钟）',

@@ -5,6 +5,8 @@
 -- ============================================
 
 -- Apple Pay 网关（沙箱）
+SET NAMES utf8mb4;
+
 INSERT INTO biz_overseas_payment_gateway
     (tenant_id, gateway_code, gateway_name, api_base_url, publishable_key, secret_key,
      webhook_secret, merchant_id, fee_rate, fixed_fee, supported_currencies, payment_methods,

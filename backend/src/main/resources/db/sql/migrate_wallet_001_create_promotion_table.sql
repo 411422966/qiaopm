@@ -4,6 +4,8 @@
 -- 2026-08-25
 -- ============================================
 
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS wallet_promotion (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '规则ID',
     tenant_id BIGINT DEFAULT NULL COMMENT '所属租户ID，NULL 表示全局规则',

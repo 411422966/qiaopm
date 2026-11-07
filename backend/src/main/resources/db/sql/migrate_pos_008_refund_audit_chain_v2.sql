@@ -4,6 +4,8 @@
 --   2. 调整默认审核规则阈值（5000/30000 → 500/5000）
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 ALTER TABLE pos_refund
     ADD COLUMN audit_status VARCHAR(32) DEFAULT NULL
         COMMENT '显式审核相位：null/DRAFT/PENDING_STORE/PENDING_HQ/PENDING_FINANCE/APPROVED/REJECTED'

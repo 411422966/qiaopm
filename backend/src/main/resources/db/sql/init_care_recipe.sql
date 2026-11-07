@@ -34,6 +34,8 @@
 -- ============================================================
 -- 1. 护理配方主表 care_recipe
 -- ============================================================
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS care_recipe (
   id                    BIGINT        NOT NULL AUTO_INCREMENT COMMENT 'PK',
   tenant_id             BIGINT        NULL     COMMENT '所属租户ID',

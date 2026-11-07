@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 技师等级表
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_technician_level;
 CREATE TABLE biz_technician_level (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

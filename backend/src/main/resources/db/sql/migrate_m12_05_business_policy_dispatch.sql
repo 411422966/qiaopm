@@ -14,6 +14,8 @@
 -- ================================================================
 
 -- 1. mkt_dispatch 增加字段
+SET NAMES utf8mb4;
+
 ALTER TABLE mkt_dispatch
     ADD COLUMN IF NOT EXISTS dispatch_subtype VARCHAR(30) DEFAULT NULL COMMENT 'PRICING_RULE/ACTIVITY/COUPON_BATCH/EXPERIMENT',
     ADD COLUMN IF NOT EXISTS source_id BIGINT DEFAULT NULL COMMENT '源策略ID（价格规则/活动/批次/实验）',

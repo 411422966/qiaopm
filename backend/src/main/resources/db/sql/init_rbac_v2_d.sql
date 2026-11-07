@@ -5,6 +5,8 @@
 -- =============================================
 
 -- 1. 服务-耗材 BOM
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_service_material;
 CREATE TABLE biz_service_material (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键',

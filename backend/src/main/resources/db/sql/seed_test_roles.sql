@@ -21,6 +21,8 @@
 --   保证 4 个测试账号（clerk01/manager01/boss01/operator01）密码都是 '123456'。
 -- =============================================
 
+SET NAMES utf8mb4;
+
 USE meiyetec;
 
 -- ① 复用 admin 的真实 BCrypt hash 作为 4 个测试账号的密码

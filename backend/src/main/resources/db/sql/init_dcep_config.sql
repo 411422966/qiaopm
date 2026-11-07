@@ -12,6 +12,8 @@
 --     (见 init_m12_dcep_qualification.sql)
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS dcep_config (
   id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'PK',
   merchant_id     VARCHAR(64)  NULL     COMMENT '商户号',

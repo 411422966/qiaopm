@@ -3,6 +3,8 @@
 -- 用途：记录会员对服务/项目的偏好分（基于消费历史，非 ML）
 -- 唯一键：(member_id, item_type, item_id, tenant_id)
 
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS crm_member_item_preference (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
     tenant_id      BIGINT NOT NULL DEFAULT 1 COMMENT '租户ID',

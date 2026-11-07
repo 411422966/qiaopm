@@ -5,6 +5,7 @@
 > **裁决人**：用户（2026-11-05 拍板；2026-11-07 批准分类 D 全部修复 + 根因处理）
 > **本批已处理**：分类 D 的 4 表 5 列共 101 行（修复方式与依据见 §8）
 > **仍不处理**：分类 A / B / C / E（见各节裁决）
+> **根因批量加固（2026-11-08）**：`db/sql` 全量 176 个 `.sql` 已补齐 `SET NAMES utf8mb4;`（165 个新增 / 11 个原有跳过），详见 **§10**
 
 ---
 
@@ -219,6 +220,11 @@ verify 脚本的 **B 段（残留字面 `?` 扫描）** 与 **C 段（残留 GBK
 
 > 规律很清楚：**凡是被人工修过一次的脚本都补上了 `SET NAMES`，没被修过的全都没有。**
 
+> **⚠️ 计数更正（2026-11-08）**：本节的「157 个 .sql / 147 个缺失」是 **2026-11-05 调查快照口径**，
+> 与目录**全量**不等价。本次（2026-11-08）实测全量为 **176 个**（顶层 173 + `audit-subset/` 3），
+> `git ls-tree` 在 HEAD 与本次改动前的多个 ref 上均显示 176 —— 即**目录内容未变，是当时的扫描口径少计**。
+> 本次批量加固**以全量 176 为准**，详见 §10。§8.1.1 的历史数字保留原样以备追溯。
+
 #### 8.1.2 时间线证据
 
 | 事实 | 取证 |
@@ -244,7 +250,7 @@ verify 脚本的 **B 段（残留字面 `?` 扫描）** 与 **C 段（残留 GBK
 | 文件 | 动作 | 效果 |
 |---|---|---|
 | `backend/src/main/resources/db/sql/init_rbac_v2_1_a.sql` | 文件头补 `SET NAMES utf8mb4;` | 该种子文件今后无论以何种客户端字符集加载都不会再污染。**原第 195 行经字节级校验本就是合法 UTF-8（`'美白亮肤 8 次套餐'`），未作任何改动** |
-| 其余 146 个 `init_*` / `migrate_*` / `seed_*` | **未改**（超出本批授权范围） | 建议下一批统一批量补 `SET NAMES utf8mb4;`（纯前置语句，无数据副作用） |
+| 其余 146 个 `init_*` / `migrate_*` / `seed_*` | **未改**（当时超出本批授权范围） | ✅ **已于 2026-11-08 全部补齐**（含实际全量 176 个中的 165 个，详见 §10） |
 
 ### 8.2 还原映射依据：逆向解码的可逆性证明
 
@@ -379,13 +385,108 @@ id  plan_code  plan_name              description
 |---|---|
 | `backend/src/main/resources/db/sql/init_rbac_v2_1_a.sql` | 文件头新增 `SET NAMES utf8mb4;` + 说明注释。**未做字符替换** —— 全文件字节级往返校验 `13536 → 13536`（纯 UTF-8），第 195 行 `'抗皱紧致疗程'` 码点 `U+6297 U+76B1 U+7D27 U+81F4 U+7597 U+7A0B` 全部正确，**不存在 GBK 残留** |
 | `audit/issues/I140-ai-enhance-blood-line-drift.md` | 新建：`AiEnhanceService.java:129` JOIN `biz_service_item` 而 `pos_order_item.service_id` 实指 `biz_service`（静默错数据）。**未改业务代码**，状态 Open / UNVERIFIED |
-| 遗留根因面 | `backend/src/main/resources/db/sql/` 共 157 个 `.sql`，**147 个缺 `SET NAMES`**。本批只加固了根因文件的 `init_rbac_v2_1_a.sql`，其余 146 个仍待批量加固（建议独立批次统一处理） |
+| 遗留根因面 | `backend/src/main/resources/db/sql/` 全量 **176** 个 `.sql` 中 **165 个缺 `SET NAMES`**。本批只加固了根因文件的 `init_rbac_v2_1_a.sql` → ✅ **已于 2026-11-08 批量补齐（165/165），见 §10** |
 
 ### 9.5 尚未收口项
 
 | 项 | 状态 |
 |---|---|
 | `sys_permission` 51 行 `·` 命名 | 本批**跳过**，待另立本地化批次（无中文权威源，不猜测） |
-| `stock_product.unit`(17) / `complication_sop.responsible_role`(5) / `biz_spa_scene_mode.*`(4+4) / `industry_template.*`(5+5) / `mh_drug_device.specification`(2) | 需权威源，未修复 |
-| `db/sql` 剩余 146 个脚本补 `SET NAMES utf8mb4` | 未做 |
-| I140 `AiEnhanceService` 血缘漂移 | 已登记，未修 |
+| `stock_product.unit`(17) / `complication_sop.responsible_role`(5) / `biz_spa_scene_mode.*`(4+4) / `industry_template.icon`/`industry_name`(5+5) / `mh_drug_device.specification`(2) | 需权威源，未修复 |
+| `db/sql` 剩余脚本补 `SET NAMES utf8mb4` | ✅ **已收口**（2026-11-08，165 个全部补齐，见 §10） |
+| I140 `AiEnhanceService` 血缘漂移 | ✅ **已修复并 VERIFIED**（2026-11-07，见 `audit/evidence/F145-i140-ai-enhance-fix/`）；衍生遗留已拆分为 I141 / I142 / I143 |
+
+---
+
+## 10. I128-b 根因批量加固（2026-11-08）：`db/sql` 全量补 `SET NAMES utf8mb4`
+
+> **状态**：✅ **VERIFIED**（落盘重扫 + 临时库实跑 + 字节级反证三项均通过）
+> **授权**：用户 2026-11-08 批准（DryRun 报告 176/176 通过后批准 `-Apply`）
+> **范围**：`backend/src/main/resources/db/sql/`（不含 Flyway `db/migration/`）
+
+### 10.1 目标
+
+§8.1.3 认定的成灾机制是「客户端字符集由客户端默认值决定」（容器 POSIX locale → latin1；Windows 本地 → cp936）。
+既然文件端无法控制客户端，就必须在**文件内部显式声明**客户端字符集 ——
+即在每个 `.sql` 的语句区最前面加 `SET NAMES utf8mb4;`，使客户端无论以何种字符集加载都按 UTF-8 解释字节。
+
+### 10.2 工具：`scripts/add-set-names.ps1`（一次性迁移工具，非 CI 守门脚本）
+
+| 项 | 内容 |
+|---|---|
+| 用途与场景 | 为 `db/sql` 目录下的全部 `.sql` 补齐 `SET NAMES utf8mb4`；本批一次性执行完毕 |
+| 参数 | `-Root`（默认 `backend/src/main/resources/db/sql`）、`-DryRun`（默认）、`-Apply`、`-IncludeSubDir`（默认 `$true`）、`-ReportPath` |
+| 退出码 | `0` = 全部成功；`1` = 有文件处理失败；`2` = 参数错误（如 `-DryRun` 与 `-Apply` 同给、Root 不存在） |
+| 是否接入 CI / PR 必跑清单 | **否**。一次性迁移工具，已执行完毕即失效，不进 CI |
+| 失败时处理方式 | 脚本**不阻断**：单文件失败仅计入 `ERROR` 并写报告，其余文件继续；退出码非 0 由人工判读 |
+| 关键约束 | 幂等（已含 `SET NAMES` 直接 SKIP）、保行尾（沿用文件自身主导行尾）、UTF-8 无 BOM 写回、严格 UTF-8 解码（失败即跳过不猜） |
+| 排除规则 | Flyway `backend/src/main/resources/db/migration/V1__init_baseline.sql`（改动会破坏 Flyway checksum）+ `backend/target/*`（编译产物） |
+| 文件编码 | UTF-8 **with BOM**（与仓库既有 `scripts/backup-db-docker.ps1` 一致；PowerShell 5.1 解析 UTF-8 脚本必须有 BOM，否则中文注释导致语法错误） |
+| 仓库入库状态 | ⚠️ **未入库** —— `.gitignore` L143 的全局 `*.ps1` 规则拦截 `scripts/*.ps1`；`.gitignore` 属治理保护文件（未经用户单独批准不得修改），本批**未**改 `.gitignore`，故原始工具留在工作区不入库。证据目录内已归档**只读副本** `audit/evidence/F146-i128-b-set-names-db-sql/add-set-names.ps1`（文件头已标注「非正式工具」） |
+
+### 10.3 执行统计
+
+| 阶段 | 候选 | SKIP | INSERT | EXCLUDE | ERROR | 退出码 |
+|---|---|---|---|---|---|---|
+| DryRun（审核前） | 176 | 11 | 165 | 0 | 0 | 0 |
+| Apply（落盘） | 176 | 11 | 165 | 0 | 0 | 0 |
+
+> 176 = 顶层 173 + `audit-subset/` 3。
+> SKIP 的 11 个是**原本已含** `SET NAMES` 的文件（含 I128-b 批加固的 `init_rbac_v2_1_a.sql`），**逐字节未被触碰**。
+
+### 10.4 落盘后重扫验证（独立于脚本自身的断言）
+
+| 检查项 | 结果 | 期望 |
+|---|---|---|
+| 缺 `SET NAMES` 的文件数 | **0** | 0 |
+| UTF-8 BOM 文件数 | **0** | 0 |
+| 非法 UTF-8 文件数 | **0** | 0 |
+| 行尾分布 | **CRLF=164 / LF=12** | 与改前完全一致（164/12） |
+| `git diff --numstat` | 165 个文件，**全部恰好 `+2 / -0`** | 每文件仅增 `SET NAMES utf8mb4;` + 空行 |
+
+### 10.5 临时库试跑（真实 MySQL 8.0.46 容器）
+
+在 `meiyetec-mysql` 容器内建 3 个**一次性**临时库（`tmp_setnames_test` / `tmp_setnames_ref` / `tmp_setnames_nofix`），
+对 6 个文件做实跑；测试副本仅把 `USE meiyetec` / `CREATE DATABASE ... meiyetec` **重定向到临时库**，
+`SET NAMES` 行与正文**逐字节未改**（`docker cp` 传输，保留原始字节）。
+
+| # | 文件 | 角色 | 结果 |
+|---|---|---|---|
+| 1 | `init_m01_auth.sql` | 顶层建库 + 用户/角色/权限种子 | ✅ exit 0，中文正常（`系统管理员` / `超级管理员` / `首页` / `收银结算` …） |
+| 2 | `create_missing_tables_b4b5.sql` | 纯 DDL（23 张表） | ✅ exit 0 |
+| 3 | `init_rbac_v2.sql` | 原含 `SET NAMES` 的 SKIP 文件（依赖补齐） | ✅ exit 0 |
+| 4 | `audit-subset/migrate_ext_22_subset.sql` | ALTER（`google_maps_config` / `ecommerce_platform`） | ✅ exit 0，4 列到位 |
+| 5 | `migrate_p3_pkg_order_version.sql` | ALTER + `SHOW COLUMNS` | ✅ exit 0，`version int NO 0` 到位 |
+| 6 | `expire_test.sql` | UPDATE + SELECT | ✅ exit 0，`expire_time` 更新为 `2025-01-01 00:00:00` |
+
+**字符集有效性验证（两库对照）**
+
+| 验证 | 方法 | 结果 |
+|---|---|---|
+| 字节级对照 | 同一批文件分别用 `--default-character-set=latin1`（跑进 `tmp_setnames_test`）与 `--default-character-set=utf8mb4`（跑进 `tmp_setnames_ref`）执行，再对 `sys_permission.permission_name` / `sys_role.role_name` / `sys_role.description` 取 `HEX()` 比对 | **148 行逐字节全等** |
+| 语义抽样 | `HEX('首页')` = `E9A696E9A1B5`、`HEX('会员管理')` = `E4BC9AE59198E7AEA1E79086` | 与源码字面量的 UTF-8 编码**逐字节一致** |
+| 新增菜单抽样 | `add_6_missing_menus_20260819.sql` 写入的 6 条中文菜单（`回访任务规则` / `国际支付` / `国际预约` / `AI 智能排班` / `资金风控` / `Google Maps`） | 6/6 与源码字面量的 UTF-8 编码**逐字节一致** |
+| **反证（决定性）** | 取**改动前**的原文件（`git show HEAD:...init_m01_auth.sql`，8484 字节，无 `SET NAMES`），用**同样的 latin1 客户端**跑进 `tmp_setnames_nofix` | **143/143 行**中文全部双重编码乱码（`首页` → `é¦–é¡µ`，HEX `C3A9C2A6E28093C3A9C2A1C2B5`）→ 证明 `SET NAMES` 缺失即成灾，补上即根治 |
+
+**测试环境清理**：3 个临时库已 `DROP`，容器内 `/tmp/st_test` `/tmp/st_ref` `/tmp/st_orig_init.sql` 已删除，
+本地临时目录 `tmp-setnames-run/` 已删除。**真实 `meiyetec` 库未被本次测试写入**（测试副本的库名已重定向）。
+
+### 10.6 顺带发现（**未修，超出本批授权范围**）
+
+`add_6_missing_menus_20260819.sql` **L40** 在两个临时库上**报同一错**：
+
+```
+ERROR 1136 (21S01) at line 40: Column count doesn't match value count at row 1
+```
+
+原因：该行 `INSERT IGNORE INTO sys_menu_permission (permission_id, route_path, icon, sort_order, hidden, keep_alive)`
+声明 **6 列**，而 `SELECT` 只提供 **4 个值**（`id, '/crm/care/follow-rule', 'SetUp', 99`），缺 `hidden` / `keep_alive`。
+**该缺陷在改动前的原文件中即存在，与 `SET NAMES` 无关**（两库同错可证）。
+§10.5 中该文件的**字符集部分仍然通过**（A 段 6 条中文菜单已正确入库并通过 HEX 校验），仅 B 段失败。
+→ **待另立 issue 处理**，本批不改。
+
+### 10.7 证据
+
+| 文件 | 内容 |
+|---|---|
+| `audit/evidence/F146-i128-b-set-names-db-sql/` | 本批完整证据（DryRun 报告 / Apply 报告 / 重扫输出 / 试跑输出 / 字节比对 / 反证） |

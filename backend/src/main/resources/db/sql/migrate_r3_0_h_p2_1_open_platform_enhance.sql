@@ -7,6 +7,8 @@
 -- 2026-08-14
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS platform_webhook_event;
 CREATE TABLE platform_webhook_event (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

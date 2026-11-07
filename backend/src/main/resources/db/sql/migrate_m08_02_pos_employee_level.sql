@@ -2,6 +2,8 @@
 -- 启用 LevelEvaluationController 的前提条件
 
 -- 仅 MySQL 8.0.29+ 支持 IF NOT EXISTS
+SET NAMES utf8mb4;
+
 ALTER TABLE pos_employee
   ADD COLUMN employee_level BIGINT DEFAULT NULL COMMENT '技师等级ID（关联 biz_technician_level.id）';
 

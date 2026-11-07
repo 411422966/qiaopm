@@ -11,6 +11,8 @@
 -- =============================================================================
 
 -- 1. 候补评分日志（每次评分都留痕，方便回溯/审计/调参）
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS booking_waitlist_score_log;
 CREATE TABLE booking_waitlist_score_log (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

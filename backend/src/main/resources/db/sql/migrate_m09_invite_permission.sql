@@ -5,6 +5,8 @@
 -- ====================================================================
 
 -- A. 注册权限
+SET NAMES utf8mb4;
+
 INSERT IGNORE INTO sys_permission (permission_code, permission_name, permission_type, parent_id) VALUES
 ('mkt:invite',        '裂变邀请',   'menu', NULL),
 ('mkt:invite:list',   '邀请列表',   'button', NULL),

@@ -5,6 +5,8 @@
 --   daily_used      DECIMAL(15,2) 当日累计消费
 --   daily_reset_at  DATETIME      当日限额重置时间
 
+SET NAMES utf8mb4;
+
 ALTER TABLE biz_dcep_hardware_wallet
     ADD COLUMN IF NOT EXISTS pin_hash VARCHAR(255) DEFAULT NULL COMMENT 'PIN BCrypt 哈希',
     ADD COLUMN IF NOT EXISTS private_key_enc VARCHAR(2048) DEFAULT NULL COMMENT '私钥(AES加密)',

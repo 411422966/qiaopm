@@ -5,6 +5,8 @@
 -- 兼容原表结构，幂等可重跑
 -- ============================================
 
+SET NAMES utf8mb4;
+
 ALTER TABLE stock_check
   ADD COLUMN IF NOT EXISTS `confirmed_by` bigint DEFAULT NULL COMMENT '确认人ID' AFTER `status`,
   ADD COLUMN IF NOT EXISTS `confirmed_by_name` varchar(64) DEFAULT NULL COMMENT '确认人' AFTER `confirmed_by`,

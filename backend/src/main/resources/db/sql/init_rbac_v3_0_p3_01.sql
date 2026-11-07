@@ -6,6 +6,8 @@
 -- ============================================
 -- 1. 会员标签（动态标签，如 RFM 分群）
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS crm_member_tag_value;
 CREATE TABLE crm_member_tag_value (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

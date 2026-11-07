@@ -5,6 +5,8 @@
 --  3. 新增 pos_refund_audit_rule（审核规则配置）
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 ALTER TABLE pos_refund
     ADD COLUMN current_audit_level INT DEFAULT 0 COMMENT '当前审核级别：0无需审核 / 1店长 / 2区域经理 / 3财务总监' AFTER status,
     ADD COLUMN audit_required TINYINT DEFAULT 0 COMMENT '是否需要审核：0否 1是' AFTER current_audit_level,

@@ -10,6 +10,8 @@
 -- ============================================
 -- 1. 总部统一下发
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS mkt_dispatch;
 CREATE TABLE mkt_dispatch (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

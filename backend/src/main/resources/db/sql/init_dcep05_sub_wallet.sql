@@ -4,6 +4,8 @@
 -- ================================================================
 
 -- 1. 子钱包主表
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_dcep_sub_wallet;
 CREATE TABLE biz_dcep_sub_wallet (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

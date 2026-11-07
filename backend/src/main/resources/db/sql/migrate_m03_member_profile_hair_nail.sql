@@ -8,6 +8,8 @@
 
 -- 1. 美容子行业已有 skin_type；本迁移仅追加美发 / 美甲子行业画像
 
+SET NAMES utf8mb4;
+
 ALTER TABLE crm_member_profile
     ADD COLUMN IF NOT EXISTS hair_type VARCHAR(50) DEFAULT NULL
         COMMENT '发质类型（美发子行业画像）'

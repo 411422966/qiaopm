@@ -5,6 +5,8 @@
 --          重复 msg_id 直接 upsert 命中 → 视为幂等成功
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS webhook_msg_log (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   source VARCHAR(32) NOT NULL COMMENT 'YOUZAN / WECHAT / STRIPE / ...',

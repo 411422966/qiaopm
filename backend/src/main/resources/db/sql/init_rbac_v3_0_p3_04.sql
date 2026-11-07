@@ -6,6 +6,8 @@
 -- ============================================
 -- 1. 定价规则（按技师/时段/项目/会员等级）
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS mkt_dynamic_pricing_rule;
 CREATE TABLE mkt_dynamic_pricing_rule (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

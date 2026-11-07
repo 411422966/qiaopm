@@ -6,6 +6,8 @@
 -- ============================================
 -- 1. 视觉档案（皮肤/面部档案）
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS mh_visual_archive;
 CREATE TABLE mh_visual_archive (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

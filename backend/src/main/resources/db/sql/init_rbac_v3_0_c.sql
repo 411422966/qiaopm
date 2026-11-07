@@ -6,6 +6,8 @@
 -- ============================================
 -- 1. 回访任务（疗程后/生日/到期）
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS crm_follow_up_task;
 CREATE TABLE crm_follow_up_task (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

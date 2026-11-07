@@ -15,6 +15,8 @@
 -- 2026-08-14
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS payment_config;
 CREATE TABLE payment_config (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

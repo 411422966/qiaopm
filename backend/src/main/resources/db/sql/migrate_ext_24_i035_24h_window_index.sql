@@ -15,6 +15,8 @@
 -- ============================================================
 
 -- 仅在索引不存在时创建（MySQL 8.0.29+）
+SET NAMES utf8mb4;
+
 SET @idx_exists := (
   SELECT COUNT(*)
   FROM information_schema.STATISTICS

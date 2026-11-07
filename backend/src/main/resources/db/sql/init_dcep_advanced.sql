@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 数字人民币硬钱包
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_dcep_hardware_wallet;
 CREATE TABLE biz_dcep_hardware_wallet (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

@@ -1,0 +1,61 @@
+=== 反证实验：改动前的原文件（无 SET NAMES）+ latin1 客户端 ===
+时间: 2026-11-08 00:35:20
+方法: git show HEAD:backend/src/main/resources/db/sql/init_m01_auth.sql > 临时文件（cmd 字节级重定向）
+      仅把 USE meiyetec / CREATE DATABASE ... meiyetec 重定向到临时库 tmp_setnames_nofix，
+      SET NAMES 缺失状态 = 改动前真实状态；客户端 --default-character-set=latin1
+
+原始文件字节数 : 8484
+含 BOM        : False
+含 SET NAMES  : False   <-- 期望 False
+--- 执行输出（末段）---
+=== 用户表数据 ===
+id	username	real_name	status
+1	admin	系统管理员	1
+
+=== 角色表数据 ===
+id	role_code	role_name	description	status	create_time	update_time	deleted
+1	SUPER_ADMIN	超级管理员	系统超级管理员，拥有所有权限	1	2026-11-08 00:35:43	2026-11-08 00:35:43	0
+2	STORE_ADMIN	门店管理员	门店管理员，管理门店所有业务	1	2026-11-08 00:35:43	2026-11-08 00:35:43	0
+3	EMPLOYEE	员工	普通员工，拥有基础操作权限	1	2026-11-08 00:35:43	2026-11-08 00:35:43	0
+
+=== 权限表数据 ===
+id	permission_code	permission_name	permission_type	parent_id	path	icon	sort_order	status	create_time	update_time	deleted
+1	dashboard	首页	menu	0	/dashboard	NULL	1	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+2	member	会员管理	menu	0	/member	NULL	2	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+3	booking	预约管理	menu	0	/booking	NULL	3	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+4	pos	收银结算	menu	0	/pos	NULL	4	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+5	inventory	库存管理	menu	0	/inventory	NULL	5	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+6	employee	员工管理	menu	0	/employee	NULL	6	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+7	marketing	营销工具	menu	0	/marketing	NULL	7	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+8	report	数据报表	menu	0	/report	NULL	8	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+9	setting	系统设置	menu	0	/setting	NULL	9	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+10	member:list	查看会员	button	2	NULL	NULL	1	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+11	member:add	新增会员	button	2	NULL	NULL	2	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+12	member:edit	编辑会员	button	2	NULL	NULL	3	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+13	member:delete	删除会员	button	2	NULL	NULL	4	1	2026-11-08 00:35:45	2026-11-08 00:35:45	0
+
+=== 登录日志表 ===
+Tables_in_tmp_setnames_nofix (sys_login_log)
+sys_login_log
+
+--- 无 SET NAMES 库的落库 HEX（前 5 行）---
+  dashboard	C3A9C2A6E28093C3A9C2A1C2B5
+  member	C3A4C2BCC5A1C3A5E28098CB9CC3A7C2AEC2A1C3A7C290E280A0
+  booking	C3A9C2A2E2809EC3A7C2BAC2A6C3A7C2AEC2A1C3A7C290E280A0
+  pos	C3A6E2809DC2B6C3A9E2809CC2B6C3A7C2BBE2809CC3A7C2AEE28094
+  inventory	C3A5C2BAE2809CC3A5C2ADCB9CC3A7C2AEC2A1C3A7C290E280A0
+
+--- 该库中的中文实际显示 ---
+dashboard	é¦–é¡µ
+member	ä¼šå‘˜ç®¡ç†
+booking	é¢„çº¦ç®¡ç†
+pos	æ”¶é“¶ç»“ç®—
+inventory	åº“å­˜ç®¡ç†
+employee	å‘˜å·¥ç®¡ç†
+
+对照（有 SET NAMES 的 tmp_setnames_test，同一客户端 latin1）：
+  dashboard  E9A696E9A1B5     -> 首页      (UTF-8 正确)
+  member     E4BC9AE59198E7AEA1E79086 -> 会员管理  (UTF-8 正确)
+
+结论：无 SET NAMES 时首页被双重编码为 'é¦–é¡µ'（HEX C3A9C2A6E28093C3A9C2A1C2B5），
+      有 SET NAMES 时为正确 UTF-8（HEX E9A696E9A1B5）。SET NAMES 缺失即成灾根因。

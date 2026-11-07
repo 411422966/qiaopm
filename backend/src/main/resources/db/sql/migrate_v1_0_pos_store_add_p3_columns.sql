@@ -18,6 +18,8 @@
 --   - idx_tenant (tenant_id)            → 跳过（T01 已建 idx_pos_store_tenant_id）
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 ALTER TABLE pos_store
     ADD COLUMN brand_id            BIGINT       NULL COMMENT '所属品牌',
     ADD COLUMN store_type          VARCHAR(16)  NULL DEFAULT 'DIRECT' COMMENT 'DIRECT直营/FRANCHISE加盟/FLAGSHIP旗舰店',

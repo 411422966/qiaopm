@@ -1,0 +1,70 @@
+---
+pid: 24376
+cwd: "D:\\QiaoPM"
+command: "cd D:\\QiaoPM\n$files = @(\"init_m01_auth.sql\",\"create_missing_tables_b4b5.sql\",\"add_6_missing_menus_20260819.sql\",\"audit-subset/migrate_ext_22_subset.sql\",\"migrate_p3_pkg_order_version.sql\",\"expire_test.sql\")\nforeach ($f in $files) {\n  Write-Output (\"################ \" + $f + \"  [latin1 client] ################\")\n  $cmd = \"mysql --default-character-set=latin1 -uroot -proot123456 tmp_setnames_test < /tmp/st_test/$f 2>&1\"\n  $out = docker exec meiyetec-mysql sh -c $cmd 2>&1 | Out-String\n  $code = $LASTEXITCODE\n  Write-Output (\"exit=\" + $code)\n  Write-Output $out.Trim()\n}"
+title: "Run 6 files in temp DB with latin1 client charset"
+status: succeeded
+started_at: 2026-11-07T16:23:10.620Z
+running_for_ms: 139221   
+---
+################ init_m01_auth.sql  [latin1 client] ################
+exit=0
+mysql: [Warning] Using a password on the command line interface can be insecure.
+
+=== 用户表数据 ===
+id	username	real_name	status
+1	admin	系统管理员	1
+
+=== 角色表数据 ===
+id	role_code	role_name	description	status	create_time	update_time	deleted
+1	SUPER_ADMIN	超级管理员	系统超级管理员，拥有所有权限	1	2026-11-08 00:23:36	2026-11-08 00:23:36	0
+2	STORE_ADMIN	门店管理员	门店管理员，管理门店所有业务	1	2026-11-08 00:23:36	2026-11-08 00:23:36	0
+3	EMPLOYEE	员工	普通员工，拥有基础操作权限	1	2026-11-08 00:23:36	2026-11-08 00:23:36	0
+
+=== 权限表数据 ===
+id	permission_code	permission_name	permission_type	parent_id	path	icon	sort_order	status	create_time	update_time	deleted
+1	dashboard	首页	menu	0	/dashboard	NULL	1	1	2026-11-08 00:23:37	2026-11-08 00:23:37	0
+2	member	会员管理	menu	0	/member	NULL	2	1	2026-11-08 00:23:37	2026-11-08 00:23:37	0
+3	booking	预约管理	menu	0	/booking	NULL	3	1	2026-11-08 00:23:37	2026-11-08 00:23:37	0
+4	pos	收银结算	menu	0	/pos	NULL	4	1	2026-11-08 00:23:37	2026-11-08 00:23:37	0
+5	inventory	库存管理	menu	0	/inventory	NULL	5	1	2026-11-08 00:23:37	2026-11-08 00:23:37	0
+6	employee	员工管理	menu	0	/employee	NULL	6	1	2026-11-08 00:23:37	2026-11-08 00:23:37	0
+7	marketing	营销工具	menu	0	/marketing	NULL	7	1	2026-11-08 00:23:37	2026-11-08 00:23:37	0
+8	report	数据报表	menu	0	/report	NULL	8	1	2026-11-08 00:23:37	2026-11-08 00:23:37	0
+9	setting	系统设置	menu	0	/setting	NULL	9	1	2026-11-08 00:23:37	2026-11-08 00:23:37	0
+10	member:list	查看会员	button	2	NULL	NULL	1	1	2026-11-08 00:23:38	2026-11-08 00:23:38	0
+11	member:add	新增会员	button	2	NULL	NULL	2	1	2026-11-08 00:23:38	2026-11-08 00:23:38	0
+12	member:edit	编辑会员	button	2	NULL	NULL	3	1	2026-11-08 00:23:38	2026-11-08 00:23:38	0
+13	member:delete	删除会员	button	2	NULL	NULL	4	1	2026-11-08 00:23:38	2026-11-08 00:23:38	0
+
+=== 登录日志表 ===
+Tables_in_tmp_setnames_test (sys_login_log)
+sys_login_log
+################ create_missing_tables_b4b5.sql  [latin1 client] ################
+exit=0
+mysql: [Warning] Using a password on the command line interface can be insecure.
+################ add_6_missing_menus_20260819.sql  [latin1 client] ################
+exit=1
+mysql: [Warning] Using a password on the command line interface can be insecure.
+ERROR 1146 (42S02) at line 40: Table 'tmp_setnames_test.sys_menu_permission' doesn't exist
+################ audit-subset/migrate_ext_22_subset.sql  [latin1 client] ################
+exit=0
+mysql: [Warning] Using a password on the command line interface can be insecure.
+################ migrate_p3_pkg_order_version.sql  [latin1 client] ################
+exit=0
+mysql: [Warning] Using a password on the command line interface can be insecure.
+
+=== crm_package_order version 列已添加 ===
+Field	Type	Null	Key	Default	Extra
+version	int	NO		0
+################ expire_test.sql  [latin1 client] ################
+exit=0
+mysql: [Warning] Using a password on the command line interface can be insecure.
+id	order_no	expire_time	status
+1	PKG202608010001	2025-01-01 00:00:00	ACTIVE
+
+---
+exit_code: 0
+elapsed_ms: 139221
+ended_at: 2026-11-07T16:25:29.841Z
+---

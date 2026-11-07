@@ -6,6 +6,8 @@
 -- ============================================
 
 -- 1. ab_assignment：转化追踪
+SET NAMES utf8mb4;
+
 ALTER TABLE ab_assignment
     ADD COLUMN conversion_status VARCHAR(16)   DEFAULT 'RECORDED' COMMENT 'RECORDED / CONVERTED / EXPIRED',
     ADD COLUMN converted_at      DATETIME      DEFAULT NULL,

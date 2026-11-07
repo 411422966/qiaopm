@@ -29,6 +29,8 @@
 --   - backend/src/main/resources/db/sql/init_mkt_promotion.sql (替代表 mkt_promotion)
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 DROP PROCEDURE IF EXISTS migrate_mkt_002;
 DELIMITER //
 CREATE PROCEDURE migrate_mkt_002()

@@ -1,6 +1,8 @@
 -- ============================================================
 -- ORG-004: sys_tenant_config 租户 KV 配置表
 -- ============================================================
+SET NAMES utf8mb4;
+
 USE meiyetec;
 
 CREATE TABLE IF NOT EXISTS sys_tenant_config (

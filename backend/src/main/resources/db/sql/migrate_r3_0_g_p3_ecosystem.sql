@@ -10,6 +10,8 @@
 -- ============================================
 -- 1. 微信小程序预约
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS wx_member_bind;
 CREATE TABLE wx_member_bind (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

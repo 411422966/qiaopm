@@ -15,6 +15,8 @@
 -- 2026-08-14
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS arch_decision;
 CREATE TABLE arch_decision (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

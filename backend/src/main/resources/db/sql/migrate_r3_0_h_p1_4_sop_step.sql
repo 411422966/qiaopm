@@ -6,6 +6,8 @@
 -- 2026-08-14
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_treatment_phase_step;
 CREATE TABLE biz_treatment_phase_step (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

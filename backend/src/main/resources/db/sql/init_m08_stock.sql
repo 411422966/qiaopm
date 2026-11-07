@@ -4,6 +4,8 @@
 -- ============================================
 
 -- 1. 商品/耗材表（含批次预警）
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS `stock_product`;
 CREATE TABLE `stock_product` (
   `id` bigint PRIMARY KEY AUTO_INCREMENT,

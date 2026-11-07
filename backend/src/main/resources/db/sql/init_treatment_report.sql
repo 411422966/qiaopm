@@ -5,6 +5,8 @@
 -- 数据库版本：MySQL 8.0+ 推荐（< 8.0.29 需先 SHOW COLUMNS 检查列存在再 ALTER）
 -- =============================================================================
 
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS treatment_report (
     id                        BIGINT          NOT NULL AUTO_INCREMENT          COMMENT '主键',
     tenant_id                 BIGINT          NOT NULL                        COMMENT '租户隔离键（多租户）',

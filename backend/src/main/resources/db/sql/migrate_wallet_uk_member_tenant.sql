@@ -11,6 +11,8 @@
 --   3) 删旧唯一索引 uk_member
 --   4) 重建外键 fk_wallet_member（此时会用新的 uk_member_tenant 作为支撑索引）
 
+SET NAMES utf8mb4;
+
 USE meiyetec;
 
 -- 1. 先查重

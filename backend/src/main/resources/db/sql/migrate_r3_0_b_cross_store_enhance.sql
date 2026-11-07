@@ -1,6 +1,8 @@
 -- Cross store rule enhancement fields
 -- 2026-08-22
 
+SET NAMES utf8mb4;
+
 ALTER TABLE crm_cross_store_rule
     ADD COLUMN remark VARCHAR(500) DEFAULT NULL COMMENT 'Rule remark' AFTER rule_name;
 

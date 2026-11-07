@@ -3,6 +3,8 @@
 -- ============================================
 
 -- 服务/产品表（订单明细需要引用）
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS `biz_service` (
   `id` bigint PRIMARY KEY AUTO_INCREMENT,
   `tenant_id` bigint DEFAULT 1,

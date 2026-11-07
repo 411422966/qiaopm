@@ -6,6 +6,8 @@
 -- ============================================
 -- 1. 渠道配置（短信/微信/订阅消息/小程序/公众号）
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS mkt_channel_config;
 CREATE TABLE mkt_channel_config (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

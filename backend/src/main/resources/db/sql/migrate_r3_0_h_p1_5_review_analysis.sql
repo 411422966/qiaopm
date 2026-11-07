@@ -5,6 +5,8 @@
 -- 2026-08-14
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS crm_review_dimension_config;
 CREATE TABLE crm_review_dimension_config (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

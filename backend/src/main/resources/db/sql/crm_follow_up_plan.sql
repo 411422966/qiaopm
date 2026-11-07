@@ -5,6 +5,8 @@
 
 -- 1. 回访计划表（crm_follow_up_plan）
 --    兼容 init_rbac_v3_0_c.sql：若表已存在，跳过；缺失字段通过 ALTER 补齐。
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS crm_follow_up_plan (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
     tenant_id       BIGINT NOT NULL DEFAULT 1,

@@ -25,6 +25,8 @@
 --   - fix_booking_calendar_tables.sql （biz_booking / biz_employee_schedule / biz_room）
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 USE meiyetec;
 
 -- ============================================================

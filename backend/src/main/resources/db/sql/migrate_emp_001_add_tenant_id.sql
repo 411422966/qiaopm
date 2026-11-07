@@ -5,6 +5,8 @@
 -- ============================================
 
 -- 1. 添加 tenant_id 列（可空，待存量数据迁移）
+SET NAMES utf8mb4;
+
 ALTER TABLE pos_employee
     ADD COLUMN tenant_id BIGINT DEFAULT NULL COMMENT '所属租户ID'
     AFTER role_ids;

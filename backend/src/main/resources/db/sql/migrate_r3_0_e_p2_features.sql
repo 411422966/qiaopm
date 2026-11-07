@@ -9,6 +9,8 @@
 -- ============================================
 -- 1. 多人共享套餐
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS crm_package_share;
 CREATE TABLE crm_package_share (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

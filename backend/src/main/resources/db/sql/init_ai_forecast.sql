@@ -18,6 +18,8 @@
 -- ============================================================
 -- 1. 预测特征表 booking_forecast_feature
 -- ============================================================
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS booking_forecast_feature (
   id                       BIGINT        NOT NULL AUTO_INCREMENT COMMENT 'PK',
   tenant_id                BIGINT        NULL     COMMENT '所属租户ID',

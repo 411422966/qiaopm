@@ -1,5 +1,7 @@
 -- M04 项目组合 — crm_package 表 bundle 结构支持
 
+SET NAMES utf8mb4;
+
 ALTER TABLE crm_package
   ADD COLUMN bundle_type INT DEFAULT 0 COMMENT '组合类型：0=单商品 1=组合（含子项目）';
 

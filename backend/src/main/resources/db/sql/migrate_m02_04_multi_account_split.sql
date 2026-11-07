@@ -15,6 +15,8 @@
 -- ================================================================
 
 -- 1. 分账规则
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS m02_split_rule (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
     tenant_id       BIGINT NOT NULL COMMENT '租户ID',

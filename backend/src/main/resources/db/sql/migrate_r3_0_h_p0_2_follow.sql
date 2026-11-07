@@ -6,6 +6,8 @@
 -- 2026-08-14
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS crm_follow_up_touch;
 CREATE TABLE crm_follow_up_touch (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

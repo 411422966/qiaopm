@@ -6,6 +6,8 @@
 -- ============================================
 -- 1. 会员 LTV 预测快照
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS crm_ltv_snapshot;
 CREATE TABLE crm_ltv_snapshot (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

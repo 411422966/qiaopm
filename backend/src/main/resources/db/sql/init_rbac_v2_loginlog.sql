@@ -1,4 +1,6 @@
 -- R2.0-A 跨租户日志归类（依赖 init_rbac_v2.sql）
+SET NAMES utf8mb4;
+
 USE meiyetec;
 
 ALTER TABLE sys_login_log

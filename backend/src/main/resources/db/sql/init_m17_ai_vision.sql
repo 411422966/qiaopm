@@ -4,6 +4,8 @@
 -- ================================================================
 
 -- 1. CV 模型注册表
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS cv_model;
 CREATE TABLE cv_model (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

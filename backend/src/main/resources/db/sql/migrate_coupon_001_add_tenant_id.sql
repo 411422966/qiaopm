@@ -5,6 +5,8 @@
 -- ============================================
 
 -- 1. market_coupon
+SET NAMES utf8mb4;
+
 ALTER TABLE market_coupon
     ADD COLUMN tenant_id BIGINT DEFAULT NULL COMMENT '所属租户ID' AFTER store_id;
 

@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 肤质检测
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_skin_detection;
 CREATE TABLE biz_skin_detection (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

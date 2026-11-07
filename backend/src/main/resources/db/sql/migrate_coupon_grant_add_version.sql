@@ -13,6 +13,8 @@
 --   UPDATE ... WHERE id=? AND version=? 原子 CAS，
 --   影响 0 行 = CAS 失败（已被人核销/状态变更），让调用方识别后抛错回滚。
 
+SET NAMES utf8mb4;
+
 USE meiyetec;
 
 -- 1. 加 version 列（幂等：列已存在则跳过）

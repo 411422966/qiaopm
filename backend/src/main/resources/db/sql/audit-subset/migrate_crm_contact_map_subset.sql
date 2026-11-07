@@ -27,6 +27,8 @@
 --    本机（2026-09-21）首次创建时 crm_contact_map 不存在，DROP 为 no-op，无损。
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS crm_contact_map;
 CREATE TABLE crm_contact_map (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

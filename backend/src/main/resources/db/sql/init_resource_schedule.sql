@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 资源冲突日志
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_resource_conflict_log;
 CREATE TABLE biz_resource_conflict_log (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

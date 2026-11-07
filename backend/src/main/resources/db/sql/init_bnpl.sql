@@ -17,6 +17,8 @@
 --   - biz_bnpl_order.biz_order_no -> pos_order.order_no (跨模块, 弱关联)
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS biz_bnpl_order (
   id                    BIGINT        NOT NULL AUTO_INCREMENT COMMENT 'PK',
   tenant_id             BIGINT        NULL     COMMENT '所属租户ID',

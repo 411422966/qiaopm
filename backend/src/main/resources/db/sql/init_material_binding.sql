@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 服务耗材用量分组表
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_service_material_group;
 CREATE TABLE biz_service_material_group (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

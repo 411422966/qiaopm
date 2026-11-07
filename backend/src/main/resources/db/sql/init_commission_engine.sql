@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 提成阶梯表
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_commission_tier;
 CREATE TABLE biz_commission_tier (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

@@ -13,6 +13,8 @@
 --   - ai_schedule_plan.store_id  -> store.id
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS ai_schedule_plan (
   id                BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'PK',
   tenant_id         BIGINT       NULL     COMMENT '所属租户ID',

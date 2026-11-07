@@ -2,6 +2,8 @@
 -- 防止同一会员在同一租户重复创建钱包
 -- 执行前会自动检测索引是否存在，避免重复创建
 
+SET NAMES utf8mb4;
+
 SET @dbname = DATABASE();
 SET @tablename = 'crm_wallet';
 SET @indexname = 'uk_member_tenant';

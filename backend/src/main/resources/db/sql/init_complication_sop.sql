@@ -21,6 +21,8 @@
 -- ============================================================
 -- 1. SOP 预案主表 complication_sop
 -- ============================================================
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS complication_sop (
   id                     BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'PK',
   tenant_id              BIGINT       NULL     COMMENT '所属租户ID',

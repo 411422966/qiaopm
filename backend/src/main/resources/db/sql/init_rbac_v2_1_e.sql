@@ -4,6 +4,8 @@
 -- ============================================
 
 -- 1. 报表导出任务表（异步）
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS report_export_task;
 CREATE TABLE report_export_task (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

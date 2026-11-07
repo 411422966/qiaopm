@@ -9,6 +9,8 @@
 -- ============================================
 
 -- 1. 双人核销记录主表
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS `stock_dual_verify_record` (
   `id`                   bigint PRIMARY KEY AUTO_INCREMENT,
   `tenant_id`            bigint NOT NULL DEFAULT 1,

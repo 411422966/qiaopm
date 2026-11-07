@@ -1,5 +1,7 @@
 -- M09-01：短信/微信触达真实通道 — 站内信消息表
 -- 存储 InAppSender 写入的站内通知
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS member_message (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键',
     tenant_id       BIGINT DEFAULT NULL COMMENT '租户ID',

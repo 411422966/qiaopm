@@ -6,6 +6,8 @@
 -- ============================================
 -- 1. 跨店共享规则（按品牌或全局）
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS crm_cross_store_rule;
 CREATE TABLE crm_cross_store_rule (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

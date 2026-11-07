@@ -15,6 +15,8 @@
 -- 2026-08-14
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS cloud_service_registry;
 CREATE TABLE cloud_service_registry (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

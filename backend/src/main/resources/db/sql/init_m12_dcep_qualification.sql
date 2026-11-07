@@ -5,6 +5,8 @@
 --       图片以"材料类型+序号"区分，不存 base64，统一放本地 storage/dcep/qualification/
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS dcep_merchant_qualification (
   id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'PK',
   config_id       BIGINT       NULL COMMENT 'FK→dcep_config.id (NULL 表示尚未绑定)',

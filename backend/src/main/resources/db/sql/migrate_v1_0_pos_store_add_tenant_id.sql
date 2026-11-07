@@ -15,6 +15,8 @@
 --   - 后续 T07（多租户 setTenantId 替换）会统一 fillback
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 ALTER TABLE pos_store
     ADD COLUMN tenant_id BIGINT NULL COMMENT '租户ID (P0-T01 补列, 与 Store.tenantId 对齐)';
 

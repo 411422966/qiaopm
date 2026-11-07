@@ -8,6 +8,8 @@
 -- ============================================
 
 -- 1. crm_package_order.store_id
+SET NAMES utf8mb4;
+
 ALTER TABLE crm_package_order
     ADD COLUMN store_id BIGINT DEFAULT NULL COMMENT '购买门店ID（用于跨店核销判断）' AFTER member_id,
     ADD KEY idx_store (store_id);

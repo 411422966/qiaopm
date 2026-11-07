@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 项目耗材绑定规则
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_service_material_rule;
 CREATE TABLE biz_service_material_rule (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

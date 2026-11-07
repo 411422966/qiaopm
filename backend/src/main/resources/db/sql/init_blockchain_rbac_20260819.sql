@@ -6,6 +6,8 @@
 -- ============================================
 -- 1. 权限菜单（用 path + icon 内嵌在 sys_permission）
 -- ============================================
+SET NAMES utf8mb4;
+
 INSERT INTO sys_permission (permission_code, permission_name, permission_type, parent_id, path, icon, sort_order, status, deleted, create_time)
 VALUES
     ('blockchain',         'Blockchain',         'menu', 0, '/blockchain',         'Connection', 90, 1, 0, NOW()),

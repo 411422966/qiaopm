@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 海外支付网关
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS biz_overseas_payment_gateway;
 CREATE TABLE biz_overseas_payment_gateway (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

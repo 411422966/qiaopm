@@ -4,6 +4,8 @@
 -- ============================================
 
 -- 1. 资源字典（房间/床位/设备 三类）
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS booking_resource;
 CREATE TABLE booking_resource (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

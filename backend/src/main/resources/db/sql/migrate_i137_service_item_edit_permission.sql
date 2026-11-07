@@ -18,6 +18,8 @@
 -- 幂等：INSERT IGNORE + 唯一键 uk_role_permission(role_id, permission_id)
 -- =============================================================================
 
+SET NAMES utf8mb4;
+
 INSERT IGNORE INTO sys_role_permission (role_id, permission_id)
 SELECT r.id, p.id
 FROM sys_role r

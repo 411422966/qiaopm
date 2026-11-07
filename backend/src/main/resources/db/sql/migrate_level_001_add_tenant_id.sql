@@ -4,6 +4,8 @@
 -- 2026-08-25
 -- ============================================
 
+SET NAMES utf8mb4;
+
 ALTER TABLE biz_level_benefit
     ADD COLUMN tenant_id BIGINT DEFAULT NULL COMMENT '所属租户ID'
     AFTER deleted;

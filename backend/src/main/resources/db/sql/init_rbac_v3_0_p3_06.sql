@@ -6,6 +6,8 @@
 -- ============================================
 -- 1. 知情同意书模板（合规字段）
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS mh_consent_template;
 CREATE TABLE mh_consent_template (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

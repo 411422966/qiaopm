@@ -5,6 +5,8 @@
 --      PluginRuntimeService 启动期 loadAllFromDisk() 重建。
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS plugin_runtime_state (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   tenant_id BIGINT NOT NULL DEFAULT 0,

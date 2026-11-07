@@ -3,6 +3,8 @@
 -- 对应功能：/place/details 接口 + 批量 geocode + 有赞 webhook 签名
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 ALTER TABLE google_maps_config
   ADD COLUMN IF NOT EXISTS enable_place_details TINYINT DEFAULT 0 COMMENT '1=启用 Place Details（计费接口），默认 0';
 

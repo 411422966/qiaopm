@@ -5,6 +5,8 @@
 -- 期望：8 步验收全部通过
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 USE meiyetec;
 
 SELECT '=== T1: 13 FK constraints present ===' AS step;

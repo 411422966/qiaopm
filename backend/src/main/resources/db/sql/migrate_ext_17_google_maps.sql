@@ -6,6 +6,8 @@
 -- ============================================
 
 -- 1. 配置表
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS google_maps_config;
 CREATE TABLE google_maps_config (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

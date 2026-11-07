@@ -7,6 +7,8 @@
 -- ============================================
 -- 1. 礼品卡
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS gift_card;
 CREATE TABLE gift_card (
     id                  BIGINT AUTO_INCREMENT PRIMARY KEY,

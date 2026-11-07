@@ -6,6 +6,8 @@
 -- ============================================
 -- 1. 数字人民币通道配置
 -- ============================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS pay_dcep_channel;
 CREATE TABLE pay_dcep_channel (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

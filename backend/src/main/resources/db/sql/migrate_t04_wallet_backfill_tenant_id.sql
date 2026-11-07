@@ -13,6 +13,8 @@
 -- 幂等：UPDATE WHERE tenant_id IS NULL，已在有值时安全跳过
 -- ============================================================
 
+SET NAMES utf8mb4;
+
 USE meiyetec;
 
 -- 1. 回填有对应 member 的钱包

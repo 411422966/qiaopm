@@ -1,1 +1,3 @@
+SET NAMES utf8mb4;
+
 SHOW TABLES LIKE 'crm%';

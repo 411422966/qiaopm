@@ -2,6 +2,8 @@
 -- Generated from entity definitions
 
 -- 1. style_gallery (for /style/* endpoints)
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS `style_gallery` (
   `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `tenant_id` BIGINT DEFAULT NULL COMMENT '租户ID',

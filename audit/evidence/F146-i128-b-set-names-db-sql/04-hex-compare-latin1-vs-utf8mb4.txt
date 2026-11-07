@@ -1,0 +1,50 @@
+=== 字符集字节级对照：latin1 客户端 vs utf8mb4 客户端（同一批文件）===
+
+时间: 2026-11-08 00:26 ~ 00:29
+来源: 本次会话终端原始输出摘录（两次建库执行 + HEX 比对）
+
+--- 实验设计 ---
+库 A = tmp_setnames_test : 用 mysql --default-character-set=latin1 执行（模拟容器 POSIX locale 的最坏情况）
+库 B = tmp_setnames_ref  : 用 mysql --default-character-set=utf8mb4 执行
+两库执行**同一批文件**、**同一份测试副本**（仅 USE / CREATE DATABASE 的库名重定向到各自临时库，
+SET NAMES 行与正文逐字节未改，经 docker cp 传输保留原始字节）。
+比对语句:
+  SELECT permission_code, HEX(permission_name) FROM sys_permission ORDER BY id;
+  SELECT role_code, HEX(role_name), HEX(description) FROM sys_role ORDER BY id;
+
+--- 比对结果 ---
+rows test/ref : 148 / 148
+HEX 完全一致：latin1 客户端落库字节 == utf8mb4 客户端落库字节
+identical rows: 148    differing rows: 0
+
+--- 抽样（test 库，即 latin1 客户端落库结果）---
+dashboard	E9A696E9A1B5
+member	E4BC9AE59198E7AEA1E79086
+booking	E9A284E7BAA6E7AEA1E79086
+pos	E694B6E993B6E7BB93E7AE97
+inventory	E5BA93E5AD98E7AEA1E79086
+employee	E59198E5B7A5E7AEA1E79086
+marketing	E890A5E99480E5B7A5E585B7
+report	E695B0E68DAEE68AA5E8A1A8
+EMPLOYEE	E59198E5B7A5	E699AEE9809AE59198E5B7A5EFBC8CE68BA5E69C89E59FBAE7A180E6938DE4BD9CE69D83E99990
+FINANCE	E8B4A2E58AA1	E69FA5E79C8BE68AA5E8A1A8E38081E8AEA2E58D95E38081E68F90E68890E79BB8E585B3E695B0E68DAE
+PLATFORM_ADMIN	E5B9B3E58FB0E7AEA1E79086E59198	E5B9B3E58FB0E7BAA7E8B4A6E58FB7EFBC8CE8B7A8E7A79FE688B7E8BF90E7BBB4
+
+--- 与源码字面量的 UTF-8 编码逐字节校验 ---
+（PowerShell [System.Text.Encoding]::UTF8.GetBytes 计算）
+
+  首页        = E9A696E9A1B5                       <-> E9A696E9A1B5                        一致
+  会员管理     = E4BC9AE59198E7AEA1E79086           <-> E4BC9AE59198E7AEA1E79086            一致
+
+--- add_6_missing_menus_20260819.sql 新增的 6 条中文菜单（latin1 客户端落库） ---
+crm:follow-rule	回访任务规则	E59B9EE8AEBFE4BBBBE58AA1E8A784E58899   期望 E59B9EE8AEBFE4BBBBE58AA1E8A784E58899  一致
+dev:intl-payment	国际支付     E59BBDE99985E694AFE4BB98             期望 E59BBDE99985E694AFE4BB98            一致
+dev:intl-booking	国际预约     E59BBDE99985E9A284E7BAA6             期望 E59BBDE99985E9A284E7BAA6            一致
+dev:ai-scheduler	AI 智能排班  414920E699BAE883BDE68E92E78FAD        期望 414920E699BAE883BDE68E92E78FAD       一致
+dev:risk-control	资金风控     E8B584E98791E9A38EE68EA7             期望 E8B584E98791E9A38EE68EA7            一致
+dev:google-maps	Google Maps  476F6F676C65204D617073              期望 476F6F676C65204D617073             一致
+
+结论: 客户端字符集为 latin1 时，脚本内的 SET NAMES utf8mb4 依然使全部中文按正确 UTF-8 落库
+      （143 条中文权限名 + 角色名 + 6 条新增菜单，逐字节等于源码字面量的 UTF-8 编码）。
+
+--- 附：两库已随测试结束 DROP；容器内 /tmp/st_test /tmp/st_ref 已删除；本地临时目录已删除 ---

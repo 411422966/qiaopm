@@ -20,6 +20,8 @@
 -- ============================================================
 
 -- SUBS-001 subscription_plan
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS subscription_plan (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT 'PK',
     tenant_id BIGINT DEFAULT NULL COMMENT '所属租户ID',

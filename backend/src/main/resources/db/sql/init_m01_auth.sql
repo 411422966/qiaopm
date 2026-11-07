@@ -3,6 +3,8 @@
 -- =============================================
 
 -- 创建数据库（如果不存在）
+SET NAMES utf8mb4;
+
 CREATE DATABASE IF NOT EXISTS meiyetec CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE meiyetec;
 

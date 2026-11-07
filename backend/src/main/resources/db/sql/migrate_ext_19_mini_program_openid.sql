@@ -6,6 +6,8 @@
 -- ============================================================
 
 -- 1. 表创建（IF NOT EXISTS：兼容已有库）
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS overseas_booking (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     tenant_id BIGINT,

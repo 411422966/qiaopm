@@ -1,0 +1,16 @@
+=== 落盘后重扫验证 (rescan) ===
+时间    : 2026-11-08 00:35:09
+根目录  : D:\QiaoPM\backend\src\main\resources\db\sql
+扫描范围: 递归全部 *.sql（含 audit-subset/）
+
+files scanned              : 176
+missing SET NAMES utf8mb4  : 0   <-- 期望 0
+UTF-8 BOM files            : 0   <-- 期望 0
+invalid UTF-8 files        : 0   <-- 期望 0
+line-end distribution      : CRLF=164  LF=12   <-- 期望 164/12
+
+--- git diff --numstat (db/sql) ---
+changed files              : 165   <-- 期望 165
+entries NOT matching +2/-0 : 0   <-- 期望 0
+
+结论: 每个被改文件仅新增 'SET NAMES utf8mb4;' + 空行两行，无其他字节改动。

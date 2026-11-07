@@ -10,6 +10,8 @@
 -- ====================================================================
 
 -- 1) 邀请活动配置表
+SET NAMES utf8mb4;
+
 CREATE TABLE IF NOT EXISTS m09_invite_campaign (
     id                      BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键',
     tenant_id               BIGINT NOT NULL COMMENT '租户ID',

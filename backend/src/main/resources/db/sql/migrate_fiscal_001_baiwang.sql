@@ -8,6 +8,8 @@
 -- ============================================================
 -- 1. fiscal_config：开票渠道配置（一条 = 一组凭据）
 -- ============================================================
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS fiscal_config;
 CREATE TABLE fiscal_config (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,

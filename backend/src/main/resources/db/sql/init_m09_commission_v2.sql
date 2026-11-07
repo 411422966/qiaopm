@@ -3,6 +3,8 @@
 -- 2026-08-03
 -- ============================================
 
+SET NAMES utf8mb4;
+
 USE meiyetec;
 
 -- 1) commission_rule: 提成规则表

@@ -24,6 +24,8 @@
 --   icon, active_paths, hidden, keep_alive, sort_order, create_time, update_time
 -- =============================================
 
+SET NAMES utf8mb4;
+
 USE meiyetec;
 
 -- =============================================

@@ -17,6 +17,8 @@
 -- 2026-08-14
 -- ============================================
 
+SET NAMES utf8mb4;
+
 DROP TABLE IF EXISTS cross_platform;
 CREATE TABLE cross_platform (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
