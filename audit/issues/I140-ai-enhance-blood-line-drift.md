@@ -254,5 +254,5 @@ total_items=115   hits_biz_service=70   hits_biz_service_item=115   hits_both=70
 | 取证脚本 | 只读 SELECT / `SHOW TABLES` / `SHOW COLUMNS`（`--default-character-set=utf8mb4`） |
 | 取证时间 | 2026-11-07 |
 | 运行时证据 | `audit/evidence/F145-i140-ai-enhance-fix/after-01-curl-runtime.txt`、`after-02-sql-verification.txt` |
-| commit hash | 待补（随 commit 1 回填） |
+| commit hash | `8cd4d9d`（修复本体；本文件与其证据目录随 `2adcf11` 一并入库） |
 | DB snapshot | 本地开发库，无生产快照；表结构变更 **0**（本修复未动 DDL） |
