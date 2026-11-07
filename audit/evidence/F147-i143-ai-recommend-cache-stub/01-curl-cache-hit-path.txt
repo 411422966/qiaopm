@@ -1,0 +1,24 @@
+=== I143 证据：AI 推荐缓存命中路径返回空数组 ===
+时间: 2026-11-08 00:36:25
+接口: GET http://localhost:8080/ai/recommend?memberId=1
+鉴权: Authorization: Bearer <JWT>
+应用: 容器 meiyetec-api（本地 Docker）
+
+--- 调用前 ai_recommend_cache 状态 ---
+2	1	2	SERVICE	1	2026-11-08 05:14:25	[{"id":1,"name":"基础面部护理","price":280.00,"score":0.04,"reason":"热销推荐"},
+3	1	1	SERVICE	5	2026-11-08 05:14:47	[{"id":1,"name":"基础面部护理","price":280.00,"score":0.04,"reason":"热销推荐"},
+
+--- call #1 ---
+{"code":200,"message":"操作成功","data":{"items":[],"algorithm":"COLLAB-V1","score":0.8500,"cacheHit":true},"traceId":"1de1f74c5c5f460185edaf1825a26a4b","timestamp":"2026-11-08 00:36:26"}
+
+--- call #2 ---
+{"code":200,"message":"操作成功","data":{"items":[],"algorithm":"COLLAB-V1","score":0.8500,"cacheHit":true},"traceId":"c9ce57e5cb9f423a82c1903963a06946","timestamp":"2026-11-08 00:36:27"}
+
+--- 调用后 ai_recommend_cache 状态（hit_count 由 3 -> 5，证明确实走了缓存分支）---
+2	2	SERVICE	1	2026-11-08 05:14:25	[{"id":1,"name":"基础面部护理","price":280.00,"score":0.04,"reason":"热销推荐"},{"id":5,"name":"美睫嫁接
+3	1	SERVICE	7	2026-11-08 05:14:47	[{"id":1,"name":"基础面部护理","price":280.00,"score":0.04,"reason":"热销推荐"},{"id":5,"name":"美睫嫁接
+
+--- 结论 ---
+两次调用均返回 cacheHit=true 且 items=[]；
+而 ai_recommend_cache.recommend_items 存的是完整合法 JSON 数组（含中文）。
+缺陷点: AiEnhanceService.parseJsonList (L434-437) 为桩代码 return List.of();

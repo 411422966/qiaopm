@@ -66,6 +66,10 @@
 | I131 | I131 — PackageItem 实体缺 deleted 字段（软删除隐患），Controller 从不写 createBy | Open | [I131-packageitem-missing-deleted-and-createby.md](I131-packageitem-missing-deleted-and-createby.md) |
 | I132 | I132 — 收银台前端未传入 tenderedAmount，找零功能未接入 UI | Open | [I132-pos-checkout-missing-tendered-ui.md](I132-pos-checkout-missing-tendered-ui.md) |
 | I137 | I137 — 前端路由守卫码与后端权限注解系统性错配：服务项目越权写入 + 套餐按钮假打通 + BOM 端点 404（🔴 高） | Open | [I137-guard-code-fake-through.md](I137-guard-code-fake-through.md) |
+| I140 | I140 — AiEnhanceService 数据血缘漂移：pos_order_item.service_id 指向 biz_service，代码却 JOIN biz_service_item | Fixed | [I140-ai-enhance-blood-line-drift.md](I140-ai-enhance-blood-line-drift.md) |
+| I141 | I141 — biz_service.category_id 全表 NULL，AI 推荐会员偏好类别链路永远为空 | Open | [I141-biz-service-category-null.md](I141-biz-service-category-null.md) |
+| I142 | I142 — LtvTrainingService 引用 4 张不存在的表，LTV 训练 ETL 全链路必然失败 | Open | [I142-ltv-training-missing-tables.md](I142-ltv-training-missing-tables.md) |
+| I143 | I143 — AI 推荐缓存反序列化为桩代码，命中缓存返回空数组 | Open | [I143-ai-recommend-cache-parse-stub.md](I143-ai-recommend-cache-parse-stub.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
