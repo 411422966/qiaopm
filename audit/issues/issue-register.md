@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-08（补登 I140~I143，I143 已修）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-09（补登 batch2-B 执行结果）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -77,3 +77,4 @@
 - **I119**：代码+数据已修复，运行时晋升验证待补。
 - **I115**：BizServiceItemService 22 个端点零 @RequirePermission，实测 operator01 可越权写入。详见 I137-P0。
 - **I127**：事故件 `before-batch1-20261025-180825.sql` 已改名为 `.UNUSABLE` 保留为证据，不恢复；根因（PS 5.1 `>` 重定向）已消除，正确备份方式（容器内 dump + `docker cp`）已验证可恢复。
+- **I130**（`I130-menu-toplevel-guard-code-fix.md`，与本表 I130 行 `I130-mysql-add-column-if-not-exists-incompatible.md` **编号重名、内容不同**，以文件为准）：§5.2 mkt 粗码缺失已 Fixed（batch2-B）；§5.3 manager01 `/market/*` 菜单断裂已 Fixed（batch2-B）。batch2-B 于 2026-11-09 执行，新增 20 个权限码 + 12 条菜单行 + 245 条角色绑定，仅动 `sys_permission` / `sys_role_permission` / `sys_menu_permission`，未改前后端代码；证据见 `audit/evidence/F149-mkt-perm/`。本条 issue 状态由 MISSING / PARTIAL-NON-BLOCKER 调整为 **PARTIAL**（营销域已修复，其余非营销域 23 个缺失守卫码与 4 条菜单断裂仍 Open，归属 I124-c）。
