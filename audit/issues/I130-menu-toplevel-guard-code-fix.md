@@ -1,6 +1,6 @@
 # I130 — MANAGER 顶级菜单补全（客户运营 / 员工提成）+ 守卫码断裂修复
 
-- **状态**：批次 1 已落地并验证（PARTIAL — 见 §6 遗留问题）
+- **状态**：批次 1 已落地并验证（PARTIAL — 见 §6 遗留问题）；**营销域部分已由 batch2-B 修复（2026-11-09，见 §8）**
 - **发现批次**：I124 权限码体系分裂调查续（2026-11-06）
 - **父批次**：I124（权限码体系分裂）
 - **严重度**：🟡 中（修复前 MANAGER 完全看不到「客户运营」「员工提成」两个顶级分类；补完后菜单可见但 `/commission/rules` 仍 403）
@@ -269,8 +269,8 @@ mkt:dispatch / mh:visual / mh:consent / pay:dcep / mkt:activity / pay:order / bi
 | F-MENU-MGR-TOPLEVEL（MANAGER 顶级菜单绑定） | **VERIFIED** | 6.1=53 / 6.2 / 6.3 + 接口 + 浏览器三方一致 |
 | F-GUARD-CODE-BREAK（守卫码断裂修复） | **VERIFIED** | 6.4 全部脱离 NONE + 6.5 delta=49 + 幂等重跑一致 |
 | F-ROUTE-DUP-COMMISSION（提成规则路由死链） | **BROKEN**（既有缺陷，归属 I124-c） | §5.1，浏览器 403 `?denied=commission:rule:config` |
-| F-GUARD-MISSING-33（33 个前端守卫码 DB 缺失） | **MISSING**（块 4 范围） | §5.2 |
-| F-MENU-DENIED-7（manager01 7 条菜单守卫码未绑） | **PARTIAL-NON-BLOCKER**（块 5.1-5.3 范围） | §5.3 |
+| F-GUARD-MISSING-33（33 个前端守卫码 DB 缺失） | **PARTIAL**（块 4 范围；营销域 10 个已由 batch2-B 补齐 → **Fixed**，其余 23 个仍 MISSING） | §5.2 + §8 |
+| F-MENU-DENIED-7（manager01 7 条菜单守卫码未绑） | **PARTIAL**（块 5.1-5.3 范围；营销域 3 条 `/market/*` 已由 batch2-B 修复 → **Fixed**，其余 4 条仍 DENIED） | §5.3 + §8 |
 
 ## 7. 未确认项
 
@@ -279,3 +279,81 @@ mkt:dispatch / mh:visual / mh:consent / pay:dcep / mkt:activity / pay:order / bi
 - 浏览器实测用的是 docker 镜像 `meiyetec/web:dev`（8088），非 vite dev server（5173 未运行）。
   该镜像为构建产物，与 `frontend/meiyetec-web/src` 源码是否同步未验证（参照 I126 runtime-image-drift）。
 - `menu-fix-batch1.sql` 内块 6 验证 SQL 与主脚本同文件，未单独拆 verify 文件。
+
+---
+
+## 8. 营销域修复记录 — batch2-B（2026-11-09）
+
+> 落盘证据：`audit/evidence/F149-mkt-perm/`（`README.md` / `fix-batch2b.sql` / `verify-batch2b.sql` / `rollback-batch2b.sql` / `evidence-notes.md`）
+> 基线 commit：`02d1da8ce6c2ea60a67bfbfba6efae8aa534b6dc`
+> DB：`meiyetec@127.0.0.1:3307`（mysql:8.0），执行前备份 `backup/before-batch2b-exec.sql`（22,627,208 B）
+> 范围：**仅 DB**（`sys_permission` / `sys_role_permission` / `sys_menu_permission`），未改前后端代码
+
+### 8.1 §5.2 的 33 个缺失守卫码 —— 营销域 10 个已 Fixed
+
+| 守卫码 | 修复前 | 修复后 | 绑定角色 |
+|---|---|---|---|
+| `mkt:effect` | ❌ DB 不存在 | ✅ 已建（button, parent_id=1204） | ADMIN / BOSS / MANAGER / OPERATOR |
+| `mkt:channel` | ❌ | ✅ | 同上 |
+| `mkt:template` | ❌ | ✅ | 同上 |
+| `mkt:touch-task` | ❌ | ✅ | 同上 |
+| `mkt:birthday` | ❌ | ✅ | 同上 |
+| `mkt:journey` | ❌ | ✅ | 同上 |
+| `mkt:conversion` | ❌ | ✅ | 同上 |
+| `mkt:pricing` | ❌ | ✅ | 同上 |
+| `mkt:dispatch` | ❌ | ✅ | 同上 |
+| `mkt:activity` | ❌ | ✅ | 同上 |
+
+**实测复核**：原 33 个缺失码当前仍缺 **25** 个（33 − 10 = 23，逐条比对多出 2 个为 `mh:visual` / `mh:consent` 在库中存在但归属「用户已验证通过页面」不处理范围）。
+→ 营销域 10 个全部脱离 MISSING，**F-GUARD-MISSING-33 在营销域范围内 → Fixed**；其余 23 个非营销域缺失码仍 Open（归属 I124-c）。
+
+### 8.2 §5.3 manager01 的 7 条 DENIED 菜单 —— 营销域 3 条已 Fixed
+
+| 菜单路径 | 路由守卫码 | 修复前 | 修复后 |
+|---|---|---|---|
+| `/market/coupon` | `market:coupon:list` | DENIED（仅 ADMIN/BOSS 已绑） | ✅ **Fixed**（MANAGER / OPERATOR / CLERK 已绑） |
+| `/market/points` | `market:point:list` | DENIED | ✅ **Fixed**（同上） |
+| `/market/activity` | `market:activity:list` | DENIED | ✅ **Fixed**（ADMIN / BOSS / MANAGER 已绑） |
+
+实测绑定（`sys_role_permission`）：`market:coupon:list` → ADMIN / BOSS / MANAGER / OPERATOR / CLERK；`market:point:list` → 同上；`market:activity:list` → ADMIN / BOSS / MANAGER。
+
+仍 DENIED（**非营销域，本批未处理**）：`/biz/service-item`（`biz:service:item`）、`/biz/treatment-plan`（`biz:treatment:plan`）、`/package/list` 与 `/package/member-orders`（`package:list`）。
+
+### 8.3 本次同时新建的 22 个权限码 + 12 条菜单行
+
+- 新建 10 个页面准入**粗码**（上表）+ 10 个**细分码**（`mkt:birthday:list/edit`、`mkt:member-day:list/edit`、`mkt:ecommerce:list/edit`、`mkt:pricing:rule:list/edit`、`mkt:dispatch:list/edit`）
+- 新建 12 条 `menu` 权限码 + 12 条 `sys_menu_permission` 行：`mkt.promotion` / `mkt.coupon` / `mkt.points` / `mkt.birthday` / `mkt.invite` / `mkt.dispatch` / `mkt.member-day` / `mkt.style-gallery` / `mkt.style-gallery.quick-order` / `mkt.subscription` / `mkt.lifecycle` / `mkt.ecommerce`
+
+### 8.4 角色绑定矩阵（规格码口径，不含粗码与菜单码）
+
+| 角色 | 规格码 | 粗码 | 菜单码 | 本批新增绑定 |
+|---|:-:|:-:|:-:|:-:|
+| ADMIN | 51 | 10 | 12 | 66 |
+| BOSS | 23 | 10 | 12 | 38 |
+| MANAGER | 53 | 10 | 19 | 76 |
+| OPERATOR | 36 | 10 | 19 | 63 |
+| CLERK | 2 | 0 | 0 | 2 |
+| **合计** | | | | **245** |
+
+执行后实测三表增量：`sys_permission` 476→508（**+32**）、`sys_role_permission` 913→1158（**+245**）、`sys_menu_permission` 110→122（**+12**），与预期完全一致。
+
+### 8.5 验证结果（V1–V8，全 PASS）
+
+| 验证 | 结果 |
+|---|---|
+| V1 · 20 个新码存在性 | ✅ 20/20 `OK` |
+| V2 · 19 条菜单行（12 新 + 7 既有） | ✅ 19/19 `OK` |
+| V3 · 五角色规格码计数 | ✅ ADMIN 51 / BOSS 23 / MANAGER 53 / OPERATOR 36 / CLERK 2，5/5 PASS |
+| V3b · 用户口径对账 | 口径 A：保留 51/23/53/36/2 不裁剪；BOSS +1 / MANAGER +13 偏差已登记 |
+| V4 · 菜单可见性模拟 | ✅ admin / boss01 / manager01 / operator01 各 19 条；clerk01 0 条 |
+| V5 · 路由守卫模拟 | ✅ 4 个有权角色 19/19 PASS；clerk01 19/19 DENY（预期） |
+| V7 · 只读断言 | ✅ BOSS 营销域写码 0；OPERATOR 未持 5 个受限 edit 码 |
+| V8 · 中文编码 | ✅ 标准 UTF-8 字节序 |
+
+### 8.6 仍未修复（归属下一批 Phase 3）
+
+1. `mkt:promotion` / `mkt:coupon` / `mkt:points` 读写不分 → BOSS 实际具备这三个模块写能力（粗码无只读变体）。
+2. 10 个细分码**本批未挂后端 `@RequirePermission` 注解**；5 个 Service/Controller 仍零注解。
+3. 旧 `/market/*` 三条路由与 `marketing` 根菜单 `route_path` 指向 `/market/coupon` 的问题本批不动。
+4. `market:list`（id 1138）占位码仍零绑定。
+5. **本批未做浏览器人工验收**，守卫与菜单可达性由 SQL 模拟复刻后端查询逻辑得出，**不替代人工验收**。
