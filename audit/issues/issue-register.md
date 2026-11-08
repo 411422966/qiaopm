@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-06（补登 I137）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-08（补登 I140~I143，I143 已修）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -69,7 +69,7 @@
 | I140 | I140 — AiEnhanceService 数据血缘漂移：pos_order_item.service_id 指向 biz_service，代码却 JOIN biz_service_item | Fixed | [I140-ai-enhance-blood-line-drift.md](I140-ai-enhance-blood-line-drift.md) |
 | I141 | I141 — biz_service.category_id 全表 NULL，AI 推荐会员偏好类别链路永远为空 | Open | [I141-biz-service-category-null.md](I141-biz-service-category-null.md) |
 | I142 | I142 — LtvTrainingService 引用 4 张不存在的表，LTV 训练 ETL 全链路必然失败 | Open | [I142-ltv-training-missing-tables.md](I142-ltv-training-missing-tables.md) |
-| I143 | I143 — AI 推荐缓存反序列化为桩代码，命中缓存返回空数组 | Open | [I143-ai-recommend-cache-parse-stub.md](I143-ai-recommend-cache-parse-stub.md) |
+| I143 | I143 — AI 推荐缓存反序列化为桩代码，命中缓存返回空数组 | Fixed | [I143-ai-recommend-cache-parse-stub.md](I143-ai-recommend-cache-parse-stub.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
