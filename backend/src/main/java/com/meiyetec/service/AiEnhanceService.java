@@ -1,6 +1,7 @@
 package com.meiyetec.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.meiyetec.entity.AiRecommendCache;
 import com.meiyetec.entity.AiReviewSummary;
 import com.meiyetec.entity.AiSalesForecast;
@@ -9,6 +10,7 @@ import com.meiyetec.mapper.AiRecommendCacheMapper;
 import com.meiyetec.mapper.AiReviewSummaryMapper;
 import com.meiyetec.mapper.AiSalesForecastMapper;
 import com.meiyetec.security.TenantContextHolder;
+import com.meiyetec.util.ObjectMapperHolder;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -431,9 +433,26 @@ public class AiEnhanceService {
                 .collect(Collectors.joining("、"));
     }
 
+    /**
+     * 反序列化缓存中的推荐条目 JSON。
+     *
+     * <p>缓存表 {@code ai_recommend_cache.recommend_items} 存的是 {@link #toJson} 生成的 JSON 数组，
+     * 元素 schema：{@code {"id":1,"name":"基础面部护理","price":280.00,"score":0.04,"reason":"热销推荐"}}。
+     *
+     * <p>解析失败时降级返回空列表并告警，不向调用方抛出异常（避免缓存脏数据导致接口 500）。
+     */
     private static List<Map<String, Object>> parseJsonList(String json) {
-        // 简化：直接当 JSON 列表返回（生产应用 Jackson）
-        return List.of();
+        if (json == null || json.trim().isEmpty()) {
+            return List.of();
+        }
+        try {
+            List<Map<String, Object>> items = ObjectMapperHolder.MAPPER.readValue(
+                    json, new TypeReference<List<Map<String, Object>>>() {});
+            return items == null ? List.of() : items;
+        } catch (Exception e) {
+            log.warn("推荐缓存反序列化失败，返回空列表：{}", e.getMessage());
+            return List.of();
+        }
     }
 
     private static String toJson(List<Map<String, Object>> list) {

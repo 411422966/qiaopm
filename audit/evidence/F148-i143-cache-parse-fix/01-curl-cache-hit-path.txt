@@ -1,0 +1,19 @@
+=== I143 fix runtime verification ===
+时间: 2026-11-08 23:05:01
+接口: GET http://localhost:8080/ai/recommend?memberId=1
+鉴权: Authorization: Bearer <JWT> (admin)
+应用: 容器 meiyetec-api（本地 Docker，镜像 meiyetec/api:dev 重建后重启）
+前置: DELETE FROM ai_recommend_cache WHERE member_id=1;  (清空旧缓存，保证第一次走冷路径)
+
+--- 调用前 ai_recommend_cache（member_id=1 行数）---
+row count = 1
+
+--- call #1（冷路径，预期 cacheHit=false，5 条推荐）---
+{"code":200,"message":"操作成功","data":{"items":[{"id":1,"name":"基础面部护理","price":280.00,"score":0.04,"reason":"热销推荐"},{"id":5,"name":"美睫嫁接","price":380.00,"score":0.01,"reason":"热销推荐"},{"id":3,"name":"肩颈舒缓按摩","price":180.00,"score":0.01,"reason":"热销推荐"},{"id":4,"name":"全身精油SPA","price":880.00,"score":0.01,"reason":"热销推荐"},{"id":2,"name":"深层补水护理","price":480.00,"score":0.01,"reason":"热销推荐"}],"algorithm":"COLLAB-V1","score":0.85,"cacheHit":false},"traceId":"5f420de1c8d846129348c2e82ed0921a","timestamp":"2026-11-08 23:04:41"}
+--- call #2（缓存命中，预期 cacheHit=true，仍返回 5 条）---
+{"code":200,"message":"操作成功","data":{"items":[{"id":1,"name":"基础面部护理","price":280.0,"score":0.04,"reason":"热销推荐"},{"id":5,"name":"美睫嫁接","price":380.0,"score":0.01,"reason":"热销推荐"},{"id":3,"name":"肩颈舒缓按摩","price":180.0,"score":0.01,"reason":"热销推荐"},{"id":4,"name":"全身精油SPA","price":880.0,"score":0.01,"reason":"热销推荐"},{"id":2,"name":"深层补水护理","price":480.0,"score":0.01,"reason":"热销推荐"}],"algorithm":"COLLAB-V1","score":0.8500,"cacheHit":true},"traceId":"11d5b87dff29494595f13f42cc5bc60e","timestamp":"2026-11-08 23:04:43"}
+--- 调用后 ai_recommend_cache（member_id=1，--default-character-set=utf8mb4）---
+5	1	1	SERVICE	1	2026-11-09 05:04:41	[{"id":1,"name":"基础面部护理","price":280.00,"score":0.04,"reason":"热销推荐"},{"id":5,"name":"美睫嫁接","price":380.00,"score":0.01,"reason":"热销推荐"},{"id":3,"name":"肩颈舒缓按摩","price":180.00,"score":0.01,"reason":"热销推荐"},{"id":4,"name":"全身精油SPA","price":880.00,"score":0.01,"reason":"热销推荐"},{"id":2,"name":"深层补水护理","price":480.00,"score":0.01,"reason":"热销推荐"}]
+
+--- 容器日志检查（应无「推荐缓存反序列化失败」告警）---
+(实测无该告警)
