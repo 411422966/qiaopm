@@ -170,4 +170,4 @@ GET /ai/recommend?memberId=1   (Authorization: Bearer <token>)
 | 取证命令 | `Invoke-WebRequest` + `Authorization: Bearer <token>`；DB 只读 SELECT |
 | 取证时间 | 2026-11-08 00:32（缺陷登记）/ 2026-11-08 23:03（修复后复验） |
 | 证据文件 | 缺陷登记：`audit/evidence/F147-i143-ai-recommend-cache-stub/`；修复复验：`audit/evidence/F148-i143-cache-parse-fix/` |
-| commit hash | 待补（随修复 commit 回填） |
+| commit hash | `91e66b7`（修复本体；本文件与证据目录随该 commit 一并入库） |
