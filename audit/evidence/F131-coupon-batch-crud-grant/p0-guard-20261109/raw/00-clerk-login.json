@@ -1,8 +1,8 @@
-﻿{
+{
     "id":  900003,
     "username":  "clerk01",
     "realName":  "测试店员",
-    "token":  "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOjkwMDAwMywianRpIjoiNjg3MzYzMTkwOTIxOC0yIiwidXNlcm5hbWUiOiJjbGVyazAxIiwic3ViIjoiY2xlcmswMSIsImlhdCI6MTc5NDIzMjM4NywiZXhwIjoxNzk0MjM5NTg3fQ.a11V4PC8t11eRERiCJEl2KkOnvFrkkvT2t9Lz_TDwJos1OSlMECtxUhCzwQbujFFdtqDiD1_THHl9FRTt-qGiA",
+    "token":  "<JWT_REDACTED>",
     "roles":  [
                   "CLERK"
               ],
