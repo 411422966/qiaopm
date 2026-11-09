@@ -1,0 +1,2 @@
+﻿{"code":200,"message":"优惠券总量已用尽","data":{"grantedCount":0,"skippedMembers":[],"skippedCount":15,"skipReason":"优惠券总量已用尽"},"traceId":"4f223e0c0ce14110a12f93743ba802b1","timestamp":"2026-11-09 21:52:57"}
+HTTP:200

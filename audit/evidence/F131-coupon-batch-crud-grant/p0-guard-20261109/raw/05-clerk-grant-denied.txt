@@ -1,0 +1,2 @@
+﻿{"code":403,"message":"权限不足: 需要权限码：mkt:coupon","data":null,"traceId":"7b1495eee4f742eca47d8750df9c97ba","timestamp":"2026-11-09 21:53:10"}
+HTTP:403

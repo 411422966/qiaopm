@@ -1,0 +1,2 @@
+﻿{"code":400,"message":"请求参数错误: 必须指定会员等级 levelIds；若确实要发给全部会员，请显式传 allMembers=true 且 confirm=true","data":null,"traceId":"74ba9795f7114991be2c1c13606c484d","timestamp":"2026-11-09 21:52:55"}
+HTTP:400

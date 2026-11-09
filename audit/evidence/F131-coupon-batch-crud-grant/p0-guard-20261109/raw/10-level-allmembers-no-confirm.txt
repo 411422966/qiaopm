@@ -1,0 +1,2 @@
+﻿{"code":400,"message":"请求参数错误: 全量发放需要二次确认：请传 confirm=true","data":null,"traceId":"23ac72ed5fc34dad858e2871b0fab3fb","timestamp":"2026-11-09 21:52:56"}
+HTTP:400

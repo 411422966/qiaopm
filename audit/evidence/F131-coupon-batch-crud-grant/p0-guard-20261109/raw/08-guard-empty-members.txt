@@ -1,0 +1,2 @@
+﻿{"code":400,"message":"请求参数错误: 必须指定发放对象：members（会员+张数）或 memberIds（会员ID列表）；若确实要发给全部会员，请显式传 allMembers=true 且 confirm=true","data":null,"traceId":"13fe773ed5f54911bd0f5906528143e5","timestamp":"2026-11-09 21:52:54"}
+HTTP:200

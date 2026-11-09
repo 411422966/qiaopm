@@ -1,0 +1,2 @@
+﻿{"code":200,"message":"已发放 0 张","data":{"grantedCount":0,"skippedMembers":[{"reason":"已达每人限领 1 张","memberId":1},{"reason":"已达每人限领 1 张","memberId":4},{"reason":"已达每人限领 1 张","memberId":6}],"skippedCount":9},"traceId":"763fc0ca675647cbb38f93cda82adf45","timestamp":"2026-11-09 21:52:56"}
+HTTP:200
