@@ -509,3 +509,5 @@ audit/baseline/.tmp-sql/
 audit-tmp-*
 audit-tpm-*
 \
+
+audit/evidence/env-token-*.txt
