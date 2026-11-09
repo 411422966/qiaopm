@@ -35,6 +35,17 @@
     </select>
 
     <!--
+        批量发放的每人限领判定：某会员在某张券下已发放（未使用 + 已使用）的张数。
+        只依赖 market_coupon_grant 必然存在的列（coupon_id / member_id / status）。
+    -->
+    <select id="countGrantedByMember" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM market_coupon_grant
+        WHERE coupon_id = #{couponId}
+          AND member_id = #{memberId}
+          AND status != 3
+    </select>
+
+    <!--
         B-4 · 原子发放优惠券。
 
         原子性保证：
@@ -110,13 +121,18 @@
     <!--
         P0-MONEY-005: 优惠券发放改条件 UPDATE，防止并发超发。
 
+        实际库表结构对齐（2026-11-09 修正）：
+          - market_coupon_grant 无 deleted 列 → 用 status != 3（作废）代替软删过滤
+          - market_coupon 无 issued_count 列 → 已发放数一律由 market_coupon_grant 的 COUNT(*) 推导
+            （market_coupon_grant 无独立的删除语义，status=1 未使用 / 2 已使用 / 3 已作废）
+
         原子性保证：
         1. market_coupon 子查询：检查总量未满（total_count > 已发放数）
         2. market_coupon_grant 子查询（每人限领）：per_limit=0 表示不限；
            否则检查该会员已领数 < per_limit
 
         受影响行数：
-          1 = UPDATE 成功（issued_count +1）
+          1 = UPDATE 命中（发放配额与限领条件均满足）
           0 = 条件不满足（总量满 或 每人已达限领上限）
     -->
     <update id="atomicGrant">
@@ -129,7 +145,7 @@
               AND (end_time IS NULL OR end_time &gt;= NOW())
               AND total_count > (
                   SELECT COUNT(*) FROM market_coupon_grant
-                  WHERE coupon_id = #{couponId} AND deleted = 0
+                  WHERE coupon_id = #{couponId} AND status != 3
               )
               AND (
                   per_limit IS NULL OR per_limit = 0
@@ -137,12 +153,12 @@
                       SELECT COUNT(*) FROM market_coupon_grant
                       WHERE coupon_id = #{couponId}
                         AND member_id = #{memberId}
-                        AND deleted = 0
+                        AND status != 3
                   ) &lt; per_limit
               )
             LIMIT 1
         ) sub ON c.id = sub.id
-        SET c.issued_count = c.issued_count + 1
+        SET c.updated_at = NOW()
         WHERE c.id = #{couponId}
     </update>
 

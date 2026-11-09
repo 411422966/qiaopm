@@ -27,7 +27,8 @@ export const couponApi = {
   memberCount: (memberId: number) => http.get(`/market/coupon/member/${memberId}/count`),
 
   // ==================== 批次 + 实例（/mkt/coupon）====================
-  batchPage: (data: any) => http.post('/mkt/coupon/batch/page', data),
+  // 批次分页：后端 GET /batch/page（曾因只有 POST 返回 405）；保留 POST 兼容历史调用方
+  batchPage: (params: any = {}) => http.get('/mkt/coupon/batch/page', { params }),
   createBatch: (data: any) => http.post('/mkt/coupon/batch', data),
   publishBatch: (id: number) => http.post(`/mkt/coupon/batch/${id}/publish`),
   endBatch: (id: number) => http.post(`/mkt/coupon/batch/${id}/end`),

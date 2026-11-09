@@ -188,7 +188,8 @@
           <el-input-number v-model="grantForm.memberId" :min="1" style="width: 100%" />
         </el-form-item>
         <el-form-item label="张数">
-          <el-input-number v-model="grantForm.count" :min="1" style="width: 100%" />
+          <el-input-number v-model="grantForm.count" :min="1" :max="MAX_COUNT_PER_MEMBER" style="width: 100%" />
+          <div class="form-tip">单个会员单次最多 {{ MAX_COUNT_PER_MEMBER }} 张；单次发放总量上限 {{ MAX_GRANT_PER_REQUEST }} 张</div>
         </el-form-item>
         <el-form-item label="会员姓名">
           <el-input v-model="grantForm.memberName" placeholder="可选" />
@@ -309,6 +310,10 @@ async function endBatch(row: any) {
 const grantDialog = reactive<any>({ visible: false, batch: null, running: false })
 const grantForm = reactive({ memberId: undefined as number | undefined, memberName: '', count: 1 })
 
+// 与后端护栏保持一致：MktCouponController.MAX_COUNT_PER_MEMBER / MAX_GRANT_PER_REQUEST
+const MAX_COUNT_PER_MEMBER = 100
+const MAX_GRANT_PER_REQUEST = 2000
+
 function openGrant(row: any) {
   grantDialog.batch = row
   grantDialog.visible = true
@@ -322,13 +327,37 @@ function resetGrantForm() {
 
 async function runGrant() {
   if (!grantForm.memberId) return ElMessage.warning('会员ID必填')
+  if (grantForm.count > MAX_COUNT_PER_MEMBER) {
+    return ElMessage.warning(`单个会员单次最多 ${MAX_COUNT_PER_MEMBER} 张`)
+  }
+  // 二次确认：发放不可撤销，避免误发
+  try {
+    await ElMessageBox.confirm(
+      `确认向会员 ${grantForm.memberId} 发放「${grantDialog.batch?.couponName || ''}」共 ${grantForm.count} 张？发放后不可撤销。`,
+      '发放确认',
+      { type: 'warning', confirmButtonText: '确认发放', cancelButtonText: '取消' }
+    )
+  } catch {
+    return
+  }
   grantDialog.running = true
   try {
     const headers = { 'Idempotency-Key': newIdempotencyKey() }
+    // 只传会员 ID 列表（数字数组），张数统一走 countPerMember。
+    // 传 members/memberIds 皆空时后端会直接 400（防止「未指定会员 → 发给全部」批量误发）。
     const r = await http.post(`/mkt/coupon/batch/${grantDialog.batch.id}/grant`, {
-      members: [{ memberId: grantForm.memberId, memberName: grantForm.memberName, count: grantForm.count }]
+      memberIds: [grantForm.memberId],
+      countPerMember: grantForm.count
     }, { headers })
-    ElMessage.success(`已发放 ${r.data.grantedCount} 张`)
+    const data = r.data || {}
+    const granted = data.grantedCount ?? 0
+    const requested = data.requestedCount ?? grantForm.count
+    const truncated = data.truncatedCount ?? 0
+    if (truncated > 0) {
+      ElMessage.warning(`已发放 ${granted} 张（申请 ${requested} 张，因批次额度不足截断 ${truncated} 张）`)
+    } else {
+      ElMessage.success(`已发放 ${granted} 张`)
+    }
     grantDialog.visible = false
     loadBatch()
   } catch (e: any) {
@@ -404,4 +433,5 @@ onMounted(() => loadBatch())
 .kpi-item.red { background: linear-gradient(135deg, #fee2e2, #fecaca); }
 .kpi-label { font-size: 12px; color: #475569; }
 .kpi-value { font-size: 24px; font-weight: 700; color: #1e293b; margin-top: 4px; }
+.form-tip { font-size: 12px; color: #94a3b8; line-height: 1.6; margin-top: 2px; }
 </style>

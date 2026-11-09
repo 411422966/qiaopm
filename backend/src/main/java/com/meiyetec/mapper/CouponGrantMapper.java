@@ -23,6 +23,12 @@ public interface CouponGrantMapper extends BaseMapper<CouponGrant> {
     int countGranted(@Param("couponId") Long couponId);
 
     /**
+     * 统计某会员在某张券下已发放的数量（用于批量发放的每人限领判定）。
+     * 只依赖 market_coupon_grant 必然存在的列（coupon_id / member_id / status）。
+     */
+    int countGrantedByMember(@Param("couponId") Long couponId, @Param("memberId") Long memberId);
+
+    /**
      * B-4 · 原子发放优惠券。
      * 总量超额或重复发放均返回 0 行，由调用方识别后抛友好错误。
      *

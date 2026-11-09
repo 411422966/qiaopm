@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @SysOpLog(module = "卡券")
 public class CouponController {
+
+    /** 单个会员单次最多发放张数 */
+    private static final int MAX_COUNT_PER_MEMBER = 100;
 
     private final CouponMapper couponMapper;
     private final CouponGrantMapper couponGrantMapper;
@@ -280,15 +284,33 @@ public class CouponController {
         return Result.success("发放成功", result);
     }
 
+    /**
+     * 按会员等级批量发放优惠券模板。
+     *
+     * P0 护栏（P0-MKT-COUPON-002）：原实现 levelIds 为空时静默退化为「发给全部 active 会员」，
+     * 且完全不做总量/每人限领校验 —— 一次误调用即可超发。现在：
+     *   1) 必须显式指定 levelIds；确实要全量时须显式传 allMembers=true 且 confirm=true；
+     *   2) 按 totalCount 截断总量，按 perLimit 截断每人张数，超出部分跳过并在响应中回报；
+     *   3) 会员查询强制带 tenant_id 过滤。
+     */
     @PostMapping("/batch-grant-by-level")
     @Transactional(rollbackFor = Exception.class)
     @RequirePermission("market:coupon:add")
-    public Result<Integer> batchGrantByLevel(@RequestBody Map<String, Object> params) {
+    public Result<Map<String, Object>> batchGrantByLevel(@RequestBody Map<String, Object> params) {
         Long t = tid();
+        if (params == null || params.get("couponId") == null) {
+            throw new BusinessException(BizCode.BAD_REQUEST, "couponId 必填");
+        }
         Long couponId = ((Number) params.get("couponId")).longValue();
         @SuppressWarnings("unchecked")
         List<Number> rawIds = (List<Number>) params.get("levelIds");
         int count = params.get("count") == null ? 1 : ((Number) params.get("count")).intValue();
+        if (count < 1) count = 1;
+        if (count > MAX_COUNT_PER_MEMBER) {
+            throw new BusinessException(BizCode.BAD_REQUEST, "每人张数不能超过 " + MAX_COUNT_PER_MEMBER);
+        }
+        boolean allMembers = boolOf(params.get("allMembers"));
+        boolean confirm = boolOf(params.get("confirm"));
 
         Coupon coupon = couponMapper.selectById(couponId);
         if (coupon == null || !t.equals(coupon.getTenantId())) {
@@ -299,41 +321,101 @@ public class CouponController {
         }
 
         List<Long> levelIds = rawIds == null ? java.util.Collections.emptyList()
-                : rawIds.stream().map(Number::longValue).collect(Collectors.toList());
+                : rawIds.stream().filter(java.util.Objects::nonNull).map(Number::longValue).collect(Collectors.toList());
+
+        // 护栏 1：不接受「缺省即全量」
+        if (levelIds.isEmpty() && !allMembers) {
+            throw new BusinessException(BizCode.BAD_REQUEST,
+                    "必须指定会员等级 levelIds；若确实要发给全部会员，请显式传 allMembers=true 且 confirm=true");
+        }
+        // 护栏 2：全量发放需要二次确认
+        if (allMembers && !confirm) {
+            throw new BusinessException(BizCode.BAD_REQUEST, "全量发放需要二次确认：请传 confirm=true");
+        }
 
         LambdaQueryWrapper<Member> q = new LambdaQueryWrapper<>();
         q.eq(Member::getStatus, 1);
+        q.eq(Member::getTenantId, t);
         if (!levelIds.isEmpty()) q.in(Member::getLevelId, levelIds);
-        // 多租户安全：若 member 表带 tenantId 列，加 .eq(Member::getTenantId, t)
-        try {
-            Member.class.getDeclaredField("tenantId");
-            q.eq(Member::getTenantId, t);
-        } catch (NoSuchFieldException ignored) {
-            // 老 member 实体无 tenantId，跳过（仅历史数据）
-        }
         List<Member> members = memberMapper.selectList(q);
-        if (members.isEmpty()) return Result.success(0);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("grantedCount", 0);
+        result.put("skippedCount", 0);
+        result.put("skippedMembers", java.util.Collections.emptyList());
+        if (members.isEmpty()) {
+            return Result.success("没有符合条件的会员", result);
+        }
+
+        // 护栏 3：总量配额（totalCount <= 0 视为不限量）
+        int totalCount = coupon.getTotalCount() == null ? 0 : coupon.getTotalCount();
+        int granted = couponGrantMapper.countGranted(couponId);
+        int remaining = totalCount > 0 ? totalCount - granted : Integer.MAX_VALUE;
+        if (remaining <= 0) {
+            result.put("skippedCount", members.size() * count);
+            result.put("skipReason", "优惠券总量已用尽");
+            return Result.success("优惠券总量已用尽", result);
+        }
+
+        // 每人限领（perLimit 为 null 或 0 视为不限）
+        int perLimit = coupon.getPerLimit() == null ? 0 : coupon.getPerLimit();
 
         int success = 0;
+        int skipped = 0;
+        List<Map<String, Object>> skippedMembers = new ArrayList<>();
         for (Member mb : members) {
-            try {
-                for (int i = 0; i < count; i++) {
-                    CouponGrant grant = new CouponGrant();
-                    grant.setCouponId(couponId);
-                    grant.setMemberId(mb.getId());
-                    grant.setTenantId(t);
-                    grant.setCode(Keys.randomCode(12));
-                    grant.setStatus(1);
-                    grant.setSource(5);
-                    grant.setExpireTime(coupon.getEndTime());
-                    couponGrantMapper.insert(grant);
+            if (success >= remaining) {
+                skipped += count;
+                Map<String, Object> skip = new HashMap<>();
+                skip.put("memberId", mb.getId());
+                skip.put("reason", "总量已用尽");
+                skippedMembers.add(skip);
+                continue;
+            }
+            int already = perLimit > 0 ? couponGrantMapper.countGrantedByMember(couponId, mb.getId()) : 0;
+            int canGive = count;
+            if (perLimit > 0) {
+                canGive = Math.min(canGive, Math.max(0, perLimit - already));
+                if (canGive == 0) {
+                    skipped += count;
+                    Map<String, Object> skip = new HashMap<>();
+                    skip.put("memberId", mb.getId());
+                    skip.put("reason", "已达每人限领 " + perLimit + " 张");
+                    skippedMembers.add(skip);
+                    continue;
                 }
+            }
+            for (int i = 0; i < canGive; i++) {
+                CouponGrant grant = new CouponGrant();
+                grant.setCouponId(couponId);
+                grant.setMemberId(mb.getId());
+                grant.setTenantId(t);
+                grant.setCode(Keys.randomCode(12));
+                grant.setStatus(1);
+                grant.setSource(5);
+                grant.setExpireTime(coupon.getEndTime());
+                couponGrantMapper.insert(grant);
                 success++;
-            } catch (Exception ignored) {
-                // 单条失败不阻塞整批
+            }
+            if (canGive < count) {
+                skipped += count - canGive;
+                Map<String, Object> skip = new HashMap<>();
+                skip.put("memberId", mb.getId());
+                skip.put("reason", "已达每人限领 " + perLimit + " 张");
+                skippedMembers.add(skip);
             }
         }
-        return Result.success(success);
+
+        result.put("grantedCount", success);
+        result.put("skippedCount", skipped);
+        result.put("skippedMembers", skippedMembers);
+        return Result.success("已发放 " + success + " 张", result);
+    }
+
+    private boolean boolOf(Object v) {
+        if (v instanceof Boolean) return (Boolean) v;
+        if (v instanceof Number) return ((Number) v).intValue() != 0;
+        return v != null && "true".equalsIgnoreCase(v.toString().trim());
     }
 
     @PostMapping("/use")
