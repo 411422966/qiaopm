@@ -366,7 +366,7 @@ public class LtvTrainingService {
             // 特征重要性（绝对权重）
             Map<String, Double> importance = new LinkedHashMap<>();
             for (int i = 0; i < FEATURE_COLUMNS.size(); i++) {
-                importance.put(FEATURE_COLUMNS.get(i), Math.abs(weights[i]));
+                importance.put(FEATURE_COLUMNS.get(i), Math.abs(weights[i + 1]));
             }
             // 按重要性排序
             List<Map.Entry<String, Double>> sorted = new ArrayList<>(importance.entrySet());
@@ -447,6 +447,21 @@ public class LtvTrainingService {
         return Result.success("已部署", null);
     }
 
+    /**
+     * 下线模型（取消激活）
+     */
+    @PostMapping("/model/{id}/offline")
+    @Transactional(rollbackFor = Exception.class)
+    public Result<Void> offline(@PathVariable Long id) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
+        LtvModelRegistry model = modelMapper.selectById(id);
+        if (model == null || !model.getTenantId().equals(tenantId)) {
+            return Result.error(BizCode.NOT_FOUND, "模型不存在");
+        }
+        jdbc.update("UPDATE ltv_model_registry SET is_active = 0, status = 4, deployed_at = NULL WHERE id = ?", id);
+        return Result.success("已下线", null);
+    }
+
     @GetMapping("/model/list")
     public Result<List<LtvModelRegistry>> listModels() {
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -474,10 +489,6 @@ public class LtvTrainingService {
         int n = rows.size();
         for (int i = 0; i < FEATURE_COLUMNS.size(); i++) {
             double sum = 0;
-            for (Map<String, Object> r : rows) {
-                sum = toDouble(r.get(FEATURE_COLUMNS.get(i)));
-            }
-            // 简化计算
             for (Map<String, Object> r : rows) {
                 sum += toDouble(r.get(FEATURE_COLUMNS.get(i)));
             }

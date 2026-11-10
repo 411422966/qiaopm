@@ -370,7 +370,7 @@ public class ChurnTrainingService {
 
         // 从 ltv_training_feature 读取（特征已有）
         String sql = "SELECT " + String.join(",", FEATURE_COLS) +
-                ", next_90d_active AS label " +
+                ", (1 - next_90d_active) AS label " +
                 "FROM ltv_training_feature " +
                 "WHERE tenant_id = ? AND feature_date = ? " +
                 "  AND next_90d_active IS NOT NULL";
@@ -549,6 +549,21 @@ public class ChurnTrainingService {
         jdbc.update("UPDATE churn_model_registry SET is_active = 0 WHERE tenant_id = ?", tenantId);
         jdbc.update("UPDATE churn_model_registry SET is_active = 1, status = 3, deployed_at = NOW() WHERE id = ?", id);
         return Result.success("已部署", null);
+    }
+
+    /**
+     * 下线模型（取消激活）
+     */
+    @PostMapping("/model/{id}/offline")
+    @Transactional(rollbackFor = Exception.class)
+    public Result<Void> offline(@PathVariable Long id) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
+        ChurnModelRegistry m = modelMapper.selectById(id);
+        if (m == null || !m.getTenantId().equals(tenantId)) {
+            return Result.error(BizCode.NOT_FOUND, "模型不存在");
+        }
+        jdbc.update("UPDATE churn_model_registry SET is_active = 0, status = 4, deployed_at = NULL WHERE id = ?", id);
+        return Result.success("已下线", null);
     }
 
     @GetMapping("/model/list")

@@ -327,12 +327,12 @@ public class DataGovernanceService {
         // 取已部署 LTV 模型
         Map<String, Object> modelA = jdbc.queryForMap(
                 "SELECT id, model_code, model_type, algorithm, val_mae, val_mape, val_r2 " +
-                "FROM ltv_model_registry WHERE tenant_id = ? AND is_active = 1 AND deleted = 0 LIMIT 1",
+                "FROM ltv_model_registry WHERE tenant_id = ? AND is_active = 1 LIMIT 1",
                 tenantId);
 
         Map<String, Object> modelB = jdbc.queryForMap(
                 "SELECT id, model_code, model_type, algorithm, val_mae, val_mape, val_r2 " +
-                "FROM ltv_model_registry WHERE tenant_id = ? AND is_active = 0 AND deleted = 0 " +
+                "FROM ltv_model_registry WHERE tenant_id = ? AND is_active = 0 " +
                 "ORDER BY id DESC LIMIT 1",
                 tenantId);
 
@@ -367,12 +367,12 @@ public class DataGovernanceService {
     private Map<String, Object> abValidateChurn(Long tenantId, LocalDate baseDate) {
         Map<String, Object> modelA = jdbc.queryForMap(
                 "SELECT id, model_code, algorithm, val_auc, val_f1, val_precision, val_recall " +
-                "FROM churn_model_registry WHERE tenant_id = ? AND is_active = 1 AND deleted = 0 LIMIT 1",
+                "FROM churn_model_registry WHERE tenant_id = ? AND is_active = 1 LIMIT 1",
                 tenantId);
 
         Map<String, Object> modelB = jdbc.queryForMap(
                 "SELECT id, model_code, algorithm, val_auc, val_f1, val_precision, val_recall " +
-                "FROM churn_model_registry WHERE tenant_id = ? AND is_active = 0 AND deleted = 0 " +
+                "FROM churn_model_registry WHERE tenant_id = ? AND is_active = 0 " +
                 "ORDER BY id DESC LIMIT 1",
                 tenantId);
 
@@ -417,7 +417,7 @@ public class DataGovernanceService {
         try {
             ltvModels = jdbc.queryForList(
                     "SELECT model_code, algorithm, val_mae, val_mape, val_r2, is_active, trained_at " +
-                    "FROM ltv_model_registry WHERE tenant_id = ? AND deleted = 0 ORDER BY is_active DESC, id DESC LIMIT 5",
+                    "FROM ltv_model_registry WHERE tenant_id = ? ORDER BY is_active DESC, id DESC LIMIT 5",
                     tenantId);
         } catch (Exception e) {
             ltvModels = List.of();
@@ -429,7 +429,7 @@ public class DataGovernanceService {
         try {
             churnModels = jdbc.queryForList(
                     "SELECT model_code, algorithm, val_auc, val_f1, val_precision, val_recall, is_active, trained_at " +
-                    "FROM churn_model_registry WHERE tenant_id = ? AND deleted = 0 ORDER BY is_active DESC, id DESC LIMIT 5",
+                    "FROM churn_model_registry WHERE tenant_id = ? ORDER BY is_active DESC, id DESC LIMIT 5",
                     tenantId);
         } catch (Exception e) {
             churnModels = List.of();
@@ -510,7 +510,7 @@ public class DataGovernanceService {
         try {
             models = jdbc.queryForList(
                     "SELECT id, model_formula, val_mape FROM ltv_model_registry " +
-                    "WHERE tenant_id = ? AND is_active = 1 AND deleted = 0 LIMIT 1",
+                    "WHERE tenant_id = ? AND is_active = 1 LIMIT 1",
                     tenantId);
         } catch (Exception e) {
             throw new RuntimeException("无已部署 LTV 模型");
@@ -548,7 +548,7 @@ public class DataGovernanceService {
         try {
             models = jdbc.queryForList(
                     "SELECT id, val_auc, val_f1 FROM churn_model_registry " +
-                    "WHERE tenant_id = ? AND is_active = 1 AND deleted = 0 LIMIT 1",
+                    "WHERE tenant_id = ? AND is_active = 1 LIMIT 1",
                     tenantId);
         } catch (Exception e) {
             throw new RuntimeException("无已部署 Churn 模型");
