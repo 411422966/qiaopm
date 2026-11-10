@@ -16,7 +16,7 @@ M09 邀请链路的「首单 → 发券」环节有三个**不抛异常、不告
 | 编号 | 现象 | 后果 |
 |---|---|---|
 | **Q5** | 未达消费门槛后 record 被置 `status = 3`，但补发查询只取 `status = 2` | 后续更高金额订单**无法自动补发**，只能人工调 `resend-reward` |
-| **Q8** | `grantInviteeReward` 在会员不存在时**静默 `return`** | 不发券、不写 `reward_log`，但 record 仍被置 `status = 4` → **漏发无痕迹** |
+| **Q8** | `grantInviteeReward` 在会员不存在时**静默 `return`** | 不发券、不写 `reward_log`，但 record 仍被置 `status = 4` → **漏发无痕迹**（触发条件：会员被**软删除** → 常见情况） |
 | **Q9** | `invitee_phone` 存**脱敏**手机号且参与唯一键 | 前 3 后 4 相同的不同手机号**撞唯一键** → 真实不同的人被当成同一人 |
 
 ---
@@ -139,9 +139,34 @@ recordMapper.updateById(r)
 
 即：**新人奖励漏发 → 无痕迹 → 无法自助补救 → 只能靠用户投诉发现**。
 
-**触发条件**：`r.getInviteeMemberId()` 非空但 `memberMapper.selectById(inviteeId)` 返回 null。
-即 `m09_invite_record.invitee_member_id` 指向一个**已不存在**的会员行
-（会员被删除 / 数据迁移丢失 / 跨库引用错位）。
+**触发条件**（**2026-11-10 补充调查后已修正**）：
+
+`r.getInviteeMemberId()` 非空但 `memberMapper.selectById(inviteeId)` 返回 null。
+
+> ⚠️ **触发条件的性质已修正（软删除）**：
+>
+> 最初登记时本条被描述为「会员行**丢失**（会员被删除 / 数据迁移丢失 / 跨库引用错位）」——
+> 属于**极端情况**。经 `SHOW CREATE TABLE crm_member` 实测（证据：
+> `audit/evidence/F151-m09-invite-grant-chain/raw/15-crm-member-schema.txt`），
+> `crm_member` 采用**软删除**模型：
+>
+> ```sql
+> `deleted` tinyint DEFAULT '0',
+> UNIQUE KEY `uk_phone` (`phone`,`deleted`),
+> UNIQUE KEY `uk_member_no` (`member_no`,`deleted`),
+> ```
+>
+> 实体侧 `backend/src/main/java/com/meiyetec/entity/Member.java:53` 标注
+> `@TableLogic`（`@TableName("crm_member")`，L11），因此 MyBatis-Plus 的
+> `memberMapper.selectById(inviteeId)` **会自动追加 `WHERE deleted = 0`**。
+>
+> **修正结论**：本缺陷的触发条件**从「会员行丢失」（极端）修正为「普通软删除」（常见）** ——
+> 会员只要执行过一次逻辑删除（注销/停用/数据清理），其 `id` 仍留在 `m09_invite_record.invitee_member_id`，
+> 但 `selectById` 查不到 → 必然走进 `L895` 的静默 `return`。
+> 这不是数据异常，而是**正常运营动作（会员注销）触发的漏发路径**。
+>
+> **严重度：P2 → P1**（依据：触发频率由「罕见」上升为「每次会员注销都必现」，
+> 且失败完全无痕迹、无法通过 `resend-reward` 补救）。
 
 **建议修复**：
 
@@ -163,6 +188,31 @@ if (invitee == null) {
 这是**另一个潜在不一致**（邀请人发了、新人没发、record 标失败），但比当前的「静默漏发 + 标成功」
 **可观测性更好**，且 `resend-reward` 可补发新人侧。
 是否要在抛异常前**先完成邀请人侧发放**、把新人侧失败单独记录，需要在实施时一并决策。
+
+---
+
+### 2.3 关联发现 —— 同一软删除模式可能使 I147（Q4）的严重性被低估 🔴 待评估
+
+同样的 `@TableLogic` 软删除模式**在另一条邀请链路中也存在**，需在修 I147 时一并评估：
+
+| 项 | 内容 |
+|---|---|
+| 实体 | `backend/src/main/java/com/meiyetec/entity/MemberInviteReward.java:15` `@TableName("member_invite_reward")`，L53 `@TableLogic` |
+| 位置 | `backend/src/main/java/com/meiyetec/service/MemberInviteService.java` — `grantRewardOnFirstOrder`（L217） |
+| 代码 | `inviteRewardMapper.selectOne(new LambdaQueryWrapper<MemberInviteReward>().eq(tenantId).eq(inviteeId))` |
+| 行为 | MyBatis-Plus 自动追加 `WHERE deleted = 0` → **软删除的邀请奖励记录查不到** → `if (r == null) return Result.success("无邀请关系", null);` |
+
+即：`member_invite_reward` 行被逻辑删除后，「首单发奖」会**静默返回成功**（HTTP 200 + `"无邀请关系"`），
+调用方无法区分「本来就没有邀请关系」与「邀请关系被软删了」。
+
+这与 Q8 是**同型问题**（静默失效 + 无痕迹）。因此：
+
+> **Q4（I147 `MemberInviteService.grantRewardOnFirstOrder` 只改状态不发券）的严重性
+> 可能被低估** —— 除 I147 已记录的 TODO 假成功外，还需叠加评估「邀请奖励记录被软删除时
+> 首单发奖静默跳过」这一路径。请在修 I147 时**一并评估并决定**是否需要区分
+> 「无邀请关系」与「记录已删除」两种状态。
+
+**本条不改变 I147 的结论**，仅标记为**实施 I147 修复时必须一并处理的关联项**。
 
 ---
 
@@ -246,7 +296,7 @@ UNIQUE KEY `uk_campaign_inviter_phone` (`campaign_id`,`inviter_member_id`,`invit
          Q5 查询只取        Q8 静默 return    Q9 唯一键用脱敏值
          status=2            （新人侧）        （写入层）
               │               │               │
-    高门槛活动受影响     会员行丢失时受影响   所有活动都受影响
+    高门槛活动受影响     会员软删除时受影响   所有活动都受影响
               │               │               │
          人工补发            record 标 4      应用层误拒 / DB 500
         (resend-reward)     → 无法补救         → 邀请链路断
@@ -275,7 +325,10 @@ UNIQUE KEY `uk_campaign_inviter_phone` (`campaign_id`,`inviter_member_id`,`invit
 
 - Q5 的「后续更高金额订单不自动补发」—— 本批活动 `inviteeMinConsume = 0`（默认），
   未触发门槛分支，**未做运行时复现**
-- Q8 的「会员不存在静默 return」—— 本批会员 1/2/3 均存在，**未构造缺失会员场景**
+- Q8 的「会员不存在静默 return」—— 本批会员 1/2/3 均存在，**未构造缺失会员场景**；
+  但**触发条件已由表结构实测修正**：`crm_member` 为软删除模型（`raw/15-crm-member-schema.txt`）
+  + `Member.java:53 @TableLogic` → `selectById` 自动带 `WHERE deleted = 0`
+  → 触发条件为「普通软删除」（常见），而非「会员行丢失」（极端）
 - Q9 的「撞唯一键」—— 本批手机号 `13800138002` / `13800138003` 脱敏后不同，**未构造撞键样本**
 
 > 上述三项的**代码路径与表结构均已确认**，但**运行时未复现** → 按验收规则标 **UNVERIFIED（运行时）**，
@@ -293,3 +346,4 @@ UNIQUE KEY `uk_campaign_inviter_phone` (`campaign_id`,`inviter_member_id`,`invit
 | 环境基线 | `audit/baseline/env.md` |
 | 证据目录 | `audit/evidence/F151-m09-invite-grant-chain/`（含 T1-T5 全部 DB 验证与 transcript） |
 | 取证时间 | 2026-11-10 23:14 – 23:18 (UTC+8) |
+| 补充调查 | 2026-11-10 23:35 — Q8 触发条件修正（`crm_member` 软删除模型），证据 `raw/15-crm-member-schema.txt`（`SHOW CREATE TABLE crm_member` 实测输出） |
