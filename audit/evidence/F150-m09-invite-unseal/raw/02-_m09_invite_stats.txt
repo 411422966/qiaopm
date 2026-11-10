@@ -1,0 +1,4 @@
+﻿=== GET /m09/invite/stats ===
+=== time: 2026-11-10 22:32:44 +08:00 ===
+HTTP 200
+{"code":200,"message":"操作成功","data":{"rewardCount":0,"registerCount":0,"totalInviteCodes":0,"firstOrderCount":0,"scanCount":0,"activeCampaigns":0,"conversionRate":0,"inviteNewRate":0},"traceId":"bd941e3d55754be0931674123b227389","timestamp":"2026-11-10 22:32:45"}

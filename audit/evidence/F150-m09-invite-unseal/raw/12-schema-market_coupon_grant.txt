@@ -1,0 +1,13 @@
+﻿id	bigint	NO	PRI	NULL	auto_increment
+coupon_id	bigint	YES	MUL	NULL	
+member_id	bigint	YES	MUL	NULL	
+code	varchar(50)	YES		NULL	
+status	int	YES		1	
+source	int	YES		1	
+order_id	bigint	YES		NULL	
+used_at	datetime	YES		NULL	
+expire_time	datetime	YES		NULL	
+created_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+updated_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+version	int	NO		0	
+tenant_id	bigint	YES		1	

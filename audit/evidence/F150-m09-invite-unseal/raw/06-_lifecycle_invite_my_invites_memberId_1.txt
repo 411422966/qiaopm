@@ -1,0 +1,4 @@
+﻿=== GET /lifecycle/invite/my-invites?memberId=1 ===
+=== time: 2026-11-10 22:32:48 +08:00 ===
+HTTP 200
+{"code":200,"message":"操作成功","data":[],"traceId":"5709245e895f4b99939cba8936e2224a","timestamp":"2026-11-10 22:32:49"}

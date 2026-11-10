@@ -125,6 +125,8 @@
           - market_coupon_grant 无 deleted 列 → 用 status != 3（作废）代替软删过滤
           - market_coupon 无 issued_count 列 → 已发放数一律由 market_coupon_grant 的 COUNT(*) 推导
             （market_coupon_grant 无独立的删除语义，status=1 未使用 / 2 已使用 / 3 已作废）
+          - D1 修复（2026-11-10）：total_count 为 NULL 或 0 时视为不限量
+            （原写法 total_count > COUNT(*) 在 NULL 时求值为 NULL → 条件恒不成立 → 误报"已达发放上限"）
 
         原子性保证：
         1. market_coupon 子查询：检查总量未满（total_count > 已发放数）
@@ -143,9 +145,12 @@
               AND status = 1
               AND (start_time IS NULL OR start_time &lt;= NOW())
               AND (end_time IS NULL OR end_time &gt;= NOW())
-              AND total_count > (
-                  SELECT COUNT(*) FROM market_coupon_grant
-                  WHERE coupon_id = #{couponId} AND status != 3
+              AND (
+                  total_count IS NULL OR total_count = 0
+                  OR total_count > (
+                      SELECT COUNT(*) FROM market_coupon_grant
+                      WHERE coupon_id = #{couponId} AND status != 3
+                  )
               )
               AND (
                   per_limit IS NULL OR per_limit = 0

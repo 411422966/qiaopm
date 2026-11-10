@@ -43,9 +43,10 @@ public interface CouponGrantMapper extends BaseMapper<CouponGrant> {
 
     /**
      * P0-MONEY-005 · 原子发放优惠券（条件 UPDATE 版本）。
-     * 只修改 market_coupon.issued_count，返回影响行数：
+     * market_coupon 无 issued_count 列，本次只校验配额与限领条件（并刷新 updated_at），返回影响行数：
      *   1 = 成功（总量未满 且 该会员未达限领）
      *   0 = 条件不满足
+     * total_count 为 NULL 或 0 时视为不限量（见 CouponGrantMapper.xml 中 atomicGrant 注释）。
      */
     int atomicGrant(@Param("couponId") Long couponId, @Param("memberId") Long memberId);
 

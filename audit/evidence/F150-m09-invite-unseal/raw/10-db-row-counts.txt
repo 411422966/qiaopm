@@ -1,0 +1,5 @@
+﻿market_coupon	4
+market_coupon_grant	8
+m09_invite_campaign	0
+m09_invite_record	0
+m09_invite_reward_log	0

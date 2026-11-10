@@ -11,7 +11,6 @@ import com.meiyetec.util.PageResult;
 import com.meiyetec.util.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -46,7 +45,6 @@ import java.util.Map;
  *   GET    /invite/my-stats                        我的邀请统计
  *   POST   /invite/{codeId}/report-share           分享按钮点击上报
  */
-@ConditionalOnProperty(name = "feature.legacy-missing-ddl.enabled", havingValue = "true", matchIfMissing = false)
 @RestController
 @RequiredArgsConstructor
 @SysOpLog(module = "裂变邀请")

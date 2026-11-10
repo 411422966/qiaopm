@@ -5,7 +5,6 @@ import com.meiyetec.entity.MemberInviteReward;
 import com.meiyetec.service.MemberInviteService;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.Map;
  * - POST /bind                绑定邀请关系（注册时调用）
  * - POST /first-order         首单完成后发放奖励
  */
-@ConditionalOnProperty(name = "feature.legacy-missing-ddl.enabled", havingValue = "true", matchIfMissing = false)
 @RestController
 @RequestMapping("/lifecycle/invite")
 @RequiredArgsConstructor

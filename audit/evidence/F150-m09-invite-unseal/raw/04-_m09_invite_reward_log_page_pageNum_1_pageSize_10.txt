@@ -1,0 +1,4 @@
+﻿=== GET /m09/invite/reward-log/page?pageNum=1&pageSize=10 ===
+=== time: 2026-11-10 22:32:48 +08:00 ===
+HTTP 200
+{"code":200,"message":"操作成功","data":{"total":0,"pages":0,"current":1,"size":10,"records":[]},"traceId":"02873259cc254c10835916d625cbf2e5","timestamp":"2026-11-10 22:32:48"}

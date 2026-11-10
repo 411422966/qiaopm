@@ -1,0 +1,4 @@
+﻿=== GET /lifecycle/invite/code?memberId=1 ===
+=== time: 2026-11-10 22:32:48 +08:00 ===
+HTTP 200
+{"code":200,"message":"操作成功","data":{"id":1,"inviteCode":"INVD5AA8288","inviteCount":0,"successCount":0,"expireAt":"2026-11-17T21:17:02","status":"ACTIVE","rewardCouponAmount":50.00,"shareText":"我在 美业通 美容，发现了一个超棒的服务！使用我的邀请码 INVD5AA8288 注册，双方各得 50.00 元代金券 \uD83C\uDF81"},"traceId":"3a306aaf1c2e48c3bcfb5e8b66bcdabd","timestamp":"2026-11-10 22:32:49"}

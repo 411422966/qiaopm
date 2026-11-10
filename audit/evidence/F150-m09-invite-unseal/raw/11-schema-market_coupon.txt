@@ -1,0 +1,17 @@
+﻿id	bigint	NO	PRI	NULL	auto_increment
+store_id	bigint	YES	MUL	NULL	
+name	varchar(100)	YES		NULL	
+type	int	YES		NULL	
+rule_type	int	YES		NULL	
+rule_value	decimal(10,2)	YES		NULL	
+min_amount	decimal(10,2)	YES		NULL	
+max_discount	decimal(10,2)	YES		NULL	
+total_count	int	YES		NULL	
+per_limit	int	YES		NULL	
+start_time	datetime	YES		NULL	
+end_time	datetime	YES		NULL	
+status	int	YES	MUL	1	
+remark	text	YES		NULL	
+created_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+updated_at	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+tenant_id	bigint	YES		1	
