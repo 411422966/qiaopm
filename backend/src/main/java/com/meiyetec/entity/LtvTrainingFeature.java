@@ -43,6 +43,7 @@ public class LtvTrainingFeature {
     // 钱包/套餐
     private BigDecimal walletBalance;
     private Integer activePackages;
+    /** 套餐剩余总次数（口径：剩余次数，非金额；金额口径待 I150） */
     private BigDecimal totalPackageBalance;
     private BigDecimal packageConsumptionRate;
 

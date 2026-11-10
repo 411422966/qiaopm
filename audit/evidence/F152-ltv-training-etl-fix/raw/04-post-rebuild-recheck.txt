@@ -1,0 +1,10 @@
+﻿total_rows	distinct_members
+489	489
+recency_nn	monetary_nn	point_nn	recency_null	monetary_null	point_null	recency_min	recency_max	mon_min	mon_max	pt_min	pt_max	freq_sum	pkg_sum	cat_sum	rv_sum	cp_sum	rev_sum
+489	489	489	0	0	0	72	9999	0.00	347083.00	0	6800	636	124.00	0	3	0	0.00
+member_id	recency_days	frequency_total	monetary_total	aov	avg_interval_days	tenure_days	active_packages	total_package_balance	point_balance	next_90d_revenue
+1414	102	8	347083.00	43385.38	22	69	0	0.00	0	0.00
+1489	95	7	304761.00	43537.29	25	69	0	0.00	0	0.00
+1418	104	7	291757.00	41679.57	24	69	0	0.00	0	0.00
+1488	100	7	288658.00	41236.86	25	69	0	0.00	0	0.00
+1220	108	7	285952.00	40850.29	25	79	0	0.00	0	0.00

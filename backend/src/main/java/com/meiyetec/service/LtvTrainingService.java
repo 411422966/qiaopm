@@ -136,39 +136,34 @@ public class LtvTrainingService {
                 COALESCE(DATEDIFF(?, MAX(o.pay_time)), 9999),
                 COUNT(o.id),
                 SUM(CASE WHEN o.pay_time >= ? THEN 1 ELSE 0 END),
-                COALESCE(SUM(o.pay_amount), 0),
-                COALESCE(SUM(CASE WHEN o.pay_time >= ? THEN o.pay_amount ELSE 0 END), 0),
-                COALESCE(AVG(o.pay_amount), 0),
+                COALESCE(SUM(o.final_amount), 0),
+                COALESCE(SUM(CASE WHEN o.pay_time >= ? THEN o.final_amount ELSE 0 END), 0),
+                COALESCE(AVG(o.final_amount), 0),
                 COALESCE(ROUND(DATEDIFF(?, MIN(o.pay_time)) / NULLIF(COUNT(o.id), 0)), 0),
-                COALESCE(DATEDIFF(?, m.created_at), 0),
+                COALESCE(DATEDIFF(?, m.create_time), 0),
                 COALESCE(po.active_packages, 0),
-                COALESCE(po.total_balance, 0),
+                COALESCE(po.total_remaining_times, 0),
                 0,
                 0,
                 0,
                 0,
                 0,
                 0,
-                COALESCE(pt.point_balance, 0)
+                COALESCE(m.points, 0)
             FROM crm_member m
-            LEFT JOIN crm_order o ON o.member_id = m.id AND o.status = 3
+            LEFT JOIN pos_order o ON o.member_id = m.id AND o.status = 2
                 AND o.deleted = 0 AND o.pay_time >= ?
             LEFT JOIN (
                 SELECT member_id,
                        COUNT(*) AS active_packages,
-                       SUM(remaining_value) AS total_balance
+                       SUM(remaining_times) AS total_remaining_times
                 FROM crm_package_order
                 WHERE deleted = 0 AND status = 1 AND expire_time > ?
                 GROUP BY member_id
             ) po ON po.member_id = m.id
-            LEFT JOIN (
-                SELECT member_id, SUM(point_balance) AS point_balance
-                FROM crm_point_account
-                WHERE deleted = 0
-                GROUP BY member_id
-            ) pt ON pt.member_id = m.id
             WHERE m.deleted = 0 AND m.tenant_id = ?
-            GROUP BY m.id, m.tenant_id, m.created_at, po.active_packages, po.total_balance, pt.point_balance
+            GROUP BY m.id, m.tenant_id, m.create_time, m.points,
+                     po.active_packages, po.total_remaining_times
             """;
 
         int inserted = jdbc.update(sql,
@@ -200,7 +195,7 @@ public class LtvTrainingService {
                        COUNT(*) AS review_count,
                        ROUND(AVG(overall_rating), 2) AS avg_rating
                 FROM crm_review
-                WHERE deleted = 0 AND status = 2 AND created_at >= ?
+                WHERE deleted = 0 AND status = 2 AND create_time >= ?
                 GROUP BY member_id
             ) r ON r.member_id = f.member_id
             SET f.review_count = r.review_count,
@@ -213,8 +208,8 @@ public class LtvTrainingService {
             UPDATE ltv_training_feature f
             JOIN (
                 SELECT member_id, COUNT(*) AS coupon_used_count
-                FROM crm_member_coupon
-                WHERE deleted = 0 AND status = 2 AND used_at >= ?
+                FROM market_coupon_grant
+                WHERE status = 2 AND used_at >= ?
                 GROUP BY member_id
             ) c ON c.member_id = f.member_id
             SET f.coupon_used_count = c.coupon_used_count
@@ -227,10 +222,11 @@ public class LtvTrainingService {
             JOIN (
                 SELECT o.member_id,
                        COUNT(DISTINCT s.category_id) AS service_category_count
-                FROM crm_order o
-                JOIN crm_order_item oi ON oi.order_id = o.id
-                JOIN biz_service_item s ON s.id = oi.service_id
-                WHERE o.deleted = 0 AND o.status = 3 AND o.pay_time >= ?
+                FROM pos_order o
+                JOIN pos_order_item oi ON oi.order_id = o.id
+                JOIN biz_service s ON s.id = oi.service_id
+                WHERE o.deleted = 0 AND o.status = 2 AND oi.deleted = 0 AND s.deleted = 0
+                  AND o.pay_time >= ?
                 GROUP BY o.member_id
             ) cat ON cat.member_id = f.member_id
             SET f.service_category_count = cat.service_category_count
@@ -281,10 +277,10 @@ public class LtvTrainingService {
             UPDATE ltv_training_feature f
             JOIN (
                 SELECT o.member_id,
-                       COALESCE(SUM(o.pay_amount), 0) AS future_revenue,
+                       COALESCE(SUM(o.final_amount), 0) AS future_revenue,
                        COUNT(*) > 0 AS future_active
-                FROM crm_order o
-                WHERE o.deleted = 0 AND o.status = 3
+                FROM pos_order o
+                WHERE o.deleted = 0 AND o.status = 2
                   AND o.pay_time >= ? AND o.pay_time < ?
                 GROUP BY o.member_id
             ) fut ON fut.member_id = f.member_id

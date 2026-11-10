@@ -1,0 +1,10 @@
+﻿@@sql_mode
+ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+t	COUNT(*)
+pos_order	1256
+status2_deleted0_total	1290
+pos_order_item	180
+market_coupon_grant_status2	0
+crm_member_tenant1	489
+biz_service_cat_notnull	0
+ltv_training_feature_before	489
