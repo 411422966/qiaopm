@@ -1,0 +1,19 @@
+=== ⑤ computeStats 均值 ===
+computed means[0] = 249.5
+expected  means[0] = 249.5
+delta             = 0.0
+PASS(均值精确)     = true
+
+=== ④ 特征重要性权重索引 ===
+weights[0] (bias)      = 741.9383570007031
+weights[1] (feature0)   = 253.14687464773007
+weights[2] (feature1)   = 2.146755902475124
+旧映射 recency_days 重要性 = 741.9383570007031  (=bias 的绝对值, 错误)
+新映射 recency_days 重要性 = 253.14687464773007  (=feature0 权重, 正确)
+两者是否不同(可证伪)       = true
+新映射是否等于 |w[1]|     = true
+
+=== 公式前 160 字符（对照 feature0 权重）===
+LTV = 741.9384 + 253.1469 * ((recency_days - 249.5000) / 86.6021) + 2.1468 * ((frequency_total - 24.4521) / 14.6191) + 0.1157 * ((frequency_90d - 26.2455) / 14.
+
+反证：若仍用 weights[i]，recency_days 重要性将为 741.9383570007031，而非真实权重 253.14687464773007

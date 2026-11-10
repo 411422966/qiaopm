@@ -1,0 +1,33 @@
+﻿{
+    "modelId":  3,
+    "modelCode":  "LTV_MLR_1794331222",
+    "algorithm":  "MLR",
+    "trainingSamples":  489,
+    "trainMAE":  0.0000,
+    "trainRMSE":  0.0000,
+    "trainMAPE":  0.0000,
+    "trainR2":  0.0000,
+    "valMAE":  0.0000,
+    "valRMSE":  0.0000,
+    "valMAPE":  0.0000,
+    "valR2":  0.0000,
+    "topFeatures":  [
+                        {
+                            "recency_days":  0.0
+                        },
+                        {
+                            "frequency_total":  0.0
+                        },
+                        {
+                            "frequency_90d":  0.0
+                        },
+                        {
+                            "monetary_total":  0.0
+                        },
+                        {
+                            "monetary_90d":  0.0
+                        }
+                    ],
+    "durationMs":  136,
+    "conclusion":  "GOOD"
+}

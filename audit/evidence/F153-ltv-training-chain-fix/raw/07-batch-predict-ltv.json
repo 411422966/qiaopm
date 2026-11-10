@@ -1,0 +1,6 @@
+﻿{
+    "modelType":  "LTV",
+    "limit":  50,
+    "predicted":  0,
+    "message":  "批量预测完成"
+}

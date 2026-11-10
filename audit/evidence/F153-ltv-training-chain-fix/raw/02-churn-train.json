@@ -1,0 +1,31 @@
+﻿{
+    "modelId":  3,
+    "algorithm":  "LR",
+    "trainingSamples":  489,
+    "positiveRate":  "100.0%",
+    "trainAUC":  0.5,
+    "valAUC":  0.5,
+    "valF1":  1.0,
+    "valPrecision":  1.0,
+    "valRecall":  1.0,
+    "valLogloss":  0.0353,
+    "conclusion":  "POOR",
+    "durationMs":  48,
+    "topRiskFeatures":  [
+                            {
+                                "aov":  5.12385462483992E-12
+                            },
+                            {
+                                "monetary_total":  3.1783451238637698E-12
+                            },
+                            {
+                                "monetary_90d":  3.1783451238637698E-12
+                            },
+                            {
+                                "recency_days":  1.4439562006391805E-12
+                            },
+                            {
+                                "point_balance":  5.0988454131253145E-14
+                            }
+                        ]
+}

@@ -1,0 +1,7 @@
+﻿
+id	model_code	is_active	status	deployed_at	val_mae	val_mape
+3	LTV_MLR_1794331222	0	4	NULL	0.0000	0.0000
+id	model_code	is_active	status	deployed_at	val_auc	val_f1
+3	CHURN_LR_1794331223	0	4	NULL	0.5000	1.0000
+
+

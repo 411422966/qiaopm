@@ -1,0 +1,5 @@
+﻿{
+    "modelType":  "CHURN",
+    "limit":  50,
+    "error":  "PreparedStatementCallback; bad SQL grammar [UPDATE crm_member m\nJOIN (\n    SELECT o.member_id,\n           COALESCE(DATEDIFF(NOW(), MAX(o.pay_time)), 9999) AS recency\n    FROM crm_order o\n    WHERE o.deleted = 0 AND o.status = 3\n    GROUP BY o.member_id\n) r ON r.member_id = m.id\nSET m.churn_risk_score = LEAST(100, ROUND(r.recency / 1.8))\nWHERE m.tenant_id = ?\nLIMIT ?\n]"
+}

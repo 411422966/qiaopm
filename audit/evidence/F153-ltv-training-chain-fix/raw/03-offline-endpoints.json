@@ -1,0 +1,30 @@
+﻿{
+    "offlineChurn":  {
+                         "code":  200,
+                         "message":  "已下线",
+                         "data":  null,
+                         "traceId":  "054a121afdf6452393f5463e0a7b3a76",
+                         "timestamp":  "2026-11-11 01:20:35"
+                     },
+    "offlineLtv":  {
+                       "code":  200,
+                       "message":  "已下线",
+                       "data":  null,
+                       "traceId":  "ac6eb534859c49989b93b17cfcdab3b7",
+                       "timestamp":  "2026-11-11 01:20:34"
+                   },
+    "deployLtv":  {
+                      "code":  200,
+                      "message":  "已部署",
+                      "data":  null,
+                      "traceId":  "a7f6764c20184156a2c40ff915f7093d",
+                      "timestamp":  "2026-11-11 01:20:32"
+                  },
+    "deployChurn":  {
+                        "code":  200,
+                        "message":  "已部署",
+                        "data":  null,
+                        "traceId":  "5583109536cd4d65a9cc6e7c55d939fe",
+                        "timestamp":  "2026-11-11 01:20:33"
+                    }
+}

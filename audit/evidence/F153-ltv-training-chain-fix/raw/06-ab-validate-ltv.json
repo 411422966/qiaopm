@@ -1,0 +1,33 @@
+﻿{
+    "modelType":  "LTV",
+    "windowDays":  90,
+    "baseDate":  "2026-08-13",
+    "comparison":  {
+                       "modelA":  {
+                                      "id":  2,
+                                      "model_code":  "LTV_MLR_1794330728",
+                                      "model_type":  "LTV_REGRESSION",
+                                      "algorithm":  "MLR",
+                                      "val_mae":  0.0000,
+                                      "val_mape":  0.0000,
+                                      "val_r2":  0.0000
+                                  },
+                       "modelB":  {
+                                      "id":  1,
+                                      "model_code":  "LTV_MLR_1794329746",
+                                      "model_type":  "LTV_REGRESSION",
+                                      "algorithm":  "MLR",
+                                      "val_mae":  0.0000,
+                                      "val_mape":  0.0000,
+                                      "val_r2":  0.0000
+                                  },
+                       "modelAMAE":  0.0,
+                       "modelBMAE":  0.0,
+                       "modelAMAPE":  0.0,
+                       "modelBMAPE":  0.0,
+                       "maeImprovement":  0.0,
+                       "mapeImprovement":  0.0,
+                       "winner":  "A",
+                       "recommendation":  "A 模型足够好，无需切换"
+                   }
+}
