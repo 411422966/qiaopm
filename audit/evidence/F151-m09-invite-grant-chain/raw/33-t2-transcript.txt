@@ -1,0 +1,32 @@
+基线：market_coupon=4 / market_coupon_grant=8 / m09_invite_campaign=0 / m09_invite_code=0 / m09_invite_record=0 / m09_invite_reward_log=0
+--- POST /market/coupon (test-batch2-t2-inviter)  HTTP=200
+{"code":200,"message":"创建成功","data":{"id":16,"storeId":1,"tenantId":1,"name":"test-batch2-t2-inviter","type":1,"ruleType":1,"ruleValue":10,"minAmount":0,"maxDiscount":null,"totalCount":0,"perLimit":1,"startTime":"2020-01-01T00:00:00","endTime":"2027-12-31T23:59:59","status":1,"remark":"test-batch2-*","createdAt":"2026-11-10T23:15:05.469453361","updatedAt":null},"traceId":"d05749b0052440e0aeb61ba2846e5df0","timestamp":"2026-11-10 23:15:05"}
+--- POST /market/coupon (test-batch2-t2-invitee)  HTTP=200
+{"code":200,"message":"创建成功","data":{"id":17,"storeId":1,"tenantId":1,"name":"test-batch2-t2-invitee","type":1,"ruleType":1,"ruleValue":10,"minAmount":0,"maxDiscount":null,"totalCount":0,"perLimit":1,"startTime":"2020-01-01T00:00:00","endTime":"2027-12-31T23:59:59","status":1,"remark":"test-batch2-*","createdAt":"2026-11-10T23:15:06.185260773","updatedAt":null},"traceId":"93a108bd365342ba88383fe372fce494","timestamp":"2026-11-10 23:15:06"}
+inviter couponId=16  invitee couponId=17
+--- POST /m09/invite/campaign (test-batch2-t2)  HTTP=200
+{"code":200,"message":"创建成功","data":{"id":3,"tenantId":1,"campaignCode":"test-batch2-t2","campaignName":"F151 batch2 test-batch2-t2","campaignType":"INVITE_REWARD","inviterRewardType":1,"inviterRewardValue":10,"inviterRewardMeta":"{\"couponId\":16}","inviteeRewardType":1,"inviteeRewardValue":10,"inviteeRewardMeta":"{\"couponId\":17}","inviteeMinConsume":0,"inviteNeedRegister":true,"inviterQuotaPerDay":5,"inviterQuotaTotal":50,"campaignQuotaTotal":0,"shareTitle":null,"shareDesc":null,"shareImageUrl":null,"shareLandingUrl":null,"startTime":"2020-01-01T00:00:00","endTime":"2027-12-31T23:59:59","status":1,"operatorId":1,"operatorName":"admin","remark":"test-batch2-*","createdAt":"2026-11-10T23:15:08.396432793","updatedAt":null,"deleted":null},"traceId":"c199d63ff3dc4822a20461a164fa37ac","timestamp":"2026-11-10 23:15:08"}
+campaignId=3
+--- GET /invite/my-code?campaignId=3&memberId=1  HTTP=200
+{"code":200,"message":"操作成功","data":{"id":3,"tenantId":1,"campaignId":3,"memberId":1,"memberName":"李雅琳","memberPhone":"138****8001","inviteCode":"6GQ396MC","shortLink":null,"shareCount":0,"scanCount":0,"registerCount":0,"successCount":0,"createdAt":"2026-11-10T23:15:09.76551043","updatedAt":null,"deleted":null},"traceId":"ab9c6ba88cb0424faa3f03cce7344ab9","timestamp":"2026-11-10 23:15:10"}
+inviteCode=6GQ396MC
+--- T2 1) POST /invite/track  HTTP=200
+{"code":200,"message":"操作成功","data":{"id":3,"tenantId":1,"campaignId":3,"campaignName":"F151 batch2 test-batch2-t2","inviteCode":"6GQ396MC","inviterMemberId":1,"inviterName":"李雅琳","inviteeMemberId":null,"inviteePhone":"138****8002","inviteeName":null,"channel":"LINK","status":1,"clickedAt":"2026-11-10T23:15:11.2514","registerAt":null,"firstConsumeAt":null,"firstOrderId":null,"inviterRewardedAt":null,"inviteeRewardedAt":null,"inviterRewardLogId":null,"inviteeRewardLogId":null,"ip":"172.25.0.1","ua":"Mozilla/5.0 (Windows NT; Windows NT 10.0; zh-CN) WindowsPowerShell/5.1.26100.9711","deviceId":null,"failReason":null,"remark":null,"createdAt":"2026-11-10T23:15:11.256229977","updatedAt":null,"deleted":null},"traceId":"e660b5625c3b4e4595ae9fc03e2289ab","timestamp":"2026-11-10 23:15:11"}
+--- T2 2) POST /invite/bind  HTTP=200
+{"code":200,"message":"操作成功","data":1,"traceId":"79a6a61a796b4d48b165f25130c4ca7e","timestamp":"2026-11-10 23:15:12"}
+--- T2 3) POST /invite/redeem  HTTP=200
+{"code":200,"message":"操作成功","data":1,"traceId":"3b8daa2152944c7d9d535858c3e00640","timestamp":"2026-11-10 23:15:14"}
+redeem http=200 body={"code":200,"message":"操作成功","data":1,"traceId":"3b8daa2152944c7d9d535858c3e00640","timestamp":"2026-11-10 23:15:14"}
+id	name	total_count	per_limit
+16	test-batch2-t2-inviter	0	1
+17	test-batch2-t2-invitee	0	1
+id	coupon_id	member_id	status	source
+13	16	1	1	6
+14	17	2	1	6
+id	status	fail_reason
+3	4	NULL
+id	reward_to	status	coupon_grant_id	fail_reason
+5	1	1	13	NULL
+6	2	1	14	NULL
+grant_cnt
+2

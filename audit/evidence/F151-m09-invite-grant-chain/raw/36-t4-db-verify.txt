@@ -1,0 +1,12 @@
+id	coupon_id	member_id	status	source
+19	24	1	1	6
+20	25	2	1	6
+inviter_grant_cnt
+1
+id	status	inviter_member_id	invitee_member_id	first_order_id	fail_reason
+7	4	1	2	99999901	NULL
+8	5	1	3	99999902	奖励发放失败：数据冲突: 邀请券已达发放上限
+id	reward_to	status	coupon_grant_id	fail_reason
+12	1	1	19	NULL
+13	2	1	20	NULL
+14	1	2	NULL	数据冲突: 邀请券已达发放上限

@@ -1,0 +1,38 @@
+基线：market_coupon=4 / market_coupon_grant=8 / m09_invite_campaign=0 / m09_invite_code=0 / m09_invite_record=0 / m09_invite_reward_log=0
+--- POST /market/coupon (test-batch2-t4-inviter)  HTTP=200
+{"code":200,"message":"创建成功","data":{"id":24,"storeId":1,"tenantId":1,"name":"test-batch2-t4-inviter","type":1,"ruleType":1,"ruleValue":10,"minAmount":0,"maxDiscount":null,"totalCount":100,"perLimit":1,"startTime":"2020-01-01T00:00:00","endTime":"2027-12-31T23:59:59","status":1,"remark":"test-batch2-*","createdAt":"2026-11-10T23:17:45.460333673","updatedAt":null},"traceId":"8b43db082e544049815848a8c5525ab9","timestamp":"2026-11-10 23:17:45"}
+--- POST /market/coupon (test-batch2-t4-invitee)  HTTP=200
+{"code":200,"message":"创建成功","data":{"id":25,"storeId":1,"tenantId":1,"name":"test-batch2-t4-invitee","type":1,"ruleType":1,"ruleValue":10,"minAmount":0,"maxDiscount":null,"totalCount":100,"perLimit":0,"startTime":"2020-01-01T00:00:00","endTime":"2027-12-31T23:59:59","status":1,"remark":"test-batch2-*","createdAt":"2026-11-10T23:17:46.412036966","updatedAt":null},"traceId":"c2dceab0a4f9442dbaa53fe24fb8064f","timestamp":"2026-11-10 23:17:46"}
+inviter couponId=24 (per_limit=1)  invitee couponId=25 (per_limit=0)
+--- POST /m09/invite/campaign (test-batch2-t4)  HTTP=200
+{"code":200,"message":"创建成功","data":{"id":6,"tenantId":1,"campaignCode":"test-batch2-t4","campaignName":"F151 batch2 test-batch2-t4","campaignType":"INVITE_REWARD","inviterRewardType":1,"inviterRewardValue":10,"inviterRewardMeta":"{\"couponId\":24}","inviteeRewardType":1,"inviteeRewardValue":10,"inviteeRewardMeta":"{\"couponId\":25}","inviteeMinConsume":0,"inviteNeedRegister":true,"inviterQuotaPerDay":5,"inviterQuotaTotal":50,"campaignQuotaTotal":0,"shareTitle":null,"shareDesc":null,"shareImageUrl":null,"shareLandingUrl":null,"startTime":"2020-01-01T00:00:00","endTime":"2027-12-31T23:59:59","status":1,"operatorId":1,"operatorName":"admin","remark":"test-batch2-*","createdAt":"2026-11-10T23:17:48.839856638","updatedAt":null,"deleted":null},"traceId":"10d246496fb34d2eb10822e86709e5e7","timestamp":"2026-11-10 23:17:48"}
+campaignId=6
+--- GET /invite/my-code?campaignId=6&memberId=1  HTTP=200
+{"code":200,"message":"操作成功","data":{"id":6,"tenantId":1,"campaignId":6,"memberId":1,"memberName":"李雅琳","memberPhone":"138****8001","inviteCode":"M5CDH33P","shortLink":null,"shareCount":0,"scanCount":0,"registerCount":0,"successCount":0,"createdAt":"2026-11-10T23:17:49.920088345","updatedAt":null,"deleted":null},"traceId":"4d4ee6b06b3846efa69bab2145f916f7","timestamp":"2026-11-10 23:17:50"}
+inviteCode=M5CDH33P
+--- T4-R1 1) POST /invite/track  HTTP=200
+{"code":200,"message":"操作成功","data":{"id":7,"tenantId":1,"campaignId":6,"campaignName":"F151 batch2 test-batch2-t4","inviteCode":"M5CDH33P","inviterMemberId":1,"inviterName":"李雅琳","inviteeMemberId":null,"inviteePhone":"138****8002","inviteeName":null,"channel":"LINK","status":1,"clickedAt":"2026-11-10T23:17:51.142965493","registerAt":null,"firstConsumeAt":null,"firstOrderId":null,"inviterRewardedAt":null,"inviteeRewardedAt":null,"inviterRewardLogId":null,"inviteeRewardLogId":null,"ip":"172.25.0.1","ua":"Mozilla/5.0 (Windows NT; Windows NT 10.0; zh-CN) WindowsPowerShell/5.1.26100.9711","deviceId":null,"failReason":null,"remark":null,"createdAt":"2026-11-10T23:17:51.14556728","updatedAt":null,"deleted":null},"traceId":"ca6c280706cb47778cd42249a73b3b00","timestamp":"2026-11-10 23:17:51"}
+--- T4-R1 2) POST /invite/bind  HTTP=200
+{"code":200,"message":"操作成功","data":1,"traceId":"8ee7a132f7514398952453c05fb1234b","timestamp":"2026-11-10 23:17:52"}
+--- T4-R1 3) POST /invite/redeem  HTTP=200
+{"code":200,"message":"操作成功","data":1,"traceId":"1724b6ee65194504a085326366d3362b","timestamp":"2026-11-10 23:17:53"}
+round1 redeem http=200 body={"code":200,"message":"操作成功","data":1,"traceId":"1724b6ee65194504a085326366d3362b","timestamp":"2026-11-10 23:17:53"}
+--- T4-R2 1) POST /invite/track  HTTP=200
+{"code":200,"message":"操作成功","data":{"id":8,"tenantId":1,"campaignId":6,"campaignName":"F151 batch2 test-batch2-t4","inviteCode":"M5CDH33P","inviterMemberId":1,"inviterName":"李雅琳","inviteeMemberId":null,"inviteePhone":"138****8003","inviteeName":null,"channel":"LINK","status":1,"clickedAt":"2026-11-10T23:17:55.217484637","registerAt":null,"firstConsumeAt":null,"firstOrderId":null,"inviterRewardedAt":null,"inviteeRewardedAt":null,"inviterRewardLogId":null,"inviteeRewardLogId":null,"ip":"172.25.0.1","ua":"Mozilla/5.0 (Windows NT; Windows NT 10.0; zh-CN) WindowsPowerShell/5.1.26100.9711","deviceId":null,"failReason":null,"remark":null,"createdAt":"2026-11-10T23:17:55.21994982","updatedAt":null,"deleted":null},"traceId":"e85fe9a8bbcd43c39253e324821bb2a6","timestamp":"2026-11-10 23:17:55"}
+--- T4-R2 2) POST /invite/bind  HTTP=200
+{"code":200,"message":"操作成功","data":1,"traceId":"6bc9ab6a8f0442398966f30f45e0ca45","timestamp":"2026-11-10 23:17:56"}
+--- T4-R2 3) POST /invite/redeem  HTTP=200
+{"code":200,"message":"操作成功","data":0,"traceId":"af73612a7be446b9b108dd4a5c58dd18","timestamp":"2026-11-10 23:17:57"}
+round2 redeem http=200 body={"code":200,"message":"操作成功","data":0,"traceId":"af73612a7be446b9b108dd4a5c58dd18","timestamp":"2026-11-10 23:17:57"}
+id	coupon_id	member_id	status	source
+19	24	1	1	6
+20	25	2	1	6
+inviter_grant_cnt
+1
+id	status	inviter_member_id	invitee_member_id	first_order_id	fail_reason
+7	4	1	2	99999901	NULL
+8	5	1	3	99999902	奖励发放失败：数据冲突: 邀请券已达发放上限
+id	reward_to	status	coupon_grant_id	fail_reason
+12	1	1	19	NULL
+13	2	1	20	NULL
+14	1	2	NULL	数据冲突: 邀请券已达发放上限

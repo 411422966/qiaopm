@@ -1,0 +1,13 @@
+id	name	total_count	per_limit
+20	test-batch2-t3-inviter	NULL	1
+21	test-batch2-t3-invitee	NULL	1
+id	coupon_id	member_id	status	source
+15	20	1	1	6
+16	21	2	1	6
+id	status	fail_reason
+4	4	NULL
+id	reward_to	status	coupon_grant_id	fail_reason
+7	1	1	15	NULL
+8	2	1	16	NULL
+grant_cnt
+2
