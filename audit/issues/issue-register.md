@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-09（补登 batch2-B 执行结果）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-10（补登 I148 / I149 — F151 批 2 发放链路实测）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -70,6 +70,9 @@
 | I141 | I141 — biz_service.category_id 全表 NULL，AI 推荐会员偏好类别链路永远为空 | Open | [I141-biz-service-category-null.md](I141-biz-service-category-null.md) |
 | I142 | I142 — LtvTrainingService 引用 4 张不存在的表，LTV 训练 ETL 全链路必然失败 | Open | [I142-ltv-training-missing-tables.md](I142-ltv-training-missing-tables.md) |
 | I143 | I143 — AI 推荐缓存反序列化为桩代码，命中缓存返回空数组 | Fixed | [I143-ai-recommend-cache-parse-stub.md](I143-ai-recommend-cache-parse-stub.md) |
+| I145 | I145 — market_coupon 缺少 issued_count 计数列，atomicGrant 无法在 UPDATE 内原子自增 | Open | [I145-market-coupon-issued-count.md](I145-market-coupon-issued-count.md) |
+| I148 | I148 — `atomicGrant` 发放闸门稳定性与口径缺陷：matched-rows 隐式依赖驱动默认值（生产 URL 未审计）/ 配额计数未带 tenant_id 跨租户互相扣配额 / 闸门与写入分离并发可超发 | Open | [I148-atomic-grant-stability-and-tenant-scope.md](I148-atomic-grant-stability-and-tenant-scope.md) |
+| I149 | I149 — M09 邀请奖励发放链路业务缺陷：未达门槛后 status=3 但补发只取 status=2 / 会员不存在静默 return 致漏发无痕迹 / 脱敏手机号参与唯一键致撞键 | Open | [I149-invite-reward-chain-biz-defects.md](I149-invite-reward-chain-biz-defects.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
