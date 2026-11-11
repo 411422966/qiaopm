@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-10（补登 I148 / I149 — F151 批 2 发放链路实测）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-11（补登 I150~I155）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -73,6 +73,12 @@
 | I145 | I145 — market_coupon 缺少 issued_count 计数列，atomicGrant 无法在 UPDATE 内原子自增 | Open | [I145-market-coupon-issued-count.md](I145-market-coupon-issued-count.md) |
 | I148 | I148 — `atomicGrant` 发放闸门稳定性与口径缺陷：matched-rows 隐式依赖驱动默认值（生产 URL 未审计）/ 配额计数未带 tenant_id 跨租户互相扣配额 / 闸门与写入分离并发可超发 | Open | [I148-atomic-grant-stability-and-tenant-scope.md](I148-atomic-grant-stability-and-tenant-scope.md) |
 | I149 | I149 — M09 邀请奖励发放链路业务缺陷：未达门槛后 status=3 但补发只取 status=2 / 会员不存在静默 return 致漏发无痕迹 / 脱敏手机号参与唯一键致撞键 | Open | [I149-invite-reward-chain-biz-defects.md](I149-invite-reward-chain-biz-defects.md) |
+| I150 | I150 — `ltv_training_feature.total_package_balance` 口径错误：存的是「剩余次数」，字段语义是「余额（金额）」 | Open | [I150-ltv-total-package-balance-should-be-amount.md](I150-ltv-total-package-balance-should-be-amount.md) |
+| I151 | I151 — LTV GMV 未扣减部分退款（`pos_order.refunded_amount` 被忽略） | Open | [I151-ltv-gmv-no-partial-refund-deduction.md](I151-ltv-gmv-no-partial-refund-deduction.md) |
+| I152 | I152 — `crm_order` / `crm_order_item` 引用外溢：13 个文件 21 处 SQL 指向不存在的表 | Open | [I152-crm-order-reference-outflow.md](I152-crm-order-reference-outflow.md) |
+| I153 | I153 — `biz_service.category_id` 全表为 NULL：服务分类未回填，5 个分类无法关联 | Open | [I153-biz-service-category-null.md](I153-biz-service-category-null.md) |
+| I154 | I154 — LTV/Churn 训练链路 6 个代码缺陷：治理看板不可见 / 下线端点缺失 / Churn 标签反向 / 重要性错位 / 均值计算错 / 运行日志不关联 | PARTIAL | [I154-ltv-training-chain-defects.md](I154-ltv-training-chain-defects.md) |
+| I155 | I155 — 预测端完全不消费训练出来的模型：部署成功的模型是"空挂"，两套模型注册表并存 | Open | [I155-prediction-side-ignores-trained-model.md](I155-prediction-side-ignores-trained-model.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
