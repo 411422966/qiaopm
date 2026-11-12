@@ -1,0 +1,19 @@
+﻿=== F156 复现后清理（恢复基线）===
+time: 2026-11-12 23:47:48  commit HEAD: 43bbcce
+动作: DELETE FROM crm_churn_prediction WHERE id > 3022  (仅删除本次 computeChurn 复现产生的 489 行；id<=3022 为 43bbcce 后 batchPredictChurn 写入的基线 489 行)
+删除前存在性检查: SELECT COUNT(*) FROM crm_churn_prediction WHERE id > 3022 => 489
+
+--- 清理后 DB ---
+rows_now	dm
+489	489
+risk_level	c
+HIGH	393
+MED	96
+dup_groups
+0
+ltv_rows
+3522
+
+--- 清理后 dashboards（应回到基线）---
+GET /ltv-churn/dashboard => {"totalLtv365d":676125348.87,"avgLtv365d":191971.99,"membersWithLtv":489,"highRiskCount":393,"medRiskCount":96,"lowRiskCount":0,"highMedRatio":100.0,"ltvModelVersion":"v1","churnModelCode":"RULE-CHURN-V1","snapshotsAt":"2026-11-12"}
+GET /intel/churn/overview  => {"highCount":393,"mediumCount":0,"lowCount":0,"safeCount":0,"avgChurnScore":0.8767,"pendingAlerts":0,"alert_status_1":0,"alert_status_2":0,"alert_status_3":0,"alert_status_4":0,"alert_status_5":0}

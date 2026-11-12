@@ -1,0 +1,32 @@
+﻿=== F156 DB state detail (双写重复逐条证据) ===
+time: 2026-11-12 23:45:41  commit HEAD: 43bbcce
+
+--- 1) 两批写入的 create_time 分组 ---
+create_time	c	min_id	max_id
+2026-11-12 23:14:47	489	2534	3022
+2026-11-12 23:25:13	469	3534	4002
+2026-11-12 23:25:14	20	4003	4022
+
+--- 2) 同 (member_id, snapshot_date) 重复组数 ---
+dup_groups
+489
+
+--- 3) 同会员两条记录的量纲差异 (member_id=1) ---
+id	member_id	total_orders	last_purchase_days	churn_score	risk_level	model_code	model_version	snapshot_date	create_time
+2534	1	10	80	0.4444	MED	RULE-CHURN-V1	v1	2026-11-12	2026-11-12 23:14:47
+4022	1	10	80	0.4400	MED	RULE-CHURN-V1	v1	2026-11-12	2026-11-12 23:25:14
+
+--- 4) 风险等级分布 ---
+risk_level	c
+HIGH	786
+MED	192
+
+--- 5) 写入来源代码特征 ---
+batchPredictChurn (DataGovernanceService.java:616) : model_code=RULE-CHURN-V1, churn_score=decimal(5,4) 4位, risk_level HIGH/MED/LOW, snapshot_date=CURDATE()
+computeChurn      (LtvChurnController.java:160)   : model_code=RULE-CHURN-V1, churn_score=setScale(2) 2位, risk_level HIGH/MED/LOW, snapshot_date=LocalDate.now()
+第三写入者 ChurnPredictionService.predictForMember (ChurnPredictionService.java:162) : risk_level HIGH/MEDIUM/LOW/SAFE, 无先删后插
+  当前因 ai_churn_model 无 is_active=1 AND enabled=1 记录而 404 短路（GET /intel/churn/predict/1 => code 404 未配置激活的流失模型）
+
+--- 6) churn_score 量纲 ---
+batch  : 0.4444 (scale 4)
+compute: 0.4400 (scale 2, 同一会员同一 snapshot_date)

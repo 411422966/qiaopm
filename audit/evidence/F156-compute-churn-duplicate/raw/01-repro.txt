@@ -1,0 +1,36 @@
+﻿=== F156 repro: computeChurn vs batchPredictChurn double-write ===
+time: 2026-11-12 23:25:12  host: local docker (meiyetec-mysql / meiyetec-api)
+commit HEAD: 43bbcce (fix(ltv): 修复 batchPredictLtv/Churn 表名+量纲+幂等（I152 批 2-3）)
+
+--- BEFORE: crm_churn_prediction ---
+total	dm	ds
+489	489	1
+risk_level	c
+HIGH	393
+MED	96
+create_time	c
+2026-11-12 23:14:47	489
+
+--- CALL POST /ltv-churn/churn/compute (admin) ---
+{
+    "code":  200,
+    "message":  "流失预测已刷新",
+    "data":  {
+                 "members":  489,
+                 "predictions":  489,
+                 "modelCode":  "RULE-CHURN-V1",
+                 "computedAt":  "2026-11-12"
+             },
+    "traceId":  "f17e717e630c412ca90a7c7e7cf3cbd3",
+    "timestamp":  "2026-11-12 23:25:13"
+}
+
+--- AFTER: crm_churn_prediction ---
+total	dm
+978	489
+dup_member_day_groups
+489
+
+--- dashboards ---
+"GET /ltv-churn/dashboard =\u003e @{totalLtv365d=676125348.87; avgLtv365d=191971.99; membersWithLtv=489; highRiskCount=786; medRiskCount=192; lowRiskCount=0; highMedRatio=100.0; ltvModelVersion=v1; churnModelCode=RULE-CHURN-V1; snapshotsAt=2026-11-12}"
+"GET /intel/churn/overview =\u003e @{highCount=786; mediumCount=0; lowCount=0; safeCount=0; avgChurnScore=0.8766; pendingAlerts=0; alert_status_1=0; alert_status_2=0; alert_status_3=0; alert_status_4=0; alert_status_5=0}"
