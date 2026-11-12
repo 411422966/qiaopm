@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -34,6 +36,10 @@ public class DataGovernanceService {
 
     @Autowired
     private JdbcTemplate jdbc;
+
+    /** 事务管理器（可选，缺失时退化为非事务的先删后插） */
+    @Autowired(required = false)
+    private PlatformTransactionManager transactionManager;
 
     // ====================================================================
     // 1. 数据质量诊断
@@ -504,50 +510,115 @@ public class DataGovernanceService {
         return Result.success(result);
     }
 
+    /**
+     * 批量 LTV 预测（规则版 RULE）
+     *
+     * 修复点（I152 批 2-3）：
+     *  - 数据源 crm_order → pos_order，status 3 → 2，金额列 pay_amount → final_amount
+     *  - 消除 N+1：单条 INSERT ... SELECT 取代逐会员循环
+     *  - 租户隔离：crm_member / pos_order 均按 tenant_id 过滤
+     *  - 幂等：先删除当日快照（tenant_id + snapshot_date = CURDATE()）再插入
+     *  - model_type = 'RULE'，model_version 取已部署注册表版本
+     *  - 补齐字段：historical_ltv / total_orders / avg_order_value /
+     *    purchase_frequency / last_purchase_days / repurchase_prob_30d
+     */
     private int batchPredictLtv(Long tenantId, int limit) {
-        // 取已部署模型的公式参数
+        // 取已部署模型的版本号（模型本体不参与计算，本轮为规则版）
+        String modelVersion = "v1";
         List<Map<String, Object>> models;
         try {
             models = jdbc.queryForList(
-                    "SELECT id, model_formula, val_mape FROM ltv_model_registry " +
+                    "SELECT id, version, model_formula, val_mape FROM ltv_model_registry " +
                     "WHERE tenant_id = ? AND is_active = 1 LIMIT 1",
                     tenantId);
         } catch (Exception e) {
             throw new RuntimeException("无已部署 LTV 模型");
         }
         if (models.isEmpty()) throw new RuntimeException("无已部署 LTV 模型");
+        Object version = models.get(0).get("version");
+        if (version != null && !version.toString().isBlank()) modelVersion = version.toString();
 
-        // 对所有会员进行预测（使用 LTV Service）
-        List<Long> memberIds;
-        try {
-            memberIds = jdbc.queryForList(
-                    "SELECT id FROM crm_member WHERE tenant_id = ? AND deleted = 0 LIMIT ?",
-                    Long.class, tenantId, limit);
-        } catch (Exception e) {
-            throw new RuntimeException("会员表查询失败: " + e.getMessage());
-        }
+        long start = System.currentTimeMillis();
+        String insertSql = """
+                INSERT INTO crm_ltv_snapshot (
+                    tenant_id, brand_id, member_id, snapshot_date, model_type, model_version,
+                    historical_ltv, predicted_ltv_30d, predicted_ltv_90d, predicted_ltv_365d,
+                    predicted_ltv_lifetime, repurchase_prob_30d, repurchase_prob_90d,
+                    repurchase_prob_180d, avg_order_value, purchase_frequency,
+                    last_purchase_days, total_orders, calc_duration_ms, operator_name
+                )
+                SELECT b.tenant_id, b.brand_id, b.member_id, CURDATE(), 'RULE', ?,
+                    b.historical_ltv, b.pred_ltv_30d, b.pred_ltv_90d, b.pred_ltv_365d,
+                    b.pred_ltv_lifetime, b.prob_30d, b.prob_90d, b.prob_180d,
+                    b.avg_order_value, b.purchase_frequency, b.last_purchase_days,
+                    b.total_orders, ?, 'batch'
+                FROM (
+                    SELECT m.tenant_id, m.brand_id, m.id AS member_id,
+                        COALESCE(o.historical_ltv, 0) AS historical_ltv,
+                        COALESCE(o.avg_order_value, 0) AS avg_order_value,
+                        COALESCE(o.total_orders, 0) AS total_orders,
+                        COALESCE(o.purchase_frequency, 0) AS purchase_frequency,
+                        COALESCE(o.last_purchase_days, 9999) AS last_purchase_days,
+                        ROUND(COALESCE(o.avg_order_value, 0) * COALESCE(o.purchase_frequency, 0) / 12, 2) AS pred_ltv_30d,
+                        ROUND(COALESCE(o.avg_order_value, 0) * COALESCE(o.purchase_frequency, 0) / 4, 2) AS pred_ltv_90d,
+                        ROUND(COALESCE(o.avg_order_value, 0) * COALESCE(o.purchase_frequency, 0), 2) AS pred_ltv_365d,
+                        ROUND(COALESCE(o.avg_order_value, 0) * COALESCE(o.purchase_frequency, 0) * 3, 2) AS pred_ltv_lifetime,
+                        CASE WHEN COALESCE(o.total_orders, 0) = 0 THEN 0
+                             WHEN o.purchase_frequency >= 12 THEN 0.85
+                             WHEN o.purchase_frequency >= 4 THEN 0.70
+                             ELSE 0.45 END AS prob_30d,
+                        CASE WHEN COALESCE(o.total_orders, 0) = 0 THEN 0
+                             WHEN o.purchase_frequency >= 12 THEN 0.95
+                             WHEN o.purchase_frequency >= 4 THEN 0.80
+                             ELSE 0.55 END AS prob_90d,
+                        CASE WHEN COALESCE(o.total_orders, 0) = 0 THEN 0
+                             WHEN o.purchase_frequency >= 12 THEN 0.99
+                             WHEN o.purchase_frequency >= 4 THEN 0.90
+                             ELSE 0.70 END AS prob_180d
+                    FROM crm_member m
+                    LEFT JOIN (
+                        SELECT p.member_id,
+                            COUNT(*) AS total_orders,
+                            COALESCE(SUM(p.final_amount), 0) AS historical_ltv,
+                            COALESCE(AVG(p.final_amount), 0) AS avg_order_value,
+                            COALESCE(DATEDIFF(CURDATE(), MAX(p.pay_time)), 9999) AS last_purchase_days,
+                            ROUND(COUNT(*) * 365 /
+                                GREATEST(GREATEST(DATEDIFF(CURDATE(), MIN(p.pay_time)), 0), 1), 2) AS purchase_frequency
+                        FROM pos_order p
+                        WHERE p.tenant_id = ? AND p.status = 2 AND p.deleted = 0
+                            AND p.member_id IS NOT NULL
+                        GROUP BY p.member_id
+                    ) o ON o.member_id = m.id
+                    WHERE m.tenant_id = ? AND m.deleted = 0
+                ) b
+                LIMIT ?
+                """;
+        int calcDuration = (int) (System.currentTimeMillis() - start);
+        Object[] args = new Object[]{modelVersion, calcDuration, tenantId, tenantId, limit};
 
-        int count = 0;
-        for (Long mid : memberIds) {
-            try {
-                jdbc.update(
-                        "INSERT IGNORE INTO crm_ltv_snapshot (tenant_id, member_id, snapshot_date, model_type, model_version, predicted_ltv_365d, calc_duration_ms, operator_name) " +
-                        "SELECT ?, ?, CURDATE(), 'AB', 'v1', " +
-                        "COALESCE((SELECT AVG(pay_amount) FROM crm_order WHERE member_id = ? AND status = 3 AND deleted = 0) * 12, 0), " +
-                        "0, 'batch'",
-                        tenantId, mid, mid);
-                count++;
-            } catch (Exception ignored) {}
-        }
-        return count;
+        return executeIdempotent(
+                "DELETE FROM crm_ltv_snapshot WHERE tenant_id = ? AND snapshot_date = CURDATE()",
+                new Object[]{tenantId},
+                insertSql, args);
     }
 
+    /**
+     * 批量 Churn 预测（规则版 RULE-CHURN-V1）
+     *
+     * 修复点（I152 批 2-3）：
+     *  - 目标表由 crm_member.churn_risk_score 改为 crm_churn_prediction（不新增会员表列）
+     *  - 数据源 crm_order → pos_order，status 3 → 2，金额列 pay_amount → final_amount
+     *  - 量纲统一 0~1，风险等级 HIGH / MED / LOW（阈值 0.66 / 0.33）
+     *  - LEFT JOIN 覆盖无消费会员（recency 记 9999 → 落入 HIGH）
+     *  - 消除多表 UPDATE + LIMIT，改为 INSERT ... SELECT
+     *  - 幂等：先删除当日预测再插入
+     */
     private int batchPredictChurn(Long tenantId, int limit) {
-        // 取已部署 Churn 模型
+        // 取已部署 Churn 模型（模型本体不参与计算，本轮为规则版）
         List<Map<String, Object>> models;
         try {
             models = jdbc.queryForList(
-                    "SELECT id, val_auc, val_f1 FROM churn_model_registry " +
+                    "SELECT id, version, val_auc, val_f1 FROM churn_model_registry " +
                     "WHERE tenant_id = ? AND is_active = 1 LIMIT 1",
                     tenantId);
         } catch (Exception e) {
@@ -555,21 +626,95 @@ public class DataGovernanceService {
         }
         if (models.isEmpty()) throw new RuntimeException("无已部署 Churn 模型");
 
-        // 简化：按 recency 计算流失概率（recency 越大流失概率越高）
-        int updated = jdbc.update("""
-            UPDATE crm_member m
-            JOIN (
-                SELECT o.member_id,
-                       COALESCE(DATEDIFF(NOW(), MAX(o.pay_time)), 9999) AS recency
-                FROM crm_order o
-                WHERE o.deleted = 0 AND o.status = 3
-                GROUP BY o.member_id
-            ) r ON r.member_id = m.id
-            SET m.churn_risk_score = LEAST(100, ROUND(r.recency / 1.8))
-            WHERE m.tenant_id = ?
-            LIMIT ?
-            """, tenantId, limit);
+        String insertSql = """
+                INSERT INTO crm_churn_prediction (
+                    tenant_id, brand_id, member_id, total_orders, historical_ltv,
+                    avg_order_value, monthly_freq, last_purchase_days, tenure_days,
+                    complaint_count, review_avg_rating, churn_score, risk_level,
+                    predicted_lost_date, model_code, model_version, snapshot_date
+                )
+                SELECT b.tenant_id, b.brand_id, b.member_id, b.total_orders, b.historical_ltv,
+                    b.avg_order_value, b.monthly_freq, b.last_purchase_days, b.tenure_days,
+                    b.complaint_count, b.review_avg_rating, b.churn_score, b.risk_level,
+                    DATE_ADD(CURDATE(), INTERVAL ROUND(60 + b.churn_score * 180) DAY),
+                    'RULE-CHURN-V1', 'v1', CURDATE()
+                FROM (
+                    SELECT m.tenant_id, m.brand_id, m.id AS member_id,
+                        COALESCE(o.total_orders, 0) AS total_orders,
+                        COALESCE(o.historical_ltv, 0) AS historical_ltv,
+                        COALESCE(o.avg_order_value, 0) AS avg_order_value,
+                        ROUND(COALESCE(o.total_orders, 0) /
+                            GREATEST(GREATEST(COALESCE(o.tenure_days, 0), 0), 30) / 30, 2) AS monthly_freq,
+                        COALESCE(o.last_purchase_days, 9999) AS last_purchase_days,
+                        COALESCE(o.tenure_days, 0) AS tenure_days,
+                        COALESCE(c.complaint_count, 0) AS complaint_count,
+                        r.review_avg_rating,
+                        LEAST(1.0, GREATEST(0.0,
+                            COALESCE(o.last_purchase_days, 9999) / 180.0
+                            + CASE WHEN COALESCE(o.total_orders, 0) <= 2 THEN 0.10 ELSE 0 END
+                        )) AS churn_score,
+                        CASE
+                            WHEN LEAST(1.0, GREATEST(0.0,
+                                COALESCE(o.last_purchase_days, 9999) / 180.0
+                                + CASE WHEN COALESCE(o.total_orders, 0) <= 2 THEN 0.10 ELSE 0 END
+                            )) >= 0.66 THEN 'HIGH'
+                            WHEN LEAST(1.0, GREATEST(0.0,
+                                COALESCE(o.last_purchase_days, 9999) / 180.0
+                                + CASE WHEN COALESCE(o.total_orders, 0) <= 2 THEN 0.10 ELSE 0 END
+                            )) >= 0.33 THEN 'MED'
+                            ELSE 'LOW'
+                        END AS risk_level
+                    FROM crm_member m
+                    LEFT JOIN (
+                        SELECT p.member_id,
+                            COUNT(*) AS total_orders,
+                            COALESCE(SUM(p.final_amount), 0) AS historical_ltv,
+                            COALESCE(AVG(p.final_amount), 0) AS avg_order_value,
+                            COALESCE(DATEDIFF(CURDATE(), MAX(p.pay_time)), 9999) AS last_purchase_days,
+                            GREATEST(GREATEST(DATEDIFF(CURDATE(), MIN(p.pay_time)), 0), 0) AS tenure_days
+                        FROM pos_order p
+                        WHERE p.tenant_id = ? AND p.status = 2 AND p.deleted = 0
+                            AND p.member_id IS NOT NULL
+                        GROUP BY p.member_id
+                    ) o ON o.member_id = m.id
+                    LEFT JOIN (
+                        SELECT t.member_id, COUNT(*) AS complaint_count
+                        FROM crm_complaint_ticket t
+                        WHERE t.tenant_id = ? AND t.deleted = 0 AND t.member_id IS NOT NULL
+                        GROUP BY t.member_id
+                    ) c ON c.member_id = m.id
+                    LEFT JOIN (
+                        SELECT v.member_id, ROUND(AVG(v.overall_rating), 2) AS review_avg_rating
+                        FROM crm_review v
+                        WHERE v.tenant_id = ? AND v.deleted = 0 AND v.member_id IS NOT NULL
+                        GROUP BY v.member_id
+                    ) r ON r.member_id = m.id
+                    WHERE m.tenant_id = ? AND m.deleted = 0
+                ) b
+                LIMIT ?
+                """;
+        Object[] args = new Object[]{tenantId, tenantId, tenantId, tenantId, limit};
 
-        return updated;
+        return executeIdempotent(
+                "DELETE FROM crm_churn_prediction WHERE tenant_id = ? AND snapshot_date = CURDATE()",
+                new Object[]{tenantId},
+                insertSql, args);
+    }
+
+    /**
+     * 先删后插（幂等）。有事务管理器时保证删除与插入原子完成。
+     */
+    private int executeIdempotent(String deleteSql, Object[] deleteArgs,
+                                 String insertSql, Object[] insertArgs) {
+        if (transactionManager == null) {
+            jdbc.update(deleteSql, deleteArgs);
+            return jdbc.update(insertSql, insertArgs);
+        }
+        TransactionTemplate template = new TransactionTemplate(transactionManager);
+        Integer affected = template.execute(status -> {
+            jdbc.update(deleteSql, deleteArgs);
+            return jdbc.update(insertSql, insertArgs);
+        });
+        return affected == null ? 0 : affected;
     }
 }
