@@ -1,0 +1,13 @@
+﻿# 登录取证（admin / 租户 1）
+
+# 时间：2026-11-13 16:54:04 (UTC+8)
+# POST http://localhost:8080/auth/login
+# body: {"username":"admin","password":"123456"}
+# code=200  message=<乱码，已确认为 code=200>  userId=1  username=admin  roles=ADMIN
+# token: <已脱敏，不落盘>
+# traceId=3fd596715c6648feb5bd098cfe292795
+
+# 说明：admin 密码哈希在 sys_user 表中为 BCrypt 明文口令 123456（admin / clerk01 / manager01 / boss01 / operator01 同一哈希）。
+
+# 权限菜单数量（前端 /dev 路由可达性参考）：16
+

@@ -1,0 +1,24 @@
+﻿=== GET /datahub/dashboard -> HTTP 200
+{"code":200,"message":"鎿嶄綔鎴愬姛","data":[],"traceId":"f053342b80934292ae4d861a7c365b01","timestamp":"2026-11-13 16:54:56"}
+
+=== GET /intel/pricelist/list -> HTTP 200
+{"code":200,"message":"鎿嶄綔鎴愬姛","data":[],"traceId":"b73b23a48f6e4de3bf84602c4d8fc686","timestamp":"2026-11-13 16:54:56"}
+
+=== GET /p1-suite/sop/list -> HTTP 200
+{"code":200,"message":"鎿嶄綔鎴愬姛","data":[{"id":1,"tenantId":1,"sopCode":"RED_SWELL","sopName":"绾㈣偪鍙嶅簲","category":"INJECTION","severity":"LOW","triggerSymptom":null,"triggerTiming":"24灏忔椂鍐?,"stepsJson":"鍐版暦 15 鍒嗛挓 + 娑傛姽鎶楃値鑽啅 + 瑙傚療 24h","medications":null,"equipment":null,"escalationRule":null,"responseDeadlineMin":null,"responsibleRole":"鍓嶅彴","version":null,"status":"ACTIVE","createdAt":"2026-08-17T00:49:17","updatedAt":null},{"id":2,"tenantId":1,"sopCode":"BRUISE","sopName":"鐦€闈?,"category":"INJECTION","severity":"LOW","triggerSymptom":null,"triggerTiming":"3-7 澶?,"stepsJson":"鐑暦 + 娑傛姽鍠滅枟濡?+ 閬垮厤鍓х儓杩愬姩 7 澶?,"medications":null,"equipment":null,"escalationRule":null,"responseDeadlineMin":null,"responsibleRole":"鍓嶅彴","version":null,"status":"ACTIVE","createdAt":"2026-08-17T00:49:17","updatedAt":null},{"id":3,"tenantId":1,"sopCode":"ALLERGY","sopName":"杩囨晱鍙嶅簲","category":"GENERAL","severity":"HIGH","triggerSymptom":null,"triggerTiming":"绔嬪嵆","stepsJson":"绔嬪嵆鍋滅敤 + 鍙ｆ湇鎶楃粍鑳?+ 灏卞尰 + 鎶ラ櫌闀?,"medications":null,"equipment":null,"escalationRule":null,"responseDeadlineMin":null,"responsibleRole":"鎵т笟鍖诲笀","version":null,"status":"ACTIVE","createdAt":"2026-08-17T00:49:17","updatedAt":null},{"id":4,"tenantId":1,"sopCode":"INFECTION","sopName":"鎰熸煋","category":"GENERAL","severity":"HIGH","triggerSymptom":null,"triggerTiming":"3-7 澶?,"stepsJson":"娓呭垱 + 鎶楃敓绱?+ 24h 璺熻繘 + 涓婃姤涓荤閮ㄩ棬","medications":null,"equipment":null,"escalationRule":null,"responseDeadlineMin":null,"responsibleRole":"鎵т笟鍖诲笀","version":null,"status":"ACTIVE","createdAt":"2026-08-17T00:49:17","updatedAt":null},{"id":5,"tenantId":1,"sopCode":"VASCULAR","sopName":"琛€绠℃爴濉烇紙鐜诲翱閰革級","category":"FILLER","severity":"CRITICAL","triggerSymptom":null,"triggerTiming":"绔嬪嵆","stepsJson":"绔嬪嵆鎷ㄦ墦 120 + 鐜诲翱閰搁叾娉ㄥ皠 + 杞叆鎬ヨ瘖","medications":null,"equipment":null,"escalationRule":null,"responseDeadlineMin":null,"responsibleRole":"鎵т笟鍖诲笀","version":null,"status":"ACTIVE","createdAt":"2026-08-17T00:49:17","updatedAt":null}],"traceId":"72ef72e78f994e95b891152f8bc23522","timestamp":"2026-11-13 16:54:56"}
+
+=== GET /p2-suite/pos/dashboard -> HTTP 200
+{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"totalTx":0,"totalRevenue":0.0,"totalTips":0.0,"byVendor":[],"onlineDevices":0},"traceId":"6dd082878f654f3c9fb89b03377b33e7","timestamp":"2026-11-13 16:54:56"}
+
+=== GET /p3-suite/ecommerce/dashboard -> HTTP 200
+{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"productCount":3,"orderCount":0,"totalRevenue":0.0,"byPlatform":[]},"traceId":"ec733b4b4889486581eb1ecf024d9651","timestamp":"2026-11-13 16:54:56"}
+
+=== GET /member-day/upcoming -> HTTP 200
+{"code":200,"message":"鎿嶄綔鎴愬姛","data":[],"traceId":"ebacd72ddf7b4812995258e1ab82ac61","timestamp":"2026-11-13 16:54:56"}
+
+=== GET /ltv-churn/dashboard -> HTTP 200
+{"code":200,"message":"鎿嶄綔鎴愬姛","data":{"totalLtv365d":676125348.87,"avgLtv365d":191971.99,"membersWithLtv":489,"highRiskCount":393,"medRiskCount":96,"lowRiskCount":0,"highMedRatio":100.0,"ltvModelVersion":"v1","churnModelCode":"RULE-CHURN-V1","snapshotsAt":"2026-11-13"},"traceId":"75273d196a8640c490d29704d175bfc3","timestamp":"2026-11-13 16:54:56"}
+
+=== GET /noshow/high-risk -> HTTP 200
+{"code":200,"message":"鎿嶄綔鎴愬姛","data":[],"traceId":"1dd397c2a2964743bea818ef1cb1e778","timestamp":"2026-11-13 16:54:57"}
+

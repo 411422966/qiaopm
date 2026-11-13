@@ -1,0 +1,7 @@
+﻿id	tenant_id	model_id	run_type	step	duration_ms	samples	metric	metric_value	message
+1	1	NULL	TRAIN	TRAIN	NULL	489	samples	NULL	算法=LR,churnThreshold=90,horizon=90
+2	1	4	TRAIN	TRAIN	125	489	val_auc	0.5000	训练完成
+churn_rows
+2
+ltv_rows
+10

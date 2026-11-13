@@ -1,0 +1,46 @@
+﻿---
+pid: 17328
+cwd: "D:\\QiaoPM"
+command: "cd d:\\QiaoPM; docker compose up -d api web 2>&1 | Select-Object -Last 20"
+title: "鐢ㄦ柊闀滃儚閲嶅缓瀹瑰櫒"
+status: succeeded
+started_at: 2026-11-13T08:10:04.425Z
+running_for_ms: 58660    
+---
+docker : time="2026-11-13T16:10:06+08:00" level=warning msg="Found orphan containers (meiyetec-alertmanager, meiyetec-h
+ttpbin, meiyetec-grafana, meiyetec-prometheus) for this project. If you removed or renamed this service in your compose
+ file, you can run this command with the --remove-orphans flag to clean it up."
+鎵€鍦ㄤ綅缃?C:\Users\qq411\AppData\Local\Temp\ps-script-61c79fff-3870-41bb-9683-792f2946a1e4.ps1:84 瀛楃: 15
++ cd d:\QiaoPM; docker compose up -d api web 2>&1 | Select-Object -Last ...
++               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (time="2026-11-1...o clean it up.":String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+time="2026-11-13T16:10:06+08:00" level=warning msg="volume \"meiyetec_mysql-data\" carries the compose label \"mysql-da
+ta\" but does not match the compose file (using \"qiaopm_mysql-data\"); it is left untouched 鈥?remove it manually if it
+ is no longer needed"
+time="2026-11-13T16:10:06+08:00" level=warning msg="volume \"meiyetec_redis-data\" carries the compose label \"redis-da
+ta\" but does not match the compose file (using \"qiaopm_redis-data\"); it is left untouched 鈥?remove it manually if it
+ is no longer needed"
+ Container meiyetec-mysql Running 
+ Container meiyetec-redis Running 
+ Container meiyetec-api Recreate 
+ Container meiyetec-api Recreated 
+ Container meiyetec-web Recreate 
+ Container meiyetec-web Recreated 
+ Container meiyetec-mysql Waiting 
+ Container meiyetec-redis Waiting 
+ Container meiyetec-redis Healthy 
+ Container meiyetec-mysql Healthy 
+ Container meiyetec-api Starting 
+ Container meiyetec-api Started 
+ Container meiyetec-api Waiting 
+ Container meiyetec-api Healthy 
+ Container meiyetec-web Starting 
+ Container meiyetec-web Started 
+
+---
+exit_code: 0
+elapsed_ms: 58660
+ended_at: 2026-11-13T08:11:03.085Z
+---

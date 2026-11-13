@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-13（补登 I156/I157，登记 I158）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-13（补登 I159/I160）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -82,6 +82,8 @@
 | I156 | I156 — computeChurn 与 batchPredictChurn 双写 crm_churn_prediction 无互斥 | Open | [I156-compute-churn-batch-predict-duplicate.md](I156-compute-churn-batch-predict-duplicate.md) |
 | I157 | I157 — LTV 年化系数分母下限只有 1 天，新客 LTV 虚高 | Open | [I157-ltv-annualization-new-member-inflation.md](I157-ltv-annualization-new-member-inflation.md) |
 | I158 | I158 — `repurchase_prob_30d` 分档只看频率不看样本量，置信度与证据强度反向 | Open | [I158-repurchase-prob-evidence-inversion.md](I158-repurchase-prob-evidence-inversion.md) |
+| I159 | I159 — `sysApi.request` 方法缺失：`/dev/*` 研发工具区 175 处调用全站静默失败（"No Data" 无提示） | Fixed | [I159-frontend-sysapi-request-missing.md](I159-frontend-sysapi-request-missing.md) |
+| I160 | I160 — Churn 训练运行日志链路缺失：`churn_training_run_log` 表 0 行且无 `/run/log` 端点 | Fixed | [I160-churn-training-run-log-missing.md](I160-churn-training-run-log-missing.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注

@@ -1,0 +1,12 @@
+﻿### 修复前 (HEAD=c27d370) frontend/meiyetec-web/src/api/sys.ts 中 'request:' 匹配行数: 0
+
+
+### 修复后 工作区 匹配行数: 1
+D:\QiaoPM\frontend\meiyetec-web\src\api\sys.ts:113:  request: (config: any) => request(config),
+
+### 修复前 ChurnTrainingService 是否存在 /run/log 映射:
+匹配行数: 0
+
+
+### 修复前 ChurnTrainingService 是否调用 logMapper.insert:
+匹配行数: 0
