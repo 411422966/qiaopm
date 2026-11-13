@@ -1,0 +1,39 @@
+﻿=== F158 DB 快照（dev.ltv-churn 菜单落地后）===
+captured: 2026-11-13 20:04:49 +08:00
+
+--- sys_permission: dev 树 + crm:tag ---
+id	permission_code	permission_name	permission_type	parent_id	path	icon	sort_order	status	deleted	roles
+1210	dev	研发工具	menu	0	/dev/gray-release	Tools	99	1	0	SUPER_ADMIN,MANAGER,BOSS,ADMIN
+1279	dev.ltv-training	LTV流失预测	menu	1210	/dev/ltv-training	DataAnalysis	2	1	0	SUPER_ADMIN,ADMIN
+1591	crm:tag	会员标签与 LTV	button	1206	NULL	NULL	112	1	0	MANAGER,BOSS,ADMIN
+1624	dev.ltv-churn	LTV/Churn 分析	menu	1210	/ltv-churn	DataLine	12	1	0	SUPER_ADMIN,MANAGER,BOSS,ADMIN
+
+--- sys_menu_permission: dev.ltv-churn 映射行 ---
+id	permission_id	route_path	component_path	redirect_path	icon	hidden	keep_alive	sort_order
+386	1624	/ltv-churn	NULL	NULL	DataLine	0	1	12
+
+--- 研发工具组子菜单排序（含 dev.ltv-churn @ 12）---
+permission_code	permission_name	route_path	icon	sort_order
+dev.gray-release	灰度发布控制台	/dev/gray-release	Switch	1
+dev.ltv-training	LTV流失预测	/dev/ltv-training	DataAnalysis	2
+dev.datahub	数据中台	/dev/datahub	Connection	3
+dev.care-memberday	配方护理会员日	/dev/care-memberday	Present	4
+dev.p1-suite	P1套件合集	/dev/p1-suite	Star	5
+dev.p2-suite	P2套件合集	/dev/p2-suite	Star	6
+dev.p3-suite	P3套件合集	/dev/p3-suite	Star	7
+dev.gap-suite	补齐套件	/dev/gap-suite	Star	8
+dev.forecast	客流预测与智能排班	/dev/forecast	TrendCharts	9
+dev.pricelist	电子价目表卡项套餐	/dev/pricelist	PriceTag	10
+dev.care-plan	护肤方案共享套餐	/dev/care-plan	Present	11
+dev.ltv-churn	LTV/Churn 分析	/ltv-churn	DataLine	12
+dev:intl-payment	国际支付	/intl-payment	CreditCard	101
+dev:intl-booking	国际预约	/intl-booking	Calendar	102
+dev:ai-scheduler	AI 智能排班	/ai-scheduler	TrendCharts	103
+dev:google-maps	Google Maps	/google-maps	MapLocation	105
+
+--- 角色绑定矩阵（dev / dev.ltv-training / dev.ltv-churn / crm:tag）---
+role_code	codes
+SUPER_ADMIN	dev,dev.ltv-churn,dev.ltv-training
+MANAGER	crm:tag,dev,dev.ltv-churn
+BOSS	crm:tag,dev,dev.ltv-churn
+ADMIN	crm:tag,dev,dev.ltv-churn,dev.ltv-training

@@ -1,0 +1,16 @@
+﻿=== admin ===
+  code=200
+  data = {"totalLtv365d":676125348.87,"avgLtv365d":191971.99,"membersWithLtv":489,"highRiskCount":393,"medRiskCount":96,"lowRiskCount":0,"highMedRatio":100.0,"ltvModelVersion":"v1","churnModelCode":"RULE-CHURN-V1","snapshotsAt":"2026-11-13"}
+
+=== boss01 ===
+  code=200
+  data = {"totalLtv365d":676125348.87,"avgLtv365d":191971.99,"membersWithLtv":489,"highRiskCount":393,"medRiskCount":96,"lowRiskCount":0,"highMedRatio":100.0,"ltvModelVersion":"v1","churnModelCode":"RULE-CHURN-V1","snapshotsAt":"2026-11-13"}
+
+=== manager01 ===
+  code=200
+  data = {"totalLtv365d":676125348.87,"avgLtv365d":191971.99,"membersWithLtv":489,"highRiskCount":393,"medRiskCount":96,"lowRiskCount":0,"highMedRatio":100.0,"ltvModelVersion":"v1","churnModelCode":"RULE-CHURN-V1","snapshotsAt":"2026-11-13"}
+
+=== operator01 ===
+  code=200
+  data = {"totalLtv365d":676125348.87,"avgLtv365d":191971.99,"membersWithLtv":489,"highRiskCount":393,"medRiskCount":96,"lowRiskCount":0,"highMedRatio":100.0,"ltvModelVersion":"v1","churnModelCode":"RULE-CHURN-V1","snapshotsAt":"2026-11-13"}
+

@@ -1,0 +1,26 @@
+﻿=== admin (roles=SUPER_ADMIN,ADMIN) ===
+  dev group visible : True
+  dev child count   : 17
+  dev children      : dev.gray-release,dev.ltv-training,dev.datahub,dev.care-memberday,dev.p1-suite,dev.p2-suite,dev.p3-suite,dev.gap-suite,dev.forecast,dev.pricelist,dev.care-plan,dev.ltv-churn,dev:intl-payment,dev:intl-booking,dev:ai-scheduler,dev:risk-control,dev:google-maps
+  dev.ltv-churn     : VISIBLE path=/ltv-churn title=LTV/Churn 分析 icon=DataLine sort=12
+  hasPermission crm:tag : True
+
+=== boss01 (roles=BOSS) ===
+  dev group visible : True
+  dev child count   : 1
+  dev children      : dev.ltv-churn
+  dev.ltv-churn     : VISIBLE path=/ltv-churn title=LTV/Churn 分析 icon=DataLine sort=12
+  hasPermission crm:tag : True
+
+=== manager01 (roles=MANAGER) ===
+  dev group visible : True
+  dev child count   : 1
+  dev children      : dev.ltv-churn
+  dev.ltv-churn     : VISIBLE path=/ltv-churn title=LTV/Churn 分析 icon=DataLine sort=12
+  hasPermission crm:tag : True
+
+=== operator01 (roles=OPERATOR) ===
+  dev group visible : False
+  dev.ltv-churn     : NOT FOUND (no dev group)
+  hasPermission crm:tag : False
+

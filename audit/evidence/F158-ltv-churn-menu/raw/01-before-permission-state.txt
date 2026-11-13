@@ -1,0 +1,4 @@
+﻿id	permission_code	permission_name	permission_type	parent_id	path	icon	sort_order	status	deleted	roles
+1210	dev	研发工具	menu	0	/dev/gray-release	Tools	99	1	0	1,8
+1279	dev.ltv-training	LTV流失预测	menu	1210	/dev/ltv-training	DataAnalysis	2	1	0	1,8
+1591	crm:tag	会员标签与 LTV	button	1206	NULL	NULL	112	1	0	5,6,8

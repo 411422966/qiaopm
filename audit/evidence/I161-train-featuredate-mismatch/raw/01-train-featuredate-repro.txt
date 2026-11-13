@@ -1,0 +1,33 @@
+﻿=== 1. 环境 ===
+date: 2026-11-13 20:03:13 +08:00
+HEAD: 1dd9a0a80008783af277e543642760569de8a2de
+feature_date 快照 (ltv_training_feature):
+feature_date	cnt	labeled
+2026-11-10	489	489
+
+=== 2. 前端 trainBoth 请求体（不传 featureDate）===
+frontend/meiyetec-web/src/views/dev/LtvTraining.vue:504
+  POST /intel/ltv/training/train  data={algorithm:MLR, epochs:200, learningRate:0.01}
+frontend/meiyetec-web/src/views/dev/LtvTraining.vue:505
+  POST /intel/churn/training/train data={algorithm:LR, churnThreshold:90, horizon:90}
+
+=== 3. 实测：不带 featureDate ===
+--- POST /intel/ltv/training/train body=algorithm:MLR,epochs:200,learningRate:0.01 ---
+{"code":400,"message":"请求参数错误: 训练样本不足 100 条（当前 0），请先运行 ETL 或积累更多历史数据","data":null,"traceId":"58657cf9706f418e8abb7443c95a850b","timestamp":"2026-11-13 20:03:13"}
+--- POST /intel/churn/training/train body=algorithm:LR,churnThreshold:90,horizon:90 ---
+{"code":400,"message":"请求参数错误: 样本不足（0条），需至少 100 条，请先运行 LTV ETL 积累数据","data":null,"traceId":"bc4f04202f804988814731e12e797d65","timestamp":"2026-11-13 20:03:13"}
+
+=== 4. 对照：显式带 featureDate=2026-11-10（最新可用快照）===
+--- POST /intel/ltv/training/train body 含 featureDate:2026-11-10 ---
+{"code":200,"message":"训练完成","data":{"modelId":6,"modelCode":"LTV_MLR_1794571393","algorithm":"MLR","trainingSamples":489,"trainMAE":0.0000,"trainRMSE":0.0000,"trainMAPE":0.0000,"trainR2":0.0000,"valMAE":0.0000,"valRMSE":0.0000,"valMAPE":0.0000,"valR2":0.0000,"topFeatures":[{"recency_days":0.0},{"frequency_total":0.0},{"frequency_90d":0.0},{"monetary_total":0.0},{"monetary_90d":0.0}],"durationMs":176,"conclusion":"GOOD"},"traceId":"825a3d95bee64f20b14bcd82c1ee1069","timestamp":"2026-11-13 20:03:13"}
+
+=== 5. 副作用清理：测试模型已下线 ===
+{"code":200,"message":"已下线","data":null,"traceId":"aedbd18ea57f41d68a9a9d28ebc5b5b3","timestamp":"2026-11-13 20:03:14"}
+
+=== 6. 模型注册表快照 ===
+id	model_code	status	training_samples
+6	LTV_MLR_1794571393	2	489
+5	LTV_MLR_1794571371	4	489
+4	LTV_MLR_1794571300	4	489
+3	LTV_MLR_1794331222	3	489
+2	LTV_MLR_1794330728	3	489
