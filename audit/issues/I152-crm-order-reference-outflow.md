@@ -231,8 +231,12 @@ ROUND(COUNT(*) * 365 / GREATEST(GREATEST(DATEDIFF(CURDATE(), MIN(p.pay_time)), 0
 **待业务确认**：是否需要对新客（`tenure_days < N`）封顶年均单数。
 
 **关联**：`LtvChurnController.computeLtv` L111 用 `orders.size() * (tenureDays <= 0 ? 365.0 : 365.0 / tenureDays)`，
-与 batch 版公式**代数等价**，但 `tenureDays` 起算点不同（`LocalDate` 差 vs `DATEDIFF(CURDATE(), MIN(pay_time))` 含时分），
-在首单当日消费的会员上可能相差 1 天 → 两入口 `predicted_ltv_365d` 可能不一致。
+与 batch 版公式**代数等价**（`COUNT*365/tenure` ≡ `orders.size() * 365/tenureDays`；
+tenure 起算点均为最早 `pay_time` 的日期部分，`tenure <= 0` 分支也与 batch 的 `GREATEST(..., 1)` 等价），
+两入口 `predicted_ltv_365d` **口径一致**，不存在分叉。
+
+> ⚠️ **但该等价性掩盖了一个共同缺陷**：两条路径**都没有年化观测窗口下限**（分母最小取 1 天），
+> 对 tenure 很短的新客会放大出数十倍年化频率 —— **已单独登记为 I157**。
 
 ### Q2 — 模型本体不参与计算，`model_version` 仅为标签 🟠 待业务确认（关联 I155）
 
