@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-13（补登 I159/I160）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-13（补登 I162/I163；I161 Layer 1 已修）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -84,7 +84,9 @@
 | I158 | I158 — `repurchase_prob_30d` 分档只看频率不看样本量，置信度与证据强度反向 | Open | [I158-repurchase-prob-evidence-inversion.md](I158-repurchase-prob-evidence-inversion.md) |
 | I159 | I159 — `sysApi.request` 方法缺失：`/dev/*` 研发工具区 175 处调用全站静默失败（"No Data" 无提示） | Fixed | [I159-frontend-sysapi-request-missing.md](I159-frontend-sysapi-request-missing.md) |
 | I160 | I160 — Churn 训练运行日志链路缺失：`churn_training_run_log` 表 0 行且无 `/run/log` 端点 | Fixed | [I160-churn-training-run-log-missing.md](I160-churn-training-run-log-missing.md) |
-| I161 | I161 — 「训练全部模型」按钮不传 featureDate，后端默认取昨天而最新快照是 2026-11-10，返回 400 训练样本不足 | Open | [I161-train-all-models-button-fails.md](I161-train-all-models-button-fails.md) |
+| I161 | I161 — 「训练全部模型」按钮不传 featureDate，后端默认取昨天而最新快照是 2026-11-10，返回 400 训练样本不足 | PARTIAL | [I161-train-all-models-button-fails.md](I161-train-all-models-button-fails.md) |
+| I162 | I162 — LTV/Churn 看板字段契约漂移：前端读 `totalLtv`/`avgLtv`，后端只返 `totalLtv365d`/`avgLtv365d`，`|| 0` 静默兜底 → LTV 卡片恒显示 ¥0（真实 6.76 亿） | Fixed | [I162-ltv-dashboard-field-mismatch.md](I162-ltv-dashboard-field-mismatch.md) |
+| I163 | I163 — LTV 标签窗口与 ETL 时序冲突：T-1 快照的「未来 90 天」标签恒为 0，训练出退化常量模型（指标全 0 但 conclusion=GOOD），需业务决策标签窗口定义 | Open | [I163-ltv-label-window-etl-timing-conflict.md](I163-ltv-label-window-etl-timing-conflict.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
@@ -93,3 +95,11 @@
 - **I115**：BizServiceItemService 22 个端点零 @RequirePermission，实测 operator01 可越权写入。详见 I137-P0。
 - **I127**：事故件 `before-batch1-20261025-180825.sql` 已改名为 `.UNUSABLE` 保留为证据，不恢复；根因（PS 5.1 `>` 重定向）已消除，正确备份方式（容器内 dump + `docker cp`）已验证可恢复。
 - **I130**（`I130-menu-toplevel-guard-code-fix.md`，与本表 I130 行 `I130-mysql-add-column-if-not-exists-incompatible.md` **编号重名、内容不同**，以文件为准）：§5.2 mkt 粗码缺失已 Fixed（batch2-B）；§5.3 manager01 `/market/*` 菜单断裂已 Fixed（batch2-B）。batch2-B 于 2026-11-09 执行，新增 20 个权限码 + 12 条菜单行 + 245 条角色绑定，仅动 `sys_permission` / `sys_role_permission` / `sys_menu_permission`，未改前后端代码；证据见 `audit/evidence/F149-mkt-perm/`。本条 issue 状态由 MISSING / PARTIAL-NON-BLOCKER 调整为 **PARTIAL**（营销域已修复，其余非营销域 23 个缺失守卫码与 4 条菜单断裂仍 Open，归属 I124-c）。
+- **I161**：Layer 1（后端缺省 `featureDate` 取该租户 `MAX(feature_date)` + 前端 `trainBoth()` 带上 `etlStats.featureDate`）已于 2026-11-13 修复并实测（LTV/Churn 两端点不带 featureDate → 200 / 489 样本 / featureDate=2026-11-10），证据 `audit/evidence/F160-i161-train-featuredate-default/`；Layer 2（ETL 缺省 `now().minusDays(1)` 与「未来 90 天标签窗口」的时序冲突，导致标签恒为 0、模型退化为常量）**未修**，已拆分为独立 Issue **I163**，本条状态调整为 **PARTIAL**。
+- **I162**：后端 `LtvChurnController.dashboard()` 增加 `totalLtv` / `avgLtv` 契约别名（保留 `totalLtv365d` / `avgLtv365d` 原名），两个前端消费方零改动；API 层与浏览器层均已实测（LTV 卡片 ¥676,125,349 / 平均 ¥191,972），证据 `audit/evidence/F159-ltv-dashboard-contract-fix/`。同域另有 3 项发现（LTV 累计值口径重复计数、P2Suite 单会员面板字段全不匹配、看板端点首响应 >10s 触发 axios 超时）**未修**，登记在 I162 §5，待决。
+
+## 脚注：证据目录命名规则切换（2026-11-13 起）
+
+- **规则**：证据目录从 **2026-11-13 起统一使用 `FXXX-<slug>` 前缀**（Feature ID 规则，见 Feature ID 规则）。
+- **不追溯改名**：此前已存在的 `I118-missing-ddl-20261029/`、`I132-batch2-guard-code/`、`I161-train-featuredate-mismatch/` 等目录**保持原 Issue ID 前缀不变**，避免断链。
+- **本轮起点**：首个采用新规则的证据目录为 `F159-ltv-dashboard-contract-fix/`（I162）与 `F160-i161-train-featuredate-default/`（I161 Layer 1）。
