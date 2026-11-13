@@ -84,6 +84,7 @@
 | I158 | I158 — `repurchase_prob_30d` 分档只看频率不看样本量，置信度与证据强度反向 | Open | [I158-repurchase-prob-evidence-inversion.md](I158-repurchase-prob-evidence-inversion.md) |
 | I159 | I159 — `sysApi.request` 方法缺失：`/dev/*` 研发工具区 175 处调用全站静默失败（"No Data" 无提示） | Fixed | [I159-frontend-sysapi-request-missing.md](I159-frontend-sysapi-request-missing.md) |
 | I160 | I160 — Churn 训练运行日志链路缺失：`churn_training_run_log` 表 0 行且无 `/run/log` 端点 | Fixed | [I160-churn-training-run-log-missing.md](I160-churn-training-run-log-missing.md) |
+| I161 | I161 — 「训练全部模型」按钮不传 featureDate，后端默认取昨天而最新快照是 2026-11-10，返回 400 训练样本不足 | Open | [I161-train-all-models-button-fails.md](I161-train-all-models-button-fails.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
