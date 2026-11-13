@@ -84,6 +84,9 @@ public class ChurnTrainingService {
                 samples.size(), samples.stream().filter(s -> s.label == 1).count(),
                 samples.stream().filter(s -> s.label == 0).count(), algorithm);
 
+        logRun(tenantId, null, "TRAIN", "TRAIN", null, samples.size(), "samples", null,
+                "算法=" + algorithm + ",churnThreshold=" + churnThreshold + ",horizon=" + horizon, null);
+
         try {
             Collections.shuffle(samples, new Random(42));
             int split = (int) (samples.size() * 0.8);
@@ -163,8 +166,14 @@ public class ChurnTrainingService {
             log.info("[Churn] 训练完成: AUC={}, F1={}, conclusion={}",
                     valMetrics.get("auc"), valMetrics.get("f1"), getConclusion(valMetrics));
 
+            logRun(tenantId, model.getId(), "TRAIN", "TRAIN",
+                    (int) (System.currentTimeMillis() - t0), samples.size(), "val_auc",
+                    model.getValAuc(), "训练完成", null);
+
             return Result.success("训练完成", data);
         } catch (Exception e) {
+            logRun(tenantId, null, "TRAIN", "TRAIN", (int) (System.currentTimeMillis() - t0),
+                    0, null, null, "训练失败", e.toString());
             log.error("Churn 训练失败", e);
             return Result.error(BizCode.SYSTEM_ERROR, "训练失败: " + e.getMessage());
         }
@@ -573,6 +582,42 @@ public class ChurnTrainingService {
                 .eq(ChurnModelRegistry::getTenantId, tenantId)
                 .orderByDesc(ChurnModelRegistry::getIsActive)
                 .orderByDesc(ChurnModelRegistry::getId)));
+    }
+
+    /**
+     * 训练运行日志（与 LTV 侧 /intel/ltv/training/run/log 对称）
+     */
+    @GetMapping("/run/log")
+    public Result<List<ChurnTrainingRunLog>> runLog(
+            @RequestParam(defaultValue = "20") Integer limit) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
+        return Result.success(logMapper.selectList(new LambdaQueryWrapper<ChurnTrainingRunLog>()
+                .eq(ChurnTrainingRunLog::getTenantId, tenantId)
+                .orderByDesc(ChurnTrainingRunLog::getId)
+                .last("LIMIT " + limit)));
+    }
+
+    /**
+     * 写一条训练运行日志
+     */
+    private Long logRun(Long tenantId, Long modelId, String runType, String step,
+                        Integer durationMs, Integer samples, String metric,
+                        BigDecimal metricValue, String message, String error) {
+        ChurnTrainingRunLog runLog = new ChurnTrainingRunLog();
+        runLog.setTenantId(tenantId);
+        runLog.setModelId(modelId);
+        runLog.setRunType(runType);
+        runLog.setStep(step);
+        runLog.setDurationMs(durationMs);
+        runLog.setSamples(samples);
+        runLog.setMetric(metric);
+        runLog.setMetricValue(metricValue);
+        runLog.setMessage(message);
+        runLog.setError(error);
+        runLog.setStartAt(LocalDateTime.now());
+        if (durationMs != null) runLog.setEndAt(LocalDateTime.now());
+        logMapper.insert(runLog);
+        return runLog.getId();
     }
 
     // ====================================================================
