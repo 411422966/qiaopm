@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-13（补登 I162/I163；I161 Layer 1 已修）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-13（补登 I162/I163/I164/I165/I166/I167 + I146 转 Parked；I161 Layer 1 已修）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -71,6 +71,7 @@
 | I142 | I142 — LtvTrainingService 引用 4 张不存在的表，LTV 训练 ETL 全链路必然失败 | Open | [I142-ltv-training-missing-tables.md](I142-ltv-training-missing-tables.md) |
 | I143 | I143 — AI 推荐缓存反序列化为桩代码，命中缓存返回空数组 | Fixed | [I143-ai-recommend-cache-parse-stub.md](I143-ai-recommend-cache-parse-stub.md) |
 | I145 | I145 — market_coupon 缺少 issued_count 计数列，atomicGrant 无法在 UPDATE 内原子自增 | Open | [I145-market-coupon-issued-count.md](I145-market-coupon-issued-count.md) |
+| I146 | I146 — C 端邀请端点匿名访问改造（`/invite/**` 8 端点免登录开放）：调查报告已通过，F1/F2/F3 三项发现改变任务性质 | Parked | [I146-c-end-invite-anonymous-access.md](I146-c-end-invite-anonymous-access.md) |
 | I148 | I148 — `atomicGrant` 发放闸门稳定性与口径缺陷：matched-rows 隐式依赖驱动默认值（生产 URL 未审计）/ 配额计数未带 tenant_id 跨租户互相扣配额 / 闸门与写入分离并发可超发 | Open | [I148-atomic-grant-stability-and-tenant-scope.md](I148-atomic-grant-stability-and-tenant-scope.md) |
 | I149 | I149 — M09 邀请奖励发放链路业务缺陷：未达门槛后 status=3 但补发只取 status=2 / 会员不存在静默 return 致漏发无痕迹 / 脱敏手机号参与唯一键致撞键 | Open | [I149-invite-reward-chain-biz-defects.md](I149-invite-reward-chain-biz-defects.md) |
 | I150 | I150 — `ltv_training_feature.total_package_balance` 口径错误：存的是「剩余次数」，字段语义是「余额（金额）」 | Open | [I150-ltv-total-package-balance-should-be-amount.md](I150-ltv-total-package-balance-should-be-amount.md) |
@@ -87,6 +88,10 @@
 | I161 | I161 — 「训练全部模型」按钮不传 featureDate，后端默认取昨天而最新快照是 2026-11-10，返回 400 训练样本不足 | PARTIAL | [I161-train-all-models-button-fails.md](I161-train-all-models-button-fails.md) |
 | I162 | I162 — LTV/Churn 看板字段契约漂移：前端读 `totalLtv`/`avgLtv`，后端只返 `totalLtv365d`/`avgLtv365d`，`|| 0` 静默兜底 → LTV 卡片恒显示 ¥0（真实 6.76 亿） | Fixed | [I162-ltv-dashboard-field-mismatch.md](I162-ltv-dashboard-field-mismatch.md) |
 | I163 | I163 — LTV 标签窗口与 ETL 时序冲突：T-1 快照的「未来 90 天」标签恒为 0，训练出退化常量模型（指标全 0 但 conclusion=GOOD），需业务决策标签窗口定义 | Open | [I163-ltv-label-window-etl-timing-conflict.md](I163-ltv-label-window-etl-timing-conflict.md) |
+| I164 | I164 — `my-stats` 三个计数缺 tenantId 过滤，导致跨租户 IDOR | Open | [I164-invite-my-stats-tenant-idor.md](I164-invite-my-stats-tenant-idor.md) |
+| I165 | I165 — `report-share` 缺 tenantId 过滤 + 无限流 + 无幂等 | Open | [I165-invite-report-share-tenant-idor.md](I165-invite-report-share-tenant-idor.md) |
+| I166 | I166 — `share-page` 隐式调用 `trackClick`，导致 `scanCount` 双计数 | Open | [I166-invite-share-page-scan-double-count.md](I166-invite-share-page-scan-double-count.md) |
+| I167 | I167 — `m09_invite_code.invite_code` 非全局唯一，匿名场景无法用 code 反查 tenantId（I146 硬前置 DDL） | Open | [I167-invite-code-global-unique-ddl.md](I167-invite-code-global-unique-ddl.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
@@ -97,6 +102,8 @@
 - **I130**（`I130-menu-toplevel-guard-code-fix.md`，与本表 I130 行 `I130-mysql-add-column-if-not-exists-incompatible.md` **编号重名、内容不同**，以文件为准）：§5.2 mkt 粗码缺失已 Fixed（batch2-B）；§5.3 manager01 `/market/*` 菜单断裂已 Fixed（batch2-B）。batch2-B 于 2026-11-09 执行，新增 20 个权限码 + 12 条菜单行 + 245 条角色绑定，仅动 `sys_permission` / `sys_role_permission` / `sys_menu_permission`，未改前后端代码；证据见 `audit/evidence/F149-mkt-perm/`。本条 issue 状态由 MISSING / PARTIAL-NON-BLOCKER 调整为 **PARTIAL**（营销域已修复，其余非营销域 23 个缺失守卫码与 4 条菜单断裂仍 Open，归属 I124-c）。
 - **I161**：Layer 1（后端缺省 `featureDate` 取该租户 `MAX(feature_date)` + 前端 `trainBoth()` 带上 `etlStats.featureDate`）已于 2026-11-13 修复并实测（LTV/Churn 两端点不带 featureDate → 200 / 489 样本 / featureDate=2026-11-10），证据 `audit/evidence/F160-i161-train-featuredate-default/`；Layer 2（ETL 缺省 `now().minusDays(1)` 与「未来 90 天标签窗口」的时序冲突，导致标签恒为 0、模型退化为常量）**未修**，已拆分为独立 Issue **I163**，本条状态调整为 **PARTIAL**。
 - **I162**：后端 `LtvChurnController.dashboard()` 增加 `totalLtv` / `avgLtv` 契约别名（保留 `totalLtv365d` / `avgLtv365d` 原名），两个前端消费方零改动；API 层与浏览器层均已实测（LTV 卡片 ¥676,125,349 / 平均 ¥191,972），证据 `audit/evidence/F159-ltv-dashboard-contract-fix/`。同域另有 3 项发现（LTV 累计值口径重复计数、P2Suite 单会员面板字段全不匹配、看板端点首响应 >10s 触发 axios 超时）**未修**，登记在 I162 §5，待决。
+- **I146**（`I146-c-end-invite-anonymous-access.md`）：C 端邀请端点匿名访问改造的**只读调查报告已通过**（2026-11-13 用户确认）。三项前置发现改变了任务性质 —— **F1** 前端 8 个 C 端端点**无任何调用方**（不是"被 JWT 挡住"，而是"后端有端点 + 前端无页面"）；**F2** `/invite/bind` 与 `/invite/redeem` 是**没有服务端触发链路的影子端点**（`MemberService` / `PosController` 中 grep `invite` 零命中）；**F3** `m09_invite_code.invite_code` **非全局唯一**（唯一键 `uk_campaign_code (campaign_id, invite_code)`），匿名场景无法用 code 反查 tenantId。任务性质由「给 `/invite/**` 加 JWT 白名单」改为「**先补安全债与数据基础，再谈开放**」；方案选型待 Q1–Q5 拍板，**实施未开始**，运行期结论一律 UNVERIFIED。调查中确认的三项**既存**安全缺陷与匿名化无关，按用户决策「现在就要修」**拆分**为独立 Issue：**I164**（`my-stats` 三个计数缺 tenantId 过滤 → 跨租户 IDOR，P1）、**I165**（`report-share` 无 tenantId 过滤 + 无限流 + 无幂等，P1）、**I166**（`share-page` 隐式调用 `trackClick` → `scanCount` 双计数，P2）；**另拆出前置数据基础缺口 I167**（`m09_invite_code.invite_code` 非全局唯一 → 匿名场景无法用 code 反查 tenantId，P2，含 3 个 DDL 候选方案与只读存量排查 SQL，是 I146 的**硬前置**）。I146 内不再承担该四项修复，其安全防护清单需引用这几项的结论。
+- **I146 状态转 Parked**（2026-11-13）：调查报告已通过，但剩余动作全部依赖产品决策（Q1 落地页形态 / Q4 tenantId 判定方式 / Q14 前端归属）与前置 DDL（I167），拍板前无法开工 → 由 Open 调整为 **Parked（等待产品决策）**。建议实施顺序：I167 完成 → I164/I165/I166 修复（与匿名化解耦，可并行）→ I146 匿名化改造开工。
 
 ## 脚注：证据目录命名规则切换（2026-11-13 起）
 
