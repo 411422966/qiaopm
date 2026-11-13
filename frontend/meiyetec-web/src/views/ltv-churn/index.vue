@@ -34,7 +34,7 @@
         <el-col :span="6">
           <el-card shadow="never" class="stat-card stat-orange">
             <div class="stat-label">中流失风险</div>
-            <div class="stat-value">{{ dashboard.mediumRiskCount || 0 }}</div>
+            <div class="stat-value">{{ dashboard.medRiskCount || 0 }}</div>
             <div class="stat-hint">需主动关怀</div>
           </el-card>
         </el-col>

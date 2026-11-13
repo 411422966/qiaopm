@@ -90,7 +90,7 @@
               </el-row>
               <el-row :gutter="12" style="margin-top:12px">
                 <el-col :span="8"><el-statistic title="高流失风险" :value="ltvDash.highRiskCount || 0" /></el-col>
-                <el-col :span="8"><el-statistic title="中风险" :value="ltvDash.mediumRiskCount || 0" /></el-col>
+                <el-col :span="8"><el-statistic title="中风险" :value="ltvDash.medRiskCount || 0" /></el-col>
                 <el-col :span="8"><el-statistic title="低风险" :value="ltvDash.lowRiskCount || 0" /></el-col>
               </el-row>
             </el-col>
