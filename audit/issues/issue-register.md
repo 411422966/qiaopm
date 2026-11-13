@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-11（补登 I150~I155）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-12（补登 I156）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -79,6 +79,7 @@
 | I153 | I153 — `biz_service.category_id` 全表为 NULL：服务分类未回填，5 个分类无法关联 | Open | [I153-biz-service-category-null.md](I153-biz-service-category-null.md) |
 | I154 | I154 — LTV/Churn 训练链路 6 个代码缺陷：治理看板不可见 / 下线端点缺失 / Churn 标签反向 / 重要性错位 / 均值计算错 / 运行日志不关联 | PARTIAL | [I154-ltv-training-chain-defects.md](I154-ltv-training-chain-defects.md) |
 | I155 | I155 — 预测端完全不消费训练出来的模型：部署成功的模型是"空挂"，两套模型注册表并存 | Open | [I155-prediction-side-ignores-trained-model.md](I155-prediction-side-ignores-trained-model.md) |
+| I156 | I156 — computeChurn 与 batchPredictChurn 双写 crm_churn_prediction 无互斥 | Open | [I156-compute-churn-batch-predict-duplicate.md](I156-compute-churn-batch-predict-duplicate.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
