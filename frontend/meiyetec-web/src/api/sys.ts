@@ -105,6 +105,12 @@ export interface DcepQualificationAttachment {
 }
 
 export const sysApi = {
+  /**
+   * 通用请求转发：支持 { method, url, params, data } 形式。
+   * 研发工具各页面（/dev/*）历史上直接用 sysApi.request(...) 调用后端，
+   * 但 sysApi 早期只暴露了具名方法，这里补一个统一入口。
+   */
+  request: (config: any) => request(config),
   // 配置
   configList: (group?: string) => request.get('/sys/config/list', { params: { group } }),
   configGrouped: () => request.get('/sys/config/grouped'),

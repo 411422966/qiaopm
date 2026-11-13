@@ -19,6 +19,16 @@
         </div>
       </template>
 
+      <el-alert
+        v-if="pageError"
+        type="error"
+        show-icon
+        :closable="true"
+        :title="pageError"
+        style="margin-bottom:12px"
+        @close="pageError = ''"
+      />
+
       <el-tabs v-model="activeTab">
         <!-- LTV 模型 -->
         <el-tab-pane label="LTV 模型" name="ltv">
@@ -341,6 +351,7 @@ const abResult = ref<any>(null)
 const modelReport = ref<any>(null)
 const currentChurn = ref<any>(null)
 const churnFeatureChart = ref<HTMLDivElement>()
+const pageError = ref('')
 let churnChart: any = null
 
 // 批量操作
@@ -525,8 +536,9 @@ async function loadLtvModels() {
     ltvModels.value = r.data || []
     const active = ltvModels.value.find((m: any) => m.isActive === 1)
     ltvConclusion.value = active?.valMape ? evalConclusion(active.valMape, false) : ''
-  } catch (e) {
+  } catch (e: any) {
     ltvModels.value = []
+    pageError.value = 'LTV 模型列表加载失败：' + (e?.message || '未知错误')
   } finally {
     modelLoading.value = false
   }
@@ -542,8 +554,9 @@ async function loadChurnModels() {
     churnConclusion.value = active?.valAuc ? evalConclusion(active.valAuc, true) : ''
     await nextTick()
     renderChurnFeature()
-  } catch (e) {
+  } catch (e: any) {
     churnModels.value = []
+    pageError.value = 'Churn 模型列表加载失败：' + (e?.message || '未知错误')
   } finally {
     churnLoading.value = false
   }
@@ -553,8 +566,9 @@ async function loadLtvLogs() {
   try {
     const r: any = await sysApi.request({ method: 'GET', url: '/intel/ltv/training/run/log', params: { limit: 20 } })
     ltvLogs.value = r.data || []
-  } catch (e) {
+  } catch (e: any) {
     ltvLogs.value = []
+    pageError.value = 'LTV 训练日志加载失败：' + (e?.message || '未知错误')
   }
 }
 
@@ -562,8 +576,9 @@ async function loadChurnLogs() {
   try {
     const r: any = await sysApi.request({ method: 'GET', url: '/intel/churn/training/run/log', params: { limit: 20 } })
     churnLogs.value = r.data || []
-  } catch (e) {
+  } catch (e: any) {
     churnLogs.value = []
+    pageError.value = 'Churn 训练日志加载失败：' + (e?.message || '未知错误')
   }
 }
 
@@ -600,13 +615,15 @@ async function loadReport() {
     modelReport.value = r.data
   } catch (e: any) {
     modelReport.value = null
+    pageError.value = '模型健康报告加载失败：' + (e?.message || '未知错误')
   } finally {
     reportLoading.value = false
   }
 }
 
 async function loadAll() {
-  await Promise.all([loadLtvModels(), loadChurnModels(), loadLtvLogs(), loadChurnLogs()])
+  pageError.value = ''
+  await Promise.all([loadLtvModels(), loadChurnModels(), loadLtvLogs(), loadChurnLogs(), loadReport()])
 }
 
 async function deployLtv(row: any) {
