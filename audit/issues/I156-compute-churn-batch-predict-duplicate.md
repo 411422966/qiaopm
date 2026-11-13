@@ -5,7 +5,7 @@
 > **发现日期**：2026-11-12（I152 批 2-3 验证全绿后，运行时复现时发现）
 > **登记人**：Cursor（I152 批 2-3 —— `batchPredictLtv/Churn` 表名+量纲+幂等修复）
 > **关联**：I152（`crm_order` 引用外溢；批 2-3 修复引入了本双写面）、I155（预测端不消费训练模型）、I151（退款未扣）
-> **修复决策**：待业务拍板（方案 A / 方案 B，见 §4）
+> **修复决策**：**已选定方案 A**（2026-11-13，工程最优解，非业务拍板）—— 下一轮单独批次实施，本轮仅登记（见 §5.5）
 
 ---
 
@@ -224,6 +224,57 @@ SELECT COUNT(*) FROM ai_churn_model WHERE is_active=1 AND enabled=1 => 0
 一旦模型被激活，它会用**第四套枚举**（`HIGH/MEDIUM/LOW/SAFE`，见 `riskLevel`）和 4 位小数的 `churn_score`
 写入同一张表，与 A/B 的 `HIGH/MED/LOW` **互不可比**。
 建议在修复 A/B 时一并处理其幂等策略与枚举口径，避免届时再开一个 issue。
+
+---
+
+## 5.5 方案选定（2026-11-13 决策）
+
+> **状态变更**：修复方案已从「待业务拍板」收敛为 **方案 A**。
+> **本轮不修** —— 修复需要重建镜像并做运行时验证，混在当前收尾批次里风险过高。
+
+### 选定结果
+
+**选定方案 A：`computeChurn` 也改为先删后插。**
+
+| 项 | 内容 |
+|---|---|
+| 选定方案 | 方案 A（`computeChurn` 在写入循环外层加 `DELETE ... WHERE tenant_id = ? AND snapshot_date = ?`，与 `batchPredictChurn` 的 `executeIdempotent` 对齐） |
+| 决策依据 | **工程最优解（非业务拍板）** —— 见下方三条 |
+| 决策日期 | 2026-11-13 |
+| 实施批次 | **下一轮单独批次**（本轮仅登记，不改业务代码） |
+| 状态 | 仍为 **Open**（修复未实施） |
+
+### 决策依据（工程最优解）
+
+1. **改动面最小、风险最低** —— 方案 B 要把 `computeChurn` 降级为只读，会连带改动前端 `P2Suite.vue` 的「跑 Churn」按钮语义（L447）、
+   单会员查询与 Top-N 榜单的数据口径，以及「基于 LTV 快照反推流失」这条链路的存废判断 —— 涉及产品语义决策，
+   而方案 A 是纯后端幂等语义对齐，**不改变任何对外可见的业务能力**。
+2. **保留双入口能力** —— 方案 A 让两个入口的行为一致（都可写、可刷新看板），
+   消除了 §3 的「顺序一 → 数据重复；顺序二 → 数据被静默覆盖」两种失败模式，
+   而方案 B 会让 `computeChurn` 丧失落库能力，现有调用方的写后读假设被打破。
+3. **与配套动作天然衔接** —— §4 补充动作 #1（dashboard 加 `snapshot_date` 过滤）、
+   #3（加 `UNIQUE (tenant_id, member_id, snapshot_date)` 唯一约束）、
+   #4（单会员查询口径）在方案 A 下都成立；若采用方案 B，#3/#4 的紧迫性下降，
+   但 #2（`/intel/churn/overview` 的 `HIGH/MEDIUM/LOW/SAFE` 与写入者 `HIGH/MED/LOW` 枚举漂移）
+   仍需单独处理 —— 两条路线都不会顺带解决枚举漂移，因此该选择不构成决定性差异。
+
+### 实施时的配套要求（下一轮必须一并完成）
+
+| # | 动作 | 来源 |
+|---|---|---|
+| 1 | `computeChurn` 加先删后插，与 `batchPredictChurn` 幂等语义对齐 | §4 方案 A |
+| 2 | `churn_score` 精度由 `setScale(2)` 改为 4 位小数 | §4 方案 A 代价 #2 |
+| 3 | 风险阈值由 `>` 改为 `>=`（与 A 路径一致） | §4 方案 A 代价 #3 |
+| 4 | 修正 `setTenureDays(s.getLastPurchaseDays())` 的疑似复制粘贴错误 | §4 方案 A 配套建议 |
+| 5 | `GET /ltv-churn/dashboard` 统计加 `snapshot_date` 过滤 | §4 补充动作 #1 |
+| 6 | `GET /intel/churn/overview` 枚举口径统一（`HIGH/MED/LOW` vs `HIGH/MEDIUM/LOW/SAFE`） | §4 补充动作 #2 |
+| 7 | `crm_churn_prediction` 加 `UNIQUE (tenant_id, member_id, snapshot_date)`，先清理存量重复行 | §4 补充动作 #3 |
+| 8 | 第三个写入者 `ChurnPredictionService.predictForMember` 的幂等策略与枚举对齐 | §5 相邻观察 |
+
+> ⚠️ **仍未解决的口径问题（方案 A 不覆盖）**：A 与 B 的**计算口径不同**（数据源不同：`pos_order` 直算 vs `crm_ltv_snapshot` 快照），
+> 谁后跑谁覆盖，**看板数值仍会随用户点击顺序抖动**。方案 A 只保证「不重复、不静默丢失」，
+> **不保证「唯一权威口径」**。权威口径的确定需要业务拍板，仍列在 §6 未确认项。
+> 同理，`crm_churn_prediction.monthly_freq` 的量纲漂移（见 I157 §6）也不在方案 A 覆盖范围内。
 
 ---
 
