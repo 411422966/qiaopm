@@ -317,8 +317,8 @@ public class LtvTrainingService {
     public Result<Map<String, Object>> trainModel(@RequestBody(required = false) Map<String, Object> body) {
         long t0 = System.currentTimeMillis();
         Long tenantId = TenantContextHolder.get().getTenantId();
-        LocalDate featureDate = body == null || body.get("featureDate") == null
-                ? LocalDate.now().minusDays(1)
+        LocalDate featureDate = (body == null || body.get("featureDate") == null)
+                ? resolveLatestFeatureDate(tenantId)
                 : LocalDate.parse(body.get("featureDate").toString());
         String modelCode = body == null || body.get("modelCode") == null
                 ? "LTV_MLR_" + System.currentTimeMillis() / 1000
@@ -338,7 +338,8 @@ public class LtvTrainingService {
 
         if (rows.size() < 100) {
             return Result.error(BizCode.BAD_REQUEST,
-                    "训练样本不足 100 条（当前 " + rows.size() + "），请先运行 ETL 或积累更多历史数据");
+                    "训练样本不足 100 条（当前 " + rows.size() + " 条，featureDate=" + featureDate
+                            + "），请先运行 ETL 或积累更多历史数据");
         }
 
         Long runId = logRun(tenantId, null, "TRAIN", "TRAIN", null, rows.size(), "samples", null,
@@ -405,6 +406,7 @@ public class LtvTrainingService {
             data.put("modelId", model.getId());
             data.put("modelCode", modelCode);
             data.put("algorithm", algorithm);
+            data.put("featureDate", featureDate);
             data.put("trainingSamples", rows.size());
             data.put("trainMAE", model.getTrainMae());
             data.put("trainRMSE", model.getTrainRmse());
@@ -428,6 +430,30 @@ public class LtvTrainingService {
             log.error("LTV 训练失败", e);
             return Result.error(BizCode.SYSTEM_ERROR, "训练失败: " + e.getMessage());
         }
+    }
+
+    /**
+     * I161 Layer 1：缺省 featureDate 取「该租户最新可用快照日」
+     * = MAX(feature_date) 且 next_90d_revenue IS NOT NULL（有标签）
+     *
+     * 旧行为：LocalDate.now().minusDays(1)（昨天）→ 只要 ETL 快照不是昨天，查询命中 0 行 → 400。
+     * 新行为：快照滞后也能自动落到最新可用快照；查不到任何带标签快照时回退 T-1 保持兼容。
+     */
+    private LocalDate resolveLatestFeatureDate(Long tenantId) {
+        try {
+            String latest = jdbc.queryForObject(
+                    "SELECT DATE_FORMAT(MAX(feature_date), '%Y-%m-%d') FROM ltv_training_feature "
+                            + "WHERE tenant_id = ? AND next_90d_revenue IS NOT NULL",
+                    String.class, tenantId);
+            if (latest != null && !latest.isBlank()) {
+                LocalDate d = LocalDate.parse(latest);
+                log.info("[LTV-TRAIN] 缺省 featureDate 解析为最新可用快照日: {}", d);
+                return d;
+            }
+        } catch (Exception e) {
+            log.warn("[LTV-TRAIN] 解析最新可用 feature_date 失败，回退 T-1: {}", e.getMessage());
+        }
+        return LocalDate.now().minusDays(1);
     }
 
     /**

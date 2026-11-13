@@ -1,0 +1,23 @@
+﻿--- ltv_training_feature 蹇収鍒嗗竷 ---
+feature_date	cnt	labeled_rev	labeled_act
+2026-11-10	489	489	489
+
+--- ltv_model_registry / churn_model_registry 鐘舵€?---
+id	tenant_id	model_code	status	is_active	training_samples	model_type
+8	1	LTV_MLR_1794575643	4	0	489	LTV_REGRESSION
+7	1	LTV_MLR_1794575572	4	0	489	LTV_REGRESSION
+6	1	LTV_MLR_1794571393	4	0	489	LTV_REGRESSION
+5	1	LTV_MLR_1794571371	4	0	489	LTV_REGRESSION
+4	1	LTV_MLR_1794571300	4	0	489	LTV_REGRESSION
+3	1	LTV_MLR_1794331222	3	1	489	LTV_REGRESSION
+id	tenant_id	model_code	status	is_active	training_samples
+6	1	CHURN_LR_1794575645	4	0	489
+5	1	CHURN_LR_1794575573	4	0	489
+4	1	CHURN_LR_1794557504	2	0	489
+3	1	CHURN_LR_1794331223	3	1	489
+2	1	CHURN_LR_1794330738	3	0	489
+1	1	CHURN_LR_1794329758	3	0	489
+
+--- crm_ltv_snapshot 姹囨€伙紙鐪嬫澘 totalLtv 鍙ｅ緞鏍稿锛?--
+tenant_id	snapshots	members	sum_ltv365d	avg_ltv365d
+1	3522	489	676125348.87	191971.99

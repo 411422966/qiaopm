@@ -1,0 +1,117 @@
+﻿=== I162 / I161-L1 杩愯鏃跺彇璇?===
+captured: 2026-11-13 21:14:02 +08:00
+login: userId= username=admin roles=
+
+--- GET /ltv-churn/dashboard ---
+{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "totalLtv365d":  676125348.87,
+                 "avgLtv365d":  191971.99,
+                 "totalLtv":  676125348.87,
+                 "avgLtv":  191971.99,
+                 "membersWithLtv":  489,
+                 "highRiskCount":  393,
+                 "medRiskCount":  96,
+                 "lowRiskCount":  0,
+                 "highMedRatio":  100.0,
+                 "ltvModelVersion":  "v1",
+                 "churnModelCode":  "RULE-CHURN-V1",
+                 "snapshotsAt":  "2026-11-13"
+             },
+    "traceId":  "73876ce9c3fd497290276c47578ec6bd",
+    "timestamp":  "2026-11-13 21:14:02"
+}
+
+  -> 01-ltv-churn-dashboard.json
+--- POST /intel/ltv/training/train锛堜笉甯?featureDate锛?--
+{
+    "code":  200,
+    "message":  "训练完成",
+    "data":  {
+                 "modelId":  8,
+                 "modelCode":  "LTV_MLR_1794575643",
+                 "algorithm":  "MLR",
+                 "featureDate":  "2026-11-10",
+                 "trainingSamples":  489,
+                 "trainMAE":  0.0000,
+                 "trainRMSE":  0.0000,
+                 "trainMAPE":  0.0000,
+                 "trainR2":  0.0000,
+                 "valMAE":  0.0000,
+                 "valRMSE":  0.0000,
+                 "valMAPE":  0.0000,
+                 "valR2":  0.0000,
+                 "topFeatures":  [
+                                     {
+                                         "recency_days":  0.0
+                                     },
+                                     {
+                                         "frequency_total":  0.0
+                                     },
+                                     {
+                                         "frequency_90d":  0.0
+                                     },
+                                     {
+                                         "monetary_total":  0.0
+                                     },
+                                     {
+                                         "monetary_90d":  0.0
+                                     }
+                                 ],
+                 "durationMs":  557,
+                 "conclusion":  "GOOD"
+             },
+    "traceId":  "d1e473b6bcce4a0d8b2191fae6941888",
+    "timestamp":  "2026-11-13 21:14:04"
+}
+
+  -> 02-ltv-train-no-featuredate.json
+--- POST /intel/churn/training/train锛堜笉甯?featureDate锛?--
+{
+    "code":  200,
+    "message":  "训练完成",
+    "data":  {
+                 "modelId":  6,
+                 "algorithm":  "LR",
+                 "featureDate":  "2026-11-10",
+                 "trainingSamples":  489,
+                 "positiveRate":  "100.0%",
+                 "trainAUC":  0.5,
+                 "valAUC":  0.5,
+                 "valF1":  1.0,
+                 "valPrecision":  1.0,
+                 "valRecall":  1.0,
+                 "valLogloss":  0.0353,
+                 "conclusion":  "POOR",
+                 "durationMs":  37,
+                 "topRiskFeatures":  [
+                                         {
+                                             "aov":  5.12385462483992E-12
+                                         },
+                                         {
+                                             "monetary_total":  3.1783451238637698E-12
+                                         },
+                                         {
+                                             "monetary_90d":  3.1783451238637698E-12
+                                         },
+                                         {
+                                             "recency_days":  1.4439562006391805E-12
+                                         },
+                                         {
+                                             "point_balance":  5.0988454131253145E-14
+                                         }
+                                     ]
+             },
+    "traceId":  "8891a46c6a74497fa73a7fb10583d84d",
+    "timestamp":  "2026-11-13 21:14:05"
+}
+
+  -> 03-churn-train-no-featuredate.json
+--- 娓呯悊锛氫笅绾挎湰娆℃柊寤烘ā鍨?---
+  POST /intel/ltv/training/model/8/offline -> code=200
+  POST /intel/churn/training/model/6/offline -> code=200
+
+  -> 04-db-snapshot.txt
+  -> 04-db-snapshot.txt

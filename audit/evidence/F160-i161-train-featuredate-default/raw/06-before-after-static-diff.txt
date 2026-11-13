@@ -1,0 +1,52 @@
+﻿=== I161 Layer 1 / I162 源码静态对比（修复前 HEAD=1be1e7c）===
+captured: 2026-11-13 21:18:58 +08:00
+
+--- LtvTrainingService.java: 缺省 featureDate ---
+LocalDate featureDate = LocalDate.now().minusDays(1); // 鐗瑰緛蹇収 T-1
+                ? LocalDate.now().minusDays(1)
+--- 修复后工作区 ---
+73: LocalDate featureDate = LocalDate.now().minusDays(1); // 特征快照 T-1
+321: ? resolveLatestFeatureDate(tenantId)
+439: * 旧行为：LocalDate.now().minusDays(1)（昨天）→ 只要 ETL 快照不是昨天，查询命中 0 行 → 400。
+442: private LocalDate resolveLatestFeatureDate(Long tenantId) {
+456: return LocalDate.now().minusDays(1);
+
+--- ChurnTrainingService.java ---
+? LocalDate.now().minusDays(1)
+--- 修复后工作区 ---
+67: ? resolveLatestFeatureDate(tenantId)
+379: * 旧行为 LocalDate.now().minusDays(1) 会命中 0 行 → 400。
+381: private LocalDate resolveLatestFeatureDate(Long tenantId) {
+395: return LocalDate.now().minusDays(1);
+
+--- LtvChurnController.java dashboard 输出键 ---
+BigDecimal totalLtv = BigDecimal.ZERO;
+BigDecimal avgLtv = BigDecimal.ZERO;
+if (s.getPredictedLtv365d() != null) totalLtv = totalLtv.add(s.getPredictedLtv365d());
+avgLtv = totalLtv.divide(new BigDecimal(ltvAll.size()), 2, RoundingMode.HALF_UP);
+out.put("totalLtv365d", totalLtv);
+out.put("avgLtv365d", avgLtv);
+--- 修复后工作区 ---
+226: BigDecimal totalLtv = BigDecimal.ZERO;
+227: BigDecimal avgLtv = BigDecimal.ZERO;
+231: if (s.getPredictedLtv365d() != null) totalLtv = totalLtv.add(s.getPredictedLtv365d());
+233: avgLtv = totalLtv.divide(new BigDecimal(ltvAll.size()), 2, RoundingMode.HALF_UP);
+241: out.put("totalLtv365d", totalLtv);
+242: out.put("avgLtv365d", avgLtv);
+243: // I162 契约别名：前端 ltv-churn/index.vue 与 dev/P2Suite.vue 读取 totalLtv / avgLtv，
+244: // 此前后端只返 totalLtv365d / avgLtv365d → 前端 `|| 0` 静默兜底 → 卡片显示 ¥0。
+246: out.put("totalLtv", totalLtv);
+247: out.put("avgLtv", avgLtv);
+
+--- 前端 LtvTraining.vue trainBoth 请求体 ---
+? '/intel/ltv/training/train'
+: '/intel/churn/training/train'
+sysApi.request({ method: 'POST', url: '/intel/ltv/training/train', data: { algorithm: 'MLR', epochs: 200, learningRate: 0.01 } }),
+sysApi.request({ method: 'POST', url: '/intel/churn/training/train', data: { algorithm: 'LR', churnThreshold: 90, horizon: 90 } })
+--- 修复后工作区 ---
+36: <el-descriptions-item label="特征快照">{{ etlStats.featureDate }}</el-descriptions-item>
+226: <el-descriptions-item label="最新快照">{{ modelReport.trainingStatus?.latestFeatureDate || '—' }}</el-descriptions-item>
+504: const featureDate = etlStats.value?.featureDate
+507: if (featureDate) {
+508: ltvBody.featureDate = featureDate
+509: churnBody.featureDate = featureDate

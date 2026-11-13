@@ -63,8 +63,8 @@ public class ChurnTrainingService {
     public Result<Map<String, Object>> train(@RequestBody(required = false) Map<String, Object> body) {
         long t0 = System.currentTimeMillis();
         Long tenantId = TenantContextHolder.get().getTenantId();
-        LocalDate featureDate = body == null || body.get("featureDate") == null
-                ? LocalDate.now().minusDays(1)
+        LocalDate featureDate = (body == null || body.get("featureDate") == null)
+                ? resolveLatestFeatureDate(tenantId)
                 : LocalDate.parse(body.get("featureDate").toString());
         String algorithm = body == null || body.get("algorithm") == null
                 ? "LR" : body.get("algorithm").toString();
@@ -77,7 +77,8 @@ public class ChurnTrainingService {
         List<Sample> samples = loadSamples(tenantId, featureDate, churnThreshold, horizon);
         if (samples.size() < 100) {
             return Result.error(BizCode.BAD_REQUEST,
-                    "样本不足（" + samples.size() + "条），需至少 100 条，请先运行 LTV ETL 积累数据");
+                    "样本不足（" + samples.size() + "条，featureDate=" + featureDate
+                            + "），需至少 100 条，请先运行 LTV ETL 积累数据");
         }
 
         log.info("[Churn] 开始训练: {} 样本, churn={}/{}, 算法={}",
@@ -145,6 +146,7 @@ public class ChurnTrainingService {
             Map<String, Object> data = new LinkedHashMap<>();
             data.put("modelId", model.getId());
             data.put("algorithm", algorithm);
+            data.put("featureDate", featureDate);
             data.put("trainingSamples", samples.size());
             data.put("positiveRate", String.format("%.1f%%",
                     samples.stream().filter(s -> s.label == 1).count() * 100.0 / samples.size()));
@@ -367,6 +369,30 @@ public class ChurnTrainingService {
         int negCount = n - posCount;
         auc = (rankSum * 1.0 - posCount * (posCount + 1.0) / 2) / (posCount * negCount);
         return Math.max(0, Math.min(1, auc));
+    }
+
+    /**
+     * I161 Layer 1：缺省 featureDate 取「该租户最新可用快照日」
+     * = MAX(feature_date) 且 next_90d_active IS NOT NULL（有 Churn 标签）
+     *
+     * Churn 样本来自 ltv_training_feature（见 loadSamples），故口径与 LTV 侧一致；
+     * 旧行为 LocalDate.now().minusDays(1) 会命中 0 行 → 400。
+     */
+    private LocalDate resolveLatestFeatureDate(Long tenantId) {
+        try {
+            String latest = jdbc.queryForObject(
+                    "SELECT DATE_FORMAT(MAX(feature_date), '%Y-%m-%d') FROM ltv_training_feature "
+                            + "WHERE tenant_id = ? AND next_90d_active IS NOT NULL",
+                    String.class, tenantId);
+            if (latest != null && !latest.isBlank()) {
+                LocalDate d = LocalDate.parse(latest);
+                log.info("[Churn] 缺省 featureDate 解析为最新可用快照日: {}", d);
+                return d;
+            }
+        } catch (Exception e) {
+            log.warn("[Churn] 解析最新可用 feature_date 失败，回退 T-1: {}", e.getMessage());
+        }
+        return LocalDate.now().minusDays(1);
     }
 
     // ====================================================================

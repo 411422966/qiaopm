@@ -499,10 +499,19 @@ async function runEtl() {
 async function trainBoth() {
   trainLoading.value = true
   try {
+    // I161 Layer 1：把本次 ETL 的特征快照日带上，让「用哪天的数据训练」在 UI 上可追溯；
+    // 后端缺省也已改为取「该租户最新可用快照日」（MAX(feature_date)），两者互为兜底。
+    const featureDate = etlStats.value?.featureDate
+    const ltvBody: any = { algorithm: 'MLR', epochs: 200, learningRate: 0.01 }
+    const churnBody: any = { algorithm: 'LR', churnThreshold: 90, horizon: 90 }
+    if (featureDate) {
+      ltvBody.featureDate = featureDate
+      churnBody.featureDate = featureDate
+    }
     // 并行训练 LTV 和 Churn
     const [ltvResult, churnResult] = await Promise.allSettled([
-      sysApi.request({ method: 'POST', url: '/intel/ltv/training/train', data: { algorithm: 'MLR', epochs: 200, learningRate: 0.01 } }),
-      sysApi.request({ method: 'POST', url: '/intel/churn/training/train', data: { algorithm: 'LR', churnThreshold: 90, horizon: 90 } })
+      sysApi.request({ method: 'POST', url: '/intel/ltv/training/train', data: ltvBody }),
+      sysApi.request({ method: 'POST', url: '/intel/churn/training/train', data: churnBody })
     ])
 
     if (ltvResult.status === 'fulfilled') {

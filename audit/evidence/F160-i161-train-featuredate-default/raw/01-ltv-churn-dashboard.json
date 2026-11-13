@@ -1,0 +1,20 @@
+﻿{
+    "code":  200,
+    "message":  "操作成功",
+    "data":  {
+                 "totalLtv365d":  676125348.87,
+                 "avgLtv365d":  191971.99,
+                 "totalLtv":  676125348.87,
+                 "avgLtv":  191971.99,
+                 "membersWithLtv":  489,
+                 "highRiskCount":  393,
+                 "medRiskCount":  96,
+                 "lowRiskCount":  0,
+                 "highMedRatio":  100.0,
+                 "ltvModelVersion":  "v1",
+                 "churnModelCode":  "RULE-CHURN-V1",
+                 "snapshotsAt":  "2026-11-13"
+             },
+    "traceId":  "73876ce9c3fd497290276c47578ec6bd",
+    "timestamp":  "2026-11-13 21:14:02"
+}

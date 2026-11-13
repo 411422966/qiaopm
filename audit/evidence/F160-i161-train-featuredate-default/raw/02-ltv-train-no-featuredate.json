@@ -1,0 +1,40 @@
+﻿{
+    "code":  200,
+    "message":  "训练完成",
+    "data":  {
+                 "modelId":  8,
+                 "modelCode":  "LTV_MLR_1794575643",
+                 "algorithm":  "MLR",
+                 "featureDate":  "2026-11-10",
+                 "trainingSamples":  489,
+                 "trainMAE":  0.0000,
+                 "trainRMSE":  0.0000,
+                 "trainMAPE":  0.0000,
+                 "trainR2":  0.0000,
+                 "valMAE":  0.0000,
+                 "valRMSE":  0.0000,
+                 "valMAPE":  0.0000,
+                 "valR2":  0.0000,
+                 "topFeatures":  [
+                                     {
+                                         "recency_days":  0.0
+                                     },
+                                     {
+                                         "frequency_total":  0.0
+                                     },
+                                     {
+                                         "frequency_90d":  0.0
+                                     },
+                                     {
+                                         "monetary_total":  0.0
+                                     },
+                                     {
+                                         "monetary_90d":  0.0
+                                     }
+                                 ],
+                 "durationMs":  557,
+                 "conclusion":  "GOOD"
+             },
+    "traceId":  "d1e473b6bcce4a0d8b2191fae6941888",
+    "timestamp":  "2026-11-13 21:14:04"
+}

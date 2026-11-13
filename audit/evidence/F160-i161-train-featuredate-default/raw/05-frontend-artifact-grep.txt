@@ -1,0 +1,19 @@
+=== 前端部署产物 grep（I161 Layer 1：featureDate 透传）===
+captured: 2026-11-13 21:18 (UTC+8)
+
+--- 容器 meiyetec-web 中包含 /intel/ltv/training/train 的产物 ---
+/usr/share/nginx/html/assets/LtvTraining-CYnk_3vt.js
+
+--- 产物内 featureDate 出现位置 ---
+featureDate
+featureDate=e
+featureDate=e
+featureDate
+
+--- trainBoth 编译后片段（证明 etlStats.featureDate 被塞进两个训练请求体）---
+message||`未知`))}finally{S.value=!1}}async function Ce(){C.value=!0;try{let e=E.value?.featureDate,t={algorithm:`MLR`,epochs:200,learningRate:.01},n={algorithm:`LR`,churnThreshold:90,horizon:90};e&&(t.featureDate=e,n.featureDate=e);let[r,i]=await Promise.allSettled([x.request({method:`POST`,url:`/intel/ltv/training/train`,data:t}),x.request({method:`POST`,url:`/intel/churn/training/train`,data:n})]);if(r.status
+
+--- 解读 ---
+- `E.value?.featureDate` 对应源码 etlStats.value?.featureDate
+- `e&&(t.featureDate=e,n.featureDate=e)` 对应源码 if (featureDate) { ltvBody.featureDate = featureDate; churnBody.featureDate = featureDate }
+- featureDate 缺省时（ETL 未在本会话跑过）请求体不带该字段 → 由后端 resolveLatestFeatureDate 兜底（见 I161 Layer 1）
