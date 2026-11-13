@@ -240,6 +240,11 @@ public class LtvChurnController {
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("totalLtv365d", totalLtv);
         out.put("avgLtv365d", avgLtv);
+        // I162 契约别名：前端 ltv-churn/index.vue 与 dev/P2Suite.vue 读取 totalLtv / avgLtv，
+        // 此前后端只返 totalLtv365d / avgLtv365d → 前端 `|| 0` 静默兜底 → 卡片显示 ¥0。
+        // 保留 365d 原名并补别名，两个消费方零改动即可取到真实值。
+        out.put("totalLtv", totalLtv);
+        out.put("avgLtv", avgLtv);
         out.put("membersWithLtv", membersWithLtv);
         out.put("highRiskCount", high);
         out.put("medRiskCount", med);
