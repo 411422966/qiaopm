@@ -1,0 +1,2 @@
+﻿=== BEFORE share-page code=TESTI164A ===
+{"code":200,"message":"操作成功","data":{"inviteeRewardDesc":"优惠券 ¥0.00","campaignType":"INVITE_REWARD","campaignId":8,"shareLandingUrl":null,"inviterRewardDesc":"优惠券 ¥0.00","shareImageUrl":null,"shareTitle":null,"inviterNick":"审**","inviteCode":"TESTI164A","startTime":"2026-01-01T00:00:00","inviteeMinConsume":0.00,"endTime":"2027-12-31T23:59:59","shareDesc":null,"campaignName":"审计测试活动C1","status":1},"traceId":"3239f1977c434989a16ca692ce0ee058","timestamp":"2026-11-13 23:53:24"}

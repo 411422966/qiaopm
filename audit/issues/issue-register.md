@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-13（补登 I162/I163/I164/I165/I166/I167 + I146 转 Parked；I161 Layer 1 已修）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I164/I165/I166 已修并 VERIFIED；I167 只读排查完成待实施 DDL；补登 I168/I169）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -88,10 +88,12 @@
 | I161 | I161 — 「训练全部模型」按钮不传 featureDate，后端默认取昨天而最新快照是 2026-11-10，返回 400 训练样本不足 | PARTIAL | [I161-train-all-models-button-fails.md](I161-train-all-models-button-fails.md) |
 | I162 | I162 — LTV/Churn 看板字段契约漂移：前端读 `totalLtv`/`avgLtv`，后端只返 `totalLtv365d`/`avgLtv365d`，`|| 0` 静默兜底 → LTV 卡片恒显示 ¥0（真实 6.76 亿） | Fixed | [I162-ltv-dashboard-field-mismatch.md](I162-ltv-dashboard-field-mismatch.md) |
 | I163 | I163 — LTV 标签窗口与 ETL 时序冲突：T-1 快照的「未来 90 天」标签恒为 0，训练出退化常量模型（指标全 0 但 conclusion=GOOD），需业务决策标签窗口定义 | Open | [I163-ltv-label-window-etl-timing-conflict.md](I163-ltv-label-window-etl-timing-conflict.md) |
-| I164 | I164 — `my-stats` 三个计数缺 tenantId 过滤，导致跨租户 IDOR | Open | [I164-invite-my-stats-tenant-idor.md](I164-invite-my-stats-tenant-idor.md) |
-| I165 | I165 — `report-share` 缺 tenantId 过滤 + 无限流 + 无幂等 | Open | [I165-invite-report-share-tenant-idor.md](I165-invite-report-share-tenant-idor.md) |
-| I166 | I166 — `share-page` 隐式调用 `trackClick`，导致 `scanCount` 双计数 | Open | [I166-invite-share-page-scan-double-count.md](I166-invite-share-page-scan-double-count.md) |
+| I164 | I164 — `my-stats` 三个计数缺 tenantId 过滤，导致跨租户 IDOR | Fixed | [I164-invite-my-stats-tenant-idor.md](I164-invite-my-stats-tenant-idor.md) |
+| I165 | I165 — `report-share` 缺 tenantId 过滤 + 无限流 + 无幂等 | Partial | [I165-invite-report-share-tenant-idor.md](I165-invite-report-share-tenant-idor.md) |
+| I166 | I166 — `share-page` 隐式调用 `trackClick`，导致 `scanCount` 双计数 | Fixed | [I166-invite-share-page-scan-double-count.md](I166-invite-share-page-scan-double-count.md) |
 | I167 | I167 — `m09_invite_code.invite_code` 非全局唯一，匿名场景无法用 code 反查 tenantId（I146 硬前置 DDL） | Open | [I167-invite-code-global-unique-ddl.md](I167-invite-code-global-unique-ddl.md) |
+| I168 | I168 — M09 邀请 `share_count`/`scan_count` 历史脏数据校正（口径待业务确认） | Open | [I168-invite-counter-historical-dirty-data.md](I168-invite-counter-historical-dirty-data.md) |
+| I169 | I169 — 应用层通用限流能力缺失（I165 D2 遗留项） | Open | [I169-app-layer-general-rate-limit.md](I169-app-layer-general-rate-limit.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
@@ -104,6 +106,15 @@
 - **I162**：后端 `LtvChurnController.dashboard()` 增加 `totalLtv` / `avgLtv` 契约别名（保留 `totalLtv365d` / `avgLtv365d` 原名），两个前端消费方零改动；API 层与浏览器层均已实测（LTV 卡片 ¥676,125,349 / 平均 ¥191,972），证据 `audit/evidence/F159-ltv-dashboard-contract-fix/`。同域另有 3 项发现（LTV 累计值口径重复计数、P2Suite 单会员面板字段全不匹配、看板端点首响应 >10s 触发 axios 超时）**未修**，登记在 I162 §5，待决。
 - **I146**（`I146-c-end-invite-anonymous-access.md`）：C 端邀请端点匿名访问改造的**只读调查报告已通过**（2026-11-13 用户确认）。三项前置发现改变了任务性质 —— **F1** 前端 8 个 C 端端点**无任何调用方**（不是"被 JWT 挡住"，而是"后端有端点 + 前端无页面"）；**F2** `/invite/bind` 与 `/invite/redeem` 是**没有服务端触发链路的影子端点**（`MemberService` / `PosController` 中 grep `invite` 零命中）；**F3** `m09_invite_code.invite_code` **非全局唯一**（唯一键 `uk_campaign_code (campaign_id, invite_code)`），匿名场景无法用 code 反查 tenantId。任务性质由「给 `/invite/**` 加 JWT 白名单」改为「**先补安全债与数据基础，再谈开放**」；方案选型待 Q1–Q5 拍板，**实施未开始**，运行期结论一律 UNVERIFIED。调查中确认的三项**既存**安全缺陷与匿名化无关，按用户决策「现在就要修」**拆分**为独立 Issue：**I164**（`my-stats` 三个计数缺 tenantId 过滤 → 跨租户 IDOR，P1）、**I165**（`report-share` 无 tenantId 过滤 + 无限流 + 无幂等，P1）、**I166**（`share-page` 隐式调用 `trackClick` → `scanCount` 双计数，P2）；**另拆出前置数据基础缺口 I167**（`m09_invite_code.invite_code` 非全局唯一 → 匿名场景无法用 code 反查 tenantId，P2，含 3 个 DDL 候选方案与只读存量排查 SQL，是 I146 的**硬前置**）。I146 内不再承担该四项修复，其安全防护清单需引用这几项的结论。
 - **I146 状态转 Parked**（2026-11-13）：调查报告已通过，但剩余动作全部依赖产品决策（Q1 落地页形态 / Q4 tenantId 判定方式 / Q14 前端归属）与前置 DDL（I167），拍板前无法开工 → 由 Open 调整为 **Parked（等待产品决策）**。建议实施顺序：I167 完成 → I164/I165/I166 修复（与匿名化解耦，可并行）→ I146 匿名化改造开工。
+
+## 补充说明（2026-11-14：I164/I165/I166 修复批次）
+
+- **I164（Fixed）**：`InviteService.myStats` 的 `successCount` / `pendingReward` / `rewardLogs` 三个 `selectCount` 补 `.eq(...::getTenantId, tid)`，消除「传其他租户 memberId 读到他人运营数据」的跨租户 IDOR。证据 `audit/evidence/F161-invite-my-stats-tenant-filter/`（VERIFIED，L5a）。
+- **I165（Partial）**：D1 租户校验（`codeMapper.selectById` 后比对 `tid.equals(c.getTenantId())`，不一致与不存在返回同一 `NOT_FOUND`）+ D3 Redis 幂等（键 `invite:share:{codeId}:{ip}`，TTL 取 `sys_config.invite.share.idempotent.window`，默认 600 秒，Redis 故障 **fail-open**）已修并 VERIFIED；**D2 限流未做** → 转 **I169**。证据 `audit/evidence/F162-invite-report-share-hardening/`。
+- **I166（Fixed）**：`InviteController.sharePage` 删除隐式 `inviteService.trackClick(...)` 及其 `try/catch` 与死代码 `InviteCampaign activity = null`，扫码计数改为只由 `POST /invite/track` 产生。证据 `audit/evidence/F163-invite-share-page-no-side-effect/`（VERIFIED，L5a）。
+- **I167（Open，只读排查已完成）**：2026-11-14 在本机开发库跑完 §3.3 全部只读 SQL（5 条业务查询 + 索引查询，**全程无写操作**）→ 跨租户同码 **0 行**、record 冗余列漂移 **0 行**、`invite_code` 单列唯一键**不存在** → 本机口径采用**方案②（全局唯一键，不加前缀）**。**DDL 未实施**，**生产库未连接**（生产存量仍 UNVERIFIED，ADD UNIQUE KEY 前须在生产只读副本复核）。证据 `audit/evidence/F164-invite-code-global-unique-readonly-scan/`。
+- **I168（Open，新增）**：`share_count` / `scan_count` 历史脏数据校正 —— 修复前的计数含 I165 越权刷量与 I166 双计数，**不可反推**，需业务先拍板口径（A 保留+标注 / B 清零 / C 折算 / D 只建流水表）再执行。**本轮未做任何校正**。
+- **I169（Open，新增）**：应用层通用限流能力缺失 —— 仓内检索确认无任何限流工具（`RedisTemplate` 业务侧仅 `NotifyReplayProtector` 一处，`pom.xml` 无 Bucket4j/Resilience4j/Sentinel，无自定义限流注解/切面/网关）。I165 的幂等**挡不住「换 codeId 绕过」**，`POST /invite/track` 在无 phone 时更是**完全无防刷**（`scan_count + 1` 发生在 phone 判空之前）→ 需独立立项建设。**本轮未实现任何限流代码**。
 
 ## 脚注：证据目录命名规则切换（2026-11-13 起）
 

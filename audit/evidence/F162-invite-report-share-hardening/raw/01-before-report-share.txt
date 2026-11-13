@@ -1,0 +1,6 @@
+﻿=== BEFORE report-share codeId=9 (tenant2 code -> cross-tenant) ===
+{"code":200,"message":"操作成功","data":null,"traceId":"2d28bcdfd1ad4adbb85e09ae1b866584","timestamp":"2026-11-13 23:53:20"}
+=== BEFORE report-share codeId=8 (own tenant) call#1 ===
+{"code":200,"message":"操作成功","data":null,"traceId":"dd5afa0bc5f649b995c183e79cf7cbf7","timestamp":"2026-11-13 23:53:21"}
+=== BEFORE report-share codeId=8 (own tenant) call#2 ===
+{"code":200,"message":"操作成功","data":null,"traceId":"f7f92f4ba1aa40998112e113a66cbb51","timestamp":"2026-11-13 23:53:22"}

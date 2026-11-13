@@ -156,17 +156,15 @@ public class InviteController {
 
     /**
      * 分享落地页数据：扫码/点链接进来后获取活动信息
+     *
+     * <p>口径约定（I166）：本端点是**只读**语义，**不做任何埋点副作用**。
+     * 扫码计数（scan_count）只由显式 {@code POST /invite/track} 产生；
+     * 否则前端同时调用 share-page + track 会造成一次真实访问被计数两次。
      */
     @GetMapping("/invite/share-page")
     public Result<Map<String, Object>> sharePage(@RequestParam String code) {
         Long tid = tid();
         if (tid == null) return Result.error(401, "未识别租户");
-        // 先触发扫码上报
-        InviteCampaign activity = null;
-        try {
-            inviteService.trackClick(code, null, "LINK", null, null);
-        } catch (Exception ignore) {}
-        // 简化：直接通过 controller 内部获取（refactor 留待后续）
         return inviteService.getSharePage(code, tid);
     }
 
@@ -242,10 +240,13 @@ public class InviteController {
 
     /**
      * 分享按钮上报（小程序/H5 点击分享按钮）
+     *
+     * <p>服务端按「同 codeId + 同 IP + 幂等窗口」去重（I165），
+     * 窗口内重复点击不再累加 share_count。
      */
     @PostMapping("/invite/{codeId}/report-share")
-    public Result<Void> reportShare(@PathVariable Long codeId) {
-        return inviteService.reportShare(codeId);
+    public Result<Void> reportShare(@PathVariable Long codeId, HttpServletRequest request) {
+        return inviteService.reportShare(codeId, clientIp(request));
     }
 
     private static String clientIp(HttpServletRequest req) {

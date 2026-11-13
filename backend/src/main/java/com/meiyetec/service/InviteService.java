@@ -15,11 +15,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -50,6 +53,14 @@ public class InviteService {
     private final CouponGrantMapper couponGrantMapper;
     private final PointService pointService;
     private final WalletService walletService;
+    private final SysConfigService sysConfigService;
+
+    /**
+     * Redis（可选依赖）：分享上报幂等。
+     * <p>Redis 未装配或不可用时走 fail-open（放行计数），仅告警不阻断分享上报。
+     */
+    @Autowired(required = false)
+    private StringRedisTemplate redis;
 
     private static final ObjectMapper JSON = new ObjectMapper();
 
@@ -57,6 +68,12 @@ public class InviteService {
     private static final int CODE_LENGTH = 8;
     /** 同一手机号绑定同一活动同一邀请人的最大次数（防刷） */
     private static final int MAX_BIND_PER_PHONE = 1;
+    /** 分享上报幂等窗口配置 key（sys_config），单位：秒 */
+    private static final String SHARE_IDEMPOTENT_WINDOW_KEY = "invite.share.idempotent.window";
+    /** 分享上报幂等窗口默认值（秒），sys_config 未配置时使用 */
+    private static final int SHARE_IDEMPOTENT_WINDOW_DEFAULT = 600;
+    /** 分享上报幂等 Redis key 前缀 */
+    private static final String SHARE_IDEMPOTENT_KEY_PREFIX = "invite:share:";
 
     // ====================================================================
     // 1. 活动管理
@@ -348,7 +365,10 @@ public class InviteService {
     }
 
     /**
-     * 我的邀请统计汇总
+     * 我的邀请统计汇总。
+     *
+     * <p>租户隔离（I164）：四个计数全部按 {@code tenant_id} 过滤，
+     * 避免传入其他租户的 memberId 时读到他人运营数据（跨租户 IDOR）。
      */
     public Result<Map<String, Object>> myStats(Long memberId) {
         Long tid = TenantContextHolder.get().getTenantId();
@@ -356,12 +376,17 @@ public class InviteService {
         Long totalCodes = codeMapper.selectCount(new LambdaQueryWrapper<InviteCode>()
                 .eq(InviteCode::getMemberId, memberId).eq(InviteCode::getTenantId, tid));
         Long successCount = recordMapper.selectCount(new LambdaQueryWrapper<InviteRecord>()
-                .eq(InviteRecord::getInviterMemberId, memberId).eq(InviteRecord::getStatus, 4));
+                .eq(InviteRecord::getInviterMemberId, memberId)
+                .eq(InviteRecord::getTenantId, tid)
+                .eq(InviteRecord::getStatus, 4));
         Long pendingReward = recordMapper.selectCount(new LambdaQueryWrapper<InviteRecord>()
                 .eq(InviteRecord::getInviterMemberId, memberId)
+                .eq(InviteRecord::getTenantId, tid)
                 .in(InviteRecord::getStatus, 2, 3));
         Long rewardLogs = rewardLogMapper.selectCount(new LambdaQueryWrapper<InviteRewardLog>()
-                .eq(InviteRewardLog::getMemberId, memberId).eq(InviteRewardLog::getStatus, 1));
+                .eq(InviteRewardLog::getMemberId, memberId)
+                .eq(InviteRewardLog::getTenantId, tid)
+                .eq(InviteRewardLog::getStatus, 1));
         stats.put("totalCampaigns", totalCodes);
         stats.put("successInvites", successCount);
         stats.put("pendingRewards", pendingReward);
@@ -790,15 +815,64 @@ public class InviteService {
     }
 
     /**
-     * 分享按钮上报（前端点击分享）
+     * 分享按钮上报（前端点击分享）。
+     *
+     * <p>租户隔离（I165）：只允许对**当前租户**的邀请码计数，
+     * 跨租户 codeId 与不存在的 codeId 返回同一结果（NOT_FOUND），不泄露资源是否存在。
+     *
+     * <p>幂等（I165）：同一 codeId + 同一 IP 在配置窗口内（sys_config
+     * {@code invite.share.idempotent.window}，默认 600 秒）只计一次，
+     * 窗口内重复上报直接返回成功（不暴露幂等命中与否），但不再累加 share_count。
+     *
+     * <p>Redis 不可用时 fail-open：仅告警，仍然计数（share_count 是运营指标，非资金口径）。
+     *
+     * @param codeId 邀请码主键
+     * @param ip     客户端 IP（用于幂等键）
      */
     @Transactional(rollbackFor = Exception.class)
-    public Result<Void> reportShare(Long codeId) {
+    public Result<Void> reportShare(Long codeId, String ip) {
+        Long tid = TenantContextHolder.get().getTenantId();
+        if (tid == null) {
+            return Result.error(BizCode.FORBIDDEN, "未识别租户");
+        }
         InviteCode c = codeMapper.selectById(codeId);
-        if (c == null) return Result.error(BizCode.NOT_FOUND, "邀请码不存在");
+        if (c == null || !tid.equals(c.getTenantId())) {
+            // 不存在与跨租户返回同一结果，避免探测
+            return Result.error(BizCode.NOT_FOUND, "邀请码不存在");
+        }
+        if (!acquireShareIdempotency(codeId, ip)) {
+            // 幂等命中：跳过计数，但仍返回成功（不泄露幂等状态）
+            return Result.success(null);
+        }
         c.setShareCount((c.getShareCount() == null ? 0 : c.getShareCount()) + 1);
         codeMapper.updateById(c);
         return Result.success(null);
+    }
+
+    /**
+     * 分享上报幂等占位：同一 codeId + 同一 IP 在窗口内只允许第一次返回 true。
+     *
+     * @return true = 首次上报（应计数）；false = 窗口内重复（不应计数）
+     */
+    private boolean acquireShareIdempotency(Long codeId, String ip) {
+        if (redis == null) {
+            log.warn("[INVITE] Redis 未装配，跳过分享上报幂等（fail-open）");
+            return true;
+        }
+        String key = SHARE_IDEMPOTENT_KEY_PREFIX + codeId + ":"
+                + (ip == null || ip.isBlank() ? "unknown" : ip);
+        int window = sysConfigService.getInt(SHARE_IDEMPOTENT_WINDOW_KEY, SHARE_IDEMPOTENT_WINDOW_DEFAULT);
+        if (window <= 0) {
+            window = SHARE_IDEMPOTENT_WINDOW_DEFAULT;
+        }
+        try {
+            Boolean acquired = redis.opsForValue().setIfAbsent(key, "1", Duration.ofSeconds(window));
+            return Boolean.TRUE.equals(acquired);
+        } catch (Exception e) {
+            // fail-open：Redis 故障不阻断分享计数，仅告警留痕
+            log.warn("[INVITE] Redis 幂等不可用，降级为不拦截（fail-open）：{}", e.getMessage());
+            return true;
+        }
     }
 
     // ====================================================================

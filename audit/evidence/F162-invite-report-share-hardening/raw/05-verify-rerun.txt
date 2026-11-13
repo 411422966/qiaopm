@@ -1,0 +1,44 @@
+﻿TOKEN_USER=operator01 USER_ID=900006 TENANT=1
+
+=== S1: I164 GET /invite/my-stats?memberId=1 (tenant1 member) ===
+RESP: code=200 data={"totalCampaigns":1,"successInvites":1,"rewardReceived":1,"pendingRewards":0}
+DB records: 8/1/status=4 | 9/2/status=4 | 10/2/status=3
+CHECK: totalCampaigns=1 successInvites=1 pendingRewards=0 rewardReceived=1 => PASS
+
+=== S2: I164 GET /invite/my-stats?memberId=99999999 (non-existent) ===
+RESP: code=200 data={"totalCampaigns":0,"successInvites":0,"rewardReceived":0,"pendingRewards":0}
+CHECK: all four counters are 0 => PASS
+
+=== S3: I165 POST /invite/9/report-share (codeId=9 belongs to tenant2, caller tenant1) ===
+RESP: code=404 message=资源不存在: 邀请码不存在
+DB: id=9 share_count before=0 after=0
+CHECK: non-200 and share_count unchanged => PASS
+
+=== S4: I165 POST /invite/8/report-share x3 (same tenant, same IP) ===
+call#1: code=200 share_count=1 (was 0)
+call#2: code=200 share_count=1
+call#3: code=200 share_count=1
+CHECK: first call +1, next two return 200 with unchanged counter => PASS
+
+=== S5: I166 GET /invite/share-page?code=TESTI164A ===
+RESP: code=200 data={"inviteeRewardDesc":"优惠券 ¥5.00","campaignType":"INVITE_REWARD","campaignId":8,"shareLandingUrl":null,"inviterRewardDesc":"优惠券 ¥10.00","shareImageUrl":null,"shareTitle":"AuditShareTitleC1","inviterNick":"A**","inviteCode":"TESTI164A","startTime":"2026-01-01T00:00:00","inviteeMinConsume":0.00,"endTime":"2027-12-31T23:59:59","shareDesc":"AuditShareDescC1","campaignName":"AuditFixtureCampaignC1","status":1}
+DB: id=8 scan_count before=0 after=0
+CHECK: scan_count unchanged after share-page => PASS
+--- extra: explicit POST /invite/track still increments scan_count ---
+RESP: code=200 | DB scan_count=1 (was 0)
+CHECK: explicit track increments scan_count by 1 => PASS
+
+=== S6: I165 POST /invite/99999999/report-share (guaranteed-absent id) ===
+RESP: code=404 message=资源不存在: 邀请码不存在
+DB: rows with id=99999999 = 0 (existence check, must be 0)
+CHECK: non-200 and target id absent => PASS
+
+=== SUMMARY ===
+S1  I164 my-stats own tenant      : PASS
+S2  I164 my-stats absent member   : PASS
+S3  I165 report-share cross-tenant: PASS
+S4  I165 report-share idempotency : PASS
+S5  I166 share-page no side effect: PASS
+S6  I165 report-share absent id   : PASS
+EXTRA explicit track still counts  : PASS
+OVERALL: ALL PASS

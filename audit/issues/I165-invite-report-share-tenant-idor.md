@@ -1,6 +1,6 @@
 # I165 — `report-share` 缺 tenantId 过滤 + 无限流 + 无幂等
 
-> **状态**：Open
+> **状态**：**部分修复**（2026-11-14，修复前 HEAD `1bc831f`）→ D1 + D3 已修（证据：`audit/evidence/F162-invite-report-share-hardening/`，VERIFIED）；**D2 限流未做 → 转 I169**
 > **严重度**：P1（**既存**越权写入 + 可任意刷计数；任意已登录用户可污染任意租户的分享计数）
 > **发现日期**：2026-11-13（I146 C 端邀请端点匿名访问改造 · 只读调查 中的 Q7）
 > **登记人**：Cursor
@@ -222,3 +222,20 @@ POST /invite/{codeId}/report-share
 ---
 
 **下一步**：等待用户拍板 §3.5 四项取舍 → 实施修复 → 按 §4 采集运行证据 → 落 `audit/evidence/FXXX-.../`。
+
+---
+
+## 6. 修复记录（2026-11-14）
+
+| 项 | 内容 |
+|---|---|
+| 修复 commit | 修复前 HEAD `1bc831f`（本批 commit：`fix(invite): 修复 my-stats 跨租户 IDOR、report-share 无租户校验、share-page 双计数（I164/I165/I166）`） |
+| 改动文件 | `backend/src/main/java/com/meiyetec/service/InviteService.java`（`reportShare` 重写 + 新增 `acquireShareIdempotency`）、`backend/src/main/java/com/meiyetec/controller/InviteController.java`（`reportShare` 增加 `HttpServletRequest` 入参）、`backend/src/main/resources/db/sql/migrate_m09_invite_share_idempotent_window.sql`（新增，`sys_config` 种子） |
+| **D1** 修复 | `codeMapper.selectById(codeId)` 后比对 `tid.equals(c.getTenantId())`，不一致返回 `BizCode.NOT_FOUND` +「邀请码不存在」——与「不存在」同结果，不泄露资源是否存在 |
+| **D3** 修复 | Redis `SETNX` 幂等，键 `invite:share:{codeId}:{ip}`，TTL 取 `sys_config.invite.share.idempotent.window`（新增行 `id=5 = 600` 秒）；幂等命中不计数但仍返回 200；Redis 不可用 **fail-open**（捕获异常 → `log.warn` → 仍计数） |
+| **D2** 限流 | **未实施** —— 仓内检索无通用限流工具（`RedisTemplate` 仅 `NotifyReplayProtector` 一处使用），按用户口径「没有现成工具就只做幂等」→ 单独立 **I169** |
+| §3.5 取舍拍板结果 | ① Redis 降级 = **fail-open**（采纳建议 b）；② 限流维度/阈值 = 移至 I169；③ 幂等窗口 = **走 `sys_config`**（采纳建议 3，配置 key `invite.share.idempotent.window`）；④ 历史脏数据 = 不校正 → 转 **I168** |
+| 验证 | **VERIFIED（L5a）**：跨租户 codeId=9 修复前 200 且 `share_count` 0→1，修复后 404 且计数不变；同租户 codeId=8 连续 3 次调用 `share_count` 只 0→1；`codeId=99999999` → 404；Redis 键 `invite:share:8:172.25.0.1` 实测 `TTL=579` |
+| 证据 | `audit/evidence/F162-invite-report-share-hardening/` |
+| **本轮复跑**（2026-11-14 重建夹具后） | **7/7 PASS**：`raw/05-verify-rerun.txt` —— S1/S2（I164 my-stats）、S3 跨租户 404 且 `share_count` 0→0、S4 同租户 3 次调用仅首次 +1、S5 `share-page` 后 `scan_count` 0→0、S6 `codeId=99999999` → 404、EXTRA 显式 `POST /invite/track` 仍 +1。Redis 键 `invite:share:8:172.25.0.1` 实测 `TTL=584`（`raw/05-redis-idempotency-keys.txt`） |
+| 遗留 UNVERIFIED | Redis 故障 fail-open 分支未做故障注入实测；幂等窗口过期后重新计数未等满 600 秒复测 |

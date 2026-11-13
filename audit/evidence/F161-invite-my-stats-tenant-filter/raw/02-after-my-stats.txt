@@ -1,0 +1,7 @@
+﻿TOKEN_USER=operator01 TENANT=1
+=== AFTER my-stats memberId=1 ===
+{"code":200,"message":"操作成功","data":{"totalCampaigns":1,"successInvites":1,"rewardReceived":1,"pendingRewards":0},"traceId":"c14d650378ee47b58d10ce6e0b2a792c","timestamp":"2026-11-14 00:02:41"}
+=== AFTER my-stats memberId=99999999 ===
+{"code":200,"message":"操作成功","data":{"totalCampaigns":0,"successInvites":0,"rewardReceived":0,"pendingRewards":0},"traceId":"3afcf26ca7924c40b4328b8673f27a1d","timestamp":"2026-11-14 00:02:41"}
+=== AFTER my-stats memberId=1 (再次确认稳定) ===
+{"code":200,"message":"操作成功","data":{"totalCampaigns":1,"successInvites":1,"rewardReceived":1,"pendingRewards":0},"traceId":"55e271d4fe7647f0ae2b6ef98db8cce6","timestamp":"2026-11-14 00:02:42"}

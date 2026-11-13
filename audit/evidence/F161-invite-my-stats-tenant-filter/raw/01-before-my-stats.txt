@@ -1,0 +1,5 @@
+﻿TOKEN_USER=operator01 USER_ID=900006 TENANT=1 (operator01.sys_user.tenant_id=1)
+=== BEFORE my-stats memberId=1 ===
+{"code":200,"message":"操作成功","data":{"totalCampaigns":1,"successInvites":2,"rewardReceived":2,"pendingRewards":1},"traceId":"3d411b5bbdd04a77b7bd70c7094d8be7","timestamp":"2026-11-13 23:53:18"}
+=== BEFORE my-stats memberId=99999999 ===
+{"code":200,"message":"操作成功","data":{"totalCampaigns":0,"successInvites":0,"rewardReceived":0,"pendingRewards":0},"traceId":"a56fc3beed774bd8975ee302cbcf2fd7","timestamp":"2026-11-13 23:53:18"}

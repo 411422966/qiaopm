@@ -1,0 +1,6 @@
+﻿
+id	tenant_id	invite_code	share_count	scan_count	register_count	success_count
+8	1	TESTI164A	2	1	0	0
+9	2	TESTI165B	1	0	0	0
+
+

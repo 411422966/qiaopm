@@ -1,6 +1,7 @@
 # I164 — `my-stats` 三个计数缺 tenantId 过滤，导致跨租户 IDOR
 
-> **状态**：Open
+> **状态**：**已修复**（2026-11-14，修复前 HEAD `1bc831f`）→ 证据：`audit/evidence/F161-invite-my-stats-tenant-filter/`（VERIFIED）
+> **修复范围**：§3.1 最小修复（三个 `selectCount` 各补 `tenant_id` 条件）；§3.2 三项建议**未实施**（超授权范围）
 > **严重度**：P1（**既存**越权读取，非匿名化引入；任意已登录用户可读其他租户的邀请统计）
 > **发现日期**：2026-11-13（I146 C 端邀请端点匿名访问改造 · 只读调查 中的 Q6）
 > **登记人**：Cursor
@@ -152,3 +153,18 @@ Long rewardLogs = rewardLogMapper.selectCount(new LambdaQueryWrapper<InviteRewar
 ---
 
 **下一步**：等待用户批准修复 → 实施 §3.1 → 按 §4 采集运行证据 → 落 `audit/evidence/FXXX-.../`。
+
+---
+
+## 6. 修复记录（2026-11-14）
+
+| 项 | 内容 |
+|---|---|
+| 修复 commit | 修复前 HEAD `1bc831f`（本批 commit：`fix(invite): 修复 my-stats 跨租户 IDOR、report-share 无租户校验、share-page 双计数（I164/I165/I166）`） |
+| 改动文件 | `backend/src/main/java/com/meiyetec/service/InviteService.java` — `myStats(Long memberId)` |
+| 改动内容 | `successCount` / `pendingReward` 补 `.eq(InviteRecord::getTenantId, tid)`；`rewardLogs` 补 `.eq(InviteRewardLog::getTenantId, tid)` |
+| 未实施 | §3.2 建议 1（`memberId` 与登录会员一致性校验）、建议 2（端点权限注解）、建议 3（字段名语义）——超本轮授权范围 |
+| 验证 | **VERIFIED（L5a）**：修复前后同口径对照实测 —— 修复前 `successInvites=2 / pendingRewards=1 / rewardReceived=2`（含 tenant 2 数据泄漏），修复后 `1 / 0 / 1`（仅 tenant 1）；`memberId=99999999` 前后均全 0 |
+| 证据 | `audit/evidence/F161-invite-my-stats-tenant-filter/`（`raw/01-before-my-stats.txt`、`raw/02-after-my-stats.txt`） |
+| **本轮复跑**（2026-11-14 重建夹具后） | **7/7 PASS**：`raw/05-verify-rerun.txt` —— S1 `memberId=1` → `totalCampaigns=1 / successInvites=1 / pendingRewards=0 / rewardReceived=1`（tenant 2 的 record 8/9/10 未计入）；S2 `memberId=99999999` → 四项全 0 |
+| 数据安全 | 测试用 `m09_*` 行全部为隔离行（进入本批时 4 张表均 0 行），验证后已删除，表回到 0 行基线 |

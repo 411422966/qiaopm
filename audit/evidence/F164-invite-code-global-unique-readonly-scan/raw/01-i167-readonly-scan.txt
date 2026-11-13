@@ -1,0 +1,29 @@
+﻿section
+--- SQL1 璺ㄧ鎴峰悓鐮侊紙鏂规鈶＄‖鍓嶆彁锛?---
+section
+--- SQL1b 浠绘剰閲嶅鐮侊紙璺ㄦ椿鍔級 ---
+section
+--- SQL2 娲诲姩鍐呭悓鐮?---
+section
+--- SQL3 record 涓?code 鐮佹紓绉?---
+section
+--- SQL4 鐮侀暱搴﹀垎甯?---
+section
+--- SQL5 tenant_id NULL 鑴忚 ---
+COUNT(*)
+0
+section
+--- SQL6 瀛橀噺琛屾暟 ---
+campaigns	codes	records	reward_logs
+0	0	0	0
+section
+--- SQL7 鐜版湁鍞竴閿?/ 绱㈠紩 ---
+Table	Non_unique	Key_name	Seq_in_index	Column_name	Collation	Cardinality	Sub_part	Packed	Null	Index_type	Comment	Index_comment	Visible	Expression
+m09_invite_code	0	PRIMARY	1	id	A	0	NULL	NULL		BTREE			YES	NULL
+m09_invite_code	0	uk_campaign_code	1	campaign_id	A	0	NULL	NULL		BTREE			YES	NULL
+m09_invite_code	0	uk_campaign_code	2	invite_code	A	0	NULL	NULL		BTREE			YES	NULL
+m09_invite_code	0	uk_campaign_member	1	campaign_id	A	0	NULL	NULL		BTREE			YES	NULL
+m09_invite_code	0	uk_campaign_member	2	member_id	A	0	NULL	NULL		BTREE			YES	NULL
+m09_invite_code	1	idx_member	1	member_id	A	0	NULL	NULL		BTREE			YES	NULL
+m09_invite_code	1	idx_tenant_campaign	1	tenant_id	A	0	NULL	NULL		BTREE			YES	NULL
+m09_invite_code	1	idx_tenant_campaign	2	campaign_id	A	0	NULL	NULL		BTREE			YES	NULL

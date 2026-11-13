@@ -1,6 +1,6 @@
 # I166 — `share-page` 隐式调用 `trackClick`，导致 `scanCount` 双计数
 
-> **状态**：Open
+> **状态**：**已修复**（2026-11-14，修复前 HEAD `1bc831f`）→ 证据：`audit/evidence/F163-invite-share-page-no-side-effect/`（VERIFIED）
 > **严重度**：P2（**既存**数据口径缺陷，不报错、不报错码，只让运营看板的扫码数虚高一倍）
 > **发现日期**：2026-11-13（I146 C 端邀请端点匿名访问改造 · 只读调查 中的 Q8）
 > **登记人**：Cursor
@@ -212,3 +212,18 @@ public Result<Map<String, Object>> sharePage(@RequestParam String code) {
 ---
 
 **下一步**：等待用户批准修复（§3.1 + §3.2）→ 实施 → 按 §4 采集运行证据 → 落 `audit/evidence/FXXX-.../`。
+
+---
+
+## 6. 修复记录（2026-11-14）
+
+| 项 | 内容 |
+|---|---|
+| 修复 commit | 修复前 HEAD `1bc831f`（本批 commit：`fix(invite): 修复 my-stats 跨租户 IDOR、report-share 无租户校验、share-page 双计数（I164/I165/I166）`） |
+| 改动文件 | `backend/src/main/java/com/meiyetec/controller/InviteController.java` — `sharePage` |
+| 改动内容 | ① 删除隐式 `inviteService.trackClick(code, null, "LINK", null, null)` 调用及其 `try/catch`（S2 一并消除）；② 删除死代码 `InviteCampaign activity = null`（S1）；③ 补注释固化口径「本端点只读，扫码计数只由 `POST /invite/track` 产生」（§3.2） |
+| 验证 | **VERIFIED（L5a）**：修复前 `GET /invite/share-page?code=TESTI164A` 使 `scan_count` 0→1；修复后同样调用 `scan_count` 保持 0；再调 `POST /invite/track` → `scan_count` 0→1（埋点唯一来源未受影响）；响应体结构修复前后完全一致 |
+| 证据 | `audit/evidence/F163-invite-share-page-no-side-effect/` |
+| **本轮复跑**（2026-11-14 重建夹具后） | **7/7 PASS**：`raw/04-verify-rerun.txt` —— S5 `GET /invite/share-page?code=TESTI164A` 后 `scan_count` 0→0；EXTRA 显式 `POST /invite/track` 后 `scan_count` 0→1（埋点唯一来源未受影响）；响应体结构与修复前完全一致 |
+| §3.4 历史数据校正 | **未做**（按用户指令）→ 转 **I168** |
+| 遗留 UNVERIFIED | 前端 C 端落地页端到端（`sharePage` / `trackClick` 在 `frontend/**` 中**当前无调用方**，本轮无前端改造） |
