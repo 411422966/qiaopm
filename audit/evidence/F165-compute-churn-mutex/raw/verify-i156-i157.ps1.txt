@@ -1,0 +1,146 @@
+# I156 / I157 verification script
+# NON-FORMAL TOOL: audit evidence collection only. NOT in CI / PR mandatory list.
+# Purpose : measure LTV annualization denominator (I157) and churn double-write
+#           mutex (I156) against the running meiyetec-api (localhost:8080).
+# Prereq  : fixture seeded via F165-compute-churn-mutex/raw/00-fixture-seed.sql
+#           (members 990001 = new/short tenure, 990002 = long tenure)
+# Params  : -Phase before|after   (expected values switch)
+# Exit    : 0 = all checks pass ; 1 = at least one check failed
+# NOTE    : ASCII-only script text on purpose (PowerShell 5.1 reads .ps1 as ANSI
+#           when there is no BOM, and mangles non-ASCII source text).
+# NOTE    : SQL separator is "/" (NOT "|") because cmd /c treats "|" as a pipe.
+param(
+  [string]$Phase = "before",
+  [string]$Base = "http://localhost:8080",
+  [string]$User = "operator01",
+  [string]$Pass = "123456"
+)
+
+$ErrorActionPreference = "Stop"
+$script:token = $null
+$script:fail = 0
+function Say($s) { Write-Host $s }
+function Check($name, $ok, $detail) {
+  if ($ok) { Say ("CHECK: {0} => PASS ({1})" -f $name, $detail) }
+  else { Say ("CHECK: {0} => FAIL ({1})" -f $name, $detail); $script:fail = 1 }
+}
+
+function Api($method, $path, $body) {
+  $req = [System.Net.HttpWebRequest]::Create("$Base$path")
+  $req.Method = $method
+  $req.Headers.Add("Authorization", "Bearer $script:token")
+  $req.Accept = "application/json"
+  if ($body -ne $null) {
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes(($body | ConvertTo-Json -Compress))
+    $req.ContentType = "application/json; charset=utf-8"
+    $req.ContentLength = $bytes.Length
+    $s = $req.GetRequestStream(); $s.Write($bytes, 0, $bytes.Length); $s.Close()
+  }
+  $resp = $req.GetResponse()
+  $sr = New-Object System.IO.StreamReader($resp.GetResponseStream(), [System.Text.Encoding]::UTF8)
+  $txt = $sr.ReadToEnd(); $sr.Close(); $resp.Close()
+  return ($txt | ConvertFrom-Json)
+}
+
+function Q($sql) {
+  $r = cmd /c "docker exec meiyetec-mysql mysql -uroot -proot123456 meiyetec -N -B -e `"$sql`" 2>nul"
+  return (($r -join "`n").Trim())
+}
+function Q1($sql) { return (Q $sql) }
+function Freq($op, $member) {
+  $rows = Q "SELECT CONCAT(member_id,'/',purchase_frequency,'/',predicted_ltv_365d,'/',repurchase_prob_30d) FROM crm_ltv_snapshot WHERE member_id=$member AND snapshot_date=CURDATE() AND operator_name='$op' ORDER BY id DESC"
+  if ($rows -eq "") { return $null }
+  return ($rows -split "`n")[0] -split "/"
+}
+
+$login = Api "POST" "/auth/login" @{username=$User; password=$Pass}
+if ($login.code -ne 200) { Say "LOGIN FAILED code=$($login.code)"; exit 1 }
+$script:token = $login.data.token
+Say "PHASE=$Phase  TOKEN_USER=$User USER_ID=$($login.data.id) TENANT=1"
+Say ("DB today: crm_ltv_snapshot=" + (Q1 "SELECT COUNT(*) FROM crm_ltv_snapshot WHERE snapshot_date=CURDATE()") +
+     " crm_churn_prediction=" + (Q1 "SELECT COUNT(*) FROM crm_churn_prediction WHERE snapshot_date=CURDATE()"))
+Say ""
+
+# ============================ I157 : LTV annualization ============================
+Say "=== I157-A: POST /governance/model/batch-predict (modelType=LTV) ==="
+$r = Api "POST" "/governance/model/batch-predict" @{modelType="LTV"; limit=10000}
+Say ("RESP: code={0} predicted={1} error={2}" -f $r.code, $r.data.predicted, $r.data.error)
+$batchNew = Freq "batch" 990001
+$batchLong = Freq "batch" 990002
+Say ("DB batch  member=990001 purchase_frequency={0} pred_ltv_365d={1} prob_30d={2}" -f $batchNew[1], $batchNew[2], $batchNew[3])
+Say ("DB batch  member=990002 purchase_frequency={0} pred_ltv_365d={1} prob_30d={2}" -f $batchLong[1], $batchLong[2], $batchLong[3])
+Say ""
+
+Say "=== I157-B: POST /ltv-churn/ltv/compute ==="
+$r2 = Api "POST" "/ltv-churn/ltv/compute" $null
+Say ("RESP: code={0} members={1} snapshots={2}" -f $r2.code, $r2.data.members, $r2.data.snapshots)
+$compNew = Freq "compute-job" 990001
+$compLong = Freq "compute-job" 990002
+Say ("DB compute member=990001 purchase_frequency={0} pred_ltv_365d={1} prob_30d={2}" -f $compNew[1], $compNew[2], $compNew[3])
+Say ("DB compute member=990002 purchase_frequency={0} pred_ltv_365d={1} prob_30d={2}" -f $compLong[1], $compLong[2], $compLong[3])
+Say ""
+
+# ============================ I156 : churn double-write mutex ============================
+Say "=== I156 seq-1: batch(CHURN) -> compute ==="
+$r3 = Api "POST" "/governance/model/batch-predict" @{modelType="CHURN"; limit=10000}
+Say ("RESP batch: code={0} predicted={1} error={2}" -f $r3.code, $r3.data.predicted, $r3.data.error)
+$afterBatch = [int](Q1 "SELECT COUNT(*) FROM crm_churn_prediction WHERE snapshot_date=CURDATE()")
+Say ("DB churn today after batch = {0}" -f $afterBatch)
+Say ("DB model_code breakdown after batch: " + ((Q "SELECT CONCAT(model_code,'=',COUNT(*)) FROM crm_churn_prediction WHERE snapshot_date=CURDATE() GROUP BY model_code") -replace "`n", " | "))
+
+$r4 = Api "POST" "/ltv-churn/churn/compute" $null
+Say ("RESP compute: code={0} members={1} predictions={2} modelCode={3}" -f $r4.code, $r4.data.members, $r4.data.predictions, $r4.data.modelCode)
+$afterCompute = [int](Q1 "SELECT COUNT(*) FROM crm_churn_prediction WHERE snapshot_date=CURDATE()")
+$dupGroups = [int](Q1 "SELECT COUNT(*) FROM (SELECT member_id FROM crm_churn_prediction WHERE snapshot_date=CURDATE() GROUP BY member_id HAVING COUNT(*)>1) x")
+$mcCompute1 = [int](Q1 "SELECT COUNT(*) FROM crm_churn_prediction WHERE snapshot_date=CURDATE() AND model_code='COMPUTE-CHURN-V1'")
+$mcOther1 = [int](Q1 "SELECT COUNT(*) FROM crm_churn_prediction WHERE snapshot_date=CURDATE() AND (model_code IS NULL OR model_code<>'COMPUTE-CHURN-V1')")
+Say ("DB churn today after compute = {0}  dup (member,snapshot_date) groups = {1}" -f $afterCompute, $dupGroups)
+Say ("DB model_code COMPUTE-CHURN-V1 = {0}  other = {1}" -f $mcCompute1, $mcOther1)
+Say ("DB model_code breakdown after compute: " + ((Q "SELECT CONCAT(model_code,'=',COUNT(*)) FROM crm_churn_prediction WHERE snapshot_date=CURDATE() GROUP BY model_code") -replace "`n", " | "))
+Say ""
+
+Say "=== I156 seq-2: clean today's churn rows -> compute -> batch ==="
+Q1 "DELETE FROM crm_churn_prediction WHERE snapshot_date=CURDATE()"
+$cleaned = [int](Q1 "SELECT COUNT(*) FROM crm_churn_prediction WHERE snapshot_date=CURDATE()")
+Say ("DB churn today after manual clean = {0}" -f $cleaned)
+$r5 = Api "POST" "/ltv-churn/churn/compute" $null
+$afterCompute2 = [int](Q1 "SELECT COUNT(*) FROM crm_churn_prediction WHERE snapshot_date=CURDATE()")
+$mcCompute2 = [int](Q1 "SELECT COUNT(*) FROM crm_churn_prediction WHERE snapshot_date=CURDATE() AND model_code='COMPUTE-CHURN-V1'")
+$dupGroupsC2 = [int](Q1 "SELECT COUNT(*) FROM (SELECT member_id FROM crm_churn_prediction WHERE snapshot_date=CURDATE() GROUP BY member_id HAVING COUNT(*)>1) x")
+Say ("RESP compute: predictions={0}  DB churn today after compute = {1}" -f $r5.data.predictions, $afterCompute2)
+Say ("DB COMPUTE-CHURN-V1 = {0}  dup groups = {1}" -f $mcCompute2, $dupGroupsC2)
+Say ("DB model_code breakdown after compute: " + ((Q "SELECT CONCAT(model_code,'=',COUNT(*)) FROM crm_churn_prediction WHERE snapshot_date=CURDATE() GROUP BY model_code") -replace "`n", " | "))
+$r6 = Api "POST" "/governance/model/batch-predict" @{modelType="CHURN"; limit=10000}
+$afterBatch2 = [int](Q1 "SELECT COUNT(*) FROM crm_churn_prediction WHERE snapshot_date=CURDATE()")
+$dupGroups2 = [int](Q1 "SELECT COUNT(*) FROM (SELECT member_id FROM crm_churn_prediction WHERE snapshot_date=CURDATE() GROUP BY member_id HAVING COUNT(*)>1) x")
+$mcRule2 = [int](Q1 "SELECT COUNT(*) FROM crm_churn_prediction WHERE snapshot_date=CURDATE() AND model_code='RULE-CHURN-V1'")
+$mcOther2 = [int](Q1 "SELECT COUNT(*) FROM crm_churn_prediction WHERE snapshot_date=CURDATE() AND (model_code IS NULL OR model_code<>'RULE-CHURN-V1')")
+Say ("RESP batch: predicted={0}  DB churn today after batch = {1}  dup groups = {2}" -f $r6.data.predicted, $afterBatch2, $dupGroups2)
+Say ("DB RULE-CHURN-V1 = {0}  other = {1}" -f $mcRule2, $mcOther2)
+Say ("DB model_code breakdown after batch: " + ((Q "SELECT CONCAT(model_code,'=',COUNT(*)) FROM crm_churn_prediction WHERE snapshot_date=CURDATE() GROUP BY model_code") -replace "`n", " | "))
+Say ""
+
+# ============================ assertions ============================
+$n  = [int]$r4.data.predictions
+$m  = [int]$r3.data.predicted
+$n2 = [int]$r5.data.predictions
+$m2 = [int]$r6.data.predicted
+if ($Phase -eq "before") {
+  Check "I157 new member frequency (expect 52.14 = 1*365/7)" ([double]$batchNew[1] -gt 50) ("batch=" + $batchNew[1])
+  Check "I157 long member frequency (expect 9.13 = 5*365/200)" ([double]$batchLong[1] -gt 9 -and [double]$batchLong[1] -lt 9.3) ("batch=" + $batchLong[1])
+  Check "I157 two paths agree (batch vs compute)" ($batchNew[1] -eq $compNew[1] -and $batchLong[1] -eq $compLong[1]) ("new batch=" + $batchNew[1] + " compute=" + $compNew[1] + " / long batch=" + $batchLong[1] + " compute=" + $compLong[1])
+  Check "I156 PRE-FIX duplicate rows (seq-1: today = M+N, dup groups > 0)" ($afterCompute -gt $m -and $dupGroups -gt 0) ("afterCompute=$afterCompute M=$m dupGroups=$dupGroups")
+  Check "I156 PRE-FIX silent overwrite (seq-2: today = M, compute rows wiped)" ($afterBatch2 -eq $m2 -and $afterBatch2 -lt ($m2 + $n2)) ("afterBatch2=$afterBatch2 M=$m2 N=$n2")
+} else {
+  Check "I157 new member frequency capped (expect 12.17 = 1*365/30)" ([double]$batchNew[1] -gt 12 -and [double]$batchNew[1] -lt 12.5) ("batch=" + $batchNew[1])
+  Check "I157 long member frequency unchanged (expect 9.13)" ([double]$batchLong[1] -gt 9 -and [double]$batchLong[1] -lt 9.3) ("batch=" + $batchLong[1])
+  Check "I157 two paths agree (batch vs compute)" ($batchNew[1] -eq $compNew[1] -and $batchLong[1] -eq $compLong[1]) ("new batch=" + $batchNew[1] + " compute=" + $compNew[1] + " / long batch=" + $batchLong[1] + " compute=" + $compLong[1])
+  Check "I156 A3 seq-1 batch->compute: today = N, dup groups = 0" ($afterCompute -eq $n -and $dupGroups -eq 0) ("afterCompute=$afterCompute N=$n dupGroups=$dupGroups")
+  Check "I156 A3 seq-1 batch->compute: all rows tagged COMPUTE-CHURN-V1" ($mcCompute1 -eq $n -and $mcOther1 -eq 0) ("computeTagged=$mcCompute1 other=$mcOther1 N=$n")
+  Check "I156 A3 seq-2 compute->batch: today = M, dup groups = 0" ($afterBatch2 -eq $m2 -and $dupGroups2 -eq 0) ("afterBatch2=$afterBatch2 M=$m2 dupGroups=$dupGroups2")
+  Check "I156 A3 seq-2 compute->batch: all rows tagged RULE-CHURN-V1" ($mcRule2 -eq $m2 -and $mcOther2 -eq 0) ("ruleTagged=$mcRule2 other=$mcOther2 M=$m2")
+  Check "I156 A3 seq-2 compute alone: today = N2, dup groups = 0" ($afterCompute2 -eq $n2 -and $dupGroupsC2 -eq 0) ("afterCompute2=$afterCompute2 N2=$n2 dupGroups=$dupGroupsC2")
+}
+Say ""
+Say ("OVERALL: " + $(if ($script:fail -eq 0) { "ALL PASS" } else { "HAS FAILURE" }))
+exit $script:fail
