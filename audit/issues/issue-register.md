@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I156/I157 已修并 VERIFIED；I170 新增；I167 只读排查完成待实施 DDL；补登 I168/I169）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I156/I157 已修并 VERIFIED；I170/I171 新增；I167 只读排查完成待实施 DDL；补登 I168/I169）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -95,6 +95,7 @@
 | I168 | I168 — M09 邀请 `share_count`/`scan_count` 历史脏数据校正（口径待业务确认） | Open | [I168-invite-counter-historical-dirty-data.md](I168-invite-counter-historical-dirty-data.md) |
 | I169 | I169 — 应用层通用限流能力缺失（I165 D2 遗留项） | Open | [I169-app-layer-general-rate-limit.md](I169-app-layer-general-rate-limit.md) |
 | I170 | I170 — `computeLtv` 与 `batchPredictLtv` 双写 `crm_ltv_snapshot` 无互斥：今日 781 行，同一会员多条当日快照 | Open | [I170-ltv-snapshot-duplicate-write.md](I170-ltv-snapshot-duplicate-write.md) |
+| I171 | I171 — `crm_churn_prediction` 口径精化配套项：写入精度 / 阈值边界 / `tenure_days` 语义 / 看板快照过滤 / 枚举漂移 / 唯一约束 / 第三写入者幂等 | Open | [I171-churn-prediction-caliber-refinement.md](I171-churn-prediction-caliber-refinement.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
@@ -124,6 +125,7 @@
 - **I170（Open，新增，P1）**：`computeLtv` 与 `batchPredictLtv` 双写 `crm_ltv_snapshot` 无互斥 —— `computeLtv` **无任何 DELETE**，与 I156 完全同构但发生在 LTV 侧。实测当日快照 781 行（491 batch + 290 compute-job）。**本轮未修**（不在授权范围），下一轮建议按 I156 的 A3 模式处理；需一并评估 `crm_ltv_snapshot` 无 `model_code` 列（只能用 `model_type` / `operator_name` 区分写入者）以及训练链路对 `model_type` 的消费。
 - **I156 §5.5 其余配套项本轮未做**：churn_score 改 4 位小数、阈值 `>`→`>=`、`tenure_days` 复制粘贴错误、dashboard 加 `snapshot_date` 过滤、`/intel/churn/overview` 枚举统一、加 `UNIQUE` 约束、第三个写入者 `ChurnPredictionService.predictForMember` 幂等 —— **均保持原状**，仍列在 I156 §5.5。
 - **未动项（用户明确指示）**：I158（置信度倒挂）、I167（DDL 需生产库）、I169（限流，独立批次）；现有 489 条 `crm_ltv_snapshot` 历史快照未被触碰（清理仅针对今日测试数据）。
+- **I171（Open，新增，P2）**：I156 §5.5 的 **7 项配套清单**从 I156 拆出独立立项 —— ① `churn_score` 精度（A/C 为 4 位、B 为 2 位）；② 阈值边界（A `>=0.66/0.33`、B `>0.66/0.33`、C 走 `ai_churn_model.threshold_high/med` 默认 0.70/0.40）；③ `tenure_days` 复制粘贴错误（`LtvChurnController.java:204` 写入 `s.getLastPurchaseDays()`，恒等于 `last_purchase_days`，与 A/C 的真实生命周期口径不同，**修复来源待定**）；④ `GET /ltv-churn/dashboard` 未按 `snapshot_date` 过滤（全表累加 21 个历史日期）；⑤ `GET /intel/churn/overview` 枚举漂移（统计 `HIGH/MEDIUM/LOW/SAFE`，写入者用 `HIGH/MED/LOW` → `mediumCount/lowCount/safeCount` **恒为 0**）；⑥ `crm_churn_prediction` 缺 `UNIQUE (tenant_id, member_id, snapshot_date)`（**需生产库 DDL**，且必须先做 ⑦）；⑦ 第三个写入者 `ChurnPredictionService.predictForMember`（L238）无先删后插（当前因 `ai_churn_model` 无激活模型而短路不产数据，激活后会直接破坏 ⑥）。**建议与 I170 同批处理**，处理顺序：先 ⑦ → 再 ①②④ → ③⑤（需拍板）→ 最后 ⑥（独立 DDL 批次）。
 
 ## 脚注：证据目录命名规则切换（2026-11-13 起）
 

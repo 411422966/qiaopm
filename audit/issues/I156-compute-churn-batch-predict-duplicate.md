@@ -324,17 +324,19 @@ OVERALL: ALL PASS
 
 ### 本轮未做的 §5.5 配套项（明确保留）
 
-以下 6 项**仍未实施**，状态不变：
+以下 7 项**仍未实施**，已拆分为独立 Issue **I171**（P2），状态不变：
 
 | # | 配套项 | 说明 |
 |---|---|---|
 | 2 | `churn_score` 精度 `setScale(2)` → 4 位小数 | 保留 2 位（batch 侧仍是 4 位，精度差异属「口径未统一」问题） |
 | 3 | 风险阈值 `>` → `>=` | 保留 `>` |
-| 4 | `setTenureDays(s.getLastPurchaseDays())` 复制粘贴错误 | 未改 |
+| 4 | `setTenureDays(s.getLastPurchaseDays())` 复制粘贴错误 | 未改（修复来源待定，见 I171 §1.3） |
 | 5 | `GET /ltv-churn/dashboard` 统计加 `snapshot_date` 过滤 | 未改（重复已消除，但历史多日期快照仍会被全表统计累加） |
 | 6 | `GET /intel/churn/overview` 枚举口径统一 | 未改 |
-| 7 | `crm_churn_prediction` 加 `UNIQUE (tenant_id, member_id, snapshot_date)` | 未做（需 DDL + 生产库） |
+| 7 | `crm_churn_prediction` 加 `UNIQUE (tenant_id, member_id, snapshot_date)` | 未做（需 DDL + 生产库，且必须先补第三写入者幂等） |
 | 8 | 第三个写入者 `ChurnPredictionService.predictForMember` 幂等 | 未做 |
+
+> 详见 `audit/issues/I171-churn-prediction-caliber-refinement.md`。
 
 ### 新登记的同源缺陷
 
