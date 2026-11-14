@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I170 部分修复批：dashboard 快照过滤 + computeForMember 幂等 + seed 环境守卫已修并 VERIFIED；A3 暂缓；补登 I172/I173/I174/I175；本次再补登 I176 + I172 §4 技术推荐节）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I170 部分修复批：dashboard 快照过滤 + computeForMember 幂等 + seed 环境守卫已修并 VERIFIED；A3 暂缓；补登 I172/I173/I174/I175；本次再补登 I176 + I172 §4 技术推荐节）；再更新 2026-11-15（I169 限流调查批次：I177/I179 已修并 VERIFIED，I178 登记待业务决策）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -101,6 +101,9 @@
 | I174 | I174 — `crm_ltv_snapshot` 历史 5 组重复行待清理（2026-09-02 / 10-30 / 10-31 / 11-02），`trend` 按月求和被放大 | Open（待业务决策） | [I174-ltv-historical-duplicate-cleanup.md](I174-ltv-historical-duplicate-cleanup.md) |
 | I175 | I175 — `crm_ltv_snapshot` 缺 `UNIQUE (tenant_id, member_id, snapshot_date)`，加约束前须先清 236 组存量重复 + A3 落地 | Open（DDL 未实施） | [I175-ltv-snapshot-unique-constraint-ddl.md](I175-ltv-snapshot-unique-constraint-ddl.md) |
 | I176 | I176 — `LtvSeedController` `mode=reset` 删不存在的表 `crm_order`（实际应为 `pos_order`），dev/test 环境留下半破坏状态 | Open（登记，不修） | [I176-ltv-seed-reset-deletes-nonexistent-table.md](I176-ltv-seed-reset-deletes-nonexistent-table.md) |
+| I177 | I177 — `POST /intl-booking/{id}/send-confirmation` 无防重复触发机制，直推外部计费渠道（短信/邮件/订阅消息） | Fixed（VERIFIED / L5a） | [I177-intl-booking-send-confirmation-no-rate-limit.md](I177-intl-booking-send-confirmation-no-rate-limit.md) |
+| I178 | I178 — `ChannelDispatcher.rateLimitCheck` 覆盖缺口：4 条发送路径仅 1 条过闸门，且计数口径（tenant+channel）与配置口径（tenant+brand+channel）错配 | Open（待业务拍板配额口径） | [I178-channel-dispatcher-coverage-gap.md](I178-channel-dispatcher-coverage-gap.md) |
+| I179 | I179 — `POST /invite/track` 无手机号请求仍 `scan_count + 1`，可被匿名/机器人无限刷 | Fixed（VERIFIED / L5a） | [I179-invite-track-scan-count-no-phone.md](I179-invite-track-scan-count-no-phone.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
@@ -147,6 +150,13 @@
 
 - **I176（Open，新增，P1，登记不修）**：`LtvSeedController.seed()` 的 `mode=reset` 分支 `LtvSeedController.java:67` 执行 `DELETE FROM crm_order WHERE tenant_id = ?` —— **`crm_order` 表在库中不存在**（同文件 `generateDemoMembersAndOrders()` 写的是 `pos_order`），失败时序为「① 删 `crm_ltv_snapshot` 成功 → ② 删 `crm_order` 抛 SQLException → ③ 删 `crm_member` 与重建示例数据均执行不到」→ dev/test 环境下留下**半破坏状态**（快照被清空、订单未清、数据未重建）。**生产不受影响**（I170 环境守卫在进入 DELETE 之前即 403 拦截，实测行数前后不变 4594/489/1848）。**修复方向二选一，需业务先确认 `mode=reset` 语义**：方案 A 改删 `pos_order`（与生成逻辑一致，但**会真删 1848 行真实收银订单**，必须加「仅限测试租户」守卫 + 事务包裹）；方案 B 删掉该 DELETE，`reset` 只清快照不清订单（语义保守，但重建的演示订单会与真实订单共存）。关联 I152。**本轮只登记，未改任何代码**。
 - **I172 §4 技术推荐（已追加，不替业务拍板）**：技术侧倾向「**以 batch（489 全量会员）为权威口径，`compute` 改为也覆盖全量会员**」，依据为 ① 业务语义（无消费会员 LTV=0 应体现为「待激活人群」而非消失）② 数据完整性（`batch` LEFT JOIN 覆盖全量 vs `compute` INNER 只覆盖消费会员）③ 复购概率档位（`batch` 三档 0.85/0.70/0.45 粒度更细）。**仍需业务拍板 Q1**（无消费会员是否应出现在 LTV 看板）、**Q2**（`compute` 是历史遗留快速路径还是业务需要的独立口径）、**Q3**（复购概率档位以哪套为准）。**Q1/Q2/Q3 确认前，A3 / I173 / I175 一律不动**。原 §4「待业务回答的问题」顺延为 §5，§5→§6，§6→§7，正文交叉引用已同步更新。
+
+## 补充说明（2026-11-15：I169 限流调查批次）
+
+- **I177（Fixed，VERIFIED / L5a，7/7 CHECK PASS）**：`POST /intl-booking/{id}/send-confirmation`（手动）与 `POST /intl-booking/{id}/status` 的「非 CONFIRMED → CONFIRMED」自动触发，此前无任何防重复机制，每次触发直推外部计费渠道（阿里云短信 / SMTP 邮件 / 微信订阅消息）。新增 Redis 幂等闸门 `BookingConfirmationIdempotency`：键 `booking:confirm:{tenantId}:{bookingId}`，TTL 取 `sys_config.intl.booking.send.idempotent.window`（默认 **300 秒**），**发送之前**占位、失败**不释放**、Redis 不可用 **fail-open**（放行 + warn，不阻断业务）；手动命中返 HTTP 200 + `code=400` +「确认消息已在发送中，请勿重复操作」，自动命中返 `data.confirmationSkipped=true` + `confirmationSkippedReason` 且**不产生** `confirmation` 字段。修复 commit `ecf509d`，证据 `audit/evidence/F167-intl-booking-confirm-idempotent/`。**边界**：真实外部渠道计费行为与前端端到端仍 **UNVERIFIED**（本地通道均为 DEMO 模式，未触达真实阿里云 / SMTP；前端 `intl-booking.ts` 仍未封装 `sendConfirmation`，属 I042 Shadow 遗留）。
+- **I178（Open，新增，P2，登记不修）**：`ChannelDispatcher.rateLimitCheck(tenantId, brandId, channelType)` 是仓库内唯一渠道配额闸门（全仓**仅 1 处调用**：`MarketingAutomationService.startTask`），**EXT-19 预约确认 / 生日通知 / 设备离线告警** 3 条真实发送路径完全绕过 → 「已配置的每分钟/每日限额」在多数发送路径上失效。另有多品牌口径错配：计数口径为 `tenant_id + channel_type`，配置口径为 `tenant_id + brand_id + channel_type` → 品牌之间互相消耗配额、限额被放大 N 倍。**按用户 2026-11-15 决策本批不改 `ChannelDispatcher`**，等业务先拍板「配额按品牌还是按租户」。**结论全部来自静态检索，运行期 UNVERIFIED**。
+- **I179（Fixed，VERIFIED / L5a，5/5 CHECK PASS）**：`InviteService.trackClick` 中 `scan_count + 1` 位于 phone 判空**之前** → 任何不带手机号的 `POST /invite/track` 都会让扫码数 +1（可被匿名/机器人无限刷）。修复：计数移到 phone 判空之后，抽出 `incrementScanCount(code)` 收敛口径；「仅点击即可」活动（`invite_need_register=0`）原行为**刻意保留**。⚠️ **口径变更**：`scan_count` 语义由「所有访问次数」收敛为「有手机号的访问次数」，**仅对变更后新流量生效，历史数据未回溯校正**，跨变更点的转化率同比/环比会失真。修复 commit `6537180`，证据 `audit/evidence/F168-invite-track-scan-count-gate/`。
+- **I169（Open，本批暂缓通用限流基建）**：暴露面清单已补全 —— ① 完全匿名（免 JWT）的写入口 12 类（`/auth/login`、`/webhook/**`、`/overseas-payment/webhook/**`、`/ecommerce/webhook/**`、`/pos/webhook/**`、`/payment/webhook/**`、`/booking/webhook/**`、`/platform/webhook/**`、`/intl-booking/webhook/**`、`/bnpl/webhook/**`、`/domestic/webhook/**`、`/actuator/**`）；② 渠道发送类写接口（真实外部计费）；③ EXT-19 预约确认发送；④ C 端邀请端点（不要求任何权限点）；⑤ 写接口总量（1021 个 POST/PUT/DELETE）。通用限流基建**从零建设、429 契约与 Nginx 侧限制待业务/运维确认后再开工**；期间由 I177（预约确认幂等）与 I179（扫码计数口径）分别止血两处高风险点。
 
 ## 脚注：证据目录命名规则切换（2026-11-13 起）
 
