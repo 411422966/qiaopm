@@ -1,11 +1,12 @@
 # I156 — `computeChurn` 与 `batchPredictChurn` 双写 `crm_churn_prediction` 无互斥，产生重复数据
 
-> **状态**：Open
+> **状态**：Fixed（2026-11-14 实施并运行时 VERIFIED，方案 A3）
 > **严重度**：P1（数据污染）—— 同一 `(member_id, snapshot_date)` 出现 2 条预测记录，看板计数翻倍
 > **发现日期**：2026-11-12（I152 批 2-3 验证全绿后，运行时复现时发现）
 > **登记人**：Cursor（I152 批 2-3 —— `batchPredictLtv/Churn` 表名+量纲+幂等修复）
-> **关联**：I152（`crm_order` 引用外溢；批 2-3 修复引入了本双写面）、I155（预测端不消费训练模型）、I151（退款未扣）
-> **修复决策**：**已选定方案 A**（2026-11-13，工程最优解，非业务拍板）—— 下一轮单独批次实施，本轮仅登记（见 §5.5）
+> **关联**：I152（`crm_order` 引用外溢；批 2-3 修复引入了本双写面）、I155（预测端不消费训练模型）、I151（退款未扣）、**I170（LTV 侧同源双写，本轮新登记，未修）**
+> **修复决策**：**已选定方案 A**（2026-11-13，工程最优解，非业务拍板）→ **2026-11-14 按 A3 变体实施**（见 §5.6）
+> **验证结论**：VERIFIED（L5a，运行期实测 8/8 CHECK PASS，证据 `audit/evidence/F165-compute-churn-mutex/raw/02-after-i156-i157.txt`）
 
 ---
 
@@ -275,6 +276,76 @@ SELECT COUNT(*) FROM ai_churn_model WHERE is_active=1 AND enabled=1 => 0
 > 谁后跑谁覆盖，**看板数值仍会随用户点击顺序抖动**。方案 A 只保证「不重复、不静默丢失」，
 > **不保证「唯一权威口径」**。权威口径的确定需要业务拍板，仍列在 §6 未确认项。
 > 同理，`crm_churn_prediction.monthly_freq` 的量纲漂移（见 I157 §6）也不在方案 A 覆盖范围内。
+
+---
+
+## 5.6 实施与验证结论（2026-11-14，方案 A3）
+
+> **状态变更**：Open → **Fixed**（运行时 VERIFIED，L5a）。
+
+### 实施方案（A3，与 §5.5 方案 A 同族，删除条件不按 `model_code` 收窄）
+
+| # | 改动点 | 文件 / 方法 | 内容 |
+|---|---|---|---|
+| 1 | `computeChurn` 加先删后插 | `backend/src/main/java/com/meiyetec/controller/LtvChurnController.java` `computeChurn()` | 写入循环前 `churnMapper.delete(LambdaQueryWrapper.eq(tenantId, t).eq(snapshotDate, today))`，删除条件 = `tenant_id + snapshot_date = CURDATE()`，**不按 `model_code` 收窄** |
+| 2 | 写入者标识 | 同上 | `model_code` 由 `'RULE-CHURN-V1'` 改为 `'COMPUTE-CHURN-V1'`（含响应字段 `out.put("modelCode", ...)`） |
+| 3 | `batchPredictChurn` 保持现状 | `DataGovernanceService.batchPredictChurn` | 删除条件不加 `model_code` 过滤，写入 `'RULE-CHURN-V1'` |
+
+**A3 的语义**：两个写入者的删除条件完全相同（`tenant_id + snapshot_date`），
+因此**谁后跑谁覆盖**，同一 `(member_id, snapshot_date)` **永不重复**，
+且表内 `model_code` 单一取值（不会出现两种 code 并存导致看板重复计数）。
+
+### 运行时验证结果（VERIFIED）
+
+环境：本地 Docker `meiyetec-api`（镜像 `meiyetec/api:dev` 已重建并 healthy）+ `meiyetec-mysql`，租户 1
+证据：`audit/evidence/F165-compute-churn-mutex/raw/02-after-i156-i157.txt`
+
+| 顺序 | 当日行数 | `model_code` 分布 | dup `(member, snapshot_date)` 组 |
+|---|---|---|---|
+| batch → compute | **551**（= N，compute 写入量） | `COMPUTE-CHURN-V1 = 551`，其他 = 0 | **0** |
+| compute（单独） | **551**（= N2） | `COMPUTE-CHURN-V1 = 551` | **0** |
+| compute → batch | **491**（= M，batch 写入量） | `RULE-CHURN-V1 = 491`，其他 = 0 | **0** |
+
+> 注：N=551 / M=491 不相等，因为两个写入者的**会员覆盖范围不同**
+> —— `batchPredictChurn` 覆盖 `crm_member` 全量 491 人（无消费会员也写入，LEFT JOIN），
+> `computeChurn` 只覆盖**有 LTV 快照**的 551 人。这是**写入范围差异**，不是重复。
+
+```
+CHECK: I157 new member frequency capped (expect 12.17 = 1*365/30) => PASS (batch=12.17)
+CHECK: I157 long member frequency unchanged (expect 9.13) => PASS (batch=9.13)
+CHECK: I157 two paths agree (batch vs compute) => PASS (new batch=12.17 compute=12.17 / long batch=9.13 compute=9.13)
+CHECK: I156 A3 seq-1 batch->compute: today = N, dup groups = 0 => PASS (afterCompute=551 N=551 dupGroups=0)
+CHECK: I156 A3 seq-1 batch->compute: all rows tagged COMPUTE-CHURN-V1 => PASS (computeTagged=551 other=0 N=551)
+CHECK: I156 A3 seq-2 compute->batch: today = M, dup groups = 0 => PASS (afterBatch2=491 M=491 dupGroups=0)
+CHECK: I156 A3 seq-2 compute->batch: all rows tagged RULE-CHURN-V1 => PASS (ruleTagged=491 other=0 M=491)
+CHECK: I156 A3 seq-2 compute alone: today = N2, dup groups = 0 => PASS (afterCompute2=551 N2=551 dupGroups=0)
+OVERALL: ALL PASS
+```
+
+### 本轮未做的 §5.5 配套项（明确保留）
+
+以下 6 项**仍未实施**，状态不变：
+
+| # | 配套项 | 说明 |
+|---|---|---|
+| 2 | `churn_score` 精度 `setScale(2)` → 4 位小数 | 保留 2 位（batch 侧仍是 4 位，精度差异属「口径未统一」问题） |
+| 3 | 风险阈值 `>` → `>=` | 保留 `>` |
+| 4 | `setTenureDays(s.getLastPurchaseDays())` 复制粘贴错误 | 未改 |
+| 5 | `GET /ltv-churn/dashboard` 统计加 `snapshot_date` 过滤 | 未改（重复已消除，但历史多日期快照仍会被全表统计累加） |
+| 6 | `GET /intel/churn/overview` 枚举口径统一 | 未改 |
+| 7 | `crm_churn_prediction` 加 `UNIQUE (tenant_id, member_id, snapshot_date)` | 未做（需 DDL + 生产库） |
+| 8 | 第三个写入者 `ChurnPredictionService.predictForMember` 幂等 | 未做 |
+
+### 新登记的同源缺陷
+
+**I170** —— `computeLtv` 与 `batchPredictLtv` 双写 `crm_ltv_snapshot` 无互斥
+（`computeLtv` 无任何 DELETE），**本轮未修**，见 `audit/issues/I170-ltv-snapshot-duplicate-write.md`。
+
+### 权威口径问题仍待业务拍板
+
+A3 只保证「不重复、不静默丢失」，**不保证「唯一权威口径」**：
+两个写入者的数据源不同（`pos_order` 直算 vs `crm_ltv_snapshot` 快照），
+谁后跑谁覆盖，看板数值仍会随用户点击顺序抖动。§6 的未确认项保持未确认。
 
 ---
 

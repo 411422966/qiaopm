@@ -583,7 +583,7 @@ public class DataGovernanceService {
                             COALESCE(AVG(p.final_amount), 0) AS avg_order_value,
                             COALESCE(DATEDIFF(CURDATE(), MAX(p.pay_time)), 9999) AS last_purchase_days,
                             ROUND(COUNT(*) * 365 /
-                                GREATEST(GREATEST(DATEDIFF(CURDATE(), MIN(p.pay_time)), 0), 1), 2) AS purchase_frequency
+                                GREATEST(GREATEST(DATEDIFF(CURDATE(), MIN(p.pay_time)), 0), 30), 2) AS purchase_frequency
                         FROM pos_order p
                         WHERE p.tenant_id = ? AND p.status = 2 AND p.deleted = 0
                             AND p.member_id IS NOT NULL

@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I164/I165/I166 已修并 VERIFIED；I167 只读排查完成待实施 DDL；补登 I168/I169）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I156/I157 已修并 VERIFIED；I170 新增；I167 只读排查完成待实施 DDL；补登 I168/I169）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -94,6 +94,7 @@
 | I167 | I167 — `m09_invite_code.invite_code` 非全局唯一，匿名场景无法用 code 反查 tenantId（I146 硬前置 DDL） | Open | [I167-invite-code-global-unique-ddl.md](I167-invite-code-global-unique-ddl.md) |
 | I168 | I168 — M09 邀请 `share_count`/`scan_count` 历史脏数据校正（口径待业务确认） | Open | [I168-invite-counter-historical-dirty-data.md](I168-invite-counter-historical-dirty-data.md) |
 | I169 | I169 — 应用层通用限流能力缺失（I165 D2 遗留项） | Open | [I169-app-layer-general-rate-limit.md](I169-app-layer-general-rate-limit.md) |
+| I170 | I170 — `computeLtv` 与 `batchPredictLtv` 双写 `crm_ltv_snapshot` 无互斥：今日 781 行，同一会员多条当日快照 | Open | [I170-ltv-snapshot-duplicate-write.md](I170-ltv-snapshot-duplicate-write.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
@@ -115,6 +116,14 @@
 - **I167（Open，只读排查已完成）**：2026-11-14 在本机开发库跑完 §3.3 全部只读 SQL（5 条业务查询 + 索引查询，**全程无写操作**）→ 跨租户同码 **0 行**、record 冗余列漂移 **0 行**、`invite_code` 单列唯一键**不存在** → 本机口径采用**方案②（全局唯一键，不加前缀）**。**DDL 未实施**，**生产库未连接**（生产存量仍 UNVERIFIED，ADD UNIQUE KEY 前须在生产只读副本复核）。证据 `audit/evidence/F164-invite-code-global-unique-readonly-scan/`。
 - **I168（Open，新增）**：`share_count` / `scan_count` 历史脏数据校正 —— 修复前的计数含 I165 越权刷量与 I166 双计数，**不可反推**，需业务先拍板口径（A 保留+标注 / B 清零 / C 折算 / D 只建流水表）再执行。**本轮未做任何校正**。
 - **I169（Open，新增）**：应用层通用限流能力缺失 —— 仓内检索确认无任何限流工具（`RedisTemplate` 业务侧仅 `NotifyReplayProtector` 一处，`pom.xml` 无 Bucket4j/Resilience4j/Sentinel，无自定义限流注解/切面/网关）。I165 的幂等**挡不住「换 codeId 绕过」**，`POST /invite/track` 在无 phone 时更是**完全无防刷**（`scan_count + 1` 发生在 phone 判空之前）→ 需独立立项建设。**本轮未实现任何限流代码**。
+
+## 补充说明（2026-11-14：I156 / I157 修复批次 + I170 新增）
+
+- **I156（Fixed，方案 A3）**：`LtvChurnController.computeChurn` 改为**先删后插** —— 删除条件 `tenant_id + snapshot_date = CURDATE()`（**不按 `model_code` 收窄**，与 `batchPredictChurn` 的 `executeIdempotent` 完全对齐），写入 `model_code` 由 `'RULE-CHURN-V1'` 改为 `'COMPUTE-CHURN-V1'`（含响应字段）。**运行时实测**：batch→compute 当日 551 行 / 全部 `COMPUTE-CHURN-V1` / dup 组 0；compute→batch 当日 491 行 / 全部 `RULE-CHURN-V1` / dup 组 0。证据 `audit/evidence/F165-compute-churn-mutex/raw/02-after-i156-i157.txt`（8/8 CHECK PASS）。
+- **I157（Fixed，方案 A）**：年化分母下限由 1 天改为 30 天，两条路径成对修改 —— `DataGovernanceService.batchPredictLtv` 的 `GREATEST(GREATEST(DATEDIFF(...),0), 1)` → `..., 30)`；`LtvChurnController.computeLtv` 的 `tenureDays <= 0 ? 365.0 : 365.0 / tenureDays` → `365.0 / Math.max(tenureDays, 30)`。**运行时实测**：短 tenure 新客 `purchase_frequency` 由 52.14 降至 12.17（= 1×365/30），长 tenure 老客保持 9.13 不变，两路径产出一致。`LtvTrainingService` 经 grep 复核**无** `GREATEST(...,1)` 年化除法，**无需对应改动点**。
+- **I170（Open，新增，P1）**：`computeLtv` 与 `batchPredictLtv` 双写 `crm_ltv_snapshot` 无互斥 —— `computeLtv` **无任何 DELETE**，与 I156 完全同构但发生在 LTV 侧。实测当日快照 781 行（491 batch + 290 compute-job）。**本轮未修**（不在授权范围），下一轮建议按 I156 的 A3 模式处理；需一并评估 `crm_ltv_snapshot` 无 `model_code` 列（只能用 `model_type` / `operator_name` 区分写入者）以及训练链路对 `model_type` 的消费。
+- **I156 §5.5 其余配套项本轮未做**：churn_score 改 4 位小数、阈值 `>`→`>=`、`tenure_days` 复制粘贴错误、dashboard 加 `snapshot_date` 过滤、`/intel/churn/overview` 枚举统一、加 `UNIQUE` 约束、第三个写入者 `ChurnPredictionService.predictForMember` 幂等 —— **均保持原状**，仍列在 I156 §5.5。
+- **未动项（用户明确指示）**：I158（置信度倒挂）、I167（DDL 需生产库）、I169（限流，独立批次）；现有 489 条 `crm_ltv_snapshot` 历史快照未被触碰（清理仅针对今日测试数据）。
 
 ## 脚注：证据目录命名规则切换（2026-11-13 起）
 

@@ -1,11 +1,12 @@
 # I157 — LTV 年化口径对短 tenure 新客的放大效应：无观测窗口下限，`predicted_ltv_365d` 可虚高数十倍
 
-> **状态**：Open
+> **状态**：Fixed（2026-11-14 实施并运行时 VERIFIED，方案 A）
 > **严重度**：P2 —— 数值口径失真，不产生重复数据；影响面随「新客占比」线性放大
 > **发现日期**：2026-11-13（I152 §4A Q1 补登时复核年化公式时发现）
 > **登记人**：Cursor（I152 §4A Q1 遗留登记项复核）
 > **关联**：I152（Q1 年化系数遗留项 —— 本 issue 是 Q1「换掉 `*12` 之后引入的新边界缺陷」）、I155（预测端不消费训练模型）、I151 / I152 Q6（退款未扣，口径叠加）、I156（同表 `crm_churn_prediction` 双写）
-> **修复决策**：**已选定方案 A**（2026-11-13，工程最优解，非业务拍板）—— 下一轮单独批次实施，本轮仅登记（见 §5.5）
+> **修复决策**：**已选定方案 A**（2026-11-13，工程最优解，非业务拍板）→ **2026-11-14 实施**（见 §5.6）
+> **验证结论**：VERIFIED（L5a，运行期实测 8/8 CHECK PASS，证据 `audit/evidence/F165-compute-churn-mutex/raw/02-after-i156-i157.txt`）
 
 ---
 
@@ -265,6 +266,50 @@ LEFT JOIN 后 `purchase_frequency` 为 `NULL` → `COALESCE(..., 0) = 0` → 不
 > - **§5 补充动作 #1（`repurchase_prob_*` 分档阈值是否同步调整）** 由 I158 承接，本 issue 不再单独决策。
 > - **30 天这个常数本身仍无业务依据** —— 本次依据是「与 Churn 侧代码对齐」而非「业务确认」。
 >   若业务后续给出不同的观测窗口标准，本 issue 需重新评估（不影响本轮登记结论）。
+
+---
+
+## 5.6 实施与验证结论（2026-11-14，方案 A）
+
+> **状态变更**：Open → **Fixed**（运行时 VERIFIED，L5a）。
+
+### 实施改动（2 处，成对修改）
+
+| # | 文件 / 方法 | 改动 |
+|---|---|---|
+| 1 | `backend/src/main/java/com/meiyetec/service/DataGovernanceService.java` `batchPredictLtv`（L585-586） | `GREATEST(GREATEST(DATEDIFF(CURDATE(), MIN(p.pay_time)), 0), 1)` → `..., 30)` |
+| 2 | `backend/src/main/java/com/meiyetec/controller/LtvChurnController.java` `computeLtv`（L111） | `orders.size() * (tenureDays <= 0 ? 365.0 : 365.0 / tenureDays)` → `orders.size() * (365.0 / Math.max(tenureDays, 30))` |
+
+**`LtvTrainingService` 无对应改动点** —— 经 grep 复核（`GREATEST` / `365` / `tenure` 三个关键词）：
+`tenure_days` 仅作为特征列写入 `ltv_training_feature` 与 `member_age_group` 分档（NEW/REGULAR/MATURE，阈值 90/365/1095），
+**全文件无 `GREATEST(...,1)` 形式的年化除法**，故无需成对修改。
+
+### 运行时验证结果（VERIFIED）
+
+证据：`audit/evidence/F165-compute-churn-mutex/raw/02-after-i156-i157.txt`（夹具：990001 = 短 tenure 新客 1 单 / 7 天前；990002 = 长 tenure 老客 5 单 / 200 天前）
+
+| 会员 | 修复前（batch） | 修复后（batch） | 修复后（compute） | 说明 |
+|---|---|---|---|---|
+| 990001（新客，tenure 7 天） | **52.14** = 1×365/7 | **12.17** = 1×365/30 | **12.17** | 虚高倍数由 ×52.1 压到 ×12.2 |
+| 990002（老客，tenure 200 天） | 9.13 | **9.13** | **9.13** | 分母 > 30，**数值零漂移** |
+
+两条路径产出**完全一致**（12.17 / 12.17、9.13 / 9.13），确认 §1.2 的「代数等价」在修复后仍然成立。
+
+```
+CHECK: I157 new member frequency capped (expect 12.17 = 1*365/30) => PASS (batch=12.17)
+CHECK: I157 long member frequency unchanged (expect 9.13) => PASS (batch=9.13)
+CHECK: I157 two paths agree (batch vs compute) => PASS (new batch=12.17 compute=12.17 / long batch=9.13 compute=9.13)
+OVERALL: ALL PASS
+```
+
+### 本轮未做的项
+
+| 项 | 状态 |
+|---|---|
+| §5 补充动作 #3：存量 `crm_ltv_snapshot` 重算 | **未做** —— 本地 21 个历史日期的快照**未触碰**；今日行由验证过程自然重算 |
+| §5 补充动作 #1：`repurchase_prob_*` 分档阈值调整 | **未做** —— 由 **I158** 承接（用户明确指示不动 I158） |
+| 30 天常数的业务确认 | **仍未确认** —— 依据是「与 Churn 侧代码对齐」 |
+| §2 场景 D 的口径断裂（新客 12.17 仍落 ≥12 档 → 0.85） | **仍未解决** —— 同属 I158 |
 
 ---
 

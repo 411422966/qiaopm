@@ -108,7 +108,9 @@ public class LtvChurnController {
             }
             int tenureDays = (int) java.time.temporal.ChronoUnit.DAYS.between(firstDay, today);
             lastPurchaseDays = (int) java.time.temporal.ChronoUnit.DAYS.between(lastDay, today);
-            double freqPerYear = orders.size() * (tenureDays <= 0 ? 365.0 : 365.0 / tenureDays);
+            // I157：年化分母下限 30 天，避免短 tenure 新客的购买频率被放大
+            //（与 DataGovernanceService.batchPredictLtv 的 GREATEST(...,30) 及 batchPredictChurn 的 30 天下限口径对齐）
+            double freqPerYear = orders.size() * (365.0 / Math.max(tenureDays, 30));
             BigDecimal predictedLtv30d = aov.multiply(BigDecimal.valueOf(freqPerYear / 12.0))
                     .setScale(2, RoundingMode.HALF_UP);
             BigDecimal predictedLtv90d = aov.multiply(BigDecimal.valueOf(freqPerYear / 4.0))
@@ -169,6 +171,12 @@ public class LtvChurnController {
         }
         int predCount = 0;
         LocalDate today = LocalDate.now();
+        // I156（方案 A3）：与 batchPredictChurn 的「先删后插」幂等语义对齐。
+        // 删除条件只按 tenant_id + snapshot_date，不按 model_code 收窄 ——
+        // 两个入口谁后跑谁覆盖，同一 (member_id, snapshot_date) 永不重复。
+        churnMapper.delete(new LambdaQueryWrapper<CrmChurnPrediction>()
+                .eq(CrmChurnPrediction::getTenantId, t)
+                .eq(CrmChurnPrediction::getSnapshotDate, today));
         for (Map.Entry<Long, CrmLtvSnapshot> e : lastByMember.entrySet()) {
             CrmLtvSnapshot s = e.getValue();
             int lastPurchaseDays = s.getLastPurchaseDays() == null ? 0 : s.getLastPurchaseDays();
@@ -197,7 +205,7 @@ public class LtvChurnController {
             p.setChurnScore(BigDecimal.valueOf(score).setScale(2, RoundingMode.HALF_UP));
             p.setRiskLevel(riskLevel);
             p.setPredictedLostDate(today.plusDays(predictedOffsetDays));
-            p.setModelCode("RULE-CHURN-V1");
+            p.setModelCode("COMPUTE-CHURN-V1");
             p.setModelVersion("v1");
             p.setSnapshotDate(today);
             churnMapper.insert(p);
@@ -206,7 +214,7 @@ public class LtvChurnController {
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("members", lastByMember.size());
         out.put("predictions", predCount);
-        out.put("modelCode", "RULE-CHURN-V1");
+        out.put("modelCode", "COMPUTE-CHURN-V1");
         out.put("computedAt", today);
         return Result.success("流失预测已刷新", out);
     }
