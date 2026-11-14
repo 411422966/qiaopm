@@ -226,9 +226,13 @@ public class LtvChurnController {
     @GetMapping("/dashboard")
     public Result<Map<String, Object>> dashboard() {
         Long t = tid();
-        // 取最近一批 LTV + Churn
+        // I170 修复：LTV 统计必须限定在「最新快照日」。
+        // 修复前是全表求和（本地实测 4595 行 → 805,548,915），把 21 个历史快照日全部累加，
+        // 数字虚高 9.4 倍；修复后只统计最新日（781 行 → 86,068,818）。
+        // 注意：最新日内部仍有同会员多行（batch vs compute-job），属 I172/I174 业务口径待决项，本轮不动。
         List<CrmLtvSnapshot> ltvAll = ltvMapper.selectList(new LambdaQueryWrapper<CrmLtvSnapshot>()
-                .eq(CrmLtvSnapshot::getTenantId, t));
+                .eq(CrmLtvSnapshot::getTenantId, t)
+                .apply("snapshot_date = (SELECT MAX(snapshot_date) FROM crm_ltv_snapshot WHERE tenant_id = {0})", t));
         List<CrmChurnPrediction> churnAll = churnMapper.selectList(new LambdaQueryWrapper<CrmChurnPrediction>()
                 .eq(CrmChurnPrediction::getTenantId, t));
         BigDecimal totalLtv = BigDecimal.ZERO;

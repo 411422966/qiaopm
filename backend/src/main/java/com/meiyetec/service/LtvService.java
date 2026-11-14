@@ -125,6 +125,11 @@ public class LtvService {
         snap.setSnapshotDate(LocalDate.now());
         snap.setCalcDurationMs((int) (System.currentTimeMillis() - t0));
         snap.setOperatorName("online");
+        // I170 修复：单会员当日快照幂等 —— 插入前先删掉该会员当日已有快照。
+        // 只删自己（tenant_id + member_id + snapshot_date），不影响其他会员；
+        // 与 DataGovernanceService.batchPredictLtv 的「全表删当日」语义不同（那是 A3，本批不做）。
+        jdbc.update("DELETE FROM crm_ltv_snapshot WHERE tenant_id = ? AND member_id = ? AND snapshot_date = CURDATE()",
+                tenantId, memberId);
         ltvSnapshotMapper.insert(snap);
 
         Map<String, Object> data = new HashMap<>();

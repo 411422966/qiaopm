@@ -1,9 +1,11 @@
 package com.meiyetec.controller;
 
+import com.meiyetec.exception.BusinessException;
 import com.meiyetec.security.TenantContextHolder;
 import com.meiyetec.util.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,9 @@ import java.util.*;
  *   - full：造新数据（默认）
  *   - reset：先清空再重建
  *   - soft：仅生成快照（假设会员和订单已存在）
+ *
+ * ⚠️ 环境守卫（I170）：reset 模式会整租户 DELETE，仅 dev / test profile 允许执行，
+ *    其他 profile 抛 BusinessException(FORBIDDEN) → HTTP 403。
  */
 @Slf4j
 @RestController
@@ -35,6 +40,12 @@ public class LtvSeedController {
 
     private final JdbcTemplate jdbc;
 
+    /**
+     * 当前 Spring profile。I170 环境守卫用：只有 dev / test 允许执行种子数据生成。
+     */
+    @Value("${spring.profiles.active:prod}")
+    private String activeProfile;
+
     @PostMapping
     public Result<Map<String, Object>> seed(@RequestBody(required = false) Map<String, Object> body) {
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -43,6 +54,10 @@ public class LtvSeedController {
         String mode = body == null || body.get("mode") == null
                 ? "full" : body.get("mode").toString().toLowerCase();
         String operator = body == null ? "seed" : (String) body.get("operatorName");
+
+        // I170 修复：环境守卫 —— mode=reset 会 DELETE 整个租户的 crm_ltv_snapshot / crm_order / crm_member，
+        // 生产环境必须禁止（抛 BusinessException → GlobalExceptionHandler → HTTP 403）。
+        assertSeedEnvironmentAllowed(mode);
 
         Map<String, Object> data = new HashMap<>();
 
@@ -69,6 +84,23 @@ public class LtvSeedController {
         data.put("mode", mode);
 
         return Result.success("LTV 示例数据已生成", data);
+    }
+
+    /**
+     * I170 环境守卫：种子数据生成器（尤其是 mode=reset 的整租户 DELETE）只允许在 dev / test 环境执行。
+     *
+     * <p>生产环境直接抛 {@link BusinessException}（FORBIDDEN）→ {@code GlobalExceptionHandler} 返回 HTTP 403，
+     * 避免示例数据清空真实租户的 crm_ltv_snapshot / crm_order / crm_member。</p>
+     */
+    private void assertSeedEnvironmentAllowed(String mode) {
+        String profile = activeProfile == null ? "" : activeProfile.toLowerCase();
+        boolean allowed = profile.contains("dev") || profile.contains("test");
+        if (allowed) return;
+        log.warn("[LTV-seed] blocked: profile={} mode={} 拒绝执行种子数据生成", activeProfile, mode);
+        if ("reset".equals(mode)) {
+            throw BusinessException.forbidden("生产环境禁止执行种子重置");
+        }
+        throw BusinessException.forbidden("生产环境禁止执行示例数据生成");
     }
 
     // ================================================================
