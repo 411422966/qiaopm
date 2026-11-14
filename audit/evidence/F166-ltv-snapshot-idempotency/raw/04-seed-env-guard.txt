@@ -1,0 +1,18 @@
+﻿=== LtvSeedController 环境守卫验证（容器 SPRING_PROFILES_ACTIVE=prod）===
+--- 调用 POST /intel/ltv/seed  body={"mode":"reset"} ---
+HTTP/1.1 403 
+X-Trace-Id: f7e2a2514d7e4e84805f769d0add60af
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sat, 14 Nov 2026 15:14:52 GMT
+
+{"code":403,"message":"生产环境禁止执行种子重置","data":null,"traceId":"f7e2a2514d7e4e84805f769d0add60af","timestamp":"2026-11-14 23:14:53"}
+--- 数据行数 BEFORE ---
+snap	mem	ord
+4594	489	1848
+--- 数据行数 AFTER ---
+snap	mem	ord
+4594	489	1848

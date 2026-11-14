@@ -1,0 +1,16 @@
+﻿=== GET /ltv-churn/dashboard (after I170 fix) ===
+HTTP=200 code=200
+{
+    "totalLtv365d":  86068818.60,
+    "avgLtv365d":  110203.35,
+    "totalLtv":  86068818.60,
+    "avgLtv":  110203.35,
+    "membersWithLtv":  549,
+    "highRiskCount":  1199,
+    "medRiskCount":  328,
+    "lowRiskCount":  0,
+    "highMedRatio":  100.0,
+    "ltvModelVersion":  "v1",
+    "churnModelCode":  "RULE-CHURN-V1",
+    "snapshotsAt":  "2026-11-14"
+}

@@ -1,0 +1,14 @@
+﻿total_rows	date_cnt	today_rows
+4594	21	780
+operator_name	model_type	c
+batch	RULE	488
+compute-job	RULE	291
+online	BG	1
+total365_today	members_today
+86064597.99	549
+dup_groups_today
+231
+dup_groups_all
+236
+churn_total
+1527

@@ -1,0 +1,16 @@
+﻿=== computeForMember 幂等验证 (member_id=1, tenant_id=1) ===
+--- BEFORE (member 1 当日快照) ---
+id	member_id	operator_name	model_type	snapshot_date
+7487	1	batch	RULE	2026-11-14
+8080	1	compute-job	RULE	2026-11-14
+--- 调用 GET /intel/ltv/compute/1 第 1 次 ---
+resp.code=200 predictedLtv365d=3801.38 modelVersion=LTV-BG-NBD-V1
+cnt
+1
+--- 调用 GET /intel/ltv/compute/1 第 2 次 ---
+resp.code=200 predictedLtv365d=3801.38 modelVersion=LTV-BG-NBD-V1
+cnt
+1
+--- AFTER ---
+id	member_id	operator_name	model_type	snapshot_date
+8293	1	online	BG	2026-11-14

@@ -1,0 +1,17 @@
+﻿=== GET /ltv-churn/dashboard (幂等测试之后，member 1 的 batch/compute-job 行已被单会员 DELETE 清掉) ===
+{
+    "totalLtv365d":  86064597.99,
+    "avgLtv365d":  110339.23,
+    "totalLtv":  86064597.99,
+    "avgLtv":  110339.23,
+    "membersWithLtv":  549,
+    "highRiskCount":  1199,
+    "medRiskCount":  328,
+    "lowRiskCount":  0,
+    "highMedRatio":  100.0,
+    "ltvModelVersion":  "v1",
+    "churnModelCode":  "RULE-CHURN-V1",
+    "snapshotsAt":  "2026-11-14"
+}
+rows_today
+780

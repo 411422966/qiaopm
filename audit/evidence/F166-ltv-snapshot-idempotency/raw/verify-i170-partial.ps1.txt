@@ -1,0 +1,138 @@
+# I170 partial-fix verification script (dashboard filter + computeForMember idempotency + seed env guard)
+# NON-FORMAL TOOL: audit evidence collection only. NOT in CI / PR mandatory list.
+# Purpose : verify the three undisputed I170 fixes against running meiyetec-api (localhost:8080).
+#           1) GET  /ltv-churn/dashboard      -> totalLtv365d / membersWithLtv use MAX(snapshot_date) only
+#           2) GET  /intel/ltv/compute/1 x2  -> single-member idempotency (row count stays 1)
+#           3) POST /intel/ltv/seed reset    -> 403 in prod profile (env guard)
+# Prereq  : meiyetec-api container running with SPRING_PROFILES_ACTIVE=prod
+# Params  : -Base http://localhost:8080   -User operator01   -Pass 123456   -Member 1
+# Exit    : 0 = all checks pass ; 1 = at least one check failed
+# NOTE    : ASCII-only script text on purpose (PowerShell 5.1 reads .ps1 as ANSI
+#           when there is no BOM, and mangles non-ASCII source text).
+# NOTE    : SQL separator is "/" (NOT "|") because cmd /c treats "|" as a pipe.
+param(
+  [string]$Base = "http://localhost:8080",
+  [string]$User = "operator01",
+  [string]$Pass = "123456",
+  [long]$Member = 1
+)
+
+$ErrorActionPreference = "Stop"
+$script:token = $null
+$script:fail = 0
+function Say($s) { Write-Host $s }
+function Check($name, $ok, $detail) {
+  if ($ok) { Say ("CHECK: {0} => PASS ({1})" -f $name, $detail) }
+  else { Say ("CHECK: {0} => FAIL ({1})" -f $name, $detail); $script:fail = 1 }
+}
+
+function Api($method, $path, $body) {
+  $req = [System.Net.HttpWebRequest]::Create("$Base$path")
+  $req.Method = $method
+  $req.Headers.Add("Authorization", "Bearer $script:token")
+  $req.Accept = "application/json"
+  if ($null -ne $body) {
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes(($body | ConvertTo-Json -Compress))
+    $req.ContentType = "application/json; charset=utf-8"
+    $req.ContentLength = $bytes.Length
+    $s = $req.GetRequestStream(); $s.Write($bytes, 0, $bytes.Length); $s.Close()
+  }
+  try {
+    $resp = $req.GetResponse()
+  } catch [System.Net.WebException] {
+    $resp = $_.Exception.Response
+    $sr = New-Object System.IO.StreamReader($resp.GetResponseStream(), [System.Text.Encoding]::UTF8)
+    $txt = $sr.ReadToEnd(); $sr.Close()
+    return @{ status = [int]$resp.StatusCode; body = $txt }
+  }
+  $sr = New-Object System.IO.StreamReader($resp.GetResponseStream(), [System.Text.Encoding]::UTF8)
+  $txt = $sr.ReadToEnd(); $sr.Close(); $resp.Close()
+  return @{ status = 200; body = $txt }
+}
+
+function Q($sql) {
+  $r = cmd /c "docker exec meiyetec-mysql mysql -uroot -proot123456 meiyetec -N -B -e `"$sql`" 2>nul"
+  return (($r -join "`n").Trim())
+}
+function Q1($sql) { return (Q $sql) }
+
+$login = Api "POST" "/auth/login" @{username=$User; password=$Pass}
+$lj = $login.body | ConvertFrom-Json
+if ($lj.code -ne 200) { Say "LOGIN FAILED code=$($lj.code)"; exit 1 }
+$script:token = $lj.data.token
+Say "TOKEN_USER=$User USER_ID=$($lj.data.id) TENANT=1"
+
+Say "=============================================================="
+Say "STEP 0: DB baseline"
+Say "=============================================================="
+Say ("snap_total_rows   = " + (Q1 "SELECT COUNT(*) FROM crm_ltv_snapshot"))
+Say ("snap_today_rows   = " + (Q1 "SELECT COUNT(*) FROM crm_ltv_snapshot WHERE tenant_id=1 AND snapshot_date=CURDATE()"))
+Say ("snap_all_rows_sum = " + (Q1 "SELECT ROUND(SUM(predicted_ltv_365d),2) FROM crm_ltv_snapshot WHERE tenant_id=1"))
+Say ("snap_today_sum    = " + (Q1 "SELECT ROUND(SUM(predicted_ltv_365d),2) FROM crm_ltv_snapshot WHERE tenant_id=1 AND snapshot_date=CURDATE()"))
+Say ("today_distinct_mem= " + (Q1 "SELECT COUNT(DISTINCT member_id) FROM crm_ltv_snapshot WHERE tenant_id=1 AND snapshot_date=CURDATE()"))
+Say ("dup_groups_today  = " + (Q1 "SELECT COUNT(*) FROM (SELECT member_id FROM crm_ltv_snapshot WHERE tenant_id=1 AND snapshot_date=CURDATE() GROUP BY member_id HAVING COUNT(*)>1) x"))
+Say "--- today rows by operator ---"
+Say (Q "SELECT operator_name, model_type, COUNT(*) FROM crm_ltv_snapshot WHERE tenant_id=1 AND snapshot_date=CURDATE() GROUP BY operator_name, model_type ORDER BY operator_name")
+
+Say "=============================================================="
+Say "STEP 1: GET /ltv-churn/dashboard (snapshot_date filter)"
+Say "=============================================================="
+$d = Api "GET" "/ltv-churn/dashboard" $null
+Say ("HTTP=" + $d.status)
+Say $d.body
+$dj = $d.body | ConvertFrom-Json
+$dd = $dj.data
+$sumToday = [double](Q1 "SELECT ROUND(SUM(predicted_ltv_365d),2) FROM crm_ltv_snapshot WHERE tenant_id=1 AND snapshot_date=CURDATE()")
+$sumAll = [double](Q1 "SELECT ROUND(SUM(predicted_ltv_365d),2) FROM crm_ltv_snapshot WHERE tenant_id=1")
+$memToday = [long](Q1 "SELECT COUNT(DISTINCT member_id) FROM crm_ltv_snapshot WHERE tenant_id=1 AND snapshot_date=CURDATE()")
+Check "dashboard.code" ($dj.code -eq 200) "code=$($dj.code)"
+Check "dashboard.totalLtv365d equals today-only sum" `
+  ([double]$dd.totalLtv365d -eq $sumToday) `
+  ("totalLtv365d=" + $dd.totalLtv365d + " todaySum=" + $sumToday)
+Check "dashboard.totalLtv365d is NOT the all-history sum" `
+  ([double]$dd.totalLtv365d -ne $sumAll) `
+  ("totalLtv365d=" + $dd.totalLtv365d + " allHistorySum=" + $sumAll)
+Check "dashboard.membersWithLtv equals today distinct members" `
+  ([long]$dd.membersWithLtv -eq $memToday) `
+  ("membersWithLtv=" + $dd.membersWithLtv + " todayDistinct=" + $memToday)
+
+Say "=============================================================="
+Say "STEP 2: computeForMember idempotency (member $Member)"
+Say "=============================================================="
+Say "--- BEFORE ---"
+Say (Q "SELECT id, member_id, operator_name, model_type, snapshot_date FROM crm_ltv_snapshot WHERE tenant_id=1 AND member_id=$Member ORDER BY id")
+$cnt0 = [int](Q1 "SELECT COUNT(*) FROM crm_ltv_snapshot WHERE tenant_id=1 AND member_id=$Member AND snapshot_date=CURDATE()")
+Say "count_before = $cnt0"
+$c1 = Api "GET" "/intel/ltv/compute/$Member" $null
+$r1 = $c1.body | ConvertFrom-Json
+Say ("call#1 code=" + $r1.code + " predictedLtv365d=" + $r1.data.predictedLtv365d)
+$n1 = [int](Q1 "SELECT COUNT(*) FROM crm_ltv_snapshot WHERE tenant_id=1 AND member_id=$Member AND snapshot_date=CURDATE()")
+Say "count_after_call1 = $n1"
+Check "computeForMember call#1 returns code 200" ($r1.code -eq 200) "code=$($r1.code)"
+Check "computeForMember leaves exactly 1 row for the member" ($n1 -eq 1) "count=$n1"
+$c2 = Api "GET" "/intel/ltv/compute/$Member" $null
+$r2 = $c2.body | ConvertFrom-Json
+Say ("call#2 code=" + $r2.code + " predictedLtv365d=" + $r2.data.predictedLtv365d)
+$n2 = [int](Q1 "SELECT COUNT(*) FROM crm_ltv_snapshot WHERE tenant_id=1 AND member_id=$Member AND snapshot_date=CURDATE()")
+Say "count_after_call2 = $n2"
+Check "computeForMember is idempotent (count stays 1 after 2 calls)" ($n2 -eq 1) "count=$n2"
+Check "computeForMember result is stable across calls" `
+  ([double]$r1.data.predictedLtv365d -eq [double]$r2.data.predictedLtv365d) `
+  ("v1=" + $r1.data.predictedLtv365d + " v2=" + $r2.data.predictedLtv365d)
+Say "--- AFTER ---"
+Say (Q "SELECT id, member_id, operator_name, model_type, snapshot_date FROM crm_ltv_snapshot WHERE tenant_id=1 AND member_id=$Member ORDER BY id")
+
+Say "=============================================================="
+Say "STEP 3: LtvSeedController env guard (prod profile)"
+Say "=============================================================="
+$before = (Q1 "SELECT COUNT(*) FROM crm_ltv_snapshot WHERE tenant_id=1") + "/" + (Q1 "SELECT COUNT(*) FROM crm_member WHERE tenant_id=1 AND deleted=0") + "/" + (Q1 "SELECT COUNT(*) FROM pos_order WHERE tenant_id=1")
+$s = Api "POST" "/intel/ltv/seed" @{mode="reset"; operatorName="i170-verify"}
+Say ("HTTP=" + $s.status)
+Say $s.body
+$after = (Q1 "SELECT COUNT(*) FROM crm_ltv_snapshot WHERE tenant_id=1") + "/" + (Q1 "SELECT COUNT(*) FROM crm_member WHERE tenant_id=1 AND deleted=0") + "/" + (Q1 "SELECT COUNT(*) FROM pos_order WHERE tenant_id=1")
+Say "rows_before = $before"
+Say "rows_after  = $after"
+Check "seed reset blocked with HTTP 403" ($s.status -eq 403) "http=$($s.status)"
+Check "seed reset did not delete any rows" ($before -eq $after) "before=$before after=$after"
+
+if ($script:fail -eq 0) { Say "RESULT: ALL CHECKS PASS"; exit 0 } else { Say "RESULT: SOME CHECKS FAILED"; exit 1 }

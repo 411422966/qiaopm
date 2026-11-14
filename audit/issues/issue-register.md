@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I156/I157 已修并 VERIFIED；I170/I171 新增；I167 只读排查完成待实施 DDL；补登 I168/I169）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I170 部分修复批：dashboard 快照过滤 + computeForMember 幂等 + seed 环境守卫已修并 VERIFIED；A3 暂缓；补登 I172/I173/I174/I175）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -94,8 +94,12 @@
 | I167 | I167 — `m09_invite_code.invite_code` 非全局唯一，匿名场景无法用 code 反查 tenantId（I146 硬前置 DDL） | Open | [I167-invite-code-global-unique-ddl.md](I167-invite-code-global-unique-ddl.md) |
 | I168 | I168 — M09 邀请 `share_count`/`scan_count` 历史脏数据校正（口径待业务确认） | Open | [I168-invite-counter-historical-dirty-data.md](I168-invite-counter-historical-dirty-data.md) |
 | I169 | I169 — 应用层通用限流能力缺失（I165 D2 遗留项） | Open | [I169-app-layer-general-rate-limit.md](I169-app-layer-general-rate-limit.md) |
-| I170 | I170 — `computeLtv` 与 `batchPredictLtv` 双写 `crm_ltv_snapshot` 无互斥：今日 781 行，同一会员多条当日快照 | Open | [I170-ltv-snapshot-duplicate-write.md](I170-ltv-snapshot-duplicate-write.md) |
+| I170 | I170 — `crm_ltv_snapshot` 多写入者无互斥：今日 781 行（489 batch + 292 compute-job），看板 LTV 全表求和虚高 9.4 倍 | Partially Fixed | [I170-ltv-snapshot-duplicate-write.md](I170-ltv-snapshot-duplicate-write.md) |
 | I171 | I171 — `crm_churn_prediction` 口径精化配套项：写入精度 / 阈值边界 / `tenure_days` 语义 / 看板快照过滤 / 枚举漂移 / 唯一约束 / 第三写入者幂等 | Open | [I171-churn-prediction-caliber-refinement.md](I171-churn-prediction-caliber-refinement.md) |
+| I172 | I172 — LTV 快照口径权威性待业务拍板：`compute` 覆盖 292 会员 vs `batch` 覆盖 489 会员，谁是权威（A3 不能照搬 I156） | Open（待业务决策） | [I172-ltv-snapshot-caliber-authority.md](I172-ltv-snapshot-caliber-authority.md) |
+| I173 | I173 — 复购概率档位口径不一致：`compute` 两档（0.85/0.30）vs `batch` 三档（0.85/0.70/0.45），同会员实测差 0.15 | Open（待业务决策） | [I173-ltv-repurchase-prob-tier-mismatch.md](I173-ltv-repurchase-prob-tier-mismatch.md) |
+| I174 | I174 — `crm_ltv_snapshot` 历史 5 组重复行待清理（2026-09-02 / 10-30 / 10-31 / 11-02），`trend` 按月求和被放大 | Open（待业务决策） | [I174-ltv-historical-duplicate-cleanup.md](I174-ltv-historical-duplicate-cleanup.md) |
+| I175 | I175 — `crm_ltv_snapshot` 缺 `UNIQUE (tenant_id, member_id, snapshot_date)`，加约束前须先清 236 组存量重复 + A3 落地 | Open（DDL 未实施） | [I175-ltv-snapshot-unique-constraint-ddl.md](I175-ltv-snapshot-unique-constraint-ddl.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
@@ -126,6 +130,17 @@
 - **I156 §5.5 其余配套项本轮未做**：churn_score 改 4 位小数、阈值 `>`→`>=`、`tenure_days` 复制粘贴错误、dashboard 加 `snapshot_date` 过滤、`/intel/churn/overview` 枚举统一、加 `UNIQUE` 约束、第三个写入者 `ChurnPredictionService.predictForMember` 幂等 —— **均保持原状**，仍列在 I156 §5.5。
 - **未动项（用户明确指示）**：I158（置信度倒挂）、I167（DDL 需生产库）、I169（限流，独立批次）；现有 489 条 `crm_ltv_snapshot` 历史快照未被触碰（清理仅针对今日测试数据）。
 - **I171（Open，新增，P2）**：I156 §5.5 的 **7 项配套清单**从 I156 拆出独立立项 —— ① `churn_score` 精度（A/C 为 4 位、B 为 2 位）；② 阈值边界（A `>=0.66/0.33`、B `>0.66/0.33`、C 走 `ai_churn_model.threshold_high/med` 默认 0.70/0.40）；③ `tenure_days` 复制粘贴错误（`LtvChurnController.java:204` 写入 `s.getLastPurchaseDays()`，恒等于 `last_purchase_days`，与 A/C 的真实生命周期口径不同，**修复来源待定**）；④ `GET /ltv-churn/dashboard` 未按 `snapshot_date` 过滤（全表累加 21 个历史日期）；⑤ `GET /intel/churn/overview` 枚举漂移（统计 `HIGH/MEDIUM/LOW/SAFE`，写入者用 `HIGH/MED/LOW` → `mediumCount/lowCount/safeCount` **恒为 0**）；⑥ `crm_churn_prediction` 缺 `UNIQUE (tenant_id, member_id, snapshot_date)`（**需生产库 DDL**，且必须先做 ⑦）；⑦ 第三个写入者 `ChurnPredictionService.predictForMember`（L238）无先删后插（当前因 `ai_churn_model` 无激活模型而短路不产数据，激活后会直接破坏 ⑥）。**建议与 I170 同批处理**，处理顺序：先 ⑦ → 再 ①②④ → ③⑤（需拍板）→ 最后 ⑥（独立 DDL 批次）。
+
+## 补充说明（2026-11-14：I170 部分修复批次 + I172/I173/I174/I175 新增）
+
+- **I170（Partially Fixed，3 项无争议项已修）**：`crm_ltv_snapshot` 有 **3 个写入者**（A `batch` / B `compute-job` / C `online`），彼此无互斥。本批只修 3 项**不涉及业务口径**的缺陷 —— ① `GET /ltv-churn/dashboard` 加 `snapshot_date = MAX(snapshot_date)` 过滤（全表求和 → 最新快照日；**数字由 ¥805,544,695 降为 ¥86,064,598，是「从错误变正确」，不是数据丢失**）；② 写入者 C `LtvService.computeForMember` 加**单会员**幂等（INSERT 前 `DELETE ... WHERE tenant_id + member_id + snapshot_date=CURDATE()`，只删自己）；③ `LtvSeedController` 加环境守卫（仅 `dev`/`test` profile 允许 seed，其余抛 `BusinessException(FORBIDDEN)` → HTTP 403）。**A3 核心（`computeLtv` 加全表 DELETE）暂缓** —— LTV 侧 `compute` 覆盖 292 会员 < `batch` 覆盖 489 会员，**方向与 CHURN 侧相反**，照搬会抹掉 197 个无消费会员的当日快照。**运行时实测 12/12 CHECK PASS**（`totalLtv365d` 与当日 `SUM` 精确相等、`membersWithLtv`=549=当日 distinct 会员、连调 `compute/1` 两次行数恒为 1、prod profile 下 seed 返回 403 且行数前后不变 4594/489/1848）。证据 `audit/evidence/F166-ltv-snapshot-idempotency/`（`raw/06-verify-i170-partial.txt` + `raw/verify-i170-partial.ps1.txt` 非正式工具）。
+- **I172（Open，新增，P1，待业务决策）**：LTV 快照**口径权威性**未定 —— A `batch`（`DataGovernanceService.batchPredictLtv`，覆盖租户内全部 `crm_member`，本地 489）vs B `compute-job`（`LtvChurnController.computeLtv`，覆盖有消费会员，本地 292）。差异不止覆盖面：`model_version` 来源不同（A 取已部署注册表版本，B 硬编码 `'v1'`）、概率档位不同（见 I173）、精度不同（A 先 `ROUND(freq,2)` 再乘，B 用未取整 double）。**「LTV 池是否包含 0 消费会员」属业务定义，技术侧不单方面拍板** → A3 阻塞。
+- **I173（Open，新增，P2，待业务决策）**：复购概率**档位口径不一致** —— A 三档（0.85/0.70/0.45，阈值 `>=12`/`>=4`）vs B 两档（0.85/0.30，阈值 `>12`/`>4`），B 缺中间档且 `prob_180d` 恒为 0.55。实测 member 4/6：`prob_30d` 0.45 vs 0.30（**差 0.15**）、`prob_90d` 0.55 vs 0.45、`prob_180d` 0.70 vs 0.55。
+- **I174（Open，新增，P2，待业务决策）**：`crm_ltv_snapshot` **历史 5 组重复行**（2026-09-02 member 1224 共 5 行；10-30 member 1 与 1548 各 3 行；10-31 member 1548 3 行；11-02 member 1548 2 行）——**全部来自写入者 C（`online`）**。因 `GET /intel/ltv/trend` 按月 `SUM` 不去重，重复行**放大历史趋势**：2026-09 多计 ¥3,903,377.00（占当月 6.6%）、2026-10 多计 ¥9,268.40（**占当月 66.7%**）、2026-11 多计 ¥0.00，合计 ¥3,912,645.40。**本批未清理**（清理 SQL 草案见 I174 §4，含归档备份步骤）。
+- **I175（Open，新增，P2，DDL 未实施）**：`crm_ltv_snapshot` **无任何唯一约束**（现仅 `PRIMARY KEY(id)` + `idx_member(member_id)` + `idx_brand_date(brand_id, snapshot_date)`，两个索引均不含 `tenant_id`）。建议 `ADD UNIQUE KEY uk_tenant_member_date (tenant_id, member_id, snapshot_date)`，但**四个前置条件必须按序满足**：① 写入者 C 幂等（✅ 本批已完成）→ ② 存量重复清零（⏳ I174）→ ③ 写入者收敛 / A3 落地（⏳ **I172**）→ ④ 生产库只读复核。**③ 未落地就加约束会导致 `compute-job` 跑批撞唯一键整批回滚**，比允许重复更严重。**本批明确不加约束**。
+- **本批新发现（未落盘为独立 issue，待用户决定，建议 I176）**：`LtvSeedController.seed()` 的 `mode=reset` 分支 `DELETE FROM crm_order WHERE tenant_id = ?` —— **`crm_order` 表在库中不存在**（同文件 `generateDemoMembersAndOrders()` 写的是 `pos_order`）→ dev/test 放开守卫后会**先删光 `crm_ltv_snapshot` 再抛 SQLException**，留下半破坏状态。生产因守卫已生效**不受影响**。关联 I152（`crm_order` 引用外泄）。**本批未改代码**（任务 3 仅授权加环境守卫）。
+- **本批未做（用户明确指示）**：`computeLtv` 加 DELETE（A3 核心，等 I172）、统一复购概率档位（I173）、清理历史重复（I174）、加唯一约束（I175）、不动 `model_type` 字段（保持 `'RULE'`，写入者仍靠 `operator_name` 区分）。
+- **已知副作用（须知悉）**：写入者 C 的单会员幂等会把**该会员当日由 A/B 产生的行一并清掉** —— 即「该会员当日快照以 C 的口径为准」。实测 member 1 的 2 行（batch + compute-job）收敛为 1 行（online / BG），当日行数 781 → 780（dup 组 232 → 231），当日 `SUM` 相应减少 ¥4,220.61，`membersWithLtv` 恒为 549 不变。
 
 ## 脚注：证据目录命名规则切换（2026-11-13 起）
 
