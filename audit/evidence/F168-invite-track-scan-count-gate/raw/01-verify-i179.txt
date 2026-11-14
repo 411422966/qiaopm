@@ -1,0 +1,38 @@
+﻿TOKEN_USER=operator01 USER_ID=900006 TENANT=1
+
+=== RESET ===
+code 990202 scan_count = 0
+code 990203 scan_count = 0
+
+=== S1: I179 POST /invite/track {code:TESTI179C} -- NO phone ===
+RESP: code=200 message=操作成功
+DB: m09_invite_code.id=990202 scan_count = 0
+CHECK: scan_count NOT incremented for a phone-less track => PASS
+
+=== S2: I179 POST /invite/track {code:TESTI179C, phone:...} -- WITH phone ===
+RESP: code=200 message=操作成功
+RESP data id = 13
+DB: m09_invite_code.id=990202 scan_count = 1
+CHECK: scan_count incremented by 1 for a track carrying a phone => PASS
+
+=== S3: I179 POST /invite/track {code:TESTI179C, phone:''} -- empty phone ===
+RESP: code=200 message=操作成功
+DB: m09_invite_code.id=990202 scan_count = 1
+CHECK: scan_count unchanged for an empty-phone track => PASS
+
+=== S4: I179 POST /invite/track {code:TESTI179D} -- scan-only campaign, NO phone ===
+RESP: code=200 message=操作成功
+DB: m09_invite_code.id=990203 scan_count = 1
+CHECK: scan-only campaign still counts (original behaviour preserved) => PASS
+
+=== S5: I179 no invite_record created for the phone-less track ===
+DB: m09_invite_record rows for invite_code=TESTI179C = 1 (expect 1, only the S2 phone track)
+CHECK: exactly one invite_record (from the phone-bearing track) => PASS
+
+=== SUMMARY ===
+S1 phone-less track does not count  : PASS
+S2 track with phone counts          : PASS
+S3 empty-phone track does not count : PASS
+S4 scan-only campaign still counts  : PASS
+S5 exactly one invite_record created: PASS
+OVERALL: ALL PASS

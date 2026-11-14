@@ -1,0 +1,63 @@
+﻿TOKEN_USER=operator01 USER_ID=900006 TENANT=1
+
+=== RESET ===
+redis key booking:confirm:1:990101 exists = 0
+sys_config window = 300
+
+=== S1: I177 POST /intl-booking/990101/send-confirmation (1st call) ===
+RESP: code=200 message=已发送
+RESP data: {"overallSuccess":true,"resolvedLocale":"en-US","usedFallback":true,"bookingId":990101,"channelResults":{"SMS":{"success":true,"externalMsgId":"SMS-DEMO-1794675799865","errorMsg":null},"EMAIL":{"success":true,"externalMsgId":"EMAIL-DEMO-1794675799872","errorMsg":null},"MINI_PROGRAM":{"success":false,"externalMsgId":null,"errorMsg":"miniProgramOpenId is empty — skipped"}}}
+redis TTL booking:confirm:1:990101 = 300
+CHECK: first call 200 + overallSuccess=true + redis key set with TTL<=300 => PASS
+
+=== S2: I177 POST /intl-booking/990101/send-confirmation (2nd call, same window) ===
+RESP: code=400 message=确认消息已在发送中，请勿重复操作
+redis TTL booking:confirm:1:990101 = 300 (was 300)
+CHECK: 2nd call code=400 + duplicate message + TTL not refreshed => PASS
+
+=== S3: I177 window length is driven by sys_config (set 5s, wait 6s, retry) ===
+call#1 (fresh key)  : code=200 message=已发送  TTL=5
+call#2 (inside win) : code=400 message=确认消息已在发送中，请勿重复操作
+call#3 (after 6s)   : code=200 message=已发送  TTL=5
+CHECK: fresh key allowed, 2nd blocked, after expiry allowed again, TTL follows config => PASS
+
+=== S4: I177 POST /intl-booking/990102/status CONFIRMED (1st transition) ===
+set NEW : code=200
+RESP: code=200 message=已更新状态
+RESP data keys: booking,confirmation
+confirmation present = True
+confirmationSkipped  = 
+overallSuccess      = True
+redis TTL booking:confirm:1:990102 = 299
+CHECK: auto trigger sent (confirmation present, no skip marker) + redis key set => PASS
+
+=== S5: I177 POST /intl-booking/990102/status CONFIRMED (2nd transition, same window) ===
+set NEW : code=200
+RESP: code=200 message=已更新状态
+RESP data keys: booking,confirmationSkipped,confirmationSkippedReason
+confirmation present = False
+confirmationSkipped  = True
+confirmationSkippedReason = 幂等窗口内已发送确认消息，跳过重复发送
+CHECK: auto trigger skipped inside window => PASS
+
+=== S6: I177 POST /intl-booking/990102/send-confirmation (manual, same window as S5) ===
+RESP: code=400 message=确认消息已在发送中，请勿重复操作
+CHECK: manual trigger shares the same gate as the auto trigger => PASS
+
+=== S7: I177 fail-open when Redis is down ===
+stopping redis container ...
+RESP: code=200 message=已发送
+RESP data: {"overallSuccess":true,"resolvedLocale":"en-US","usedFallback":true,"bookingId":990101,"channelResults":{"SMS":{"success":true,"externalMsgId":"SMS-DEMO-1794675819431","errorMsg":null},"EMAIL":{"success":true,"externalMsgId":"EMAIL-DEMO-1794675819440","errorMsg":null},"MINI_PROGRAM":{"success":false,"externalMsgId":null,"errorMsg":"miniProgramOpenId is empty — skipped"}}}
+restarting redis container ...
+redis back: PONG
+CHECK: send still succeeds while Redis is down (fail-open) => PASS
+
+=== SUMMARY ===
+S1 first manual send allowed       : PASS
+S2 second manual send blocked      : PASS
+S3 window driven by sys_config      : PASS
+S4 auto trigger sends              : PASS
+S5 auto trigger deduped in window  : PASS
+S6 manual shares gate w/ auto      : PASS
+S7 fail-open on Redis outage       : PASS
+OVERALL: ALL PASS

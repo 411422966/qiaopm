@@ -1,0 +1,128 @@
+﻿# I179 verification script -- InviteService.trackClick scan_count gating
+# NON-FORMAL TOOL: audit evidence collection only. NOT in CI / PR mandatory list.
+# Purpose: prove that
+#   (a) a track request WITHOUT phone does NOT increment scan_count
+#   (b) a track request WITH phone DOES increment scan_count
+#   (c) the "scan-only" campaign (invite_need_register = 0) keeps counting
+#       without a phone (behaviour of the original code, deliberately preserved)
+# Prereq : fixtures seeded via raw/00-fixture-seed.sql
+# Exit   : 0 = all checks pass ; 1 = at least one check failed
+# NOTE   : UTF-8 WITH BOM on purpose -- Windows PowerShell 5.1 reads .ps1 as ANSI
+#          when there is no BOM and mangles non-ASCII source text.
+param(
+  [string]$Base = "http://localhost:8080",
+  [string]$User = "operator01",
+  [string]$Pass = "123456",
+  [string]$OutFile = "$PSScriptRoot\01-verify-i179.txt"
+)
+
+$ErrorActionPreference = "Stop"
+$script:token = $null
+$out = New-Object System.Collections.Generic.List[string]
+function Say($s) { $script:out.Add($s); Write-Host $s }
+
+# The API returns application/json without an explicit charset, so Windows
+# PowerShell 5.1 decodes the body as ANSI and mangles Chinese text.
+# Use a raw WebRequest and decode the response bytes as UTF-8 explicitly.
+function Api($method, $path, $body) {
+  $req = [System.Net.HttpWebRequest]::Create("$Base$path")
+  $req.Method = $method
+  $req.Headers.Add("Authorization", "Bearer $script:token")
+  $req.Accept = "application/json"
+  if ($body -ne $null) {
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes(($body | ConvertTo-Json -Compress))
+    $req.ContentType = "application/json; charset=utf-8"
+    $req.ContentLength = $bytes.Length
+    $s = $req.GetRequestStream(); $s.Write($bytes, 0, $bytes.Length); $s.Close()
+  }
+  $resp = $req.GetResponse()
+  $sr = New-Object System.IO.StreamReader($resp.GetResponseStream(), [System.Text.Encoding]::UTF8)
+  $txt = $sr.ReadToEnd(); $sr.Close(); $resp.Close()
+  return ($txt | ConvertFrom-Json)
+}
+
+function Q($sql) {
+  # mysql client writes a password warning to stderr; discard it via cmd redirection
+  $r = cmd /c "docker exec meiyetec-mysql mysql -uroot -proot123456 meiyetec -N -B -e `"$sql`" 2>nul"
+  return (($r -join "`n").Trim())
+}
+
+function ScanCount($id) { return (Q "SELECT scan_count FROM m09_invite_code WHERE id=$id") }
+
+$login = Api "POST" "/auth/login" @{username=$User; password=$Pass}
+if ($login.code -ne 200) { Say "LOGIN FAILED code=$($login.code)"; exit 1 }
+$script:token = $login.data.token
+Say "TOKEN_USER=$User USER_ID=$($login.data.id) TENANT=1"
+Say ""
+
+$REG = 990202   # regular campaign  (invite_need_register = 1) -> invite_code TESTI179C
+$SCN = 990203   # scan-only campaign (invite_need_register = 0) -> invite_code TESTI179D
+
+# ---- reset counters ----
+Q "UPDATE m09_invite_code SET scan_count = 0, register_count = 0 WHERE id IN (990202, 990203)" | Out-Null
+Say "=== RESET ==="
+Say ("code 990202 scan_count = " + (ScanCount $REG))
+Say ("code 990203 scan_count = " + (ScanCount $SCN))
+Say ""
+
+# ---- S1 : track WITHOUT phone on a regular campaign ----
+Say "=== S1: I179 POST /invite/track {code:TESTI179C} -- NO phone ==="
+$r1 = Api "POST" "/invite/track" @{code="TESTI179C"; channel="LINK"}
+$c1 = ScanCount $REG
+Say ("RESP: code={0} message={1}" -f $r1.code, $r1.message)
+Say ("DB: m09_invite_code.id=990202 scan_count = {0}" -f $c1)
+$expect1 = ($r1.code -eq 200) -and ([int]$c1 -eq 0)
+Say ("CHECK: scan_count NOT incremented for a phone-less track => " + $(if ($expect1) { "PASS" } else { "FAIL" }))
+Say ""
+
+# ---- S2 : track WITH phone on a regular campaign ----
+Say "=== S2: I179 POST /invite/track {code:TESTI179C, phone:...} -- WITH phone ==="
+$r2 = Api "POST" "/invite/track" @{code="TESTI179C"; phone="13900000179"; channel="LINK"}
+$c2 = ScanCount $REG
+Say ("RESP: code={0} message={1}" -f $r2.code, $r2.message)
+Say ("RESP data id = {0}" -f $r2.data.id)
+Say ("DB: m09_invite_code.id=990202 scan_count = {0}" -f $c2)
+$expect2 = ($r2.code -eq 200) -and ([int]$c2 -eq 1)
+Say ("CHECK: scan_count incremented by 1 for a track carrying a phone => " + $(if ($expect2) { "PASS" } else { "FAIL" }))
+Say ""
+
+# ---- S3 : track with an EMPTY phone string ----
+Say "=== S3: I179 POST /invite/track {code:TESTI179C, phone:''} -- empty phone ==="
+$r3 = Api "POST" "/invite/track" @{code="TESTI179C"; phone=""; channel="LINK"}
+$c3 = ScanCount $REG
+Say ("RESP: code={0} message={1}" -f $r3.code, $r3.message)
+Say ("DB: m09_invite_code.id=990202 scan_count = {0}" -f $c3)
+$expect3 = ($r3.code -eq 200) -and ([int]$c3 -eq [int]$c2)
+Say ("CHECK: scan_count unchanged for an empty-phone track => " + $(if ($expect3) { "PASS" } else { "FAIL" }))
+Say ""
+
+# ---- S4 : scan-only campaign keeps counting without a phone ----
+Say "=== S4: I179 POST /invite/track {code:TESTI179D} -- scan-only campaign, NO phone ==="
+$r4 = Api "POST" "/invite/track" @{code="TESTI179D"; channel="LINK"}
+$c4 = ScanCount $SCN
+Say ("RESP: code={0} message={1}" -f $r4.code, $r4.message)
+Say ("DB: m09_invite_code.id=990203 scan_count = {0}" -f $c4)
+$expect4 = ($r4.code -eq 200) -and ([int]$c4 -eq 1)
+Say ("CHECK: scan-only campaign still counts (original behaviour preserved) => " + $(if ($expect4) { "PASS" } else { "FAIL" }))
+Say ""
+
+# ---- S5 : the record was NOT created for the phone-less track ----
+Say "=== S5: I179 no invite_record created for the phone-less track ==="
+$recCnt = Q "SELECT COUNT(*) FROM m09_invite_record WHERE invite_code='TESTI179C'"
+Say ("DB: m09_invite_record rows for invite_code=TESTI179C = {0} (expect 1, only the S2 phone track)" -f $recCnt)
+$expect5 = ([int]$recCnt -eq 1)
+Say ("CHECK: exactly one invite_record (from the phone-bearing track) => " + $(if ($expect5) { "PASS" } else { "FAIL" }))
+Say ""
+
+# ---- summary ----
+Say "=== SUMMARY ==="
+Say ("S1 phone-less track does not count  : " + $(if ($expect1) { "PASS" } else { "FAIL" }))
+Say ("S2 track with phone counts          : " + $(if ($expect2) { "PASS" } else { "FAIL" }))
+Say ("S3 empty-phone track does not count : " + $(if ($expect3) { "PASS" } else { "FAIL" }))
+Say ("S4 scan-only campaign still counts  : " + $(if ($expect4) { "PASS" } else { "FAIL" }))
+Say ("S5 exactly one invite_record created: " + $(if ($expect5) { "PASS" } else { "FAIL" }))
+
+$all = $expect1 -and $expect2 -and $expect3 -and $expect4 -and $expect5
+Say ("OVERALL: " + $(if ($all) { "ALL PASS" } else { "HAS FAILURE" }))
+$out | Out-File -FilePath $OutFile -Encoding UTF8
+exit $(if ($all) { 0 } else { 1 })

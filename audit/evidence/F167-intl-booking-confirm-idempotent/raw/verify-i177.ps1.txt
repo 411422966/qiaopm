@@ -1,0 +1,186 @@
+﻿# I177 verification script -- booking confirmation idempotency gate
+# NON-FORMAL TOOL: audit evidence collection only. NOT in CI / PR mandatory list.
+# Purpose: prove that
+#   (a) POST /intl-booking/{id}/send-confirmation is idempotent inside the window
+#   (b) POST /intl-booking/{id}/status CONFIRMED auto-trigger is deduped inside the window
+#   (c) the window length comes from sys_config intl.booking.send.idempotent.window
+#   (d) Redis outage degrades to fail-open (send still happens)
+# Prereq : fixtures seeded via raw/00-fixture-seed.sql
+# Exit   : 0 = all checks pass ; 1 = at least one check failed
+# NOTE   : ASCII-only script text on purpose (PowerShell 5.1 reads .ps1 as ANSI
+#          when there is no BOM, and mangles non-ASCII source text).
+param(
+  [string]$Base = "http://localhost:8080",
+  [string]$User = "operator01",
+  [string]$Pass = "123456",
+  [string]$OutFile = "$PSScriptRoot\01-verify-i177.txt"
+)
+
+$ErrorActionPreference = "Stop"
+$script:token = $null
+$out = New-Object System.Collections.Generic.List[string]
+function Say($s) { $script:out.Add($s); Write-Host $s }
+
+# The API returns application/json without an explicit charset, so Windows
+# PowerShell 5.1 decodes the body as ANSI and mangles Chinese text.
+# Use a raw WebRequest and decode the response bytes as UTF-8 explicitly.
+function Api($method, $path, $body) {
+  $req = [System.Net.HttpWebRequest]::Create("$Base$path")
+  $req.Method = $method
+  $req.Headers.Add("Authorization", "Bearer $script:token")
+  $req.Accept = "application/json"
+  if ($body -ne $null) {
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes(($body | ConvertTo-Json -Compress))
+    $req.ContentType = "application/json; charset=utf-8"
+    $req.ContentLength = $bytes.Length
+    $s = $req.GetRequestStream(); $s.Write($bytes, 0, $bytes.Length); $s.Close()
+  }
+  $resp = $req.GetResponse()
+  $sr = New-Object System.IO.StreamReader($resp.GetResponseStream(), [System.Text.Encoding]::UTF8)
+  $txt = $sr.ReadToEnd(); $sr.Close(); $resp.Close()
+  return ($txt | ConvertFrom-Json)
+}
+
+function Q($sql) {
+  # mysql client writes a password warning to stderr; discard it via cmd redirection
+  $r = cmd /c "docker exec meiyetec-mysql mysql -uroot -proot123456 meiyetec -N -B -e `"$sql`" 2>nul"
+  return (($r -join "`n").Trim())
+}
+
+function RedisCli($cmdLine) {
+  $parts = @($cmdLine -split '\s+' | Where-Object { $_ -ne '' })
+  $r = & docker exec meiyetec-redis redis-cli @parts 2>$null
+  return (($r | Out-String).Trim())
+}
+
+function SetWindow($seconds) {
+  cmd /c "docker exec meiyetec-mysql mysql -uroot -proot123456 meiyetec -e `"UPDATE sys_config SET config_value='$seconds' WHERE config_key='intl.booking.send.idempotent.window'`" 2>nul" | Out-Null
+}
+
+$login = Api "POST" "/auth/login" @{username=$User; password=$Pass}
+if ($login.code -ne 200) { Say "LOGIN FAILED code=$($login.code)"; exit 1 }
+$script:token = $login.data.token
+Say "TOKEN_USER=$User USER_ID=$($login.data.id) TENANT=1"
+Say ""
+
+$BK = 990101   # manual trigger subject
+$AK = 990102   # auto trigger subject
+
+# ---- reset state ----
+RedisCli "DEL booking:confirm:1:$BK" | Out-Null
+RedisCli "DEL booking:confirm:1:$AK" | Out-Null
+SetWindow 300
+Say "=== RESET ==="
+Say ("redis key booking:confirm:1:$BK exists = " + (RedisCli "EXISTS booking:confirm:1:$BK"))
+Say ("sys_config window = " + (Q "SELECT config_value FROM sys_config WHERE config_key='intl.booking.send.idempotent.window'"))
+Say ""
+
+# ---- S1 : first manual send ----
+Say "=== S1: I177 POST /intl-booking/$BK/send-confirmation (1st call) ==="
+$r1 = Api "POST" "/intl-booking/$BK/send-confirmation" $null
+Say ("RESP: code={0} message={1}" -f $r1.code, $r1.message)
+Say ("RESP data: " + ($r1.data | ConvertTo-Json -Compress -Depth 6))
+$ttl1 = RedisCli "TTL booking:confirm:1:$BK"
+Say ("redis TTL booking:confirm:1:$BK = {0}" -f $ttl1)
+$expect1 = ($r1.code -eq 200) -and ($r1.data.overallSuccess -eq $true) -and ([int]$ttl1 -gt 0) -and ([int]$ttl1 -le 300)
+Say ("CHECK: first call 200 + overallSuccess=true + redis key set with TTL<=300 => " + $(if ($expect1) { "PASS" } else { "FAIL" }))
+Say ""
+
+# ---- S2 : second manual send inside window ----
+Say "=== S2: I177 POST /intl-booking/$BK/send-confirmation (2nd call, same window) ==="
+$r2 = Api "POST" "/intl-booking/$BK/send-confirmation" $null
+Say ("RESP: code={0} message={1}" -f $r2.code, $r2.message)
+$ttl2 = RedisCli "TTL booking:confirm:1:$BK"
+Say ("redis TTL booking:confirm:1:$BK = {0} (was {1})" -f $ttl2, $ttl1)
+$expect2 = ($r2.code -eq 400) -and ($r2.message -like "*请勿重复操作*") -and ($ttl2 -eq $ttl1)
+Say ("CHECK: 2nd call code=400 + duplicate message + TTL not refreshed => " + $(if ($expect2) { "PASS" } else { "FAIL" }))
+Say ""
+
+# ---- S3 : window length comes from sys_config ----
+Say "=== S3: I177 window length is driven by sys_config (set 5s, wait 6s, retry) ==="
+RedisCli "DEL booking:confirm:1:$BK" | Out-Null
+SetWindow 5
+$r3a = Api "POST" "/intl-booking/$BK/send-confirmation" $null
+$ttl3a = RedisCli "TTL booking:confirm:1:$BK"
+Say ("call#1 (fresh key)  : code={0} message={1}  TTL={2}" -f $r3a.code, $r3a.message, $ttl3a)
+$r3b = Api "POST" "/intl-booking/$BK/send-confirmation" $null
+Say ("call#2 (inside win) : code={0} message={1}" -f $r3b.code, $r3b.message)
+Start-Sleep -Seconds 6
+$r3c = Api "POST" "/intl-booking/$BK/send-confirmation" $null
+$ttl3 = RedisCli "TTL booking:confirm:1:$BK"
+Say ("call#3 (after 6s)   : code={0} message={1}  TTL={2}" -f $r3c.code, $r3c.message, $ttl3)
+SetWindow 300
+$expect3 = ($r3a.code -eq 200) -and ($r3b.code -eq 400) -and ($r3c.code -eq 200) -and ([int]$ttl3a -gt 0) -and ([int]$ttl3a -le 5)
+Say ("CHECK: fresh key allowed, 2nd blocked, after expiry allowed again, TTL follows config => " + $(if ($expect3) { "PASS" } else { "FAIL" }))
+Say ""
+
+# ---- S4 : auto trigger (status -> CONFIRMED) ----
+Say "=== S4: I177 POST /intl-booking/$AK/status CONFIRMED (1st transition) ==="
+RedisCli "DEL booking:confirm:1:$AK" | Out-Null
+$st0 = Api "POST" "/intl-booking/$AK/status" @{status="NEW"}
+Say ("set NEW : code={0}" -f $st0.code)
+$r4 = Api "POST" "/intl-booking/$AK/status" @{status="CONFIRMED"}
+Say ("RESP: code={0} message={1}" -f $r4.code, $r4.message)
+Say ("RESP data keys: " + ($r4.data.PSObject.Properties.Name -join ","))
+Say ("confirmation present = {0}" -f ($r4.data.confirmation -ne $null))
+Say ("confirmationSkipped  = {0}" -f $r4.data.confirmationSkipped)
+Say ("overallSuccess      = {0}" -f $r4.data.confirmation.overallSuccess)
+$ttl4 = RedisCli "TTL booking:confirm:1:$AK"
+Say ("redis TTL booking:confirm:1:$AK = {0}" -f $ttl4)
+$expect4 = ($r4.code -eq 200) -and ($r4.data.confirmation -ne $null) -and ($r4.data.confirmationSkipped -eq $null) -and ([int]$ttl4 -gt 0)
+Say ("CHECK: auto trigger sent (confirmation present, no skip marker) + redis key set => " + $(if ($expect4) { "PASS" } else { "FAIL" }))
+Say ""
+
+# ---- S5 : second auto trigger inside window ----
+Say "=== S5: I177 POST /intl-booking/$AK/status CONFIRMED (2nd transition, same window) ==="
+$st1 = Api "POST" "/intl-booking/$AK/status" @{status="NEW"}
+Say ("set NEW : code={0}" -f $st1.code)
+$r5 = Api "POST" "/intl-booking/$AK/status" @{status="CONFIRMED"}
+Say ("RESP: code={0} message={1}" -f $r5.code, $r5.message)
+Say ("RESP data keys: " + ($r5.data.PSObject.Properties.Name -join ","))
+Say ("confirmation present = {0}" -f ($r5.data.confirmation -ne $null))
+Say ("confirmationSkipped  = {0}" -f $r5.data.confirmationSkipped)
+Say ("confirmationSkippedReason = {0}" -f $r5.data.confirmationSkippedReason)
+$expect5 = ($r5.code -eq 200) -and ($r5.data.confirmation -eq $null) -and ($r5.data.confirmationSkipped -eq $true)
+Say ("CHECK: auto trigger skipped inside window => " + $(if ($expect5) { "PASS" } else { "FAIL" }))
+Say ""
+
+# ---- S6 : manual endpoint on the auto-triggered booking ----
+Say "=== S6: I177 POST /intl-booking/$AK/send-confirmation (manual, same window as S5) ==="
+$r6 = Api "POST" "/intl-booking/$AK/send-confirmation" $null
+Say ("RESP: code={0} message={1}" -f $r6.code, $r6.message)
+$expect6 = ($r6.code -eq 400)
+Say ("CHECK: manual trigger shares the same gate as the auto trigger => " + $(if ($expect6) { "PASS" } else { "FAIL" }))
+Say ""
+
+# ---- S7 : fail-open when Redis is unavailable ----
+Say "=== S7: I177 fail-open when Redis is down ==="
+RedisCli "DEL booking:confirm:1:$BK" | Out-Null
+Say "stopping redis container ..."
+cmd /c "docker stop meiyetec-redis >nul 2>&1"
+Start-Sleep -Seconds 2
+$r7 = Api "POST" "/intl-booking/$BK/send-confirmation" $null
+Say ("RESP: code={0} message={1}" -f $r7.code, $r7.message)
+Say ("RESP data: " + ($r7.data | ConvertTo-Json -Compress -Depth 6))
+Say "restarting redis container ..."
+cmd /c "docker start meiyetec-redis >nul 2>&1"
+Start-Sleep -Seconds 5
+Say ("redis back: " + (RedisCli "PING"))
+$expect7 = ($r7.code -eq 200) -and ($r7.data -ne $null)
+Say ("CHECK: send still succeeds while Redis is down (fail-open) => " + $(if ($expect7) { "PASS" } else { "FAIL" }))
+Say ""
+
+# ---- summary ----
+Say "=== SUMMARY ==="
+Say ("S1 first manual send allowed       : " + $(if ($expect1) { "PASS" } else { "FAIL" }))
+Say ("S2 second manual send blocked      : " + $(if ($expect2) { "PASS" } else { "FAIL" }))
+Say ("S3 window driven by sys_config      : " + $(if ($expect3) { "PASS" } else { "FAIL" }))
+Say ("S4 auto trigger sends              : " + $(if ($expect4) { "PASS" } else { "FAIL" }))
+Say ("S5 auto trigger deduped in window  : " + $(if ($expect5) { "PASS" } else { "FAIL" }))
+Say ("S6 manual shares gate w/ auto      : " + $(if ($expect6) { "PASS" } else { "FAIL" }))
+Say ("S7 fail-open on Redis outage       : " + $(if ($expect7) { "PASS" } else { "FAIL" }))
+
+$all = $expect1 -and $expect2 -and $expect3 -and $expect4 -and $expect5 -and $expect6 -and $expect7
+Say ("OVERALL: " + $(if ($all) { "ALL PASS" } else { "HAS FAILURE" }))
+$out | Out-File -FilePath $OutFile -Encoding UTF8
+exit $(if ($all) { 0 } else { 1 })
