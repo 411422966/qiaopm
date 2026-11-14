@@ -1,6 +1,7 @@
 package com.meiyetec.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.meiyetec.booking.BookingConfirmationIdempotency;
 import com.meiyetec.booking.BookingConfirmationResult;
 import com.meiyetec.booking.BookingConfirmationService;
 import com.meiyetec.entity.OverseasBooking;
@@ -40,6 +41,8 @@ public class IntlBookingService {
     private final OverseasBookingMapper bookingMapper;
     private final JdbcTemplate jdbc;
     private final BookingConfirmationService confirmationService;
+    /** I177：预约确认发送幂等闸门（防同一次确认被重复触发 → 外部计费放大） */
+    private final BookingConfirmationIdempotency confirmationIdempotency;
 
     // ========================================================================
     // 渠道连接（OAuth2 入口 — 真实 Google / Instagram 跳转 URL）
@@ -232,15 +235,23 @@ public class IntlBookingService {
         Boolean autoSend = body.get("autoSend") == null ? Boolean.TRUE
                 : Boolean.valueOf(body.get("autoSend").toString());
         if (autoSend && "CONFIRMED".equals(status) && !"CONFIRMED".equals(oldStatus)) {
-            try {
-                BookingConfirmationResult r = confirmationService.sendConfirmation(b);
-                data.put("confirmation", r);
-                log.info("[INTL-BOOKING] auto-send on CONFIRM: bookingId={} overallSuccess={} locale={} (fallback={}) channels={}",
-                        id, r.isOverallSuccess(), r.getResolvedLocale(), r.getUsedFallback(),
-                        r.getChannelResults().keySet());
-            } catch (Exception e) {
-                log.warn("[INTL-BOOKING] auto-send failed (status 仍成功): {}", e.getMessage());
-                data.put("confirmationError", e.getMessage());
+            // I177：幂等闸门 —— 同一预约在窗口内只发一次，避免外部渠道（短信/邮件/订阅消息）重复计费
+            Long tenantId = TenantContextHolder.get().getTenantId();
+            if (!confirmationIdempotency.acquire(tenantId, id)) {
+                log.info("[INTL-BOOKING] auto-send skipped: 幂等窗口内已发送确认消息，跳过 bookingId={}", id);
+                data.put("confirmationSkipped", true);
+                data.put("confirmationSkippedReason", "幂等窗口内已发送确认消息，跳过重复发送");
+            } else {
+                try {
+                    BookingConfirmationResult r = confirmationService.sendConfirmation(b);
+                    data.put("confirmation", r);
+                    log.info("[INTL-BOOKING] auto-send on CONFIRM: bookingId={} overallSuccess={} locale={} (fallback={}) channels={}",
+                            id, r.isOverallSuccess(), r.getResolvedLocale(), r.getUsedFallback(),
+                            r.getChannelResults().keySet());
+                } catch (Exception e) {
+                    log.warn("[INTL-BOOKING] auto-send failed (status 仍成功): {}", e.getMessage());
+                    data.put("confirmationError", e.getMessage());
+                }
             }
         }
         return Result.success("已更新状态", data);
@@ -256,6 +267,11 @@ public class IntlBookingService {
     public Result<BookingConfirmationResult> sendConfirmation(@PathVariable Long id) {
         OverseasBooking b = bookingMapper.selectById(id);
         if (b == null) return Result.error(BizCode.NOT_FOUND, "预约不存在");
+        // I177：幂等闸门 —— 同一预约在窗口内只允许手动触发一次，避免外部渠道重复计费
+        Long tenantId = TenantContextHolder.get().getTenantId();
+        if (!confirmationIdempotency.acquire(tenantId, id)) {
+            return Result.error(BizCode.BAD_REQUEST.code, "确认消息已在发送中，请勿重复操作");
+        }
         BookingConfirmationResult r = confirmationService.sendConfirmation(b);
         return Result.success("已发送", r);
     }
