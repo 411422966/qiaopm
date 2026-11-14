@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I170 部分修复批：dashboard 快照过滤 + computeForMember 幂等 + seed 环境守卫已修并 VERIFIED；A3 暂缓；补登 I172/I173/I174/I175）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I170 部分修复批：dashboard 快照过滤 + computeForMember 幂等 + seed 环境守卫已修并 VERIFIED；A3 暂缓；补登 I172/I173/I174/I175；本次再补登 I176 + I172 §4 技术推荐节）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -96,10 +96,11 @@
 | I169 | I169 — 应用层通用限流能力缺失（I165 D2 遗留项） | Open | [I169-app-layer-general-rate-limit.md](I169-app-layer-general-rate-limit.md) |
 | I170 | I170 — `crm_ltv_snapshot` 多写入者无互斥：今日 781 行（489 batch + 292 compute-job），看板 LTV 全表求和虚高 9.4 倍 | Partially Fixed | [I170-ltv-snapshot-duplicate-write.md](I170-ltv-snapshot-duplicate-write.md) |
 | I171 | I171 — `crm_churn_prediction` 口径精化配套项：写入精度 / 阈值边界 / `tenure_days` 语义 / 看板快照过滤 / 枚举漂移 / 唯一约束 / 第三写入者幂等 | Open | [I171-churn-prediction-caliber-refinement.md](I171-churn-prediction-caliber-refinement.md) |
-| I172 | I172 — LTV 快照口径权威性待业务拍板：`compute` 覆盖 292 会员 vs `batch` 覆盖 489 会员，谁是权威（A3 不能照搬 I156） | Open（待业务决策） | [I172-ltv-snapshot-caliber-authority.md](I172-ltv-snapshot-caliber-authority.md) |
+| I172 | I172 — LTV 快照口径权威性待业务拍板：`compute` 覆盖 292 会员 vs `batch` 覆盖 489 会员，谁是权威（A3 不能照搬 I156）；已附 §4 技术推荐（不替业务拍板） | Open（待业务决策） | [I172-ltv-snapshot-caliber-authority.md](I172-ltv-snapshot-caliber-authority.md) |
 | I173 | I173 — 复购概率档位口径不一致：`compute` 两档（0.85/0.30）vs `batch` 三档（0.85/0.70/0.45），同会员实测差 0.15 | Open（待业务决策） | [I173-ltv-repurchase-prob-tier-mismatch.md](I173-ltv-repurchase-prob-tier-mismatch.md) |
 | I174 | I174 — `crm_ltv_snapshot` 历史 5 组重复行待清理（2026-09-02 / 10-30 / 10-31 / 11-02），`trend` 按月求和被放大 | Open（待业务决策） | [I174-ltv-historical-duplicate-cleanup.md](I174-ltv-historical-duplicate-cleanup.md) |
 | I175 | I175 — `crm_ltv_snapshot` 缺 `UNIQUE (tenant_id, member_id, snapshot_date)`，加约束前须先清 236 组存量重复 + A3 落地 | Open（DDL 未实施） | [I175-ltv-snapshot-unique-constraint-ddl.md](I175-ltv-snapshot-unique-constraint-ddl.md) |
+| I176 | I176 — `LtvSeedController` `mode=reset` 删不存在的表 `crm_order`（实际应为 `pos_order`），dev/test 环境留下半破坏状态 | Open（登记，不修） | [I176-ltv-seed-reset-deletes-nonexistent-table.md](I176-ltv-seed-reset-deletes-nonexistent-table.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
@@ -138,9 +139,14 @@
 - **I173（Open，新增，P2，待业务决策）**：复购概率**档位口径不一致** —— A 三档（0.85/0.70/0.45，阈值 `>=12`/`>=4`）vs B 两档（0.85/0.30，阈值 `>12`/`>4`），B 缺中间档且 `prob_180d` 恒为 0.55。实测 member 4/6：`prob_30d` 0.45 vs 0.30（**差 0.15**）、`prob_90d` 0.55 vs 0.45、`prob_180d` 0.70 vs 0.55。
 - **I174（Open，新增，P2，待业务决策）**：`crm_ltv_snapshot` **历史 5 组重复行**（2026-09-02 member 1224 共 5 行；10-30 member 1 与 1548 各 3 行；10-31 member 1548 3 行；11-02 member 1548 2 行）——**全部来自写入者 C（`online`）**。因 `GET /intel/ltv/trend` 按月 `SUM` 不去重，重复行**放大历史趋势**：2026-09 多计 ¥3,903,377.00（占当月 6.6%）、2026-10 多计 ¥9,268.40（**占当月 66.7%**）、2026-11 多计 ¥0.00，合计 ¥3,912,645.40。**本批未清理**（清理 SQL 草案见 I174 §4，含归档备份步骤）。
 - **I175（Open，新增，P2，DDL 未实施）**：`crm_ltv_snapshot` **无任何唯一约束**（现仅 `PRIMARY KEY(id)` + `idx_member(member_id)` + `idx_brand_date(brand_id, snapshot_date)`，两个索引均不含 `tenant_id`）。建议 `ADD UNIQUE KEY uk_tenant_member_date (tenant_id, member_id, snapshot_date)`，但**四个前置条件必须按序满足**：① 写入者 C 幂等（✅ 本批已完成）→ ② 存量重复清零（⏳ I174）→ ③ 写入者收敛 / A3 落地（⏳ **I172**）→ ④ 生产库只读复核。**③ 未落地就加约束会导致 `compute-job` 跑批撞唯一键整批回滚**，比允许重复更严重。**本批明确不加约束**。
-- **本批新发现（未落盘为独立 issue，待用户决定，建议 I176）**：`LtvSeedController.seed()` 的 `mode=reset` 分支 `DELETE FROM crm_order WHERE tenant_id = ?` —— **`crm_order` 表在库中不存在**（同文件 `generateDemoMembersAndOrders()` 写的是 `pos_order`）→ dev/test 放开守卫后会**先删光 `crm_ltv_snapshot` 再抛 SQLException**，留下半破坏状态。生产因守卫已生效**不受影响**。关联 I152（`crm_order` 引用外泄）。**本批未改代码**（任务 3 仅授权加环境守卫）。
+- **本批新发现（已落盘为 **I176**）**：`LtvSeedController.seed()` 的 `mode=reset` 分支 `DELETE FROM crm_order WHERE tenant_id = ?` —— **`crm_order` 表在库中不存在**（同文件 `generateDemoMembersAndOrders()` 写的是 `pos_order`）→ dev/test 放开守卫后会**先删光 `crm_ltv_snapshot` 再抛 SQLException**，留下半破坏状态。生产因守卫已生效**不受影响**。关联 I152（`crm_order` 引用外泄）。**本批未改代码**（任务 3 仅授权加环境守卫）。**I176 已于同日登记落盘，状态 Open（只登记、不修）**。
 - **本批未做（用户明确指示）**：`computeLtv` 加 DELETE（A3 核心，等 I172）、统一复购概率档位（I173）、清理历史重复（I174）、加唯一约束（I175）、不动 `model_type` 字段（保持 `'RULE'`，写入者仍靠 `operator_name` 区分）。
 - **已知副作用（须知悉）**：写入者 C 的单会员幂等会把**该会员当日由 A/B 产生的行一并清掉** —— 即「该会员当日快照以 C 的口径为准」。实测 member 1 的 2 行（batch + compute-job）收敛为 1 行（online / BG），当日行数 781 → 780（dup 组 232 → 231），当日 `SUM` 相应减少 ¥4,220.61，`membersWithLtv` 恒为 549 不变。
+
+## 补充说明（2026-11-14：I176 登记 + I172 技术推荐）
+
+- **I176（Open，新增，P1，登记不修）**：`LtvSeedController.seed()` 的 `mode=reset` 分支 `LtvSeedController.java:67` 执行 `DELETE FROM crm_order WHERE tenant_id = ?` —— **`crm_order` 表在库中不存在**（同文件 `generateDemoMembersAndOrders()` 写的是 `pos_order`），失败时序为「① 删 `crm_ltv_snapshot` 成功 → ② 删 `crm_order` 抛 SQLException → ③ 删 `crm_member` 与重建示例数据均执行不到」→ dev/test 环境下留下**半破坏状态**（快照被清空、订单未清、数据未重建）。**生产不受影响**（I170 环境守卫在进入 DELETE 之前即 403 拦截，实测行数前后不变 4594/489/1848）。**修复方向二选一，需业务先确认 `mode=reset` 语义**：方案 A 改删 `pos_order`（与生成逻辑一致，但**会真删 1848 行真实收银订单**，必须加「仅限测试租户」守卫 + 事务包裹）；方案 B 删掉该 DELETE，`reset` 只清快照不清订单（语义保守，但重建的演示订单会与真实订单共存）。关联 I152。**本轮只登记，未改任何代码**。
+- **I172 §4 技术推荐（已追加，不替业务拍板）**：技术侧倾向「**以 batch（489 全量会员）为权威口径，`compute` 改为也覆盖全量会员**」，依据为 ① 业务语义（无消费会员 LTV=0 应体现为「待激活人群」而非消失）② 数据完整性（`batch` LEFT JOIN 覆盖全量 vs `compute` INNER 只覆盖消费会员）③ 复购概率档位（`batch` 三档 0.85/0.70/0.45 粒度更细）。**仍需业务拍板 Q1**（无消费会员是否应出现在 LTV 看板）、**Q2**（`compute` 是历史遗留快速路径还是业务需要的独立口径）、**Q3**（复购概率档位以哪套为准）。**Q1/Q2/Q3 确认前，A3 / I173 / I175 一律不动**。原 §4「待业务回答的问题」顺延为 §5，§5→§6，§6→§7，正文交叉引用已同步更新。
 
 ## 脚注：证据目录命名规则切换（2026-11-13 起）
 

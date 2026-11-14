@@ -256,7 +256,7 @@ GROUP BY operator_name, model_type;
 > 守卫读取的是 `spring.profiles.active`（容器内 `SPRING_PROFILES_ACTIVE=prod`），
 > **若该环境变量被误设为空**，兜底值为 `prod`（仍然拦截），属 fail-safe。
 
-### 7.1 本批新发现（**未落盘为独立 issue，待用户决定**）
+### 7.1 本批新发现（**已落盘为独立 issue I176**）
 
 实施修复 3 时发现 `LtvSeedController` 的 `mode=reset` 分支存在**独立的表引用错误**：
 
@@ -270,7 +270,8 @@ GROUP BY operator_name, model_type;
 | 本批处理 | **未改代码**（超出本批授权范围：任务 3 仅要求加环境守卫） |
 | 建议 | ① 最小修复：`crm_order` → `pos_order`；② 更稳：把三条 DELETE 包在 `@Transactional(rollbackFor = Exception.class)` 内，避免半破坏；③ 校验 `DELETE` 与 `generateDemoMembersAndOrders` 的表集合一致 |
 
-> 🔒 **本项不在本批授权范围**，已报告待用户决定是否单独立项（建议 **I176**）。
+> 🔒 **本项不在本批授权范围**，已报告待用户决定是否单独立项。
+> ✅ **2026-11-14 已单独立项 → [I176](I176-ltv-seed-reset-deletes-nonexistent-table.md)**，状态 Open（**只登记、不修**）：修复方向方案 A / 方案 B 二选一，需业务先确认 `mode=reset` 的真实语义。
 > 注意：由于守卫已生效，**生产环境不受影响**（在进入 DELETE 之前即被 403 拦下）。
 
 ---
