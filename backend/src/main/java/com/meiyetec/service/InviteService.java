@@ -424,20 +424,21 @@ public class InviteService {
         if (c.getStartTime() != null && c.getStartTime().isAfter(now)) return Result.success(null);
         if (c.getEndTime() != null && c.getEndTime().isBefore(now)) return Result.success(null);
 
-        // 累加扫码数（即使后续不注册也记录）
-        code.setScanCount((code.getScanCount() == null ? 0 : code.getScanCount()) + 1);
-        codeMapper.updateById(code);
-
         // 是否需要创建 record
         if (Boolean.FALSE.equals(c.getInviteNeedRegister())) {
             // 不需要注册的场景：扫码即奖励（特殊场景，如扫码关注公众号）
-            // 当前版本默认要求注册，所以这里仅返回
+            // 该场景下"扫码"本身就是转化事件，scan_count 仍需累加（否则该活动扫码数恒为 0）
+            incrementScanCount(code);
             return Result.success(null);
         }
         if (phone == null || phone.isBlank()) {
-            // 没有手机号只记录扫码，不建 record
+            // 没有手机号：不建 record，也不累加 scan_count
+            // I179：scan_count 的口径由"所有访问"收敛为"有手机号的访问"，
+            //       防止匿名 / 机器人请求用空 phone 无限刷扫码数
             return Result.success(null);
         }
+        // 累加扫码数（I179：仅在拿到手机号、确认是真人访问后才计数）
+        incrementScanCount(code);
         // 检查活动配额
         if (!checkQuota(code, c)) {
             return Result.error(BizCode.CONFLICT, "邀请配额已用完");
@@ -471,6 +472,21 @@ public class InviteService {
         codeMapper.updateById(code);
 
         return Result.success(record);
+    }
+
+    /**
+     * 累加邀请码的扫码数（I179 抽出为独立方法，把计数口径写在一处）。
+     *
+     * <p>调用点只有两处，且都代表"这是一次真实的扫码访问"：
+     * <ul>
+     *   <li>活动配置为"仅点击即可"（inviteNeedRegister = 0）—— 扫码本身即转化事件</li>
+     *   <li>常规活动且请求带上了手机号 —— 认定为真人访问</li>
+     * </ul>
+     * 不带手机号的常规请求不再计数，避免匿名 / 机器人刷量。
+     */
+    private void incrementScanCount(InviteCode code) {
+        code.setScanCount((code.getScanCount() == null ? 0 : code.getScanCount()) + 1);
+        codeMapper.updateById(code);
     }
 
     /**
