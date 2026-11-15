@@ -5,8 +5,8 @@
 > **发现日期**：2026-11-14（I169 通用限流调查批次）
 > **登记人**：Cursor
 > **绑定基线**：修复前 HEAD `4ccca57`；口径对齐修复 commit `44746cc`，修复前 HEAD `eb41278`
-> **验证等级**：静态代码分析（全仓调用点检索）→ 口径对齐部分**运行期 VERIFIED（L5a，9/9 CHECK PASS）**；覆盖缺口部分仍 **UNVERIFIED**
-> **关联**：I169（通用限流基建）、I177（EXT-19 预约确认幂等）、**I180**（`brand_id = NULL` 的共享池配置是死配置）
+> **验证等级**：静态代码分析（全仓调用点检索）→ 口径对齐部分**运行期 VERIFIED（L5a，9/9 CHECK PASS）**；覆盖缺口部分已于 2026-11-15 batch2-C 调查**部分升级为运行期 VERIFIED**（告警路径活跃触发 + 唯一过闸门路径的配置实际未命中），生日 / 预约确认路径仍 **UNVERIFIED（库内无样本）**
+> **关联**：I169（通用限流基建）、I177（EXT-19 预约确认幂等）、**I180**（`brand_id = NULL` 的共享池配置是死配置）、**I181**（渠道发送路径配额绕过）、**I182**（`InAppSender` 把手机号当 memberId 落库）
 
 ---
 
@@ -74,6 +74,18 @@ public boolean rateLimitCheck(Long tenantId, Long brandId, String channelType) {
 > 这 3 条路径与 `MarketingAutomationService.startTask` 共用同一批 `ChannelSender` 实现
 > （同一套阿里云 / SMTP 账号）→ **配额是共享资源，但只有 1/4 的路径看配额**。
 
+**2026-11-15 batch2-C 只读调查补入的运行期证据**（`audit/evidence/F170-mkt-send-path-quota-coverage/`）：
+
+| 证据 | 内容 | 等级 |
+|---|---|---|
+| 告警路径**当前处于活跃触发状态** | `kiosk_device` 10 行 `last_heartbeat` **全为 NULL** → `severityOf(-1)="NEVER"` → 23:04:36 连续 10 条 `[KioskAlert] sent ... extId=MSG-SKIPPED-NO-MEMBER`；冷却 30 分钟 → **480 次/天** | **VERIFIED（运行期）** |
+| 告警路径**无配额且无品牌上下文** | `kiosk_device.store_id` 10 行**全为 NULL** → 下沉闸门后只能拿 tenant+channel 维度；且当前不写 `marketing_touch_log` → 配额对其既不设限也不可见 | **VERIFIED（运行期）** |
+| 触达任务路径的闸门**实际也未生效** | SMS 唯一有效配置 `id=13` 为 `brand_id=NULL` / `per_min=3` / `per_day=5`，而历史 SMS 成功发送峰值 **489 条/分钟**、单日 **1975 条**（这些成功行所属任务 `brand_id` 全为 NULL）→ 配置从未命中 | **VERIFIED（运行期）** |
+| 生日 / 预约确认路径 | `birthday_member` / `birthday_send_log` / `overseas_booking` 均 **0 行** → 无运行期样本 | **UNVERIFIED（无数据）** |
+
+→ 覆盖缺口已从**静态推断**升级为**运行期可观测**：唯一那条过闸门的路径，其闸门本身也因 `brand_id=NULL` 永不命中而放行（见 I180），故「4 条路径中 0 条真正受配额约束」。
+→ 详细发现与修复方向见 **I181**（渠道发送路径配额绕过）与 **I182**（`InAppSender` 把手机号当 memberId 落库）。
+
 ### 1.4 多品牌配额口径错配
 
 | 项 | 口径 | 后果 |
@@ -126,8 +138,12 @@ public boolean rateLimitCheck(Long tenantId, Long brandId, String channelType) {
 
 ## 5. 边界声明
 
-- 本 Issue 结论**全部来自静态代码检索**（`rateLimitCheck` / `dispatcher.getSender` / `sender.send(` /
-  `marketing_touch_log` 全仓 grep）→ 运行期行为一律 **UNVERIFIED**。
+- 本 Issue 的**原始**结论全部来自静态代码检索（`rateLimitCheck` / `dispatcher.getSender` / `sender.send(` /
+  `marketing_touch_log` 全仓 grep）。
+  **2026-11-15 更新**：batch2-C 只读调查（`audit/evidence/F170-mkt-send-path-quota-coverage/`）补入运行期证据 ——
+  ① 告警路径当前活跃触发（`kiosk_device` 10 行 never-heartbeat → 480 次/天假成功告警）；
+  ② 唯一过闸门的触达任务路径，其 SMS 配额配置因 `brand_id=NULL` 从未命中（峰值 489 条/分钟 vs 配置 3 条/分钟）。
+  生日 / 预约确认路径因库内 0 样本仍为 **UNVERIFIED**。
 - **未修改任何业务代码**、**未执行任何 SQL 写入**。
 - 未核实：生产环境 `mkt_channel_config` 中 `rate_limit_per_min` / `rate_limit_per_day` 的**实际取值分布**
   （本地库仅作参考，不能代表生产）。
@@ -158,7 +174,7 @@ public boolean rateLimitCheck(Long tenantId, Long brandId, String channelType) {
 
 | # | 未修项 | 状态 |
 |---|---|---|
-| 1 | **§1.3 闸门覆盖缺口**：EXT-19 预约确认 / 生日通知 / 设备离线告警 3 条真实发送路径**完全绕过** `rateLimitCheck` → 「已配置的每分钟/每日限额」在多数发送路径上依然失效 | **Open**，需业务先确认口径（已按品牌对齐后，可下沉闸门到统一发送入口） |
+| 1 | **§1.3 闸门覆盖缺口**：EXT-19 预约确认 / 生日通知 / 设备离线告警 3 条真实发送路径**完全绕过** `rateLimitCheck` → 「已配置的每分钟/每日限额」在多数发送路径上依然失效 | **Open**，需业务先确认口径（已按品牌对齐后，可下沉闸门到统一发送入口）；2026-11-15 batch2-C 已补运行期证据（告警路径活跃触发），修复方案与风险清单见 **I181** |
 | 2 | **R2 多品牌串味** | ✅ 本次已修（§5.1） |
 | 3 | **R3 只统计发送成功**（`sent_at` 非空）：失败不计入配额，但真实调用量已发生 | **Open**，取决于渠道商计费规则，未与渠道商确认 |
 | 4 | **R4 配置缺失即放行**：静默行为，运营无感知 | **Open**，本批未改（改法涉及告警/日志口径） |

@@ -1,0 +1,49 @@
++--------------------------------+
+| section                        |
++--------------------------------+
+| --- birthday_member 规模 ---   |
++--------------------------------+
++-----------------------------------------------------+
+| section                                             |
++-----------------------------------------------------+
+| --- overseas_booking 结构(预约确认路径) ---         |
++-----------------------------------------------------+
++----------------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| Field                | Type         | Null | Key | Default           | Extra                                         |
++----------------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| id                   | bigint       | NO   | PRI | NULL              | auto_increment                                |
+| tenant_id            | bigint       | YES  | MUL | NULL              |                                               |
+| booking_no           | varchar(64)  | YES  |     | NULL              |                                               |
+| source               | varchar(32)  | YES  | MUL | NULL              |                                               |
+| external_id          | varchar(128) | YES  |     | NULL              |                                               |
+| customer_name        | varchar(128) | YES  |     | NULL              |                                               |
+| customer_phone       | varchar(64)  | YES  |     | NULL              |                                               |
+| customer_email       | varchar(128) | YES  |     | NULL              |                                               |
+| customer_locale      | varchar(16)  | YES  |     | NULL              |                                               |
+| mini_program_open_id | varchar(128) | YES  |     | NULL              |                                               |
+| service_id           | bigint       | YES  |     | NULL              |                                               |
+| service_name         | varchar(255) | YES  |     | NULL              |                                               |
+| staff_id             | bigint       | YES  |     | NULL              |                                               |
+| store_id             | bigint       | YES  | MUL | NULL              |                                               |
+| booking_date         | date         | YES  |     | NULL              |                                               |
+| booking_time         | varchar(16)  | YES  |     | NULL              |                                               |
+| notes                | text         | YES  |     | NULL              |                                               |
+| status               | varchar(32)  | YES  |     | NULL              |                                               |
+| ip_address           | varchar(64)  | YES  |     | NULL              |                                               |
+| user_agent           | varchar(500) | YES  |     | NULL              |                                               |
+| raw_payload          | text         | YES  |     | NULL              |                                               |
+| converted_member_id  | bigint       | YES  |     | NULL              |                                               |
+| converted_order_id   | bigint       | YES  |     | NULL              |                                               |
+| created_at           | datetime     | YES  | MUL | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
+| updated_at           | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++----------------------+--------------+------+-----+-------------------+-----------------------------------------------+
++--------------------------------------------------------------------+
+| section                                                            |
++--------------------------------------------------------------------+
+| --- store 表是否有 brand_id(告警路径 store_id→brand) ---           |
++--------------------------------------------------------------------+
++--------------------------------+
+| Tables_in_meiyetec (pos_store) |
++--------------------------------+
+| pos_store                      |
++--------------------------------+

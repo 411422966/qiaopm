@@ -1,0 +1,322 @@
+Picked up JAVA_TOOL_OPTIONS: -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOutOfMemoryError -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom -Djava.net.preferIPv4Stack=true
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+23:03:43,994 |-INFO in ch.qos.logback.classic.LoggerContext[default] - This is logback-classic version 1.4.11
+23:03:44,000 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Here is a list of configurators discovered as a service, by rank: 
+23:03:44,001 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 -   org.springframework.boot.logging.logback.RootLogLevelConfigurator
+23:03:44,001 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - They will be invoked in order until ExecutionStatus.DO_NOT_INVOKE_NEXT_IF_ANY is returned.
+23:03:44,001 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Constructed configurator of type class org.springframework.boot.logging.logback.RootLogLevelConfigurator
+23:03:44,011 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - org.springframework.boot.logging.logback.RootLogLevelConfigurator.configure() call lasted 1 milliseconds. ExecutionStatus=INVOKE_NEXT_IF_ANY
+23:03:44,011 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Trying to configure with ch.qos.logback.classic.joran.SerializedModelConfigurator
+23:03:44,013 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Constructed configurator of type class ch.qos.logback.classic.joran.SerializedModelConfigurator
+23:03:44,032 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback-test.scmo]
+23:03:44,033 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback.scmo]
+23:03:44,033 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - ch.qos.logback.classic.joran.SerializedModelConfigurator.configure() call lasted 20 milliseconds. ExecutionStatus=INVOKE_NEXT_IF_ANY
+23:03:44,033 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Trying to configure with ch.qos.logback.classic.util.DefaultJoranConfigurator
+23:03:44,034 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Constructed configurator of type class ch.qos.logback.classic.util.DefaultJoranConfigurator
+23:03:44,037 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback-test.xml]
+23:03:44,040 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Could NOT find resource [logback.xml]
+23:03:44,040 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - ch.qos.logback.classic.util.DefaultJoranConfigurator.configure() call lasted 6 milliseconds. ExecutionStatus=INVOKE_NEXT_IF_ANY
+23:03:44,040 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Trying to configure with ch.qos.logback.classic.BasicConfigurator
+23:03:44,042 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - Constructed configurator of type class ch.qos.logback.classic.BasicConfigurator
+23:03:44,042 |-INFO in ch.qos.logback.classic.BasicConfigurator@683dbc2c - Setting up default configuration.
+23:03:44,080 |-INFO in ch.qos.logback.classic.util.ContextInitializer@2898ac89 - ch.qos.logback.classic.BasicConfigurator.configure() call lasted 37 milliseconds. ExecutionStatus=NEUTRAL
+23:03:44,841 |-INFO in ch.qos.logback.core.joran.spi.ConfigurationWatchList@68267da0 - URL [jar:file:/app/app.jar!/BOOT-INF/classes!/logback-spring.xml] is not of type file
+23:03:44,933 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [CONSOLE]
+23:03:44,933 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.ConsoleAppender]
+23:03:44,937 |-INFO in ch.qos.logback.core.model.processor.ImplicitModelHandler - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+23:03:44,952 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [FILE]
+23:03:44,952 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.rolling.RollingFileAppender]
+23:03:44,960 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@40075281 - No compression will be used
+23:03:44,961 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@40075281 - Will use the pattern logs/meiyetec.%d{yyyy-MM-dd}.%i.log for the active file
+23:03:44,980 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@6ff29830 - The date pattern is 'yyyy-MM-dd' from file name pattern 'logs/meiyetec.%d{yyyy-MM-dd}.%i.log'.
+23:03:44,980 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@6ff29830 - Roll-over at midnight.
+23:03:44,986 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@6ff29830 - Setting initial period to 2026-11-15T15:03:44.986Z
+23:03:44,987 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@6ff29830 - SizeAndTimeBasedFNATP is deprecated. Use SizeAndTimeBasedRollingPolicy instead
+23:03:44,987 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@6ff29830 - For more information see http://logback.qos.ch/manual/appenders.html#SizeAndTimeBasedRollingPolicy
+23:03:44,988 |-INFO in ch.qos.logback.core.model.processor.ImplicitModelHandler - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+23:03:44,993 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[FILE] - Active log file name: logs/meiyetec.log
+23:03:44,993 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[FILE] - File property is set to [logs/meiyetec.log]
+23:03:44,995 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [ERROR_FILE]
+23:03:44,995 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.rolling.RollingFileAppender]
+23:03:44,997 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@1781241150 - No compression will be used
+23:03:44,998 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@1781241150 - Will use the pattern logs/meiyetec-error.%d{yyyy-MM-dd}.%i.log for the active file
+23:03:44,998 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@313b2ea6 - The date pattern is 'yyyy-MM-dd' from file name pattern 'logs/meiyetec-error.%d{yyyy-MM-dd}.%i.log'.
+23:03:44,998 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@313b2ea6 - Roll-over at midnight.
+23:03:44,998 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@313b2ea6 - Setting initial period to 2026-11-15T15:03:44.998Z
+23:03:44,998 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@313b2ea6 - SizeAndTimeBasedFNATP is deprecated. Use SizeAndTimeBasedRollingPolicy instead
+23:03:44,998 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@313b2ea6 - For more information see http://logback.qos.ch/manual/appenders.html#SizeAndTimeBasedRollingPolicy
+23:03:45,000 |-INFO in ch.qos.logback.core.model.processor.ImplicitModelHandler - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+23:03:45,001 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[ERROR_FILE] - Active log file name: logs/meiyetec-error.log
+23:03:45,001 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[ERROR_FILE] - File property is set to [logs/meiyetec-error.log]
+23:03:45,001 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [BIZ_FILE]
+23:03:45,001 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.rolling.RollingFileAppender]
+23:03:45,002 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@793138072 - No compression will be used
+23:03:45,002 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@793138072 - Will use the pattern logs/meiyetec-biz.%d{yyyy-MM-dd}.log for the active file
+23:03:45,004 |-INFO in c.q.l.core.rolling.DefaultTimeBasedFileNamingAndTriggeringPolicy - The date pattern is 'yyyy-MM-dd' from file name pattern 'logs/meiyetec-biz.%d{yyyy-MM-dd}.log'.
+23:03:45,004 |-INFO in c.q.l.core.rolling.DefaultTimeBasedFileNamingAndTriggeringPolicy - Roll-over at midnight.
+23:03:45,004 |-INFO in c.q.l.core.rolling.DefaultTimeBasedFileNamingAndTriggeringPolicy - Setting initial period to 2026-11-15T15:03:45.004Z
+23:03:45,005 |-INFO in ch.qos.logback.core.model.processor.ImplicitModelHandler - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+23:03:45,007 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[BIZ_FILE] - Active log file name: logs/meiyetec-biz.log
+23:03:45,007 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[BIZ_FILE] - File property is set to [logs/meiyetec-biz.log]
+23:03:45,007 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting level of logger [com.meiyetec.service.IdempotencyService] to DEBUG
+23:03:45,007 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@548e6d58 - Propagating DEBUG level on Logger[com.meiyetec.service.IdempotencyService] onto the JUL framework
+23:03:45,010 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting additivity of logger [com.meiyetec.service.IdempotencyService] to false
+23:03:45,010 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [BIZ_FILE] to Logger[com.meiyetec.service.IdempotencyService]
+23:03:45,010 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [CONSOLE] to Logger[com.meiyetec.service.IdempotencyService]
+23:03:45,010 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting level of logger [com.meiyetec.service.impl.PointServiceImpl] to DEBUG
+23:03:45,010 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@548e6d58 - Propagating DEBUG level on Logger[com.meiyetec.service.impl.PointServiceImpl] onto the JUL framework
+23:03:45,010 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting additivity of logger [com.meiyetec.service.impl.PointServiceImpl] to false
+23:03:45,010 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [BIZ_FILE] to Logger[com.meiyetec.service.impl.PointServiceImpl]
+23:03:45,010 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [CONSOLE] to Logger[com.meiyetec.service.impl.PointServiceImpl]
+23:03:45,010 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting level of logger [com.meiyetec.mapper] to DEBUG
+23:03:45,010 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@548e6d58 - Propagating DEBUG level on Logger[com.meiyetec.mapper] onto the JUL framework
+23:03:45,010 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting additivity of logger [com.meiyetec.mapper] to false
+23:03:45,010 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [CONSOLE] to Logger[com.meiyetec.mapper]
+23:03:45,010 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - Processing appender named [DOMESTIC_PAY_FILE]
+23:03:45,010 |-INFO in ch.qos.logback.core.model.processor.AppenderModelHandler - About to instantiate appender of type [ch.qos.logback.core.rolling.RollingFileAppender]
+23:03:45,011 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@1648001170 - No compression will be used
+23:03:45,011 |-INFO in c.q.l.core.rolling.TimeBasedRollingPolicy@1648001170 - Will use the pattern logs/domestic-pay.%d{yyyy-MM-dd}.%i.log for the active file
+23:03:45,012 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@a1cdc6d - The date pattern is 'yyyy-MM-dd' from file name pattern 'logs/domestic-pay.%d{yyyy-MM-dd}.%i.log'.
+23:03:45,012 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@a1cdc6d - Roll-over at midnight.
+23:03:45,012 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@a1cdc6d - Setting initial period to 2026-11-15T15:03:45.012Z
+23:03:45,012 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@a1cdc6d - SizeAndTimeBasedFNATP is deprecated. Use SizeAndTimeBasedRollingPolicy instead
+23:03:45,012 |-WARN in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@a1cdc6d - For more information see http://logback.qos.ch/manual/appenders.html#SizeAndTimeBasedRollingPolicy
+23:03:45,012 |-INFO in ch.qos.logback.core.model.processor.ImplicitModelHandler - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+23:03:45,013 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[DOMESTIC_PAY_FILE] - Active log file name: logs/domestic-pay.log
+23:03:45,013 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[DOMESTIC_PAY_FILE] - File property is set to [logs/domestic-pay.log]
+23:03:45,014 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting level of logger [com.meiyetec.cn.domestic] to INFO
+23:03:45,014 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@548e6d58 - Propagating INFO level on Logger[com.meiyetec.cn.domestic] onto the JUL framework
+23:03:45,014 |-INFO in ch.qos.logback.classic.model.processor.LoggerModelHandler - Setting additivity of logger [com.meiyetec.cn.domestic] to false
+23:03:45,014 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [DOMESTIC_PAY_FILE] to Logger[com.meiyetec.cn.domestic]
+23:03:45,014 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [CONSOLE] to Logger[com.meiyetec.cn.domestic]
+23:03:45,014 |-INFO in ch.qos.logback.classic.model.processor.RootLoggerModelHandler - Setting level of ROOT logger to INFO
+23:03:45,014 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@548e6d58 - Propagating INFO level on Logger[ROOT] onto the JUL framework
+23:03:45,014 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [CONSOLE] to Logger[ROOT]
+23:03:45,014 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [FILE] to Logger[ROOT]
+23:03:45,014 |-INFO in ch.qos.logback.core.model.processor.AppenderRefModelHandler - Attaching appender named [ERROR_FILE] to Logger[ROOT]
+23:03:45,014 |-INFO in ch.qos.logback.core.model.processor.DefaultProcessor@175b9425 - End of configuration.
+23:03:45,015 |-INFO in org.springframework.boot.logging.logback.SpringBootJoranConfigurator@3098cf3b - Registering current configuration as safe fallback point
+
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.1.5)
+
+2026-11-15 23:03:45.061 [background-preinit] INFO  o.h.validator.internal.util.Version [traceId=] [tenant=] [order=] [pay=] HV000001: Hibernate Validator 8.0.1.Final
+2026-11-15 23:03:45.128 [main] INFO  com.meiyetec.MeiyetecApplication [traceId=] [tenant=] [order=] [pay=] Starting MeiyetecApplication v1.0.0 using Java 17.0.20.1 with PID 7 (/app/app.jar started by meiyetec in /app)
+2026-11-15 23:03:45.130 [main] INFO  com.meiyetec.MeiyetecApplication [traceId=] [tenant=] [order=] [pay=] The following 1 profile is active: "prod"
+2026-11-15 23:03:47.464 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [traceId=] [tenant=] [order=] [pay=] Multiple Spring Data modules found, entering strict repository configuration mode
+2026-11-15 23:03:47.467 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [traceId=] [tenant=] [order=] [pay=] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-11-15 23:03:47.562 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate [traceId=] [tenant=] [order=] [pay=] Finished Spring Data repository scanning in 70 ms. Found 0 Redis repository interfaces.
+2026-11-15 23:03:49.265 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer [traceId=] [tenant=] [order=] [pay=] Tomcat initialized with port(s): 8080 (http)
+2026-11-15 23:03:49.279 [main] INFO  o.a.coyote.http11.Http11NioProtocol [traceId=] [tenant=] [order=] [pay=] Initializing ProtocolHandler ["http-nio-8080"]
+2026-11-15 23:03:49.283 [main] INFO  o.a.catalina.core.StandardService [traceId=] [tenant=] [order=] [pay=] Starting service [Tomcat]
+2026-11-15 23:03:49.284 [main] INFO  o.a.catalina.core.StandardEngine [traceId=] [tenant=] [order=] [pay=] Starting Servlet engine: [Apache Tomcat/10.1.15]
+2026-11-15 23:03:49.451 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] [traceId=] [tenant=] [order=] [pay=] Initializing Spring embedded WebApplicationContext
+2026-11-15 23:03:49.455 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext [traceId=] [tenant=] [order=] [pay=] Root WebApplicationContext: initialization completed in 4228 ms
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+2026-11-15 23:03:50.995 [main] INFO  o.f.c.i.license.VersionPrinter [traceId=] [tenant=] [order=] [pay=] Flyway Community Edition 9.16.3 by Redgate
+2026-11-15 23:03:50.996 [main] INFO  o.f.c.i.license.VersionPrinter [traceId=] [tenant=] [order=] [pay=] See release notes here: https://rd.gt/416ObMi
+2026-11-15 23:03:50.997 [main] INFO  o.f.c.i.license.VersionPrinter [traceId=] [tenant=] [order=] [pay=] 
+2026-11-15 23:03:51.044 [main] INFO  com.zaxxer.hikari.HikariDataSource [traceId=] [tenant=] [order=] [pay=] HikariPool-1 - Starting...
+2026-11-15 23:03:51.392 [main] INFO  com.zaxxer.hikari.pool.HikariPool [traceId=] [tenant=] [order=] [pay=] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5382184b
+2026-11-15 23:03:51.396 [main] INFO  com.zaxxer.hikari.HikariDataSource [traceId=] [tenant=] [order=] [pay=] HikariPool-1 - Start completed.
+2026-11-15 23:03:51.440 [main] INFO  o.f.c.i.d.base.BaseDatabaseType [traceId=] [tenant=] [order=] [pay=] Database: jdbc:mysql://mysql:3306/meiyetec (MySQL 8.0)
+2026-11-15 23:03:51.524 [main] INFO  o.f.core.internal.command.DbValidate [traceId=] [tenant=] [order=] [pay=] Successfully validated 2 migrations (execution time 00:00.047s)
+2026-11-15 23:03:51.547 [main] INFO  o.f.core.internal.command.DbMigrate [traceId=] [tenant=] [order=] [pay=] Current version of schema `meiyetec`: 2
+2026-11-15 23:03:51.549 [main] INFO  o.f.core.internal.command.DbMigrate [traceId=] [tenant=] [order=] [pay=] Schema `meiyetec` is up to date. No migration necessary.
+2026-11-15 23:03:52.735 [main] INFO  c.m.b.BookingConfirmationTemplateResolver [traceId=] [tenant=] [order=] [pay=] [I18N-TPL] warmup done, locales=[zh-CN, zh-TW, en-US, ja-JP, ko-KR, fr-FR]
+2026-11-15 23:03:52.858 [main] INFO  c.m.c.d.adapter.AlipayV4Adapter [traceId=] [tenant=] [order=] [pay=] [CN-ALIPAY] PROD mode — AlipayClient initialized, gateway=https://openapi.alipaydev.com/gateway.do, appId=2021000000000000
+2026-11-15 23:03:52.865 [main] WARN  c.m.c.d.adapter.WechatPayV3Adapter [traceId=] [tenant=] [order=] [pay=] [CN-WECHAT] SANDBOX mode enabled — 凭据未配置或 env-mode=sandbox，所有 prepay/query/refund 将返回 mock 结果（仅供联调）
+2026-11-15 23:03:52.876 [main] INFO  c.m.c.d.DomesticPayChannelRouter [traceId=] [tenant=] [order=] [pay=] [CN-DOMESTIC] register adapter: ALIPAY (支付宝)
+2026-11-15 23:03:52.876 [main] INFO  c.m.c.d.DomesticPayChannelRouter [traceId=] [tenant=] [order=] [pay=] [CN-DOMESTIC] register adapter: WECHAT_PAY (微信支付（沙箱）)
+2026-11-15 23:03:52.876 [main] INFO  c.m.c.d.DomesticPayChannelRouter [traceId=] [tenant=] [order=] [pay=] [CN-DOMESTIC] router initialized with 2 adapter(s): [WECHAT_PAY, ALIPAY]
+2026-11-15 23:03:52.967 [main] INFO  c.m.config.FlywayAutoBaseliner [traceId=] [tenant=] [order=] [pay=] [FLYWAY] flyway_schema_history already exists → skip auto-baseline
+2026-11-15 23:03:53.676 [main] INFO  c.m.payment.bnpl.MockBnplProvider [traceId=] [tenant=] [order=] [pay=] [BNPL-MOCK] Initialized as fallback provider: MOCK
+2026-11-15 23:03:53.678 [main] INFO  c.m.payment.bnpl.BnplProviderRouter [traceId=] [tenant=] [order=] [pay=] [BNPL-ROUTER] Registered provider: AFTERPAY (AfterpayBnplProvider) isConfigured=false
+2026-11-15 23:03:53.678 [main] INFO  c.m.payment.bnpl.BnplProviderRouter [traceId=] [tenant=] [order=] [pay=] [BNPL-ROUTER] Registered provider: KLARNA (KlarnaBnplProvider) isConfigured=false
+2026-11-15 23:03:53.678 [main] INFO  c.m.payment.bnpl.BnplProviderRouter [traceId=] [tenant=] [order=] [pay=] [BNPL-ROUTER] Registered provider: MOCK (MockBnplProvider) isConfigured=false
+2026-11-15 23:03:53.678 [main] INFO  c.m.payment.bnpl.BnplProviderRouter [traceId=] [tenant=] [order=] [pay=] [BNPL-ROUTER] Initialized with 3 providers: [AFTERPAY, KLARNA, MOCK]
+2026-11-15 23:03:53.699 [main] INFO  o.s.b.f.a.AutowiredAnnotationBeanPostProcessor [traceId=] [tenant=] [order=] [pay=] Autowired annotation should only be used on methods with parameters: public void com.meiyetec.util.IdGenerator.init()
+2026-11-15 23:03:56.314 [main] INFO  c.m.f.InMemoryFeatureFlagEvaluator [traceId=] [tenant=] [order=] [pay=] [AI-006] FeatureFlag 初始加载：count=0, lastPollTime=2026-11-15T23:03:56.314884480
+2026-11-15 23:03:56.767 [main] INFO  com.meiyetec.iot.IotProtocolRouter [traceId=] [tenant=] [order=] [pay=] [IOT-ROUTER] Registered adapter: protocolCode=http (HttpDeviceAdapter)
+2026-11-15 23:03:56.767 [main] INFO  com.meiyetec.iot.IotProtocolRouter [traceId=] [tenant=] [order=] [pay=] [IOT-ROUTER] Registered adapter: protocolCode=massage_chair (MassageChairAdapter)
+2026-11-15 23:03:56.767 [main] INFO  com.meiyetec.iot.IotProtocolRouter [traceId=] [tenant=] [order=] [pay=] [IOT-ROUTER] Registered adapter: protocolCode=mqtt (MqttDeviceAdapter)
+2026-11-15 23:03:56.767 [main] INFO  com.meiyetec.iot.IotProtocolRouter [traceId=] [tenant=] [order=] [pay=] [IOT-ROUTER] Registered adapter: protocolCode=skin_analyzer (SkinAnalyzerAdapter)
+2026-11-15 23:03:58.350 [main] INFO  o.pf4j.DefaultPluginStatusProvider [traceId=] [tenant=] [order=] [pay=] Enabled plugins: []
+2026-11-15 23:03:58.351 [main] INFO  o.pf4j.DefaultPluginStatusProvider [traceId=] [tenant=] [order=] [pay=] Disabled plugins: []
+2026-11-15 23:03:58.357 [main] INFO  org.pf4j.DefaultPluginManager [traceId=] [tenant=] [order=] [pay=] PF4J version 3.10.0 in 'deployment' mode
+2026-11-15 23:03:58.358 [main] INFO  c.m.plugin.PluginRuntimeService [traceId=] [tenant=] [order=] [pay=] [PLUGIN] 插件运行时已就绪，根目录：/opt/plugins
+2026-11-15 23:03:59.868 [main] INFO  c.m.dcep.crypto.SmCryptoConfig [traceId=] [tenant=] [order=] [pay=] [DCEP-03] SmCryptoProvider 初始化：使用 BouncyCastle 软件实现（开发联调用）
+2026-11-15 23:04:00.099 [main] INFO  c.m.d.o.UniversalOperatorDcepAdapter [traceId=] [tenant=] [order=] [pay=] [DCEP-Universal] 启动完成，enabled operators: [], supported protocols: [REST, NETTY_LONG]
+2026-11-15 23:04:01.901 [main] WARN  c.meiyetec.dcep.impl.AbcDcepAdapter [traceId=] [tenant=] [order=] [pay=] [DCEP-ABC] prepay() not yet implemented, order=DCEP-PROBE-cf0b6080
+2026-11-15 23:04:01.901 [main] WARN  c.meiyetec.dcep.impl.CcbDcepAdapter [traceId=] [tenant=] [order=] [pay=] [DCEP-CCB] prepay() not yet implemented, channel=DCEP-CCB order=DCEP-PROBE-c407e65d
+2026-11-15 23:04:01.902 [main] WARN  c.meiyetec.dcep.impl.IcbcDcepAdapter [traceId=] [tenant=] [order=] [pay=] [DCEP-ICBC] prepay() not yet implemented, order=DCEP-PROBE-8ddd845f
+2026-11-15 23:04:01.928 [main] INFO  c.m.dcep.impl.SandboxDcepAdapter [traceId=] [tenant=] [order=] [pay=] [DCEP-SANDBOX] prepay OK: order=DCEP-PROBE-6c5e6d6d prepayId=SP17947550419022DA5023C amount=0 expires=2026-11-15T23:34:01.904033327
+2026-11-15 23:04:01.928 [main] INFO  com.meiyetec.service.DcepService [traceId=] [tenant=] [order=] [pay=] [DCEP] mode=prod 启动，至少 1 个银行 adapter 已对接，DCEP 运行时可用
+2026-11-15 23:04:03.053 [main] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] init enabled=true pushEnabled=true scanInterval=60000ms thresholds=INFO:5min WARN:15min CRITICAL:30min
+2026-11-15 23:04:04.273 [main] INFO  c.m.s.ReportExportFileCleanupService [traceId=] [tenant=] [order=] [pay=] [CLEANUP] 启动清理探查: exportDir=/tmp/meiyetec-reports, retentionDays=7 天
+2026-11-15 23:04:04.274 [main] INFO  c.m.s.ReportExportFileCleanupService [traceId=] [tenant=] [order=] [pay=] [CLEANUP] 启动清理: 目录不存在, 跳过
+2026-11-15 23:04:04.696 [main] WARN  c.m.d.hardware.ble.StubBleGattClient [traceId=] [tenant=] [order=] [pay=] [DCEP-04] BleGattClient 未配置，使用 StubBleGattClient（仅 dev / 联调用）。真实硬件接入时需实现 BleGattClient 并标注 @Primary。
+2026-11-15 23:04:05.312 [perm-auto-register] INFO  c.m.security.PermissionAutoRegistrar [traceId=] [tenant=] [order=] [pay=] [PermAutoRegister] 启动期扫描完成，新增/更新 0 个权限码
+2026-11-15 23:04:05.841 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver [traceId=] [tenant=] [order=] [pay=] Exposing 3 endpoint(s) beneath base path '/actuator'
+2026-11-15 23:04:06.126 [main] INFO  o.a.coyote.http11.Http11NioProtocol [traceId=] [tenant=] [order=] [pay=] Starting ProtocolHandler ["http-nio-8080"]
+2026-11-15 23:04:06.144 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer [traceId=] [tenant=] [order=] [pay=] Tomcat started on port(s): 8080 (http) with context path ''
+2026-11-15 23:04:06.166 [scheduling-1] INFO  c.m.m.e.ComplaintSlaAutoEscalationJob [traceId=] [tenant=] [order=] [pay=] [M9.5-ComplaintSLA] SLA 超时检查开始
+2026-11-15 23:04:06.170 [main] INFO  com.meiyetec.MeiyetecApplication [traceId=] [tenant=] [order=] [pay=] Started MeiyetecApplication in 21.835 seconds (process running for 22.706)
+2026-11-15 23:04:06.278 [scheduling-1] INFO  c.m.m.e.ComplaintSlaAutoEscalationJob [traceId=] [tenant=] [order=] [pay=] [M9.5-ComplaintSLA] 检查完成: 工单数=10 租户数=1 升级数=0 cost=112ms
+2026-11-15 23:04:09.103 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] [traceId=] [tenant=] [order=] [pay=] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-15 23:04:09.104 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet [traceId=] [tenant=] [order=] [pay=] Initializing Servlet 'dispatcherServlet'
+2026-11-15 23:04:09.116 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet [traceId=] [tenant=] [order=] [pay=] Completed initialization in 12 ms
+2026-11-15 23:04:10.017 [http-nio-8080-exec-1] INFO  o.s.s.a.AnnotationAsyncExecutionInterceptor [traceId=95d2155d42a941f08b75df74e052dd3b] [tenant=] [order=] [pay=] More than one TaskExecutor bean found within the context, and none is named 'taskExecutor'. Mark one of them as primary or name it 'taskExecutor' (possibly as an alias) in order to use it for async processing: [reportExportExecutorPool, taskScheduler]
+2026-11-15 23:04:36.182 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK01, fallback to ops
+2026-11-15 23:04:36.189 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:04:36.190 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK01 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:04:36.194 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_1786899816844, fallback to ops
+2026-11-15 23:04:36.195 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:04:36.196 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_1786899816844 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:04:36.201 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_1786899843571, fallback to ops
+2026-11-15 23:04:36.202 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:04:36.203 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_1786899843571 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:04:36.208 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901346918, fallback to ops
+2026-11-15 23:04:36.209 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:04:36.210 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786901346918 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:04:36.216 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901428847, fallback to ops
+2026-11-15 23:04:36.217 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:04:36.218 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786901428847 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:04:36.223 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901480172, fallback to ops
+2026-11-15 23:04:36.224 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:04:36.224 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786901480172 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:04:36.229 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901531974, fallback to ops
+2026-11-15 23:04:36.230 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:04:36.231 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786901531974 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:04:36.235 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786960202644, fallback to ops
+2026-11-15 23:04:36.237 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:04:36.237 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786960202644 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:04:36.242 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786960300234, fallback to ops
+2026-11-15 23:04:36.243 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:04:36.244 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786960300234 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:04:36.251 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1787581091714, fallback to ops
+2026-11-15 23:04:36.252 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:04:36.254 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1787581091714 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:04:59.999 [scheduling-1] INFO  com.meiyetec.task.TenantFreezeTask [traceId=] [tenant=] [order=] [pay=] [定时任务] 扫描过期租户 - 开始 2026-11-15T23:04:59.999238491
+2026-11-15 23:05:00.031 [scheduling-1] INFO  com.meiyetec.task.TenantFreezeTask [traceId=] [tenant=] [order=] [pay=] [定时任务] 扫描过期租户 - 完成，处理租户 0 个，冻结用户 0 个
+2026-11-15 23:05:06.162 [scheduling-1] INFO  c.m.job.BlockchainIntegrityCheckJob [traceId=] [tenant=] [order=] [pay=] [BlockchainIntegrityCheckJob] 开始链完整性校验...
+2026-11-15 23:05:06.178 [scheduling-1] INFO  c.m.job.BlockchainIntegrityCheckJob [traceId=] [tenant=] [order=] [pay=] [BlockchainIntegrityCheckJob] 链 meiyetec-main 完整（1 块）
+2026-11-15 23:05:06.181 [scheduling-1] INFO  c.m.job.BlockchainIntegrityCheckJob [traceId=] [tenant=] [order=] [pay=] [BlockchainIntegrityCheckJob] 链 meiyetec-cosmetic 完整（0 块）
+2026-11-15 23:05:06.185 [scheduling-1] INFO  c.m.job.BlockchainIntegrityCheckJob [traceId=] [tenant=] [order=] [pay=] [BlockchainIntegrityCheckJob] 链 meiyetec-drug 完整（1 块）
+2026-11-15 23:05:06.187 [scheduling-1] INFO  c.m.job.BlockchainIntegrityCheckJob [traceId=] [tenant=] [order=] [pay=] [BlockchainIntegrityCheckJob] 链 meiyetec-device 完整（0 块）
+2026-11-15 23:05:06.187 [scheduling-1] INFO  c.m.job.BlockchainIntegrityCheckJob [traceId=] [tenant=] [order=] [pay=] [BlockchainIntegrityCheckJob] 链完整性校验完成
+2026-11-15 23:05:26.894 [http-nio-8080-exec-6] INFO  c.m.service.channel.InAppSender [traceId=990088bc613a434fad075a496c0cad03] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=1 memberId=13800138001 title=系统通知
+2026-11-15 23:05:27.038 [http-nio-8080-exec-6] INFO  c.m.service.channel.InAppSender [traceId=990088bc613a434fad075a496c0cad03] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=2 memberId=13800138002 title=系统通知
+2026-11-15 23:05:27.114 [http-nio-8080-exec-6] INFO  c.m.service.channel.InAppSender [traceId=990088bc613a434fad075a496c0cad03] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=3 memberId=13800138003 title=系统通知
+2026-11-15 23:05:27.123 [http-nio-8080-exec-6] INFO  c.m.service.channel.InAppSender [traceId=990088bc613a434fad075a496c0cad03] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=4 memberId=13800138004 title=系统通知
+2026-11-15 23:05:27.132 [http-nio-8080-exec-6] INFO  c.m.service.channel.InAppSender [traceId=990088bc613a434fad075a496c0cad03] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=5 memberId=13800138005 title=系统通知
+2026-11-15 23:05:29.889 [http-nio-8080-exec-8] INFO  c.m.service.channel.InAppSender [traceId=8d4bfbf297af4ebc9d280984ab3e79a5] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=6 memberId=13800138001 title=系统通知
+2026-11-15 23:05:29.897 [http-nio-8080-exec-8] INFO  c.m.service.channel.InAppSender [traceId=8d4bfbf297af4ebc9d280984ab3e79a5] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=7 memberId=13800138002 title=系统通知
+2026-11-15 23:05:29.906 [http-nio-8080-exec-8] INFO  c.m.service.channel.InAppSender [traceId=8d4bfbf297af4ebc9d280984ab3e79a5] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=8 memberId=13800138003 title=系统通知
+2026-11-15 23:05:29.913 [http-nio-8080-exec-8] INFO  c.m.service.channel.InAppSender [traceId=8d4bfbf297af4ebc9d280984ab3e79a5] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=9 memberId=13800138004 title=系统通知
+2026-11-15 23:05:29.921 [http-nio-8080-exec-8] INFO  c.m.service.channel.InAppSender [traceId=8d4bfbf297af4ebc9d280984ab3e79a5] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=10 memberId=13800138005 title=系统通知
+2026-11-15 23:05:32.236 [http-nio-8080-exec-10] INFO  c.m.service.channel.InAppSender [traceId=8b715f8a83134fc8a81d3d18a628a87f] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=11 memberId=13800138001 title=系统通知
+2026-11-15 23:05:32.244 [http-nio-8080-exec-10] INFO  c.m.service.channel.InAppSender [traceId=8b715f8a83134fc8a81d3d18a628a87f] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=12 memberId=13800138002 title=系统通知
+2026-11-15 23:05:32.251 [http-nio-8080-exec-10] INFO  c.m.service.channel.InAppSender [traceId=8b715f8a83134fc8a81d3d18a628a87f] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=13 memberId=13800138003 title=系统通知
+2026-11-15 23:05:32.257 [http-nio-8080-exec-10] INFO  c.m.service.channel.InAppSender [traceId=8b715f8a83134fc8a81d3d18a628a87f] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=14 memberId=13800138004 title=系统通知
+2026-11-15 23:05:32.262 [http-nio-8080-exec-10] INFO  c.m.service.channel.InAppSender [traceId=8b715f8a83134fc8a81d3d18a628a87f] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=15 memberId=13800138005 title=系统通知
+2026-11-15 23:05:34.364 [http-nio-8080-exec-2] INFO  c.m.service.channel.InAppSender [traceId=ad25e18872a047f7896de611a15a4d89] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=16 memberId=13800138001 title=系统通知
+2026-11-15 23:05:34.371 [http-nio-8080-exec-2] INFO  c.m.service.channel.InAppSender [traceId=ad25e18872a047f7896de611a15a4d89] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=17 memberId=13800138002 title=系统通知
+2026-11-15 23:05:34.378 [http-nio-8080-exec-2] INFO  c.m.service.channel.InAppSender [traceId=ad25e18872a047f7896de611a15a4d89] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=18 memberId=13800138003 title=系统通知
+2026-11-15 23:05:34.384 [http-nio-8080-exec-2] INFO  c.m.service.channel.InAppSender [traceId=ad25e18872a047f7896de611a15a4d89] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=19 memberId=13800138004 title=系统通知
+2026-11-15 23:05:34.392 [http-nio-8080-exec-2] INFO  c.m.service.channel.InAppSender [traceId=ad25e18872a047f7896de611a15a4d89] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=20 memberId=13800138005 title=系统通知
+2026-11-15 23:05:36.454 [http-nio-8080-exec-4] INFO  c.m.service.channel.InAppSender [traceId=88af70ef41eb46cd9a7dbafcdad8d827] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=21 memberId=13800138001 title=系统通知
+2026-11-15 23:05:36.466 [http-nio-8080-exec-4] INFO  c.m.service.channel.InAppSender [traceId=88af70ef41eb46cd9a7dbafcdad8d827] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=22 memberId=13800138002 title=系统通知
+2026-11-15 23:05:36.479 [http-nio-8080-exec-4] INFO  c.m.service.channel.InAppSender [traceId=88af70ef41eb46cd9a7dbafcdad8d827] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=23 memberId=13800138003 title=系统通知
+2026-11-15 23:05:36.492 [http-nio-8080-exec-4] INFO  c.m.service.channel.InAppSender [traceId=88af70ef41eb46cd9a7dbafcdad8d827] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=24 memberId=13800138004 title=系统通知
+2026-11-15 23:05:36.503 [http-nio-8080-exec-4] INFO  c.m.service.channel.InAppSender [traceId=88af70ef41eb46cd9a7dbafcdad8d827] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=25 memberId=13800138005 title=系统通知
+2026-11-15 23:07:08.136 [http-nio-8080-exec-3] INFO  c.m.service.channel.InAppSender [traceId=793702a69e91424bb8833e6ef11306a8] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=26 memberId=13800138001 title=系统通知
+2026-11-15 23:07:08.142 [http-nio-8080-exec-3] INFO  c.m.service.channel.InAppSender [traceId=793702a69e91424bb8833e6ef11306a8] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=27 memberId=13800138002 title=系统通知
+2026-11-15 23:07:11.085 [http-nio-8080-exec-4] INFO  c.m.service.channel.InAppSender [traceId=ff1c08ba906d4921a6b23d50a04e996f] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=28 memberId=13800138001 title=系统通知
+2026-11-15 23:07:11.092 [http-nio-8080-exec-4] INFO  c.m.service.channel.InAppSender [traceId=ff1c08ba906d4921a6b23d50a04e996f] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=29 memberId=13800138002 title=系统通知
+2026-11-15 23:07:13.501 [http-nio-8080-exec-7] INFO  c.m.service.channel.InAppSender [traceId=cee3e47fabd84231ad633aa6fd77c73a] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=30 memberId=13800138001 title=系统通知
+2026-11-15 23:07:13.506 [http-nio-8080-exec-7] INFO  c.m.service.channel.InAppSender [traceId=cee3e47fabd84231ad633aa6fd77c73a] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=31 memberId=13800138002 title=系统通知
+2026-11-15 23:07:15.918 [http-nio-8080-exec-9] INFO  c.m.service.channel.InAppSender [traceId=92b803123fb3411085229fb6bc836eb2] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=32 memberId=13800138001 title=系统通知
+2026-11-15 23:07:18.219 [http-nio-8080-exec-1] INFO  c.m.service.channel.InAppSender [traceId=b0379f4c89134295b837be97f1aa9fdf] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=33 memberId=13800138001 title=系统通知
+2026-11-15 23:07:18.233 [http-nio-8080-exec-1] INFO  c.m.service.channel.InAppSender [traceId=b0379f4c89134295b837be97f1aa9fdf] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=34 memberId=13800138002 title=系统通知
+2026-11-15 23:07:18.261 [http-nio-8080-exec-1] INFO  c.m.service.channel.InAppSender [traceId=b0379f4c89134295b837be97f1aa9fdf] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=35 memberId=13800138003 title=系统通知
+2026-11-15 23:07:18.285 [http-nio-8080-exec-1] INFO  c.m.service.channel.InAppSender [traceId=b0379f4c89134295b837be97f1aa9fdf] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=36 memberId=13800138004 title=系统通知
+2026-11-15 23:07:18.321 [http-nio-8080-exec-1] INFO  c.m.service.channel.InAppSender [traceId=b0379f4c89134295b837be97f1aa9fdf] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=37 memberId=13800138005 title=系统通知
+2026-11-15 23:07:56.585 [http-nio-8080-exec-6] INFO  c.m.service.channel.InAppSender [traceId=8ff83b1f2303424aa0d6e295c033abb4] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=38 memberId=13800138001 title=系统通知
+2026-11-15 23:07:56.590 [http-nio-8080-exec-6] INFO  c.m.service.channel.InAppSender [traceId=8ff83b1f2303424aa0d6e295c033abb4] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=39 memberId=13800138002 title=系统通知
+2026-11-15 23:07:59.562 [http-nio-8080-exec-8] INFO  c.m.service.channel.InAppSender [traceId=8adf8db712bb4e7595a8a8dd83497725] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=40 memberId=13800138001 title=系统通知
+2026-11-15 23:07:59.570 [http-nio-8080-exec-8] INFO  c.m.service.channel.InAppSender [traceId=8adf8db712bb4e7595a8a8dd83497725] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=41 memberId=13800138002 title=系统通知
+2026-11-15 23:08:01.821 [http-nio-8080-exec-10] INFO  c.m.service.channel.InAppSender [traceId=ddc2de8cc42d4ea09ff3d1598d42122e] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=42 memberId=13800138001 title=系统通知
+2026-11-15 23:08:01.825 [http-nio-8080-exec-10] INFO  c.m.service.channel.InAppSender [traceId=ddc2de8cc42d4ea09ff3d1598d42122e] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=43 memberId=13800138002 title=系统通知
+2026-11-15 23:08:03.818 [http-nio-8080-exec-2] INFO  c.m.service.channel.InAppSender [traceId=d90506b9a26b4a1b866a66a2714137c4] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=44 memberId=13800138001 title=系统通知
+2026-11-15 23:08:06.005 [http-nio-8080-exec-5] INFO  c.m.service.channel.InAppSender [traceId=d6b6093fd2684929a4278f0c4398bfc2] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=45 memberId=13800138001 title=系统通知
+2026-11-15 23:08:06.016 [http-nio-8080-exec-5] INFO  c.m.service.channel.InAppSender [traceId=d6b6093fd2684929a4278f0c4398bfc2] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=46 memberId=13800138002 title=系统通知
+2026-11-15 23:08:06.025 [http-nio-8080-exec-5] INFO  c.m.service.channel.InAppSender [traceId=d6b6093fd2684929a4278f0c4398bfc2] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=47 memberId=13800138003 title=系统通知
+2026-11-15 23:08:06.035 [http-nio-8080-exec-5] INFO  c.m.service.channel.InAppSender [traceId=d6b6093fd2684929a4278f0c4398bfc2] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=48 memberId=13800138004 title=系统通知
+2026-11-15 23:08:06.045 [http-nio-8080-exec-5] INFO  c.m.service.channel.InAppSender [traceId=d6b6093fd2684929a4278f0c4398bfc2] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=49 memberId=13800138005 title=系统通知
+2026-11-15 23:09:15.816 [http-nio-8080-exec-1] INFO  c.m.service.channel.InAppSender [traceId=365f778f2b844e5b93fd28629a706668] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=50 memberId=13800138001 title=系统通知
+2026-11-15 23:09:15.820 [http-nio-8080-exec-1] INFO  c.m.service.channel.InAppSender [traceId=365f778f2b844e5b93fd28629a706668] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=51 memberId=13800138002 title=系统通知
+2026-11-15 23:09:18.832 [http-nio-8080-exec-3] INFO  c.m.service.channel.InAppSender [traceId=ad07f05b7b8b44a8b8212f638546b700] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=52 memberId=13800138001 title=系统通知
+2026-11-15 23:09:18.837 [http-nio-8080-exec-3] INFO  c.m.service.channel.InAppSender [traceId=ad07f05b7b8b44a8b8212f638546b700] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=53 memberId=13800138002 title=系统通知
+2026-11-15 23:09:22.298 [http-nio-8080-exec-4] INFO  c.m.service.channel.InAppSender [traceId=e19b12242c7240b18e20cf759e8412bc] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=54 memberId=13800138001 title=系统通知
+2026-11-15 23:09:22.313 [http-nio-8080-exec-4] INFO  c.m.service.channel.InAppSender [traceId=e19b12242c7240b18e20cf759e8412bc] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=55 memberId=13800138002 title=系统通知
+2026-11-15 23:09:24.930 [http-nio-8080-exec-7] INFO  c.m.service.channel.InAppSender [traceId=19ff40e8c05142aa92eb832dbb2c3d6d] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=56 memberId=13800138001 title=系统通知
+2026-11-15 23:09:28.059 [http-nio-8080-exec-9] INFO  c.m.service.channel.InAppSender [traceId=66058ff2ecc44829b111a9904c58ba74] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=57 memberId=13800138001 title=系统通知
+2026-11-15 23:09:28.070 [http-nio-8080-exec-9] INFO  c.m.service.channel.InAppSender [traceId=66058ff2ecc44829b111a9904c58ba74] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=58 memberId=13800138002 title=系统通知
+2026-11-15 23:09:28.080 [http-nio-8080-exec-9] INFO  c.m.service.channel.InAppSender [traceId=66058ff2ecc44829b111a9904c58ba74] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=59 memberId=13800138003 title=系统通知
+2026-11-15 23:09:28.090 [http-nio-8080-exec-9] INFO  c.m.service.channel.InAppSender [traceId=66058ff2ecc44829b111a9904c58ba74] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=60 memberId=13800138004 title=系统通知
+2026-11-15 23:09:28.099 [http-nio-8080-exec-9] INFO  c.m.service.channel.InAppSender [traceId=66058ff2ecc44829b111a9904c58ba74] [tenant=] [order=] [pay=] [IN_APP] Message saved: id=61 memberId=13800138005 title=系统通知
+2026-11-15 23:19:06.105 [scheduling-1] INFO  c.m.m.e.ComplaintSlaAutoEscalationJob [traceId=] [tenant=] [order=] [pay=] [M9.5-ComplaintSLA] SLA 超时检查开始
+2026-11-15 23:19:06.144 [scheduling-1] INFO  c.m.m.e.ComplaintSlaAutoEscalationJob [traceId=] [tenant=] [order=] [pay=] [M9.5-ComplaintSLA] 检查完成: 工单数=10 租户数=1 升级数=0 cost=39ms
+2026-11-15 23:34:06.048 [scheduling-1] INFO  c.m.m.e.ComplaintSlaAutoEscalationJob [traceId=] [tenant=] [order=] [pay=] [M9.5-ComplaintSLA] SLA 超时检查开始
+2026-11-15 23:34:06.086 [scheduling-1] INFO  c.m.m.e.ComplaintSlaAutoEscalationJob [traceId=] [tenant=] [order=] [pay=] [M9.5-ComplaintSLA] 检查完成: 工单数=10 租户数=1 升级数=0 cost=38ms
+2026-11-15 23:34:36.283 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK01, fallback to ops
+2026-11-15 23:34:36.284 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:34:36.286 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK01 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:34:36.288 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_1786899816844, fallback to ops
+2026-11-15 23:34:36.289 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:34:36.290 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_1786899816844 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:34:36.292 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_1786899843571, fallback to ops
+2026-11-15 23:34:36.293 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:34:36.294 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_1786899843571 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:34:36.297 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901346918, fallback to ops
+2026-11-15 23:34:36.298 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:34:36.299 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786901346918 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:34:36.303 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901428847, fallback to ops
+2026-11-15 23:34:36.304 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:34:36.304 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786901428847 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:34:36.308 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901480172, fallback to ops
+2026-11-15 23:34:36.309 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:34:36.310 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786901480172 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:34:36.313 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786901531974, fallback to ops
+2026-11-15 23:34:36.314 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:34:36.315 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786901531974 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:34:36.318 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786960202644, fallback to ops
+2026-11-15 23:34:36.318 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:34:36.319 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786960202644 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:34:36.322 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1786960300234, fallback to ops
+2026-11-15 23:34:36.323 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:34:36.324 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1786960300234 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:34:36.326 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] no receiver configured for tenant=1 device=KIOSK_E2E_B7_1787581091714, fallback to ops
+2026-11-15 23:34:36.327 [scheduling-1] WARN  c.m.service.channel.InAppSender [traceId=] [tenant=] [order=] [pay=] [IN_APP] receiver='ops' 不可解析为 memberId（系统/组级通道），跳过站内信持久化（channelType=IN_APP scene=null）
+2026-11-15 23:34:36.328 [scheduling-1] INFO  c.m.service.KioskOfflineAlertService [traceId=] [tenant=] [order=] [pay=] [KioskAlert] sent device=KIOSK_E2E_B7_1787581091714 channel=IN_APP extId=MSG-SKIPPED-NO-MEMBER
+2026-11-15 23:35:06.584 [scheduling-1] WARN  c.meiyetec.crm.SalesforceCrmAdapter [traceId=] [tenant=] [order=] [pay=] [CRM/SALESFORCE] fetchContacts skip: auth failed: clientId / username / privateKey / loginUrl 必填
+2026-11-15 23:35:08.123 [scheduling-1] INFO  com.meiyetec.crm.CrmSyncScheduler [traceId=] [tenant=] [order=] [pay=] [CRM-Scheduler] 集成 SALESFORCE 增量同步完成：total=0 ok=0 fail=0 elapsed=1875ms
+2026-11-15 23:35:08.709 [scheduling-1] INFO  com.meiyetec.crm.MockCrmAdapter [traceId=] [tenant=] [order=] [pay=] [CRM/MOCK] fetchContacts: total=4 new=1 knownIds=387 firstSync=false
+2026-11-15 23:35:09.713 [scheduling-1] INFO  com.meiyetec.crm.CrmSyncScheduler [traceId=] [tenant=] [order=] [pay=] [CRM-Scheduler] 集成 MOCK 增量同步完成：total=1 ok=1 fail=0 elapsed=1589ms
+2026-11-15 23:35:10.126 [scheduling-1] WARN  c.meiyetec.crm.SalesforceCrmAdapter [traceId=] [tenant=] [order=] [pay=] [CRM/SALESFORCE] fetchContacts skip: auth failed: clientId / username / privateKey / loginUrl 必填
+2026-11-15 23:35:10.702 [scheduling-1] INFO  com.meiyetec.crm.CrmSyncScheduler [traceId=] [tenant=] [order=] [pay=] [CRM-Scheduler] 集成 SALESFORCE 增量同步完成：total=0 ok=0 fail=0 elapsed=989ms
+2026-11-15 23:35:11.108 [scheduling-1] WARN  c.meiyetec.crm.SalesforceCrmAdapter [traceId=] [tenant=] [order=] [pay=] [CRM/SALESFORCE] fetchContacts skip: auth failed: clientId / username / privateKey / loginUrl 必填
+2026-11-15 23:35:11.822 [scheduling-1] INFO  com.meiyetec.crm.CrmSyncScheduler [traceId=] [tenant=] [order=] [pay=] [CRM-Scheduler] 集成 SALESFORCE 增量同步完成：total=0 ok=0 fail=0 elapsed=1120ms
+2026-11-15 23:35:12.134 [scheduling-1] WARN  c.meiyetec.crm.SalesforceCrmAdapter [traceId=] [tenant=] [order=] [pay=] [CRM/SALESFORCE] fetchContacts skip: auth failed: clientId / username / privateKey / loginUrl 必填
+2026-11-15 23:35:12.689 [scheduling-1] INFO  com.meiyetec.crm.CrmSyncScheduler [traceId=] [tenant=] [order=] [pay=] [CRM-Scheduler] 集成 SALESFORCE 增量同步完成：total=0 ok=0 fail=0 elapsed=867ms
+2026-11-15 23:35:13.079 [scheduling-1] WARN  c.meiyetec.crm.SalesforceCrmAdapter [traceId=] [tenant=] [order=] [pay=] [CRM/SALESFORCE] fetchContacts skip: auth failed: clientId / username / privateKey / loginUrl 必填
+2026-11-15 23:35:14.138 [scheduling-1] INFO  com.meiyetec.crm.CrmSyncScheduler [traceId=] [tenant=] [order=] [pay=] [CRM-Scheduler] 集成 SALESFORCE 增量同步完成：total=0 ok=0 fail=0 elapsed=1449ms
+2026-11-15 23:35:14.463 [scheduling-1] WARN  c.meiyetec.crm.SalesforceCrmAdapter [traceId=] [tenant=] [order=] [pay=] [CRM/SALESFORCE] fetchContacts skip: auth failed: clientId / username / privateKey / loginUrl 必填
+2026-11-15 23:35:15.137 [scheduling-1] INFO  com.meiyetec.crm.CrmSyncScheduler [traceId=] [tenant=] [order=] [pay=] [CRM-Scheduler] 集成 SALESFORCE 增量同步完成：total=0 ok=0 fail=0 elapsed=998ms

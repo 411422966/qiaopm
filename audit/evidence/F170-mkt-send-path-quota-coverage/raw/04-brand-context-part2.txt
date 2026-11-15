@@ -1,0 +1,111 @@
++-------------------------------------------------------------------+
+| section                                                           |
++-------------------------------------------------------------------+
+| --- pos_store 结构(告警路径 store→brand 可获得性) ---             |
++-------------------------------------------------------------------+
++---------------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| Field               | Type         | Null | Key | Default           | Extra                                         |
++---------------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| id                  | bigint       | NO   | PRI | NULL              | auto_increment                                |
+| store_name          | varchar(100) | NO   |     | NULL              |                                               |
+| store_code          | varchar(50)  | YES  | UNI | NULL              |                                               |
+| contact_person      | varchar(50)  | YES  |     | NULL              |                                               |
+| contact_phone       | varchar(20)  | YES  |     | NULL              |                                               |
+| address             | varchar(255) | YES  |     | NULL              |                                               |
+| province            | varchar(50)  | YES  |     | NULL              |                                               |
+| city                | varchar(50)  | YES  |     | NULL              |                                               |
+| district            | varchar(50)  | YES  |     | NULL              |                                               |
+| business_hours      | varchar(100) | YES  |     | NULL              |                                               |
+| status              | tinyint      | YES  | MUL | 1                 |                                               |
+| logo_url            | varchar(255) | YES  |     | NULL              |                                               |
+| description         | text         | YES  |     | NULL              |                                               |
+| create_time         | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
+| update_time         | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
+| deleted             | tinyint      | YES  |     | 0                 |                                               |
+| tenant_id           | bigint       | YES  | MUL | NULL              |                                               |
+| brand_id            | bigint       | YES  | MUL | NULL              |                                               |
+| store_type          | varchar(16)  | YES  |     | DIRECT            |                                               |
+| region_code         | varchar(32)  | YES  |     | NULL              |                                               |
+| is_hq               | tinyint      | YES  |     | 0                 |                                               |
+| manager_employee_id | bigint       | YES  |     | NULL              |                                               |
+| manager_name        | varchar(64)  | YES  |     | NULL              |                                               |
+| open_date           | date         | YES  |     | NULL              |                                               |
+| brand_priority      | int          | YES  |     | 0                 |                                               |
++---------------------+--------------+------+-----+-------------------+-----------------------------------------------+
++--------------------------------------+
+| section                              |
++--------------------------------------+
+| --- kiosk_device store_id 分布 ---   |
++--------------------------------------+
++-----------+----------+---------+
+| tenant_id | store_id | devices |
++-----------+----------+---------+
+|         1 |     NULL |      10 |
++-----------+----------+---------+
++---------------------------------------+
+| section                               |
++---------------------------------------+
+| --- 预约确认/生日 相关表 ---          |
++---------------------------------------+
++--------------------------------+
+| Tables_in_meiyetec (%booking%) |
++--------------------------------+
+| biz_booking                    |
+| booking_booking_resource       |
+| booking_forecast_feature       |
+| booking_forecast_result        |
+| booking_no_show_rule           |
+| booking_resource               |
+| booking_resource_link          |
+| booking_waitlist               |
+| booking_waitlist_notify        |
+| booking_waitlist_score_log     |
+| overseas_booking               |
+| platform_booking               |
+| wx_booking_record              |
++--------------------------------+
++---------------------------------+
+| Tables_in_meiyetec (%birthday%) |
++---------------------------------+
+| birthday_member                 |
+| birthday_send_log               |
++---------------------------------+
++----------------------------------------+
+| section                                |
++----------------------------------------+
+| --- IN_APP 有效配置 configJson ---     |
++----------------------------------------+
++----+--------------+----------+------+
+| id | channel_type | brand_id | cfg  |
++----+--------------+----------+------+
+|  4 | IN_APP       |     NULL | NULL |
++----+--------------+----------+------+
++---------------------------------------------------------+
+| section                                                 |
++---------------------------------------------------------+
+| --- 触达日志按 task 聚合(单任务发送量) ---              |
++---------------------------------------------------------+
++---------+----------+----------+
+| task_id | rows_cnt | sent_cnt |
++---------+----------+----------+
+|       1 |      490 |        0 |
+|       2 |      489 |      489 |
+|       3 |      489 |        0 |
+|       5 |      489 |      489 |
+|       6 |      489 |      489 |
+|       7 |      489 |        0 |
+|      10 |      489 |      489 |
+|      11 |      489 |      100 |
+|       0 |        7 |        6 |
+|       9 |        7 |        7 |
++---------+----------+----------+
++----------------------------------------+
+| section                                |
++----------------------------------------+
+| --- task 表 brand/brand 相关列 ---     |
++----------------------------------------+
++----------+--------+------+-----+---------+-------+
+| Field    | Type   | Null | Key | Default | Extra |
++----------+--------+------+-----+---------+-------+
+| brand_id | bigint | YES  |     | NULL    |       |
++----------+--------+------+-----+---------+-------+

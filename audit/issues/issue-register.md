@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I170 部分修复批：dashboard 快照过滤 + computeForMember 幂等 + seed 环境守卫已修并 VERIFIED；A3 暂缓；补登 I172/I173/I174/I175；本次再补登 I176 + I172 §4 技术推荐节）；再更新 2026-11-15（I169 限流调查批次：I177/I179 已修并 VERIFIED，I178 登记待业务决策）；再更新 2026-11-15（I178 口径对齐批：I178 改 Partial、I180 新增登记）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I170 部分修复批：dashboard 快照过滤 + computeForMember 幂等 + seed 环境守卫已修并 VERIFIED；A3 暂缓；补登 I172/I173/I174/I175；本次再补登 I176 + I172 §4 技术推荐节）；再更新 2026-11-15（I169 限流调查批次：I177/I179 已修并 VERIFIED，I178 登记待业务决策）；再更新 2026-11-15（I178 口径对齐批：I178 改 Partial、I180 新增登记）；再更新 2026-11-15（batch2-C 渠道发送路径配额覆盖调查：I180 改 Parked 并补运行期佐证、新增 I181 渠道发送路径配额绕过、新增 I182 `InAppSender` 手机号当 memberId 落库；I178 §1.3 补运行期证据引用）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -104,7 +104,9 @@
 | I177 | I177 — `POST /intl-booking/{id}/send-confirmation` 无防重复触发机制，直推外部计费渠道（短信/邮件/订阅消息） | Fixed（VERIFIED / L5a） | [I177-intl-booking-send-confirmation-no-rate-limit.md](I177-intl-booking-send-confirmation-no-rate-limit.md) |
 | I178 | I178 — `ChannelDispatcher.rateLimitCheck` 覆盖缺口：4 条发送路径仅 1 条过闸门，且计数口径（tenant+channel）与配置口径（tenant+brand+channel）错配 | Partial（多品牌口径已对齐并 VERIFIED；闸门覆盖缺口仍未修） | [I178-channel-dispatcher-coverage-gap.md](I178-channel-dispatcher-coverage-gap.md) |
 | I179 | I179 — `POST /invite/track` 无手机号请求仍 `scan_count + 1`，可被匿名/机器人无限刷 | Fixed（VERIFIED / L5a） | [I179-invite-track-scan-count-no-phone.md](I179-invite-track-scan-count-no-phone.md) |
-| I180 | I180 — `mkt_channel_config.brand_id = NULL` 的配额配置是死配置（`eq(brandId, null)` 永不命中 → 共享池额度实际不生效），且同渠道可重复插入 | Open（仅登记，不修） | [I180-mkt-channel-config-null-brand-unreachable.md](I180-mkt-channel-config-null-brand-unreachable.md) |
+| I180 | I180 — `mkt_channel_config.brand_id = NULL` 的配额配置是死配置（`eq(brandId, null)` 永不命中 → 共享池额度实际不生效），且同渠道可重复插入 | Parked（等业务拍板 NULL 品牌配置口径） | [I180-mkt-channel-config-null-brand-unreachable.md](I180-mkt-channel-config-null-brand-unreachable.md) |
+| I181 | I181 — 渠道发送路径配额绕过：EXT-19 预约确认 / 生日通知 / 设备离线告警 3 条路径完全绕过 `rateLimitCheck`；失败与重试不计入配额；`getSender` 静默降级导致 3 处 null 检查为死代码 | Open（仅登记，不实施） | [I181-mkt-send-path-quota-bypass.md](I181-mkt-send-path-quota-bypass.md) |
+| I182 | I182 — `InAppSender.parseMemberId` 把手机号当 memberId 解析 → 手机号被写入 `member_message.member_id`，产生指向不存在会员的脏行（站内信假发送） | Open（仅登记，不修） | [I182-inapp-sender-phone-as-member-id.md](I182-inapp-sender-phone-as-member-id.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
@@ -162,8 +164,19 @@
 ## 补充说明（2026-11-15：I178 多品牌配额口径对齐批）
 
 - **I178（Partial，口径部分已修并 VERIFIED / L5a，9/9 CHECK PASS）**：按用户 2026-11-15 决策，配额口径对齐到配置口径（tenant + brand + channel）。`ChannelDispatcher.rateLimitCheck`（`backend/src/main/java/com/meiyetec/service/channel/ChannelDispatcher.java`）两条计数 SQL 改为经 `task_id` JOIN `marketing_touch_task` 取品牌（`marketing_touch_log` 表本身无 brand_id 列），品牌条件用 NULL 安全等于 `tt.brand_id <=> ?`。**实测**：品牌 A（per_day=2）发满 2 条后，品牌 B 同额度不受影响（仍发 2 条）；分钟闸门、日闸门、无品牌任务行为均通过；夹具已全部清理。修复 commit `44746cc`，证据 `audit/evidence/F169-channel-quota-brand-scope/`。**仍未修**：§1.3 闸门覆盖缺口（EXT-19 预约确认 / 生日通知 / 设备告警 3 条真实发送路径依旧绕过闸门）、R3 失败是否计入配额、R4 配置缺失静默放行、R5 与 I169 职责重叠。
-- **I180（Open，新增，P2，仅登记不修）**：`mkt_channel_config` 中 3 条 `brand_id = NULL` 的有效配置（SMS 3/5、PUSH 60/5000、IN_APP 1000/99999）因 `eq(getBrandId, null)` 永不命中而成为「死配置」→ 库内「租户级共享池额度」实际不生效；同一原因使创建接口的重复校验失效 → 同渠道 NULL 品牌配置可重复插入（IN_APP / SMS / PUSH 各有 2–3 条同类行为实证）。口径有两种解读（共享池哨兵值 vs 历史脏数据），需业务拍板后再修。**本批未改任何业务代码**。
-- **验证期副产物（已清理，未登记为 Issue）**：`InAppSender.parseMemberId` 对数字串一律按 memberId 解析，任务流程传入的 receiver 是手机号 → 被当作 memberId 写入 `member_message.member_id`，产生指向不存在会员的脏行。属既有缺陷，与 I178 无关，本批未修，待决定是否单独立项。
+- **I180（Parked，新增，P2，仅登记不修）**：`mkt_channel_config` 中 3 条 `brand_id = NULL` 的有效配置（SMS 3/5、PUSH 60/5000、IN_APP 1000/99999）因 `eq(getBrandId, null)` 永不命中而成为「死配置」→ 库内「租户级共享池额度」实际不生效；同一原因使创建接口的重复校验失效 → 同渠道 NULL 品牌配置可重复插入（IN_APP / SMS / PUSH 各有 2–3 条同类行为实证）。口径有两种解读（共享池哨兵值 vs 历史脏数据），需业务拍板后再修。**本批未改任何业务代码**。**2026-11-15 用户决策：状态由 Open 调整为 Parked**（等待业务口径拍板，不阻塞其他批次）；运行期佐证见下方「补充说明（2026-11-15：batch2-C 渠道发送路径配额覆盖调查）」。
+- **I182（原「验证期副产物」，已单独立项）**：`InAppSender.parseMemberId` 对数字串一律按 memberId 解析，触达任务流程传入的 receiver 是会员手机号 → 被当作 memberId 写入 `member_message.member_id`，产生指向不存在会员的脏行（I178 验证期曾产生 49 行，已清理）。属既有缺陷，与 I178 无关，**本批未修**，已单独立项为 **I182**（P2，仅登记）。
+
+## 补充说明（2026-11-15：batch2-C 渠道发送路径配额覆盖只读调查）
+
+> **性质**：只读调查（未改任何业务代码、未执行 SQL 写入、未执行 DDL、未启停容器）。
+> **证据**：`audit/evidence/F170-mkt-send-path-quota-coverage/`（8 条发现 F1–F8）。
+> **基线**：HEAD `cfa7909cdd8cea1e5e5d57c9259a385669507c9b`；DB 快照 `backup/meiyetec_20261110_020004.sql`。
+
+- **I181（Open，新增，P2，仅登记不实施）**：`ChannelDispatcher.rateLimitCheck` 之外，**EXT-19 预约确认 / 生日通知 / 设备离线告警** 3 条真实发送路径完全绕过配额闸门且不写 `marketing_touch_log`（配额对其既不设限也不可见）。运行期实证：① 告警路径**当前活跃触发** —— `kiosk_device` 10 行 `last_heartbeat` 全为 NULL → `severityOf(-1)="NEVER"` → 23:04:36 连续 10 条 `[KioskAlert] sent ... extId=MSG-SKIPPED-NO-MEMBER`，冷却 30 分钟 → **480 次/天「假成功」告警**（记为 SENT 但无站内信落库）；② 唯一过闸门的触达任务路径，其 SMS 配额配置（`id=13`，`brand_id=NULL`，`per_min=3` / `per_day=5`）**从未命中** —— 历史 SMS 成功发送峰值 **489 条/分钟**、单日 1975 条。另：失败与重试不进入配额口径（单条明细最多 1+3 次真实外部调用，配额计 1 或 0）；`cfg == null` 静默放行且无日志；取配置 `.last("LIMIT 1")` 无 `ORDER BY` → 命中不确定；`getSender` 对未知渠道静默回退 `InAppSender` → 3 处 `sender == null` 为死代码。**「失败是否计入配额」未与渠道商确认**；生日 / 预约确认路径因库内 0 样本为 **UNVERIFIED**。**前置**：I180 的共享池口径拍板 + I178 §1.3 闸门下沉改造（需单独窗口 + 业务确认计数口径）。
+- **I180 运行期佐证升级**：上述 SMS 峰值 489 条/分钟 vs 配置 `per_min=3` 的量级差，把「`brand_id = NULL` 配置从未生效」从静态推断升级为**运行期 VERIFIED**；状态由 Open 调整为 **Parked**（等待业务拍板解读 A「租户级共享池哨兵值」/ 解读 B「历史脏数据」）。
+- **告警路径无品牌上下文**：`kiosk_device.store_id` 10 行**全为 NULL** → 即使下沉闸门，告警路径也只能拿到 tenant + channel 维度 → 直接撞上 I180 的共享池口径问题 → I180 拍板是闸门下沉的前置条件。
+- **编号说明**：原计划的 I181（`InAppSender` 脏数据）因编号冲突调整为 **I182**；I181 = 渠道发送路径配额绕过。
 
 ## 脚注：证据目录命名规则切换（2026-11-13 起）
 
