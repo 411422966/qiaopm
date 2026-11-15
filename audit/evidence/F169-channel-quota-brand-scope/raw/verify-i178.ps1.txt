@@ -1,0 +1,204 @@
+# I178 verification script -- channel quota counted per brand
+# NON-FORMAL TOOL: audit evidence collection only. NOT in CI / PR mandatory list.
+# Purpose: prove that ChannelDispatcher.rateLimitCheck counts per brand
+#   (tenant_id + brand_id + channel_type) instead of (tenant_id + channel_type),
+#   i.e. brand A exhausting its quota does NOT block brand B, and that the
+#   per-minute / per-day gates still work inside one brand.
+# Prereq : fixtures seeded via raw/00-fixture-seed.sql (done by this script)
+# Exit   : 0 = all checks pass ; 1 = at least one check failed
+# NOTE   : ASCII-only script text on purpose (PowerShell 5.1 reads .ps1 as ANSI
+#          when there is no BOM, and mangles non-ASCII source text).
+param(
+  [string]$Base = "http://localhost:8080",
+  [string]$User = "operator01",
+  [string]$Pass = "123456",
+  [string]$OutFile = "$PSScriptRoot\01-verify-i178.txt"
+)
+
+$ErrorActionPreference = "Stop"
+$script:token = $null
+$script:fails = 0
+$out = New-Object System.Collections.Generic.List[string]
+
+function Say($s) { $script:out.Add([string]$s); Write-Host $s }
+
+function Check($name, $cond, $detail) {
+  if ($cond) { Say ("CHECK: {0} => PASS ({1})" -f $name, $detail) }
+  else { Say ("CHECK: {0} => FAIL ({1})" -f $name, $detail); $script:fails++ }
+}
+
+# The API returns application/json without an explicit charset, so Windows
+# PowerShell 5.1 decodes the body as ANSI and mangles Chinese text.
+# Use a raw WebRequest and decode the response bytes as UTF-8 explicitly.
+function Api($method, $path, $body) {
+  $req = [System.Net.HttpWebRequest]::Create("$Base$path")
+  $req.Method = $method
+  $req.Headers.Add("Authorization", "Bearer $script:token")
+  $req.Accept = "application/json"
+  if ($body -ne $null) {
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes(($body | ConvertTo-Json -Compress))
+    $req.ContentType = "application/json; charset=utf-8"
+    $req.ContentLength = $bytes.Length
+    $s = $req.GetRequestStream(); $s.Write($bytes, 0, $bytes.Length); $s.Close()
+  }
+  $resp = $req.GetResponse()
+  $sr = New-Object System.IO.StreamReader($resp.GetResponseStream(), [System.Text.Encoding]::UTF8)
+  $txt = $sr.ReadToEnd(); $sr.Close(); $resp.Close()
+  return ($txt | ConvertFrom-Json)
+}
+
+function Q($sql) {
+  # mysql client writes a password warning to stderr; discard it via cmd redirection
+  $r = cmd /c "docker exec meiyetec-mysql mysql -uroot -proot123456 meiyetec -N -B -e `"$sql`" 2>nul"
+  return (($r -join "`n").Trim())
+}
+
+function SqlExec($sql) {
+  cmd /c "docker exec meiyetec-mysql mysql -uroot -proot123456 meiyetec -e `"$sql`" 2>nul" | Out-Null
+}
+
+# Multi-line SQL files must be piped through stdin: passing them inline via
+# cmd /c truncates the statement at the first line break.
+function SqlFile($path) {
+  # mysql prints a password warning on stderr; with ErrorActionPreference=Stop a
+  # native stderr line would abort the script, so relax it for this call only.
+  $ErrorActionPreference = "Continue"
+  Get-Content $path | & docker exec -i meiyetec-mysql mysql -uroot -proot123456 meiyetec 2>$null | Out-Null
+}
+
+$AUDIENCE = '{"memberIds":[1,2,3,4,5]}'
+$BRAND_A = 990301
+$BRAND_B = 990302
+$BRAND_C = 990303
+$BRAND_D = 990304
+$taskIds = New-Object System.Collections.Generic.List[string]
+
+function NewTask($name, $brandId) {
+  $b = @{ campaignName = $name; channelType = "IN_APP"; audienceFilter = $AUDIENCE; content = "I178 quota probe" }
+  if ($brandId -ne $null) { $b["brandId"] = $brandId }
+  $r = Api "POST" "/mkt/task" $b
+  if ($r.code -ne 200) { Say ("CREATE TASK FAILED name={0} code={1} message={2}" -f $name, $r.code, $r.message); return $null }
+  $id = [string]$r.data.id
+  $script:taskIds.Add($id)
+  return $id
+}
+
+function StartTask($id) {
+  return Api "POST" ("/mkt/task/" + $id + "/start") $null
+}
+
+function LogStatus($id) {
+  $rows = Q ("SELECT status, COUNT(*) FROM marketing_touch_log WHERE task_id = " + $id + " AND deleted = 0 GROUP BY status ORDER BY status")
+  $sent = 0; $pending = 0; $failed = 0
+  foreach ($line in ($rows -split "`n")) {
+    if ([string]::IsNullOrWhiteSpace($line)) { continue }
+    $p = $line -split "`t"
+    $st = [int]$p[0]; $cnt = [int]$p[1]
+    if ($st -eq 2) { $sent = $cnt } elseif ($st -eq 1) { $pending = $cnt } elseif ($st -eq 3) { $failed = $cnt }
+  }
+  return @{ sent = $sent; pending = $pending; failed = $failed }
+}
+
+$login = Api "POST" "/auth/login" @{username=$User; password=$Pass}
+if ($login.code -ne 200) { Say "LOGIN FAILED code=$($login.code)"; $out | Out-File -FilePath $OutFile -Encoding UTF8; exit 1 }
+$script:token = $login.data.token
+Say ("TOKEN_USER={0} USER_ID={1} TENANT=1" -f $User, $login.data.id)
+Say ""
+
+# ---------------------------------------------------------------- preflight --
+Say "=== S0: fail-fast preflight (synthetic ids must not exist) ==="
+$pre = Q ("SELECT COUNT(*) FROM mkt_channel_config WHERE brand_id IN (990301,990302,990303,990304)")
+Say ("existing mkt_channel_config rows for test brands = {0}" -f $pre)
+Check "S0 brand ids are free" ($pre -eq "0") "existing=$pre"
+if ($pre -ne "0") {
+  Say "ABORT: synthetic brand ids already in use, refusing to write"
+  $out | Out-File -FilePath $OutFile -Encoding UTF8
+  exit 1
+}
+$preTask = Q ("SELECT COUNT(*) FROM marketing_touch_task WHERE brand_id IN (990301,990302,990303,990304)")
+Say ("existing marketing_touch_task rows for test brands = {0}" -f $preTask)
+$members = Q ("SELECT COUNT(*) FROM crm_member WHERE id IN (1,2,3,4,5) AND deleted = 0")
+Say ("audience members available (crm_member id 1-5) = {0}" -f $members)
+Check "S0 audience members exist" ([int]$members -eq 5) "count=$members"
+
+SqlFile "$PSScriptRoot\00-fixture-seed.sql"
+Say ("seeded config rows = {0}" -f (Q "SELECT COUNT(*) FROM mkt_channel_config WHERE brand_id IN (990301,990302,990303,990304) AND deleted = 0"))
+Say ""
+
+# ------------------------------------------------------------------ brand A --
+Say "=== S1: brand A (990301, per_min=1000 / per_day=2) -- 5 members ==="
+$ta = NewTask "I178-TEST-A" $BRAND_A
+$ra = StartTask $ta
+Say ("START RESP: code={0} message={1} successCount={2} failCount={3}" -f $ra.code, $ra.message, $ra.data.successCount, $ra.data.failCount)
+$la = LogStatus $ta
+Say ("logs: sent={0} pending(skipped)={1} failed={2}" -f $la.sent, $la.pending, $la.failed)
+Check "S1 brand A daily gate cuts at 2" ($la.sent -eq 2 -and $la.pending -eq 3) "sent=$($la.sent) pending=$($la.pending)"
+$oldCount = Q ("SELECT COUNT(*) FROM marketing_touch_log t WHERE t.tenant_id = 1 AND t.channel_type = 'IN_APP' AND t.sent_at >= DATE(NOW()) AND t.deleted = 0")
+$newCountA = Q ("SELECT COUNT(*) FROM marketing_touch_log t JOIN marketing_touch_task tt ON tt.id = t.task_id AND tt.deleted = 0 WHERE t.tenant_id = 1 AND t.channel_type = 'IN_APP' AND t.sent_at >= DATE(NOW()) AND t.deleted = 0 AND tt.brand_id <=> 990301")
+$newCountB = Q ("SELECT COUNT(*) FROM marketing_touch_log t JOIN marketing_touch_task tt ON tt.id = t.task_id AND tt.deleted = 0 WHERE t.tenant_id = 1 AND t.channel_type = 'IN_APP' AND t.sent_at >= DATE(NOW()) AND t.deleted = 0 AND tt.brand_id <=> 990302")
+Say ("counting: OLD(tenant+channel)={0}  NEW(brand A)={1}  NEW(brand B)={2}" -f $oldCount, $newCountA, $newCountB)
+Check "S1 old scope counts brand A sends, new scope does not leak into brand B" ([int]$newCountA -eq 2 -and [int]$newCountB -eq 0) "old=$oldCount newA=$newCountA newB=$newCountB"
+Say ""
+
+# ------------------------------------------------------------------ brand B --
+Say "=== S2: brand B (990302, per_min=1000 / per_day=2) -- must be independent of brand A ==="
+$tb = NewTask "I178-TEST-B" $BRAND_B
+$rb = StartTask $tb
+Say ("START RESP: code={0} message={1} successCount={2} failCount={3}" -f $rb.code, $rb.message, $rb.data.successCount, $rb.data.failCount)
+$lb = LogStatus $tb
+Say ("logs: sent={0} pending(skipped)={1} failed={2}" -f $lb.sent, $lb.pending, $lb.failed)
+Check "S2 brand A exhausting quota does NOT block brand B" ($lb.sent -eq 2 -and $lb.pending -eq 3) "sent=$($lb.sent) pending=$($lb.pending)"
+Say ""
+
+# ------------------------------------------------------------------ brand C --
+Say "=== S3: brand C (990303, per_min=2 / per_day=1000) -- per-minute gate ==="
+$tc = NewTask "I178-TEST-C" $BRAND_C
+$rc = StartTask $tc
+Say ("START RESP: code={0} message={1} successCount={2} failCount={3}" -f $rc.code, $rc.message, $rc.data.successCount, $rc.data.failCount)
+$lc = LogStatus $tc
+Say ("logs: sent={0} pending(skipped)={1} failed={2}" -f $lc.sent, $lc.pending, $lc.failed)
+Check "S3 per-minute gate cuts at 2 inside one brand" ($lc.sent -eq 2 -and $lc.pending -eq 3) "sent=$($lc.sent) pending=$($lc.pending)"
+Say ""
+
+# ------------------------------------------------------------------ brand D --
+Say "=== S4: brand D (990304, per_min=1000 / per_day=1) -- strict daily gate ==="
+$td = NewTask "I178-TEST-D" $BRAND_D
+$rd = StartTask $td
+Say ("START RESP: code={0} message={1} successCount={2} failCount={3}" -f $rd.code, $rd.message, $rd.data.successCount, $rd.data.failCount)
+$ld = LogStatus $td
+Say ("logs: sent={0} pending(skipped)={1} failed={2}" -f $ld.sent, $ld.pending, $ld.failed)
+Check "S4 per-day gate cuts at 1 inside one brand" ($ld.sent -eq 1 -and $ld.pending -eq 4) "sent=$($ld.sent) pending=$($ld.pending)"
+Say ""
+
+# --------------------------------------------------------------- no brand --
+Say "=== S5: task without brandId -- no brand config found -> pass through (unchanged) ==="
+$te = NewTask "I178-TEST-E" $null
+$re = StartTask $te
+Say ("START RESP: code={0} message={1} successCount={2} failCount={3}" -f $re.code, $re.message, $re.data.successCount, $re.data.failCount)
+$le = LogStatus $te
+Say ("logs: sent={0} pending(skipped)={1} failed={2}" -f $le.sent, $le.pending, $le.failed)
+Check "S5 brandless task is not limited (no matching config)" ($le.sent -eq 5 -and $le.pending -eq 0) "sent=$($le.sent) pending=$($le.pending)"
+Say ""
+
+# ------------------------------------------------------------------ cleanup --
+Say "=== S6: cleanup ==="
+foreach ($tid in $taskIds) {
+  SqlExec ("DELETE FROM marketing_touch_log WHERE task_id = " + $tid)
+  SqlExec ("DELETE FROM marketing_touch_task WHERE id = " + $tid)
+}
+SqlExec "DELETE FROM mkt_channel_config WHERE brand_id IN (990301,990302,990303,990304)"
+# The IN_APP sender writes member_message rows whose member_id is the numeric
+# phone string (InAppSender.parseMemberId accepts digits), so the probe content
+# marker is used to remove them again.
+SqlExec "DELETE FROM member_message WHERE content = 'I178 quota probe'"
+$leftCfg = Q "SELECT COUNT(*) FROM mkt_channel_config WHERE brand_id IN (990301,990302,990303,990304)"
+$leftTask = Q "SELECT COUNT(*) FROM marketing_touch_task WHERE brand_id IN (990301,990302,990303,990304)"
+$leftLog = Q ("SELECT COUNT(*) FROM marketing_touch_log WHERE task_id IN (" + (($taskIds -join ",")) + ")")
+$leftMsg = Q "SELECT COUNT(*) FROM member_message WHERE content = 'I178 quota probe'"
+Say ("cleanup: config rows left={0} task rows left={1} log rows left={2} member_message rows left={3}" -f $leftCfg, $leftTask, $leftLog, $leftMsg)
+Check "S6 all fixtures removed" ($leftCfg -eq "0" -and $leftTask -eq "0" -and $leftLog -eq "0" -and $leftMsg -eq "0") "cfg=$leftCfg task=$leftTask log=$leftLog msg=$leftMsg"
+Say ""
+
+if ($script:fails -eq 0) { Say "OVERALL: ALL PASS" } else { Say ("OVERALL: FAILED ({0} checks failed)" -f $script:fails) }
+$out | Out-File -FilePath $OutFile -Encoding UTF8
+if ($script:fails -eq 0) { exit 0 } else { exit 1 }

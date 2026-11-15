@@ -1,0 +1,42 @@
+﻿TOKEN_USER=operator01 USER_ID=900006 TENANT=1
+
+=== S0: fail-fast preflight (synthetic ids must not exist) ===
+existing mkt_channel_config rows for test brands = 0
+CHECK: S0 brand ids are free => PASS (existing=0)
+existing marketing_touch_task rows for test brands = 0
+audience members available (crm_member id 1-5) = 5
+CHECK: S0 audience members exist => PASS (count=5)
+seeded config rows = 4
+
+=== S1: brand A (990301, per_min=1000 / per_day=2) -- 5 members ===
+START RESP: code=200 message=已完成 successCount=2 failCount=0
+logs: sent=2 pending(skipped)=3 failed=0
+CHECK: S1 brand A daily gate cuts at 2 => PASS (sent=2 pending=3)
+counting: OLD(tenant+channel)=2  NEW(brand A)=2  NEW(brand B)=0
+CHECK: S1 old scope counts brand A sends, new scope does not leak into brand B => PASS (old=2 newA=2 newB=0)
+
+=== S2: brand B (990302, per_min=1000 / per_day=2) -- must be independent of brand A ===
+START RESP: code=200 message=已完成 successCount=2 failCount=0
+logs: sent=2 pending(skipped)=3 failed=0
+CHECK: S2 brand A exhausting quota does NOT block brand B => PASS (sent=2 pending=3)
+
+=== S3: brand C (990303, per_min=2 / per_day=1000) -- per-minute gate ===
+START RESP: code=200 message=已完成 successCount=2 failCount=0
+logs: sent=2 pending(skipped)=3 failed=0
+CHECK: S3 per-minute gate cuts at 2 inside one brand => PASS (sent=2 pending=3)
+
+=== S4: brand D (990304, per_min=1000 / per_day=1) -- strict daily gate ===
+START RESP: code=200 message=已完成 successCount=1 failCount=0
+logs: sent=1 pending(skipped)=4 failed=0
+CHECK: S4 per-day gate cuts at 1 inside one brand => PASS (sent=1 pending=4)
+
+=== S5: task without brandId -- no brand config found -> pass through (unchanged) ===
+START RESP: code=200 message=已完成 successCount=5 failCount=0
+logs: sent=5 pending(skipped)=0 failed=0
+CHECK: S5 brandless task is not limited (no matching config) => PASS (sent=5 pending=0)
+
+=== S6: cleanup ===
+cleanup: config rows left=0 task rows left=0 log rows left=0 member_message rows left=0
+CHECK: S6 all fixtures removed => PASS (cfg=0 task=0 log=0 msg=0)
+
+OVERALL: ALL PASS
