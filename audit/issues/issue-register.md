@@ -1,6 +1,6 @@
 # Issue Register
 
-> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I170 部分修复批：dashboard 快照过滤 + computeForMember 幂等 + seed 环境守卫已修并 VERIFIED；A3 暂缓；补登 I172/I173/I174/I175；本次再补登 I176 + I172 §4 技术推荐节）；再更新 2026-11-15（I169 限流调查批次：I177/I179 已修并 VERIFIED，I178 登记待业务决策）
+> 重建于 2026-10-16（原 register 受 I112 编码损坏，见 I112），最近更新 2026-11-14（I170 部分修复批：dashboard 快照过滤 + computeForMember 幂等 + seed 环境守卫已修并 VERIFIED；A3 暂缓；补登 I172/I173/I174/I175；本次再补登 I176 + I172 §4 技术推荐节）；再更新 2026-11-15（I169 限流调查批次：I177/I179 已修并 VERIFIED，I178 登记待业务决策）；再更新 2026-11-15（I178 口径对齐批：I178 改 Partial、I180 新增登记）
 > 数据来源：audit/issues/I*.md 单文件自动提取
 > 状态列为启发式匹配，如与文件不一致，以文件为准
 
@@ -102,8 +102,9 @@
 | I175 | I175 — `crm_ltv_snapshot` 缺 `UNIQUE (tenant_id, member_id, snapshot_date)`，加约束前须先清 236 组存量重复 + A3 落地 | Open（DDL 未实施） | [I175-ltv-snapshot-unique-constraint-ddl.md](I175-ltv-snapshot-unique-constraint-ddl.md) |
 | I176 | I176 — `LtvSeedController` `mode=reset` 删不存在的表 `crm_order`（实际应为 `pos_order`），dev/test 环境留下半破坏状态 | Open（登记，不修） | [I176-ltv-seed-reset-deletes-nonexistent-table.md](I176-ltv-seed-reset-deletes-nonexistent-table.md) |
 | I177 | I177 — `POST /intl-booking/{id}/send-confirmation` 无防重复触发机制，直推外部计费渠道（短信/邮件/订阅消息） | Fixed（VERIFIED / L5a） | [I177-intl-booking-send-confirmation-no-rate-limit.md](I177-intl-booking-send-confirmation-no-rate-limit.md) |
-| I178 | I178 — `ChannelDispatcher.rateLimitCheck` 覆盖缺口：4 条发送路径仅 1 条过闸门，且计数口径（tenant+channel）与配置口径（tenant+brand+channel）错配 | Open（待业务拍板配额口径） | [I178-channel-dispatcher-coverage-gap.md](I178-channel-dispatcher-coverage-gap.md) |
+| I178 | I178 — `ChannelDispatcher.rateLimitCheck` 覆盖缺口：4 条发送路径仅 1 条过闸门，且计数口径（tenant+channel）与配置口径（tenant+brand+channel）错配 | Partial（多品牌口径已对齐并 VERIFIED；闸门覆盖缺口仍未修） | [I178-channel-dispatcher-coverage-gap.md](I178-channel-dispatcher-coverage-gap.md) |
 | I179 | I179 — `POST /invite/track` 无手机号请求仍 `scan_count + 1`，可被匿名/机器人无限刷 | Fixed（VERIFIED / L5a） | [I179-invite-track-scan-count-no-phone.md](I179-invite-track-scan-count-no-phone.md) |
+| I180 | I180 — `mkt_channel_config.brand_id = NULL` 的配额配置是死配置（`eq(brandId, null)` 永不命中 → 共享池额度实际不生效），且同渠道可重复插入 | Open（仅登记，不修） | [I180-mkt-channel-config-null-brand-unreachable.md](I180-mkt-channel-config-null-brand-unreachable.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
@@ -157,6 +158,12 @@
 - **I178（Open，新增，P2，登记不修）**：`ChannelDispatcher.rateLimitCheck(tenantId, brandId, channelType)` 是仓库内唯一渠道配额闸门（全仓**仅 1 处调用**：`MarketingAutomationService.startTask`），**EXT-19 预约确认 / 生日通知 / 设备离线告警** 3 条真实发送路径完全绕过 → 「已配置的每分钟/每日限额」在多数发送路径上失效。另有多品牌口径错配：计数口径为 `tenant_id + channel_type`，配置口径为 `tenant_id + brand_id + channel_type` → 品牌之间互相消耗配额、限额被放大 N 倍。**按用户 2026-11-15 决策本批不改 `ChannelDispatcher`**，等业务先拍板「配额按品牌还是按租户」。**结论全部来自静态检索，运行期 UNVERIFIED**。
 - **I179（Fixed，VERIFIED / L5a，5/5 CHECK PASS）**：`InviteService.trackClick` 中 `scan_count + 1` 位于 phone 判空**之前** → 任何不带手机号的 `POST /invite/track` 都会让扫码数 +1（可被匿名/机器人无限刷）。修复：计数移到 phone 判空之后，抽出 `incrementScanCount(code)` 收敛口径；「仅点击即可」活动（`invite_need_register=0`）原行为**刻意保留**。⚠️ **口径变更**：`scan_count` 语义由「所有访问次数」收敛为「有手机号的访问次数」，**仅对变更后新流量生效，历史数据未回溯校正**，跨变更点的转化率同比/环比会失真。修复 commit `6537180`，证据 `audit/evidence/F168-invite-track-scan-count-gate/`。
 - **I169（Open，本批暂缓通用限流基建）**：暴露面清单已补全 —— ① 完全匿名（免 JWT）的写入口 12 类（`/auth/login`、`/webhook/**`、`/overseas-payment/webhook/**`、`/ecommerce/webhook/**`、`/pos/webhook/**`、`/payment/webhook/**`、`/booking/webhook/**`、`/platform/webhook/**`、`/intl-booking/webhook/**`、`/bnpl/webhook/**`、`/domestic/webhook/**`、`/actuator/**`）；② 渠道发送类写接口（真实外部计费）；③ EXT-19 预约确认发送；④ C 端邀请端点（不要求任何权限点）；⑤ 写接口总量（1021 个 POST/PUT/DELETE）。通用限流基建**从零建设、429 契约与 Nginx 侧限制待业务/运维确认后再开工**；期间由 I177（预约确认幂等）与 I179（扫码计数口径）分别止血两处高风险点。
+
+## 补充说明（2026-11-15：I178 多品牌配额口径对齐批）
+
+- **I178（Partial，口径部分已修并 VERIFIED / L5a，9/9 CHECK PASS）**：按用户 2026-11-15 决策，配额口径对齐到配置口径（tenant + brand + channel）。`ChannelDispatcher.rateLimitCheck`（`backend/src/main/java/com/meiyetec/service/channel/ChannelDispatcher.java`）两条计数 SQL 改为经 `task_id` JOIN `marketing_touch_task` 取品牌（`marketing_touch_log` 表本身无 brand_id 列），品牌条件用 NULL 安全等于 `tt.brand_id <=> ?`。**实测**：品牌 A（per_day=2）发满 2 条后，品牌 B 同额度不受影响（仍发 2 条）；分钟闸门、日闸门、无品牌任务行为均通过；夹具已全部清理。修复 commit `44746cc`，证据 `audit/evidence/F169-channel-quota-brand-scope/`。**仍未修**：§1.3 闸门覆盖缺口（EXT-19 预约确认 / 生日通知 / 设备告警 3 条真实发送路径依旧绕过闸门）、R3 失败是否计入配额、R4 配置缺失静默放行、R5 与 I169 职责重叠。
+- **I180（Open，新增，P2，仅登记不修）**：`mkt_channel_config` 中 3 条 `brand_id = NULL` 的有效配置（SMS 3/5、PUSH 60/5000、IN_APP 1000/99999）因 `eq(getBrandId, null)` 永不命中而成为「死配置」→ 库内「租户级共享池额度」实际不生效；同一原因使创建接口的重复校验失效 → 同渠道 NULL 品牌配置可重复插入（IN_APP / SMS / PUSH 各有 2–3 条同类行为实证）。口径有两种解读（共享池哨兵值 vs 历史脏数据），需业务拍板后再修。**本批未改任何业务代码**。
+- **验证期副产物（已清理，未登记为 Issue）**：`InAppSender.parseMemberId` 对数字串一律按 memberId 解析，任务流程传入的 receiver 是手机号 → 被当作 memberId 写入 `member_message.member_id`，产生指向不存在会员的脏行。属既有缺陷，与 I178 无关，本批未修，待决定是否单独立项。
 
 ## 脚注：证据目录命名规则切换（2026-11-13 起）
 
