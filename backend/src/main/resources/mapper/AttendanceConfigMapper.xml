@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meiyetec.mapper.AttendanceConfigMapper">
+
+    <!--
+        I186 第 1 批：考勤配置「按门店集合取生效行」。
+        语义（D8）：门店行优先（store_id 非空行排前，取集合内最小 store_id），本租户全局行（store_id IS NULL）兜底。
+        - storeIds 为 null → 不拼门店条件（dataScope=ALL）
+        - storeIds 非空 → (store_id IN (...) OR store_id IS NULL)
+        - 空范围传 [-9999] → 只命中本租户全局行
+    -->
+    <select id="findActiveConfigByStores" resultType="com.meiyetec.entity.AttendanceConfig">
+        SELECT *
+        FROM attendance_config
+        WHERE tenant_id = #{tenantId} AND status = 1 AND deleted = 0
+        <if test="storeIds != null and storeIds.size() > 0">
+            AND (store_id IN
+            <foreach collection="storeIds" item="sid" open="(" separator="," close=")">#{sid}</foreach>
+            OR store_id IS NULL)
+        </if>
+        ORDER BY (store_id IS NULL) ASC, store_id ASC LIMIT 1
+    </select>
+
+</mapper>

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.AttendanceConfig;
 import com.meiyetec.exception.BizCode;
+import com.meiyetec.security.DataScopeService;
+import com.meiyetec.security.StoreScope;
 import com.meiyetec.security.TenantContextHolder;
 import com.meiyetec.service.AttendanceConfigService;
 import com.meiyetec.util.Result;
@@ -20,12 +22,14 @@ import java.util.List;
 public class AttendanceConfigController {
 
     private final AttendanceConfigService attendanceConfigService;
+    private final DataScopeService dataScopeService;
     private Long tid() { Long t = TenantContextHolder.get().getTenantId(); return t == null ? 1L : t; }
 
     @GetMapping("/active")
     @RequirePermission("attendance:config:list")
     public Result<AttendanceConfig> getActiveConfig(@RequestParam(required = false) Long storeId) {
-        AttendanceConfig config = attendanceConfigService.getActiveConfig(tid(), storeId);
+        // I186 第 1 批：缺省 storeId 时按有效门店集合取（门店行优先、全局行兜底）
+        AttendanceConfig config = attendanceConfigService.getActiveConfigForScope(tid(), storeId);
         return Result.success(config);
     }
 
@@ -35,8 +39,19 @@ public class AttendanceConfigController {
         Long t = tid();
         LambdaQueryWrapper<AttendanceConfig> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(AttendanceConfig::getTenantId, t);
-        if (storeId != null) {
-            wrapper.eq(AttendanceConfig::getStoreId, storeId).or().isNull(AttendanceConfig::getStoreId);
+        // I186 专项 1：OR 分支必须收进 and(...) 嵌套条件（MyBatis-Plus 嵌套条件天然带括号），
+        // 否则原 SQL 语义为 (tenant_id=? AND store_id=?) OR (store_id IS NULL)
+        // → 第二个分支没有 tenant_id 约束，会把他租户的全局配置行返回本租户。
+        // 缺省 storeId 时按当前会话的有效门店集合过滤（不再是租户内全量）。
+        StoreScope scope = dataScopeService.resolveEffectiveStoreScope(storeId);
+        if (!scope.isAll()) {
+            wrapper.and(w -> {
+                if (scope.isEmptyScope()) {
+                    w.eq(AttendanceConfig::getStoreId, StoreScope.EMPTY_SENTINEL);
+                } else {
+                    w.in(AttendanceConfig::getStoreId, scope.getStoreIds()).or().isNull(AttendanceConfig::getStoreId);
+                }
+            });
         }
         wrapper.orderByDesc(AttendanceConfig::getCreateTime);
         return Result.success(attendanceConfigService.list(wrapper));

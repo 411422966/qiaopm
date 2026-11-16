@@ -67,6 +67,8 @@ public class LeaveRequestController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        // I186 第 1 批：缺省 storeId 的范围收敛在 Service 层完成（注入有效门店集合 / 越权 403），
+        // Controller 只负责透传请求参数，不做范围判断。
         List<Map<String, Object>> requests = leaveRequestService.queryRequests(tid(), employeeId, storeId, status, startDate, endDate);
         return Result.success(requests);
     }

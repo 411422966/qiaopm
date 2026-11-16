@@ -30,6 +30,8 @@ import java.util.regex.Pattern;
 public class DataScopeInterceptor implements HandlerInterceptor {
 
     // P1-SCOPE-001: 白名单路径不做数据范围校验
+    // I186 第 1 批：/commission/salary/export 与 /commission/settlement/export 已移出白名单
+    //（导出端点必须参与范围校验；拦截器只在 preHandle 工作，不影响 xlsx 流式写出）
     private static final Set<String> WHITELIST = Set.of(
         "/auth/login",
         "/auth/refresh",
@@ -37,8 +39,6 @@ public class DataScopeInterceptor implements HandlerInterceptor {
         "/report/export",
         "/report/download",
         "/booking/export",
-        "/commission/salary/export",
-        "/commission/settlement/export",
         "/market/coupon/export",
         "/stock/export"
     );

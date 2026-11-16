@@ -6,6 +6,8 @@ import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.*;
 import com.meiyetec.exception.BizCode;
 import com.meiyetec.mapper.*;
+import com.meiyetec.security.DataScopeService;
+import com.meiyetec.security.StoreScope;
 import com.meiyetec.security.TenantContextHolder;
 import com.meiyetec.service.*;
 import com.meiyetec.util.Keys;
@@ -42,6 +44,7 @@ public class CommissionController {
     private final CommissionSettlementService settlementService;
     private final JwtUtil jwtUtil;
     private final JdbcTemplate jdbc;
+    private final DataScopeService dataScopeService;
 
     @GetMapping("/rules/page")
     @RequirePermission("commission:rule:list")
@@ -57,7 +60,8 @@ public class CommissionController {
         Long tenantId = TenantContextHolder.get().getTenantId();
         LambdaQueryWrapper<CommissionRule> query = new LambdaQueryWrapper<>();
         if (tenantId != null) query.eq(CommissionRule::getTenantId, tenantId);
-        if (storeId != null) query.eq(CommissionRule::getStoreId, storeId);
+        // I186 第 1 批：缺省 storeId 时按当前会话有效门店集合过滤（显式越权 → 403）
+        dataScopeService.applyStoreScope(query, CommissionRule::getStoreId, storeId);
         if (businessType != null && !businessType.isBlank()) query.eq(CommissionRule::getBusinessType, businessType);
         if (status != null) query.eq(CommissionRule::getStatus, status);
         if (keyword != null && !keyword.isBlank()) query.like(CommissionRule::getRuleName, keyword.trim());
@@ -102,7 +106,7 @@ public class CommissionController {
                 .orderByDesc(CommissionRule::getPriority)
                 .orderByDesc(CommissionRule::getId);
         if (tenantId != null) query.eq(CommissionRule::getTenantId, tenantId);
-        if (storeId != null) query.eq(CommissionRule::getStoreId, storeId);
+        dataScopeService.applyStoreScope(query, CommissionRule::getStoreId, storeId);
         return Result.success(ruleMapper.selectList(query));
     }
 
@@ -186,12 +190,12 @@ public class CommissionController {
         Map<String, Object> stats = new HashMap<>();
         LambdaQueryWrapper<CommissionRule> allQuery = new LambdaQueryWrapper<>();
         if (tenantId != null) allQuery.eq(CommissionRule::getTenantId, tenantId);
-        if (storeId != null) allQuery.eq(CommissionRule::getStoreId, storeId);
+        dataScopeService.applyStoreScope(allQuery, CommissionRule::getStoreId, storeId);
         stats.put("total", ruleMapper.selectCount(allQuery));
 
         LambdaQueryWrapper<CommissionRule> activeQuery = new LambdaQueryWrapper<>();
         if (tenantId != null) activeQuery.eq(CommissionRule::getTenantId, tenantId);
-        if (storeId != null) activeQuery.eq(CommissionRule::getStoreId, storeId);
+        dataScopeService.applyStoreScope(activeQuery, CommissionRule::getStoreId, storeId);
         activeQuery.eq(CommissionRule::getStatus, 1);
         stats.put("active", ruleMapper.selectCount(activeQuery));
         return Result.success(stats);
@@ -220,10 +224,15 @@ public class CommissionController {
             @RequestParam(required = false) Integer status,
             @RequestParam(required = false) String keyword) {
         Long tenantId = TenantContextHolder.get().getTenantId();
+        if (tenantId == null) {
+            return Result.error(BizCode.BAD_REQUEST, "未识别租户");
+        }
         StringBuilder where = new StringBuilder(" WHERE r.deleted=0 ");
         List<Object> args = new java.util.ArrayList<>();
-        if (tenantId != null) { where.append("AND r.tenant_id=? "); args.add(tenantId); }
-        if (storeId != null) { where.append("AND r.store_id=? "); args.add(storeId); }
+        where.append("AND r.tenant_id=? "); args.add(tenantId);
+        // I186 第 1 批：缺省 storeId → 按有效门店集合过滤；显式越权 → 403（Service 层纵深防御）
+        StoreScope scope = dataScopeService.resolveEffectiveStoreScope(storeId);
+        appendStoreScope(where, args, scope, "r.store_id");
         if (employeeId != null) { where.append("AND r.employee_id=? "); args.add(employeeId); }
         if (salaryMonth != null && !salaryMonth.isBlank()) { where.append("AND r.salary_month=? "); args.add(salaryMonth); }
         if (status != null) { where.append("AND r.status=? "); args.add(status); }
@@ -251,14 +260,22 @@ public class CommissionController {
             @RequestParam(required = false) String salaryMonth) {
         String month = normalizeMonth(salaryMonth);
         Long tenantId = TenantContextHolder.get().getTenantId();
-        String tenantFilter = tenantId == null ? "" : " AND tenant_id=" + tenantId;
-        String storeFilter = storeId == null ? "" : " AND store_id=" + storeId;
+        if (tenantId == null) {
+            return Result.error(BizCode.BAD_REQUEST, "未识别租户");
+        }
+        // I186 第 1 批：租户 / 门店 / 月份条件全部参数化（不再字符串拼接），门店走有效范围集合
+        StoreScope scope = dataScopeService.resolveEffectiveStoreScope(storeId);
+        StringBuilder where = new StringBuilder(" WHERE deleted=0 AND salary_month=? AND tenant_id=? ");
+        List<Object> args = new java.util.ArrayList<>();
+        args.add(month);
+        args.add(tenantId);
+        appendStoreScope(where, args, scope, "store_id");
         Map<String, Object> result = Keys.camel(jdbc.queryForMap(
                 "SELECT COUNT(*) record_count,COUNT(DISTINCT employee_id) employee_count," +
                         "COALESCE(SUM(CASE WHEN status=1 THEN base_amount ELSE 0 END),0) performance_amount," +
                         "COALESCE(SUM(CASE WHEN status=1 THEN commission_amount ELSE 0 END),0) commission_amount," +
                         "COALESCE(SUM(CASE WHEN status=2 THEN commission_amount ELSE 0 END),0) settled_amount " +
-                        "FROM commission_record WHERE deleted=0 AND salary_month=?" + tenantFilter + storeFilter, month));
+                        "FROM commission_record" + where, args.toArray()));
         result.put("salaryMonth", month);
         return Result.success(result);
     }
@@ -270,10 +287,13 @@ public class CommissionController {
         // T07-D1：从 TenantContextHolder 取租户；缺失则拒绝，禁止 fallback 到默认租户 1L
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (tenantId == null) {
-            return Result.error(BizCode.UNAUTHORIZED, "未识别租户");
+            return Result.error(BizCode.BAD_REQUEST, "未识别租户");
         }
         String month = normalizeMonth(body.get("salaryMonth") == null ? null : body.get("salaryMonth").toString());
-        Long storeId = body.get("storeId") == null ? 1L : ((Number) body.get("storeId")).longValue();
+        // I186 专项 2：缺省不再静默硬编码门店 1；按当前会话有效门店范围裁决
+        //（单店账号 → 本店；多店账号 → 400 要求显式指定；显式越权 → 403）
+        Long storeId = dataScopeService.resolveWritableStoreId(
+                body.get("storeId") == null ? null : ((Number) body.get("storeId")).longValue());
         List<Employee> employees = employeeMapper.selectList(new LambdaQueryWrapper<Employee>()
                 .eq(Employee::getStoreId, storeId)
                 .ne(Employee::getStatus, 0)
@@ -325,10 +345,15 @@ public class CommissionController {
             @RequestParam(required = false) String salaryMonth,
             @RequestParam(required = false) Integer status) {
         Long tenantId = TenantContextHolder.get().getTenantId();
+        if (tenantId == null) {
+            return Result.error(BizCode.BAD_REQUEST, "未识别租户");
+        }
         StringBuilder where = new StringBuilder(" WHERE s.deleted=0 ");
         List<Object> args = new java.util.ArrayList<>();
-        if (tenantId != null) { where.append(" AND s.tenant_id=?"); args.add(tenantId); }
-        if (storeId != null) { where.append(" AND s.store_id=?"); args.add(storeId); }
+        where.append(" AND s.tenant_id=?"); args.add(tenantId);
+        // I186 第 1 批：缺省 storeId → 按有效门店集合过滤；显式越权 → 403
+        StoreScope scope = dataScopeService.resolveEffectiveStoreScope(storeId);
+        appendStoreScope(where, args, scope, "s.store_id");
         if (employeeId != null) { where.append(" AND s.employee_id=?"); args.add(employeeId); }
         if (salaryMonth != null && !salaryMonth.isBlank()) { where.append(" AND s.salary_month=?"); args.add(salaryMonth); }
         if (status != null) { where.append(" AND s.status=?"); args.add(status); }
@@ -403,8 +428,16 @@ public class CommissionController {
             @RequestParam(required = false) String salaryMonth) {
         String month = normalizeMonth(salaryMonth);
         Long tenantId = TenantContextHolder.get().getTenantId();
-        String tenantFilter = tenantId == null ? "" : " AND tenant_id=" + tenantId;
-        String storeFilter = storeId == null ? "" : " AND store_id=" + storeId;
+        if (tenantId == null) {
+            return Result.error(BizCode.BAD_REQUEST, "未识别租户");
+        }
+        // I186 第 1 批：租户 / 门店 / 月份条件全部参数化，门店走有效范围集合
+        StoreScope scope = dataScopeService.resolveEffectiveStoreScope(storeId);
+        StringBuilder where = new StringBuilder(" WHERE deleted=0 AND salary_month=? AND tenant_id=?");
+        List<Object> args = new java.util.ArrayList<>();
+        args.add(month);
+        args.add(tenantId);
+        appendStoreScope(where, args, scope, "store_id");
         Map<String, Object> result = Keys.camel(jdbc.queryForMap(
                 "SELECT COUNT(*) record_count," +
                         "COALESCE(SUM(base_salary),0) base_salary_total," +
@@ -415,7 +448,7 @@ public class CommissionController {
                         "COALESCE(SUM(CASE WHEN status=2 THEN payable_amount ELSE 0 END),0) confirmed_total," +
                         "COALESCE(SUM(CASE WHEN status=3 THEN payable_amount ELSE 0 END),0) paid_total," +
                         "COALESCE(SUM(CASE WHEN status IN (1,2) THEN payable_amount ELSE 0 END),0) pending_total " +
-                        "FROM commission_salary WHERE deleted=0 AND salary_month=?" + tenantFilter + storeFilter, month));
+                        "FROM commission_salary" + where, args.toArray()));
         result.put("salaryMonth", month);
         return Result.success(result);
     }
@@ -430,12 +463,21 @@ public class CommissionController {
             HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         Long tenantId = TenantContextHolder.get().getTenantId();
+        if (tenantId == null) {
+            // D5：导出端点为 void，无法走 Result.error → 直接写 400 + JSON body
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"code\":400,\"message\":\"未识别租户\",\"data\":null}");
+            return;
+        }
         String month = normalizeMonth(salaryMonth);
         StringBuilder where = new StringBuilder(" WHERE s.deleted=0 AND s.salary_month=?");
         List<Object> args = new java.util.ArrayList<>();
         args.add(month);
-        if (tenantId != null) { where.append(" AND s.tenant_id=?"); args.add(tenantId); }
-        if (storeId != null) { where.append(" AND s.store_id=?"); args.add(storeId); }
+        where.append(" AND s.tenant_id=?"); args.add(tenantId);
+        // I186 第 1 批（Q1 配套）：导出端点已移出拦截器白名单 → 显式越权 403；缺省按有效门店集合过滤
+        StoreScope scope = dataScopeService.resolveEffectiveStoreScope(storeId);
+        appendStoreScope(where, args, scope, "s.store_id");
         if (employeeId != null) { where.append(" AND s.employee_id=?"); args.add(employeeId); }
         if (status != null) { where.append(" AND s.status=?"); args.add(status); }
 
@@ -533,16 +575,26 @@ public class CommissionController {
             @RequestParam(required = false) Long storeId,
             @RequestParam(required = false) String salaryMonth) {
         Long tenantId = TenantContextHolder.get().getTenantId();
-        String tenantFilter = tenantId == null ? "" : " AND tenant_id=" + tenantId;
-        String storeFilter = storeId == null ? "" : " AND store_id=" + storeId;
-        String monthFilter = salaryMonth == null || salaryMonth.isBlank() ? "" : " AND salary_month='" + salaryMonth + "'";
+        if (tenantId == null) {
+            return Result.error(BizCode.BAD_REQUEST, "未识别租户");
+        }
+        // I186 第 1 批：租户 / 门店 / 月份条件全部参数化（不再字符串拼接），门店走有效范围集合
+        StoreScope scope = dataScopeService.resolveEffectiveStoreScope(storeId);
+        StringBuilder where = new StringBuilder(" WHERE deleted=0 AND tenant_id=?");
+        List<Object> args = new java.util.ArrayList<>();
+        args.add(tenantId);
+        appendStoreScope(where, args, scope, "store_id");
+        if (salaryMonth != null && !salaryMonth.isBlank()) {
+            where.append(" AND salary_month=?");
+            args.add(salaryMonth);
+        }
         Map<String, Object> result = Keys.camel(jdbc.queryForMap(
                 "SELECT COUNT(*) record_count," +
                         "COALESCE(SUM(total_payable),0) total_payable," +
                         "COALESCE(SUM(CASE WHEN status=1 THEN total_payable ELSE 0 END),0) pending_total," +
                         "COALESCE(SUM(CASE WHEN status=2 THEN total_payable ELSE 0 END),0) confirmed_total," +
                         "COALESCE(SUM(CASE WHEN status=3 THEN total_payable ELSE 0 END),0) paid_total " +
-                        "FROM commission_settlement WHERE deleted=0" + tenantFilter + storeFilter + monthFilter));
+                        "FROM commission_settlement" + where, args.toArray()));
         return Result.success(result);
     }
 
@@ -573,9 +625,13 @@ public class CommissionController {
             @RequestParam(required = false) String salaryMonth,
             @RequestParam(required = false) Integer status) {
         Long tenantId = TenantContextHolder.get().getTenantId();
+        if (tenantId == null) {
+            return Result.error(BizCode.BAD_REQUEST, "未识别租户");
+        }
         LambdaQueryWrapper<CommissionSettlement> query = new LambdaQueryWrapper<>();
-        if (tenantId != null) query.eq(CommissionSettlement::getTenantId, tenantId);
-        if (storeId != null) query.eq(CommissionSettlement::getStoreId, storeId);
+        query.eq(CommissionSettlement::getTenantId, tenantId);
+        // I186 第 1 批：缺省 storeId → 按有效门店集合过滤；显式越权 → 403
+        dataScopeService.applyStoreScope(query, CommissionSettlement::getStoreId, storeId);
         if (salaryMonth != null && !salaryMonth.isBlank()) query.eq(CommissionSettlement::getSalaryMonth, salaryMonth);
         if (status != null) query.eq(CommissionSettlement::getStatus, status);
         query.orderByDesc(CommissionSettlement::getSalaryMonth).orderByDesc(CommissionSettlement::getId);
@@ -683,10 +739,19 @@ public class CommissionController {
             @RequestParam(required = false) Integer status,
             HttpServletResponse response) throws Exception {
         Long tenantId = TenantContextHolder.get().getTenantId();
+        if (tenantId == null) {
+            // D5：导出端点为 void，无法走 Result.error → 直接写 400 + JSON body
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"code\":400,\"message\":\"未识别租户\",\"data\":null}");
+            return;
+        }
         StringBuilder where = new StringBuilder(" WHERE s.deleted=0");
         List<Object> args = new java.util.ArrayList<>();
-        if (tenantId != null) { where.append(" AND s.tenant_id=?"); args.add(tenantId); }
-        if (storeId != null) { where.append(" AND s.store_id=?"); args.add(storeId); }
+        where.append(" AND s.tenant_id=?"); args.add(tenantId);
+        // I186 第 1 批（Q1 配套）：导出端点已移出拦截器白名单 → 显式越权 403；缺省按有效门店集合过滤
+        StoreScope scope = dataScopeService.resolveEffectiveStoreScope(storeId);
+        appendStoreScope(where, args, scope, "s.store_id");
         if (salaryMonth != null && !salaryMonth.isBlank()) { where.append(" AND s.salary_month=?"); args.add(salaryMonth); }
         if (status != null) { where.append(" AND s.status=?"); args.add(status); }
 
@@ -719,6 +784,22 @@ public class CommissionController {
             }
             wb.write(response.getOutputStream());
         }
+    }
+
+    /**
+     * 把门店范围拼进裸 SQL 的 WHERE 片段（I186 第 1 批）。
+     *
+     * <p>scope 来自 {@code DataScopeService.resolveEffectiveStoreScope}：
+     * 显式门店越权时已在该方法内抛 403；ALL 范围不拼条件；
+     * 空范围拼 {@code IN (-9999)} → 恒空集。</p>
+     */
+    private void appendStoreScope(StringBuilder where, List<Object> args, StoreScope scope, String column) {
+        String condition = scope.sqlCondition(column);
+        if (condition.isEmpty()) {
+            return;
+        }
+        where.append(" AND ").append(condition);
+        args.addAll(scope.sqlParams());
     }
 
     private Long extractOperatorId(HttpServletRequest request) {

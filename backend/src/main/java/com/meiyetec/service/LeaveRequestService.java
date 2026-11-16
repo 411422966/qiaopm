@@ -23,6 +23,9 @@ public interface LeaveRequestService extends IService<LeaveRequest> {
     List<LeaveRequest> getByEmployee(Long tenantId, Long employeeId);
     /**
      * 查询请假记录(带员工信息)
+     *
+     * <p>I186 第 1 批：门店范围由 Service 层裁决（签名保持不变）。
+     * storeId 缺省 → 按当前会话的有效门店集合过滤；显式传入且越权 → 403（纵深防御）。</p>
      */
     List<Map<String, Object>> queryRequests(Long tenantId, Long employeeId, Long storeId, String status, LocalDate startDate, LocalDate endDate);
     /**

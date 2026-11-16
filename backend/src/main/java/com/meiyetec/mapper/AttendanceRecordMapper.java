@@ -18,24 +18,25 @@ public interface AttendanceRecordMapper extends BaseMapper<AttendanceRecord> {
                                            @Param("employeeId") Long employeeId,
                                            @Param("checkDate") LocalDate checkDate);
 
-    @Select("SELECT * FROM attendance_record WHERE tenant_id = #{tenantId} AND store_id = #{storeId} AND check_date BETWEEN #{startDate} AND #{endDate} AND deleted = 0 ORDER BY check_date, employee_id")
-    List<AttendanceRecord> findByStoreAndDateRange(@Param("tenantId") Long tenantId,
-                                                  @Param("storeId") Long storeId,
-                                                  @Param("startDate") LocalDate startDate,
-                                                  @Param("endDate") LocalDate endDate);
+    /**
+     * 按门店集合 + 日期区间查询考勤记录（I186 第 1 批：单值 storeId 改为集合）。
+     *
+     * <p>SQL 落在 {@code resources/mapper/AttendanceRecordMapper.xml}（落法 B2）。
+     * storeIds 为 null 表示「不限制」（ALL 范围）；非空时按 IN 过滤
+     * （空范围传 {@code [-9999]} → 恒空集）。</p>
+     */
+    List<AttendanceRecord> findByStoresAndDateRange(@Param("tenantId") Long tenantId,
+                                                     @Param("storeIds") List<Long> storeIds,
+                                                     @Param("startDate") LocalDate startDate,
+                                                     @Param("endDate") LocalDate endDate);
 
-    @Select("SELECT ar.*, pe.employee_name, pe.position, ps.store_name " +
-            "FROM attendance_record ar " +
-            "LEFT JOIN pos_employee pe ON ar.employee_id = pe.id " +
-            "LEFT JOIN pos_store ps ON ar.store_id = ps.id " +
-            "WHERE ar.deleted = 0 AND ar.tenant_id = #{tenantId} " +
-            "AND (#{storeId} IS NULL OR ar.store_id = #{storeId}) " +
-            "AND (#{employeeId} IS NULL OR ar.employee_id = #{employeeId}) " +
-            "AND (#{startDate} IS NULL OR ar.check_date >= #{startDate}) " +
-            "AND (#{endDate} IS NULL OR ar.check_date <= #{endDate}) " +
-            "ORDER BY ar.check_date DESC, ar.employee_id")
+    /**
+     * 考勤记录列表（I186 第 1 批：门店维度由「单值或不过滤」改为「有效门店集合」）。
+     *
+     * <p>SQL 落在 {@code resources/mapper/AttendanceRecordMapper.xml}（落法 B2）。</p>
+     */
     List<Map<String, Object>> queryRecords(@Param("tenantId") Long tenantId,
-                                           @Param("storeId") Long storeId,
+                                           @Param("storeIds") List<Long> storeIds,
                                            @Param("employeeId") Long employeeId,
                                            @Param("startDate") LocalDate startDate,
                                            @Param("endDate") LocalDate endDate);

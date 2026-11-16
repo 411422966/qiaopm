@@ -7,6 +7,7 @@ import com.meiyetec.entity.LeaveRequest;
 import com.meiyetec.exception.BizCode;
 import com.meiyetec.exception.BusinessException;
 import com.meiyetec.mapper.LeaveRequestMapper;
+import com.meiyetec.security.DataScopeService;
 import com.meiyetec.service.AttendanceRecordService;
 import com.meiyetec.service.LeaveRequestService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class LeaveRequestServiceImpl extends ServiceImpl<LeaveRequestMapper, Lea
 
     private final LeaveRequestMapper leaveRequestMapper;
     private final AttendanceRecordService attendanceRecordService;
+    private final DataScopeService dataScopeService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -98,7 +100,8 @@ public class LeaveRequestServiceImpl extends ServiceImpl<LeaveRequestMapper, Lea
 
     @Override
     public List<Map<String, Object>> queryRequests(Long tenantId, Long employeeId, Long storeId, String status, LocalDate startDate, LocalDate endDate) {
-        return leaveRequestMapper.queryRequests(tenantId, storeId, employeeId, status, startDate, endDate);
+        // I186 第 1 批：门店范围由 Service 层注入（缺省 → 有效门店集合；显式越权 → 403）
+        return leaveRequestMapper.queryRequests(tenantId, dataScopeService.resolveStoreIds(storeId), employeeId, status, startDate, endDate);
     }
 
     @Override

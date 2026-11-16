@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meiyetec.mapper.LeaveRequestMapper">
+
+    <!--
+        I186 第 1 批：请假侧门店维度由「单值或不过滤」改为「有效门店集合」。
+        - storeIds 为 null → 不拼门店条件（dataScope=ALL，不限制）
+        - storeIds 非空 → lr.store_id IN (...)（空范围传 [-9999] → 恒空集）
+        SQL 落在 XML 而非注解，便于 <foreach> 动态 IN 与可读性（落法 B2）。
+    -->
+
+    <!-- 请假单列表（带员工 / 门店 / 审批人名称） -->
+    <select id="queryRequests" resultType="java.util.Map">
+        SELECT lr.*, pe.employee_name AS employeeName, pe.position, ps.store_name AS storeName,
+        pa.employee_name AS approverName
+        FROM attendance_leave_request lr
+        LEFT JOIN pos_employee pe ON lr.employee_id = pe.id
+        LEFT JOIN pos_store ps ON lr.store_id = ps.id
+        LEFT JOIN pos_employee pa ON lr.approver_id = pa.id
+        WHERE lr.deleted = 0 AND lr.tenant_id = #{tenantId}
+        <if test="storeIds != null and storeIds.size() > 0">
+            AND lr.store_id IN
+            <foreach collection="storeIds" item="sid" open="(" separator="," close=")">#{sid}</foreach>
+        </if>
+        AND (#{employeeId} IS NULL OR lr.employee_id = #{employeeId})
+        AND (#{status} IS NULL OR lr.status = #{status})
+        AND (#{startDate} IS NULL OR lr.start_date &gt;= #{startDate})
+        AND (#{endDate} IS NULL OR lr.end_date &lt;= #{endDate})
+        ORDER BY lr.create_time DESC
+    </select>
+
+</mapper>

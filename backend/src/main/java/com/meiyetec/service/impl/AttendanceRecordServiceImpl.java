@@ -1,12 +1,14 @@
 package com.meiyetec.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;import com.meiyetec.entity.AttendanceConfig;
 import com.meiyetec.entity.AttendanceRecord;
 import com.meiyetec.entity.Employee;
 import com.meiyetec.mapper.AttendanceConfigMapper;
 import com.meiyetec.mapper.AttendanceRecordMapper;
 import com.meiyetec.mapper.EmployeeMapper;
+import com.meiyetec.security.DataScopeService;
 import com.meiyetec.service.AttendanceRecordService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ public class AttendanceRecordServiceImpl extends ServiceImpl<AttendanceRecordMap
 
     private final AttendanceConfigMapper attendanceConfigMapper;
     private final EmployeeMapper employeeMapper;
+    private final DataScopeService dataScopeService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -77,17 +80,17 @@ public class AttendanceRecordServiceImpl extends ServiceImpl<AttendanceRecordMap
 
     @Override
     public List<AttendanceRecord> getRecords(Long tenantId, Long employeeId, Long storeId, LocalDate startDate, LocalDate endDate) {
-        return baseMapper.findByStoreAndDateRange(tenantId, storeId, startDate, endDate);
+        return baseMapper.findByStoresAndDateRange(tenantId, dataScopeService.resolveStoreIds(storeId), startDate, endDate);
     }
 
     @Override
     public List<Map<String, Object>> queryRecords(Long tenantId, Long employeeId, Long storeId, LocalDate startDate, LocalDate endDate) {
-        return baseMapper.queryRecords(tenantId, storeId, employeeId, startDate, endDate);
+        return baseMapper.queryRecords(tenantId, dataScopeService.resolveStoreIds(storeId), employeeId, startDate, endDate);
     }
 
     @Override
     public Map<String, Object> getStatistics(Long tenantId, Long storeId, LocalDate startDate, LocalDate endDate) {
-        List<AttendanceRecord> records = baseMapper.findByStoreAndDateRange(tenantId, storeId, startDate, endDate);
+        List<AttendanceRecord> records = baseMapper.findByStoresAndDateRange(tenantId, dataScopeService.resolveStoreIds(storeId), startDate, endDate);
         Map<String, Object> stats = new HashMap<>();
         stats.put("totalRecords", records.size());
         stats.put("normalCount", records.stream().filter(r -> "normal".equals(r.getCheckInStatus()) && "normal".equals(r.getCheckOutStatus())).count());
@@ -101,6 +104,22 @@ public class AttendanceRecordServiceImpl extends ServiceImpl<AttendanceRecordMap
                 .orElse(0.0);
         stats.put("avgWorkMinutes", avgWorkMinutes);
         return stats;
+    }
+
+    @Override
+    public Page<AttendanceRecord> pageRecords(Long tenantId, Long employeeId, Long storeId,
+                                              LocalDate startDate, LocalDate endDate,
+                                              int pageNum, int pageSize) {
+        // I186 第 1 批：门店范围在 Service 层注入（缺省 → 有效门店集合；显式越权 → 403）
+        Page<AttendanceRecord> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<AttendanceRecord> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(AttendanceRecord::getTenantId, tenantId);
+        if (employeeId != null) wrapper.eq(AttendanceRecord::getEmployeeId, employeeId);
+        dataScopeService.applyStoreScope(wrapper, AttendanceRecord::getStoreId, storeId);
+        if (startDate != null) wrapper.ge(AttendanceRecord::getCheckDate, startDate);
+        if (endDate != null) wrapper.le(AttendanceRecord::getCheckDate, endDate);
+        wrapper.orderByDesc(AttendanceRecord::getCheckDate);
+        return baseMapper.selectPage(page, wrapper);
     }
 
     @Override

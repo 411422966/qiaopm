@@ -23,21 +23,15 @@ public interface LeaveRequestMapper extends BaseMapper<LeaveRequest> {
     List<LeaveRequest> findByStoreId(@Param("tenantId") Long tenantId,
                                      @Param("storeId") Long storeId);
 
-    @Select("SELECT lr.*, pe.employee_name AS employeeName, pe.position, ps.store_name AS storeName, "
-            + "pa.employee_name AS approverName "
-            + "FROM attendance_leave_request lr "
-            + "LEFT JOIN pos_employee pe ON lr.employee_id = pe.id "
-            + "LEFT JOIN pos_store ps ON lr.store_id = ps.id "
-            + "LEFT JOIN pos_employee pa ON lr.approver_id = pa.id "
-            + "WHERE lr.deleted = 0 AND lr.tenant_id = #{tenantId} "
-            + "AND (#{storeId} IS NULL OR lr.store_id = #{storeId}) "
-            + "AND (#{employeeId} IS NULL OR lr.employee_id = #{employeeId}) "
-            + "AND (#{status} IS NULL OR lr.status = #{status}) "
-            + "AND (#{startDate} IS NULL OR lr.start_date >= #{startDate}) "
-            + "AND (#{endDate} IS NULL OR lr.end_date <= #{endDate}) "
-            + "ORDER BY lr.create_time DESC")
+    /**
+     * 请假单列表（I186 第 1 批：门店维度由「单值或不过滤」改为「有效门店集合」）。
+     *
+     * <p>SQL 落在 {@code resources/mapper/LeaveRequestMapper.xml}（落法 B2）。
+     * storeIds 为 null 表示「不限制」（ALL 范围）；非空时按 IN 过滤
+     * （空范围传 {@code [-9999]} → 恒空集）。</p>
+     */
     List<Map<String, Object>> queryRequests(@Param("tenantId") Long tenantId,
-                                           @Param("storeId") Long storeId,
+                                           @Param("storeIds") List<Long> storeIds,
                                            @Param("employeeId") Long employeeId,
                                            @Param("status") String status,
                                            @Param("startDate") LocalDate startDate,

@@ -1,7 +1,6 @@
 package com.meiyetec.controller;
 
 import com.meiyetec.annotation.RequirePermission;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.AttendanceRecord;
@@ -78,15 +77,9 @@ public class AttendanceController {
         LocalDate startDate = startDateStr != null ? LocalDate.parse(startDateStr) : null;
         LocalDate endDate = endDateStr != null ? LocalDate.parse(endDateStr) : null;
         Long t = tid();
-        Page<AttendanceRecord> page = new Page<>(pageNum, pageSize);
-        LambdaQueryWrapper<AttendanceRecord> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(AttendanceRecord::getTenantId, t);
-        if (employeeId != null) wrapper.eq(AttendanceRecord::getEmployeeId, employeeId);
-        if (storeId != null) wrapper.eq(AttendanceRecord::getStoreId, storeId);
-        if (startDate != null) wrapper.ge(AttendanceRecord::getCheckDate, startDate);
-        if (endDate != null) wrapper.le(AttendanceRecord::getCheckDate, endDate);
-        wrapper.orderByDesc(AttendanceRecord::getCheckDate);
-        var result = attendanceRecordService.page(page, wrapper);
+        // I186 第 1 批：分页查询下沉到 Service 层（门店范围在 Service 层注入）
+        Page<AttendanceRecord> result = attendanceRecordService.pageRecords(
+                t, employeeId, storeId, startDate, endDate, pageNum, pageSize);
         return Result.success(PageResult.of(result));
     }
 

@@ -47,6 +47,8 @@ public class CommissionSettlementService {
         String month = normalizeMonth(salaryMonth);
 
         CommissionSettlement existing = settlementMapper.selectOne(new LambdaQueryWrapper<CommissionSettlement>()
+                // I186 专项 2：补 tenant_id 条件，避免跨租户「同门店 id + 同月份」命中他租户结算单被复用
+                .eq(CommissionSettlement::getTenantId, tenantId)
                 .eq(CommissionSettlement::getStoreId, storeId)
                 .eq(CommissionSettlement::getSalaryMonth, month));
         if (existing != null && existing.getStatus() != null && existing.getStatus() > 1) {
