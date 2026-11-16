@@ -118,6 +118,8 @@
 | I191 | I191 — 请假审批通过后考勤记录从未落库：`LeaveRequestServiceImpl.markLeaveDays` 只构造 `AttendanceRecord`、全方法无 `save`/`insert`/`update` → 审批接口 200 且状态置 `approved`，但 `attendance_record` 零写入，请假在考勤口径上完全不存在；连带 `storeId` 硬编码 `1L`、`isAbsence=0` 语义错误、表内无请假标记列；修复前须先定请假语义（α/β/γ） | Open（仅登记，不修） | [I191-leave-approval-attendance-not-persisted.md](I191-leave-approval-attendance-not-persisted.md) |
 | I192 | I192 — `sys_user` 与 `pos_employee` 无任何关联（`sys_user` 无 `employee_id` / `pos_employee` 无 `user_id`），5 个候选映射键交集全部 0 行；「员工是否登录系统」属业务架构未定义 → I189「本人撤回请假」无法实现、M1 必须 DDL + 人工回填且映射键需产品指定（待 A/B/C 三选一） | Open（待产品决策） | [I192-user-employee-architecture-undefined.md](I192-user-employee-architecture-undefined.md) |
 | I193 | I193 — `pos_employee` 存活 150 行中 **144 行 `tenant_id IS NULL`**（全部 `store_id=1`），仅 6 行 `tenant_id=1`；M3 双过滤（`tenant_id = ctx.tenantId AND store_id IN ctx.storeIds`）对 NULL 行恒 FALSE → M3 硬前置；补核验确认这 144 行为 UT-3 压测残留（`UT3-*` 码 / 10 位 hex 手机号 / 16 分钟内批量生成 / 无任何业务引用） | Open（待业务确认） | [I193-pos-employee-tenant-id-null.md](I193-pos-employee-tenant-id-null.md) |
+| I194 | I194 — 前端 6 文件 7 处硬编码 `storeId: 1`（`commission/salary.vue:136`、`commission/settlement.vue:206`、`attendance/index.vue:224`/`:246`、`attendance/leave.vue:317`、`commission/rule-list.vue:119`、`commission/simulation.vue:224`）→ I186 第 1 批「缺省按门店集合过滤」在真实链路上**永不触发**（前端永远显式传值 → 要么退化成 `eq(1)`，要么被拦截器 403）；**必须紧随 I186 第 1 批上线**，否则修复效果被绕过 | Open（独立批次，紧随 I186-1） | [I194-frontend-hardcoded-storeid.md](I194-frontend-hardcoded-storeid.md) |
+| I195 | I195 — 前端调用、后端**完全缺失**的 3 个提成记录路由：`GET /commission/records/export`（`api/commission.ts:29`）、`PUT /commission/records/batch/settle`（`:30`）、`PUT /commission/records/batch/invalidate`（`:31`）→ `views/commission/records.vue:135`/`:158`/`:179` 三个按钮**必然 404**（导出因 `responseType:'blob'` 更隐蔽：下载到的是装着错误 JSON 的假 xlsx）；后端 `/commission/records*` 仅存在 `/records/page`(:212)、`/records/stats`(:247) | Open（独立批次） | [I195-commission-records-export-route-missing.md](I195-commission-records-export-route-missing.md) |
 | TD-006 | TD-006 — 调查类探针表（_t_*）在 MySQL 库中可能遗留，需定期清理 | Open | [TD-006-probe-tables-leftover.md](TD-006-probe-tables-leftover.md) |
 
 ## 备注
@@ -220,6 +222,27 @@
 - **I193（Open，新增，P1，待业务确认）**：`pos_employee` 存活行 150（`deleted=0`）中 **144 行 `tenant_id IS NULL`**（全部 `store_id=1`，ids 219–423），仅 6 行 `tenant_id=1`（`EMP001~006`，ids 1–6）；另有 21 行 `tenant_id=1` 的**软删**行（ids 581–627）。M3 口径（`tenant_id = ctx.tenantId` AND `store_id IN ctx.storeIds`）对 NULL 行**恒 FALSE** → 列为 **M3 实施前置**。⚠️ **本轮对性质的精确定性（与原始登记口径的修正）**：这 144 行**不是「真实员工漏填租户」，而是 UT-3 压测脚本残留** —— `employee_code` 全部 `UT3-` 前缀、姓名 `UT-3 测试员工 …`、`phone` 为 10 位 hex、`salary` 一律 `5000.00`、`entry_date` 全 NULL、`create_time` 集中在 **2026-08-15 06:42:55~06:58:29**（16 分钟）；且**无任何业务引用**（`commission_salary` / `commission_settlement` / `commission_settlement_record` / `attendance_record` / `attendance_leave_request` 均 **0 行**；`commission_record` 10 行只引用真实员工 `employee_id=4`，UT 区间引用 0 行）。→ **本机真实存活员工只有 6 行且 `tenant_id=1`**，M3 双过滤**对真实业务数据无损失**；但**生产库分布未核实（UNVERIFIED）**，且「直接 `UPDATE … SET tenant_id = 1` 回填」会把压测残留**转正**并使「按 `store_id` 取员工」的工资/结算生成（`CommissionController.java:277-280`、`CommissionSettlementService.java:51-54`，两者**只按 `store_id`、不过滤 `tenant_id`**）把 144 个不存在的员工纳入计算 → **方案排序由 A/B/C 调整为 C（先定性清理）→ A（仅回填经确认的真实员工）→ B（永不采用）**，并需补 **方案 D（`tenant_id` 不再可空，堵复发）**。
 - **I186 第 1 批启动（本轮）**：范围 = **G0**（统一范围解析基础设施）+ **G1**（列表/统计类接口缺省注入 `IN (ctx.storeIds)`）+ **专项1**（`AttendanceConfigController.list` 的 `or()` 括号修正）+ **专项2**（`CommissionController:276` 硬编码 `1L`、`CommissionSettlementService` 缺 `tenantId`）+ **Q1**（移除 `DataScopeInterceptor.WHITELIST` 的导出豁免）。**明确不在本批**：G2/G3/G4（详情/写/批量归属校验 → 第 2 批）、G5/M3（等 I193）、I189（等 I192 产品答复）、I191（等请假语义拍板）。只读调查落点结论：**`DataScopeService` 已存在且已实现 `applyStoreScope`（集合语义 `IN (...)`）+ `assertStoreScope`，但全仓 0 调用方** → G0 落点为「**启用并补齐现有类**」，而非新建 `StoreScopeResolver`；补齐项包括 javadoc 承诺但缺失的 `applyTenantScope`、raw SQL 场景所需的集合导出方法、以及 `storeId` 显式传入时与 `ctx.storeIds` 的交集收敛。修复草案见 `audit/reports/i186-batch1-fix-draft.md`（**待用户审核后再改代码**）。
 - **本轮纪律**：全程只读（`SELECT` / `SHOW`）；**未改任何业务代码、未写库、未执行 DDL、未新增入库脚本、未创建角色/账号、未打开浏览器、未连生产库**；按 ID 探测沿用兜底 ID `99999999`；**未触达** `/dashboard`、`/mh/visual`、`/mh/consent` 三个已验收页面及其数据接口。
+
+## 补充说明（2026-11-16：batch2-C 第五轮 —— I194 / I195 登记 + I186 第 1 批 Q-A~Q-H 拍板）
+
+> **性质**：**只读调查 + 登记 + 决策落定**（本轮登记阶段**未修改任何业务代码、未执行任何写操作、未执行任何 DDL**；I186 第 1 批代码修复在**同一批次的后续 commit** 中落地）。
+> **基线**：HEAD `d7e4a2c`（`docs(audit): I186 第 1 批修复草案（G0/G1/专项1/专项2/Q1）`）；DB 快照 `backup/meiyetec_20261116_020004.sql`；运行期 `meiyetec-mysql`（MySQL 8.0，库 `meiyetec`）。
+
+- **I194（Open，新增，P1，独立批次）**：前端 **6 个文件 / 7 处**把门店 ID 写死为 `1` 并**显式**发给后端 —— `views/commission/salary.vue:136`、`views/commission/settlement.vue:206`、`views/attendance/index.vue:224`（statistics）与 `:246`（check-in）、`views/attendance/leave.vue:317`、`views/commission/rule-list.vue:119`、`views/commission/simulation.vue:224`。**后果**：I186 第 1 批 G1 的「缺省按 `ctx.storeIds` 集合过滤」在真实链路上**不可达**（前端永远显式传值 → Service 层走「显式值」分支 → 退化为 `eq(1)`；门店≠1 的账号则被拦截器 403）。**硬前置关系**：**I194 必须紧随 I186 第 1 批上线**，否则后端修复效果被绕过。修复需**分三批**（读接口可直接不传；工资/结算生成是**单门店语义**、不能简单删参数，见 I194 §3.1）。另登记 **8 处同族硬编码**（`google-maps`、`crm/care-review`、`report/caliber`、`pos/checkout`、`resource/resource-schedule`、`technician/evaluation`、`ai-scheduler`、`setting/employee`）**不在本条范围**（其中 `pos/checkout.vue:638` 影响面最大）。关联 I186 / I187 / I185 / I192。
+- **I195（Open，新增，P2，独立批次）**：前端 `api/commission.ts` 的 **3 个** 提成记录接口在后端**完全缺失** —— `GET /commission/records/export`（`:29`）、`PUT /commission/records/batch/settle`（`:30`）、`PUT /commission/records/batch/invalidate`（`:31`）；后端 `CommissionController` 的 `/commission/records*` **穷举后仅 2 个**：`/records/page`(:212)、`/records/stats`(:247)。页面调用点 `views/commission/records.vue:135`（导出）/`:158`（批量结算）/`:179`（批量作废）**必然 404**；导出因 `responseType:'blob'` 失败形态**更隐蔽**（下载到装着错误 JSON 的假 xlsx）。**修复方向**：① 后端补 3 个端点（与 `/salary/export`、`/settlement/export` 对称 → 判定为**遗漏**而非有意屏蔽）② 或前端移除按钮；若补建，**必须**同时带上 I186 第 1 批 Q1 的口径（**不**加入拦截器白名单 + 门店集合过滤 + 租户判空 400），否则等于新开一个「导出全租户」的洞。关联 I152 / I185 / I186 / I194。
+- **I186 第 1 批 Q-A ~ Q-H 已全部拍板（2026-11-16）**（用户决策，草案 §8 全闭环）：
+  | # | 决策 |
+  |---|---|
+  | Q-A | **空范围 → 返回空集**（`IN (-9999)` 兜底，与 `DataScopeService.java:50-53` 既有哨兵一致），**不返 403**（避免泄露信息） |
+  | Q-B | mapper 动态 SQL **新增 XML**（`<foreach>`），不使用注解 `@Select <script>`（集合 0/1/N 时 `IN ()` 语法风险大） |
+  | Q-C | `config/active` **回退全局行**：`store_id IN (...) OR store_id IS NULL`，但**必须用 `and(...)` 嵌套包住**（专项 1 的教训） |
+  | Q-D | `settlementStats` 的 `salaryMonth` **顺手参数化**（既然要动这段 SQL） |
+  | Q-E | **Service 层二次校验**（拦截器 + Service 层纵深防御；拦截器可能因路径规则遗漏而失效） |
+  | Q-F | 多店账号生成工资 → **400**（"哪家店的工资"语义不明，**必须显式传 storeId，不猜**） |
+  | Q-G | `settlement/generate` **保持 storeId 必填**（结算是财务动作） |
+  | Q-H | 裸 SQL 端点 `tenant_id` 为空 → **400**（`WHERE tenant_id = NULL` 静默返回 0 行是最危险的假成功） |
+- **实施落点补充事实（只读）**：`DataScopeService` 的 javadoc 曾承诺 `applyTenantScope(wrapper, tenantIdColumn)` 但**全类无该方法**（只有 `assertTenantScope(Long)`）→ 注释漂移，修复时一并更正；类注释「12 个模块接 RBAC 时调用本类」经 `grep dataScopeService` 核实**全仓 0 调用方** → I186 第 1 批起**正式启用**，注释改写为「① 工具方法（`applyStoreScope` / `resolveStoreScope`）供 Service 层注入范围 ② 校验方法（`assertStoreScope`）做 Service 层纵深防御（拦截器第一层、本类第二层）」。
+- **本轮纪律**：登记阶段全程只读；**未改任何业务代码、未写库、未执行 DDL、未新增入库脚本、未打开浏览器、未连生产库**；**未触达** `/dashboard`、`/mh/visual`、`/mh/consent` 三个已验收页面及其数据接口。
 
 ## 脚注：证据目录命名规则切换（2026-11-13 起）
 

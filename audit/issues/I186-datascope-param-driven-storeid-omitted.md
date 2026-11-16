@@ -137,6 +137,8 @@ BOSS 同组探测结果完全一致（`raw/06b` B 段）。
 ## 3. 建议方案（**仅建议，本批不实施**；已按用户决策 2026-11-16 修订）
 
 > 📌 **决策落点**：① 缺省语义取**集合**（`ctx.storeIds` → `IN (...)`）；② 员工归属校验分两阶段（本轮 M3，后续 M1）；③ 405 特判归 I189 本批，`handleAny` 收窄归 I190 单独批次；④ I183/I184 绑定必须排在本条**之后**。
+>
+> ⚠️ **第 1 批后端修复后，前端硬编码会绕过修复，I194 必须紧随其后**（2026-11-16 登记 I194 时确认）：前端 `views/commission/salary.vue:136`、`views/commission/settlement.vue:206`、`views/attendance/index.vue:224` / `:246`、`views/attendance/leave.vue:317`、`views/commission/rule-list.vue:119`、`views/commission/simulation.vue:224` 共 **6 文件 7 处**把 `storeId` 写死为 `1` 并**显式**传给后端 → 步骤 1 的「缺省按集合」路径在真实链路上**不可达**（要么退化成 `eq(1)`，要么被拦截器 403）。**后端第 1 批上线与 I194 前端改造必须同批次或紧随发布**，否则修复效果被绕过。
 
 | # | 步骤 | 内容 | 备注 |
 |---|---|---|---|
