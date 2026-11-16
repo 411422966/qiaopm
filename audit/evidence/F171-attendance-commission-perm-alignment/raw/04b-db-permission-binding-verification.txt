@@ -1,0 +1,121 @@
+﻿+-----+-------------------------------------+-----------------+---------------------+---------------+--------------------------------+
+| tag | permission_code                     | permission_type | create_time         | role_bindings | roles                          |
++-----+-------------------------------------+-----------------+---------------------+---------------+--------------------------------+
+| V1  | attendance:check                    | button          | 2026-10-21 22:33:46 |             0 | NULL                           |
+| V1  | attendance:config:edit              | button          | 2026-10-21 22:33:46 |             0 | NULL                           |
+| V1  | attendance:config:list              | button          | 2026-10-21 22:33:46 |             0 | NULL                           |
+| V1  | attendance:edit                     | button          | 2026-10-21 22:33:46 |             0 | NULL                           |
+| V1  | attendance:leave:approve            | button          | 2026-10-21 22:33:46 |             0 | NULL                           |
+| V1  | attendance:leave:list               | button          | 2026-10-21 22:33:46 |             0 | NULL                           |
+| V1  | attendance:leave:submit             | button          | 2026-10-21 22:33:46 |             0 | NULL                           |
+| V1  | attendance:list                     | button          | 2026-10-21 22:33:46 |             0 | NULL                           |
+| V1  | attendance:stat                     | button          | 2026-10-21 22:33:46 |             0 | NULL                           |
+| V1  | commission                          | menu            | 2026-08-16 22:08:39 |             4 | SUPER_ADMIN,ADMIN,BOSS,MANAGER |
+| V1  | commission:batch                    | button          | 2026-08-16 21:54:32 |             3 | MANAGER,ADMIN,BOSS             |
+| V1  | commission:calculate                | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:list                     | button          | 2026-08-16 21:54:32 |             0 | NULL                           |
+| V1  | commission:record:list              | button          | 2026-08-16 21:54:32 |             3 | MANAGER,ADMIN,BOSS             |
+| V1  | commission:record:stat              | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:reversal                 | button          | 2026-08-16 21:54:32 |             3 | MANAGER,ADMIN,BOSS             |
+| V1  | commission:rule:add                 | button          | 2026-08-16 21:54:32 |             0 | NULL                           |
+| V1  | commission:rule:delete              | button          | 2026-08-16 21:54:32 |             0 | NULL                           |
+| V1  | commission:rule:detail              | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:rule:edit                | button          | 2026-08-16 21:54:32 |             0 | NULL                           |
+| V1  | commission:rule:list                | button          | 2026-08-16 21:54:32 |             3 | MANAGER,ADMIN,BOSS             |
+| V1  | commission:rule:stat                | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:rule:status              | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:salary:add               | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:salary:adjust            | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:salary:batch-confirm     | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:salary:batch-pay         | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:salary:confirm           | button          | 2026-08-16 21:54:32 |             0 | NULL                           |
+| V1  | commission:salary:export            | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:salary:list              | button          | 2026-08-16 21:54:32 |             3 | MANAGER,ADMIN,BOSS             |
+| V1  | commission:salary:pay               | button          | 2026-08-16 21:54:32 |             0 | NULL                           |
+| V1  | commission:salary:stat              | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:settlement:add           | API             | 2026-09-08 15:20:43 |             0 | NULL                           |
+| V1  | commission:settlement:audit         | button          | 2026-08-16 21:54:32 |             0 | NULL                           |
+| V1  | commission:settlement:batch-confirm | API             | 2026-09-08 15:20:41 |             0 | NULL                           |
+| V1  | commission:settlement:batch-pay     | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:settlement:confirm       | API             | 2026-09-08 15:20:43 |             0 | NULL                           |
+| V1  | commission:settlement:detail        | API             | 2026-09-08 15:20:43 |             0 | NULL                           |
+| V1  | commission:settlement:export        | API             | 2026-09-08 15:20:43 |             0 | NULL                           |
+| V1  | commission:settlement:list          | button          | 2026-08-16 21:54:32 |             3 | MANAGER,ADMIN,BOSS             |
+| V1  | commission:settlement:pay           | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
+| V1  | commission:settlement:stat          | API             | 2026-09-08 15:20:42 |             0 | NULL                           |
++-----+-------------------------------------+-----------------+---------------------+---------------+--------------------------------+
++-----+-------------------------------------+-----------------+---------------------+---------+
+| tag | permission_code                     | permission_type | create_time         | deleted |
++-----+-------------------------------------+-----------------+---------------------+---------+
+| V2  | attendance:check                    | button          | 2026-10-21 22:33:46 |       0 |
+| V2  | attendance:config:edit              | button          | 2026-10-21 22:33:46 |       0 |
+| V2  | attendance:config:list              | button          | 2026-10-21 22:33:46 |       0 |
+| V2  | attendance:edit                     | button          | 2026-10-21 22:33:46 |       0 |
+| V2  | attendance:leave:approve            | button          | 2026-10-21 22:33:46 |       0 |
+| V2  | attendance:leave:list               | button          | 2026-10-21 22:33:46 |       0 |
+| V2  | attendance:leave:submit             | button          | 2026-10-21 22:33:46 |       0 |
+| V2  | attendance:list                     | button          | 2026-10-21 22:33:46 |       0 |
+| V2  | attendance:stat                     | button          | 2026-10-21 22:33:46 |       0 |
+| V2  | commission                          | menu            | 2026-08-16 22:08:39 |       0 |
+| V2  | commission:batch                    | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:calculate                | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:list                     | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:record:list              | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:record:stat              | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:reversal                 | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:rule:add                 | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:rule:delete              | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:rule:detail              | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:rule:edit                | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:rule:list                | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:rule:stat                | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:rule:status              | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:salary:add               | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:salary:adjust            | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:salary:batch-confirm     | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:salary:batch-pay         | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:salary:confirm           | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:salary:export            | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:salary:list              | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:salary:pay               | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:salary:stat              | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:settlement:add           | API             | 2026-09-08 15:20:43 |       0 |
+| V2  | commission:settlement:audit         | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:settlement:batch-confirm | API             | 2026-09-08 15:20:41 |       0 |
+| V2  | commission:settlement:batch-pay     | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:settlement:confirm       | API             | 2026-09-08 15:20:43 |       0 |
+| V2  | commission:settlement:detail        | API             | 2026-09-08 15:20:43 |       0 |
+| V2  | commission:settlement:export        | API             | 2026-09-08 15:20:43 |       0 |
+| V2  | commission:settlement:list          | button          | 2026-08-16 21:54:32 |       0 |
+| V2  | commission:settlement:pay           | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission:settlement:stat          | API             | 2026-09-08 15:20:42 |       0 |
+| V2  | commission.batch                    | menu            | 2026-08-16 22:08:40 |       0 |
+| V2  | commission.records                  | menu            | 2026-08-16 22:08:40 |       0 |
+| V2  | commission.reversal                 | menu            | 2026-08-16 22:08:40 |       0 |
+| V2  | commission.rules                    | menu            | 2026-08-16 22:08:40 |       0 |
+| V2  | commission.salary                   | menu            | 2026-08-16 22:08:40 |       0 |
+| V2  | commission.settlement               | menu            | 2026-08-16 22:08:40 |       0 |
++-----+-------------------------------------+-----------------+---------------------+---------+
++-----+---------------------+
+| tag | admin_role_perm_cnt |
++-----+---------------------+
+| V3  |                 381 |
++-----+---------------------+
++-----+-----------------------+
+| tag | manager_role_perm_cnt |
++-----+-----------------------+
+| V4  |                   278 |
++-----+-----------------------+
++-----+-------------+-----+
+| tag | role_code   | cnt |
++-----+-------------+-----+
+| V5  | SUPER_ADMIN |   7 |
+| V5  | ADMIN       |  13 |
+| V5  | BOSS        |  11 |
+| V5  | MANAGER     |  13 |
++-----+-------------+-----+
++-----+-----------------------------------+
+| tag | super_admin_commission_attendance |
++-----+-----------------------------------+
+| V6  |                                 7 |
++-----+-----------------------------------+

@@ -1,0 +1,137 @@
+# F171 —— 前端权限码清单 + 运行期 RBAC 下发载荷
+# 基线 HEAD 56d59a2 | 采集时间 2026-11-16 | 来源：静态 grep + GET /auth/me/permissions
+
+===== A. frontend/meiyetec-web/src/router/index.ts —— 涉及考勤/提成的路由 meta.permission =====
+58: { path: 'commission/rules', name: 'CommissionRules', component: () => import('@/views/commission/rules.vue'), meta: { title: '提成规则', requiresAuth: true, permission: 'commission:rule:list' } },
+59: { path: 'commission/records', name: 'CommissionRecords', component: () => import('@/views/commission/records.vue'), meta: { title: '提成记录', requiresAuth: true, permission: 'commission:record:list' } },
+60: { path: 'commission/salary', name: 'CommissionSalary', component: () => import('@/views/commission/salary.vue'), meta: { title: '工资报表', requiresAuth: true, permission: 'commission:salary:list' } },
+61: { path: 'commission/settlement', name: 'CommissionSettlement', component: () => import('@/views/commission/settlement.vue'), meta: { title: '结算管理', requiresAuth: true, permission: 'commission:settlement:list' } },
+94: { path: 'commission/batch', name: 'CommissionBatch', component: () => import('@/views/commission/batch.vue'), meta: { title: '提成结算批次', requiresAuth: true, permission: 'commission:batch' } },
+95: { path: 'commission/reversal', name: 'CommissionReversal', component: () => import('@/views/commission/reversal.vue'), meta: { title: '提成冲正', requiresAuth: true, permission: 'commission:reversal' } },
+105: { path: 'attendance/index', name: 'AttendanceIndex', component: () => import('@/views/attendance/index.vue'), meta: { title: '考勤打卡', requiresAuth: true, permission: 'employee:attendance' } },
+106: { path: 'attendance/records', name: 'AttendanceRecords', component: () => import('@/views/attendance/records.vue'), meta: { title: '考勤记录', requiresAuth: true, permission: 'employee:attendance:list' } },
+107: { path: 'attendance/leave', name: 'AttendanceLeave', component: () => import('@/views/attendance/leave.vue'), meta: { title: '请假管理', requiresAuth: true, permission: 'employee:leave' } },
+108: { path: 'attendance/statistics', name: 'AttendanceStatistics', component: () => import('@/views/attendance/statistics.vue'), meta: { title: '考勤统计', requiresAuth: true, permission: 'employee:attendance:stat' } },
+109: { path: 'attendance/config', name: 'AttendanceConfig', component: () => import('@/views/attendance/config.vue'), meta: { title: '考勤规则配置', requiresAuth: true, permission: 'employee:attendance:config' } },
+113: { path: 'commission/rule-list', name: 'CommissionRuleList', component: () => import('@/views/commission/rule-list.vue'), meta: { title: '提成规则列表', requiresAuth: true, permission: 'commission:rule' } },
+114: { path: 'commission/rules', name: 'CommissionRules', component: () => import('@/views/commission/rules.vue'), meta: { title: '提成规则配置', requiresAuth: true, permission: 'commission:rule:config' } },
+115: { path: 'commission/simulation', name: 'CommissionSimulation', component: () => import('@/views/commission/simulation.vue'), meta: { title: '提成模拟计算', requiresAuth: true, permission: 'commission:simulation' } },
+
+===== B. v-permission 指令使用点（frontend/meiyetec-web/src/views） =====
+(无匹配：views 目录下 0 处 v-permission 使用)
+
+===== C. frontend/meiyetec-web/src/api/attendance.ts 请求路径 =====
+10: request.post('/attendance/check-in', data),
+14: request.post('/attendance/check-out', data),
+18: request.get('/attendance/today', { params: { employeeId } }),
+29: }) => request.post('/attendance/page', params),
+37: }) => request.get('/attendance/records', { params }),
+44: }) => request.get('/attendance/statistics', { params }),
+48: request.get('/attendance/monthly-report', { params: { employeeId, year, month } }),
+51: getById: (id: number) => request.get(`/attendance/${id}`),
+54: update: (data: any) => request.put(`/attendance/${data.id}`, data),
+59: request.get('/attendance/config/active', { params: { storeId } }),
+63: request.get('/attendance/config/list', { params: { storeId } }),
+66: getConfigById: (id: number) => request.get(`/attendance/config/${id}`),
+69: createConfig: (data: any) => request.post('/attendance/config', data),
+72: updateConfig: (data: any) => request.put(`/attendance/config/${data.id}`, data),
+75: deleteConfig: (id: number) => request.delete(`/attendance/config/${id}`)
+90: }) => request.post('/attendance/leave', data),
+94: request.put(`/attendance/leave/${id}/approve`, data),
+98: request.put(`/attendance/leave/${id}/cancel`, { employeeId }),
+107: }) => request.get('/attendance/leave/list', { params }),
+110: myList: (employeeId: number) => request.get('/attendance/leave/my', { params: { employeeId } }),
+114: request.get('/attendance/leave/pending-count', { params: { storeId } }),
+117: getById: (id: number) => request.get(`/attendance/leave/${id}`)
+
+===== D. frontend/meiyetec-web/src/api/commission.ts 请求路径 =====
+20: rulePage: (params: Record<string, unknown>) => request.get('/commission/rules/page', { params }),
+21: ruleList: (params?: Record<string, unknown>) => request.get('/commission/rules/list', { params }),
+22: createRule: (data: CommissionRule) => request.post('/commission/rules', data),
+23: updateRule: (id: number, data: CommissionRule) => request.put(`/commission/rules/${id}`, data),
+24: deleteRule: (id: number) => request.delete(`/commission/rules/${id}`),
+25: toggleRuleStatus: (id: number) => request.put(`/commission/rules/${id}/toggle`),
+26: calculateOrder: (orderId: number) => request.post(`/commission/calculate/order/${orderId}`),
+27: recordPage: (params: Record<string, unknown>) => request.get('/commission/records/page', { params }),
+28: recordStats: (params: Record<string, unknown>) => request.get('/commission/records/stats', { params }),
+29: recordExport: (params: Record<string, unknown>) => request.get('/commission/records/export', { params, responseType: 'blob' }),
+30: recordBatchSettle: (ids: number[]) => request.put('/commission/records/batch/settle', { ids }),
+31: recordBatchInvalidate: (ids: number[]) => request.put('/commission/records/batch/invalidate', { ids }),
+32: generateSalary: (data: { storeId: number; salaryMonth: string }) => request.post('/commission/salary/generate', data),
+33: salaryPage: (params: Record<string, unknown>) => request.get('/commission/salary/page', { params }),
+34: salaryStats: (params: Record<string, unknown>) => request.get('/commission/salary/stats', { params }),
+35: salaryExport: (params: Record<string, unknown>) => request.get('/commission/salary/export', { params, responseType: 'blob' }),
+36: salaryBatchConfirm: (ids: number[]) => request.put('/commission/salary/batch/confirm', { ids }),
+37: salaryBatchPay: (ids: number[]) => request.put('/commission/salary/batch/pay', { ids }),
+38: updateAdjustment: (id: number, data: { adjustmentAmount: number; remark?: string }) => request.put(`/commission/salary/${id}/adjustment`, data),
+39: confirmSalary: (id: number) => request.post(`/commission/salary/${id}/confirm`),
+40: paySalary: (id: number) => request.post(`/commission/salary/${id}/pay`),
+42: generateSettlement: (data: { storeId: number; salaryMonth: string }) => request.post('/commission/settlement/generate', data),
+43: settlementPage: (params: Record<string, unknown>) => request.get('/commission/settlement/page', { params }),
+44: settlementDetail: (id: number) => request.get(`/commission/settlement/${id}`),
+45: settlementStats: (params: Record<string, unknown>) => request.get('/commission/settlement/stats', { params }),
+46: settlementExport: (params: Record<string, unknown>) => request.get('/commission/settlement/export', { params, responseType: 'blob' }),
+47: confirmSettlement: (id: number) => request.put(`/commission/settlement/${id}/confirm`),
+48: paySettlement: (id: number) => request.put(`/commission/settlement/${id}/pay`),
+49: settlementBatchConfirm: (ids: number[]) => request.put('/commission/settlement/batch/confirm', { ids }),
+50: settlementBatchPay: (ids: number[]) => request.put('/commission/settlement/batch/pay', { ids })
+
+===== E. frontend/meiyetec-web/src/api/commission-rule.ts 请求路径 =====
+8: tiersByRule: (ruleId: number) => request.get(`/commission/tier/by-rule/${ruleId}`),
+10: saveTiers: (ruleId: number, tiers: any[]) => request.post(`/commission/tier/batch/${ruleId}`, tiers),
+12: deleteTier: (id: number) => request.delete(`/commission/tier/${id}`),
+15: conditionsByRule: (ruleId: number) => request.get(`/commission/condition/by-rule/${ruleId}`),
+17: saveConditions: (ruleId: number, conditions: any[]) => request.post(`/commission/condition/batch/${ruleId}`, conditions),
+19: deleteCondition: (id: number) => request.delete(`/commission/condition/${id}`),
+32: }) => request.post('/commission/simulation', params),
+35: recentSimulations: (employeeId: number) => request.get(`/commission/simulation/recent/${employeeId}`)
+
+===== F. 前端守卫判定（router/index.ts:220-235） =====
+219: 
+220:   // 已登录状态：保证 permission store 已加载
+221:   if (token) {
+222:     const store = usePermissionStore()
+223:     if (!store.loaded) {
+224:       await store.refresh()
+225:     }
+226:     const need = to.meta.permission as string | undefined
+227:     // 兜底白名单：首页 / 登录 / 404 始终放行，避免死循环
+228:     const safePath = to.path === '/dashboard' || to.path === '/login' || to.path.startsWith('/403') || to.path.startsWith('/404')
+229:     if (need && !safePath && !store.hasPermission(need)) {
+230:       next({ path: '/403', query: { denied: need } })
+231:       NProgress.done()
+232:       return
+233:     }
+234:   }
+235:   next()
+236:   NProgress.done()
+237: })
+238: 
+
+===== G. 前端 hasPermission 判定（stores/permission.ts:62-66） =====
+61:   getters: {
+62:     hasPermission: (state) => (code: string) => {
+63:       if (!code) return true
+64:       return state.permissions.includes(code) || state.permissions.includes('*')
+65:     },
+66:     hasAny: (state) => (codes: string[]) => codes.some((c) => state.permissions.includes(c)),
+67:     hasAll: (state) => (codes: string[]) => codes.every((c) => state.permissions.includes(c))
+68:   },
+
+===== H. 运行期 GET /auth/me/permissions 下发载荷 =====
+--- user=admin roles=SUPER_ADMIN,ADMIN permCount=384 dataScope=ALL storeIds=-1 ---
+  含 '*'          : True
+  attendance* 码  : []
+  commission* 码  : [commission:settlement:list,commission.settlement,commission,commission.batch,commission:reversal,commission.rules,commission.salary,commission:salary:list,commission:record:list,commission:rule:list,commission:batch,commission.records,commission.reversal]
+--- user=manager01 roles=MANAGER permCount=278 dataScope=STORE storeIds=1 ---
+  含 '*'          : False
+  attendance* 码  : []
+  commission* 码  : [commission:settlement:list,commission.settlement,commission,commission.batch,commission:reversal,commission.rules,commission.salary,commission:salary:list,commission:record:list,commission:rule:list,commission:batch,commission.records,commission.reversal]
+--- user=boss01 roles=BOSS permCount=191 dataScope=STORE storeIds=1 ---
+  含 '*'          : False
+  attendance* 码  : []
+  commission* 码  : [commission:settlement:list,commission:salary:list,commission:record:list,commission:rule:list,commission.settlement,commission,commission:batch,commission.records,commission:reversal,commission.rules,commission.salary]
+--- user=clerk01 roles=CLERK permCount=50 dataScope=STORE storeIds=1 ---
+  含 '*'          : False
+  attendance* 码  : []
+  commission* 码  : []

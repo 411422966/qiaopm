@@ -1,0 +1,132 @@
+﻿docker : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-21268079-7712-43d5-8ef3-ab5c6f53f66f.ps1:86 字符: 60
++ ... 2c-q1.sql | docker exec -i meiyetec-mysql mysql -uroot -proot123456 - ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
++--------------------------------------------------------------------------------+
+| s                                                                              |
++--------------------------------------------------------------------------------+
+| === A. sys_permission attendance% / employee:attendance% / employee:leave% === |
++--------------------------------------------------------------------------------+
++------+--------------------------+--------------------+-----------------+--------+-----------+---------+
+| id   | permission_code          | permission_name    | permission_type | status | parent_id | deleted |
++------+--------------------------+--------------------+-----------------+--------+-----------+---------+
+| 1453 | attendance:check         | 考勤打卡           | button          |      1 |         0 |       0 |
+| 1452 | attendance:config:edit   | 考勤配置编辑       | button          |      1 |         0 |       0 |
+| 1451 | attendance:config:list   | 考勤配置列表       | button          |      1 |         0 |       0 |
+| 1456 | attendance:edit          | 考勤记录编辑       | button          |      1 |         0 |       0 |
+| 1458 | attendance:leave:approve | 请假审批           | button          |      1 |         0 |       0 |
+| 1459 | attendance:leave:list    | 请假列表           | button          |      1 |         0 |       0 |
+| 1457 | attendance:leave:submit  | 请假申请           | button          |      1 |         0 |       0 |
+| 1454 | attendance:list          | 考勤记录列表       | button          |      1 |         0 |       0 |
+| 1455 | attendance:stat          | 考勤统计           | button          |      1 |         0 |       0 |
++------+--------------------------+--------------------+-----------------+--------+-----------+---------+
++---------------------------------------+
+| s                                     |
++---------------------------------------+
+| === B. sys_permission commission% === |
++---------------------------------------+
++------+-------------------------------------+--------------------------------------+-----------------+--------+-----------+---------+
+| id   | permission_code                     | permission_name                      | permission_type | status | parent_id | deleted |
++------+-------------------------------------+--------------------------------------+-----------------+--------+-----------+---------+
+| 1203 | commission                          | 员工提成                             | menu            |      1 |         0 |       0 |
+| 1129 | commission:batch                    | 结算批次                             | button          |      1 |      NULL |       0 |
+| 1328 | commission:calculate                | commission·calculate                 | API             |      1 |         0 |       0 |
+| 1118 | commission:list                     | 提成列表                             | button          |      1 |      NULL |       0 |
+| 1123 | commission:record:list              | 提成记录                             | button          |      1 |      NULL |       0 |
+| 1330 | commission:record:stat              | commission·record:stat               | API             |      1 |         0 |       0 |
+| 1130 | commission:reversal                 | 提成冲正                             | button          |      1 |      NULL |       0 |
+| 1120 | commission:rule:add                 | 新增规则                             | button          |      1 |      NULL |       0 |
+| 1122 | commission:rule:delete              | 删除规则                             | button          |      1 |      NULL |       0 |
+| 1331 | commission:rule:detail              | commission·rule:detail               | API             |      1 |         0 |       0 |
+| 1121 | commission:rule:edit                | 编辑规则                             | button          |      1 |      NULL |       0 |
+| 1119 | commission:rule:list                | 提成规则                             | button          |      1 |      NULL |       0 |
+| 1332 | commission:rule:stat                | commission·rule:stat                 | API             |      1 |         0 |       0 |
+| 1329 | commission:rule:status              | commission·rule:status               | API             |      1 |         0 |       0 |
+| 1335 | commission:salary:add               | commission·salary:add                | API             |      1 |         0 |       0 |
+| 1336 | commission:salary:adjust            | commission·salary:adjust             | API             |      1 |         0 |       0 |
+| 1339 | commission:salary:batch-confirm     | commission·salary:batch-confirm      | API             |      1 |         0 |       0 |
+| 1337 | commission:salary:batch-pay         | commission·salary:batch-pay          | API             |      1 |         0 |       0 |
+| 1125 | commission:salary:confirm           | 工资确认                             | button          |      1 |      NULL |       0 |
+| 1333 | commission:salary:export            | commission·salary:export             | API             |      1 |         0 |       0 |
+| 1124 | commission:salary:list              | 工资报表                             | button          |      1 |      NULL |       0 |
+| 1126 | commission:salary:pay               | 工资发放                             | button          |      1 |      NULL |       0 |
+| 1334 | commission:salary:stat              | commission·salary:stat               | API             |      1 |         0 |       0 |
+| 1345 | commission:settlement:add           | commission·settlement:add            | API             |      1 |         0 |       0 |
+| 1128 | commission:settlement:audit         | 结算审核                             | button          |      1 |      NULL |       0 |
+| 1327 | commission:settlement:batch-confirm | commission·settlement:batch-confirm  | API             |      1 |         0 |       0 |
+| 1341 | commission:settlement:batch-pay     | commission·settlement:batch-pay      | API             |      1 |         0 |       0 |
+| 1344 | commission:settlement:confirm       | commission·settlement:confirm        | API             |      1 |         0 |       0 |
+| 1343 | commission:settlement:detail        | commission·settlement:detail         | API             |      1 |         0 |       0 |
+| 1342 | commission:settlement:export        | commission·settlement:export         | API             |      1 |         0 |       0 |
+| 1127 | commission:settlement:list          | 结算管理                             | button          |      1 |      NULL |       0 |
+| 1340 | commission:settlement:pay           | commission·settlement:pay            | API             |      1 |         0 |       0 |
+| 1338 | commission:settlement:stat          | commission·settlement:stat           | API             |      1 |         0 |       0 |
+| 1239 | commission.batch                    | 提成结算批次                         | menu            |      1 |      1203 |       0 |
+| 1236 | commission.records                  | 提成记录                             | menu            |      1 |      1203 |       0 |
+| 1240 | commission.reversal                 | 提成冲正                             | menu            |      1 |      1203 |       0 |
+| 1235 | commission.rules                    | 提成规则                             | menu            |      1 |      1203 |       0 |
+| 1237 | commission.salary                   | 工资报表                             | menu            |      1 |      1203 |       0 |
+| 1238 | commission.settlement               | 结算管理                             | menu            |      1 |      1203 |       0 |
++------+-------------------------------------+--------------------------------------+-----------------+--------+-----------+---------+
++------------------------------------------+
+| s                                        |
++------------------------------------------+
+| === C. role bindings for those codes === |
++------------------------------------------+
++---------+-------------+-----------------+---------------+----------------------------+
+| role_id | role_code   | role_name       | permission_id | permission_code            |
++---------+-------------+-----------------+---------------+----------------------------+
+|       1 | SUPER_ADMIN | 超级管理员      |          1203 | commission                 |
+|       5 | MANAGER     | 店长            |          1203 | commission                 |
+|       6 | BOSS        | 老板            |          1203 | commission                 |
+|       8 | ADMIN       | 系统管理员      |          1203 | commission                 |
+|       5 | MANAGER     | 店长            |          1129 | commission:batch           |
+|       6 | BOSS        | 老板            |          1129 | commission:batch           |
+|       8 | ADMIN       | 系统管理员      |          1129 | commission:batch           |
+|       5 | MANAGER     | 店长            |          1123 | commission:record:list     |
+|       6 | BOSS        | 老板            |          1123 | commission:record:list     |
+|       8 | ADMIN       | 系统管理员      |          1123 | commission:record:list     |
+|       5 | MANAGER     | 店长            |          1130 | commission:reversal        |
+|       6 | BOSS        | 老板            |          1130 | commission:reversal        |
+|       8 | ADMIN       | 系统管理员      |          1130 | commission:reversal        |
+|       5 | MANAGER     | 店长            |          1119 | commission:rule:list       |
+|       6 | BOSS        | 老板            |          1119 | commission:rule:list       |
+|       8 | ADMIN       | 系统管理员      |          1119 | commission:rule:list       |
+|       5 | MANAGER     | 店长            |          1124 | commission:salary:list     |
+|       6 | BOSS        | 老板            |          1124 | commission:salary:list     |
+|       8 | ADMIN       | 系统管理员      |          1124 | commission:salary:list     |
+|       5 | MANAGER     | 店长            |          1127 | commission:settlement:list |
+|       6 | BOSS        | 老板            |          1127 | commission:settlement:list |
+|       8 | ADMIN       | 系统管理员      |          1127 | commission:settlement:list |
+|       1 | SUPER_ADMIN | 超级管理员      |          1239 | commission.batch           |
+|       5 | MANAGER     | 店长            |          1239 | commission.batch           |
+|       8 | ADMIN       | 系统管理员      |          1239 | commission.batch           |
+|       1 | SUPER_ADMIN | 超级管理员      |          1236 | commission.records         |
+|       5 | MANAGER     | 店长            |          1236 | commission.records         |
+|       6 | BOSS        | 老板            |          1236 | commission.records         |
+|       8 | ADMIN       | 系统管理员      |          1236 | commission.records         |
+|       1 | SUPER_ADMIN | 超级管理员      |          1240 | commission.reversal        |
+|       5 | MANAGER     | 店长            |          1240 | commission.reversal        |
+|       8 | ADMIN       | 系统管理员      |          1240 | commission.reversal        |
+|       1 | SUPER_ADMIN | 超级管理员      |          1235 | commission.rules           |
+|       5 | MANAGER     | 店长            |          1235 | commission.rules           |
+|       6 | BOSS        | 老板            |          1235 | commission.rules           |
+|       8 | ADMIN       | 系统管理员      |          1235 | commission.rules           |
+|       1 | SUPER_ADMIN | 超级管理员      |          1237 | commission.salary          |
+|       5 | MANAGER     | 店长            |          1237 | commission.salary          |
+|       6 | BOSS        | 老板            |          1237 | commission.salary          |
+|       8 | ADMIN       | 系统管理员      |          1237 | commission.salary          |
+|       1 | SUPER_ADMIN | 超级管理员      |          1238 | commission.settlement      |
+ERROR 1054 (42S22) at line 28: Unknown column 'data_scope' in 'field list'
+|       5 | MANAGER     | 店长            |          1238 | commission.settlement      |
+|       6 | BOSS        | 老板            |          1238 | commission.settlement      |
+|       8 | ADMIN       | 系统管理员      |          1238 | commission.settlement      |
++---------+-------------+-----------------+---------------+----------------------------+
++----------------------+
+| s                    |
++----------------------+
+| === D. all roles === |
++----------------------+

@@ -1,0 +1,80 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+s
+=== 0. 表结构 ===
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+employee_code	varchar(50)	YES	UNI	NULL	
+employee_name	varchar(50)	NO		NULL	
+phone	varchar(20)	YES	UNI	NULL	
+password	varchar(100)	YES		NULL	
+gender	tinyint	YES		NULL	
+id_card	varchar(20)	YES		NULL	
+avatar_url	varchar(255)	YES		NULL	
+position	varchar(50)	YES		NULL	
+department	varchar(50)	YES		NULL	
+store_id	bigint	NO	MUL	NULL	
+entry_date	date	YES		NULL	
+status	tinyint	YES	MUL	1	
+salary	decimal(10,2)	YES		NULL	
+commission_rate	decimal(5,4)	YES		NULL	
+role_ids	varchar(255)	YES		NULL	
+tenant_id	bigint	YES	MUL	NULL	
+create_time	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+update_time	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+deleted	tinyint	YES		0	
+employee_level	bigint	YES	MUL	NULL	
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+username	varchar(50)	NO	UNI	NULL	
+password	varchar(100)	NO		NULL	
+real_name	varchar(50)	YES		NULL	
+phone	varchar(20)	YES		NULL	
+email	varchar(100)	YES		NULL	
+avatar	varchar(255)	YES		NULL	
+status	tinyint	YES		1	
+store_id	bigint	YES	MUL	NULL	
+tenant_id	bigint	YES	MUL	NULL	
+create_time	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+update_time	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED on update CURRENT_TIMESTAMP
+deleted	tinyint	YES		0	
+s
+=== 1. 规模与 phone 覆盖率 ===
+t	total	with_phone
+sys_user	5	5
+pos_employee	150	150
+s
+=== 2. 交集（sys_user.phone = pos_employee.phone）===
+matched_rows	distinct_users	distinct_employees	distinct_phones	cross_tenant_rows	cross_store_rows
+0	0	0	0	NULL	NULL
+s
+=== 3. 冲突 A：一个 phone 对多条 pos_employee ===
+s
+=== 4. 冲突 B：一个 phone 对多条 sys_user ===
+s
+=== 5. 唯一性判定（每个 sys_user 命中几条员工）===
+hit_cnt	user_cnt
+0	5
+s
+=== 6. 覆盖度（按用户）===
+users_with_phone	users_matched	users_unmatched
+5	0	5
+s
+=== 7. 交集明细（逐条）===
+s
+=== 8. 未命中用户清单（phone 指向不存在员工）===
+user_id	username	tenant_id	store_id	phone	status
+1	admin	1	NULL	13800138000	1
+900003	clerk01	1	1	13800000001	1
+900004	manager01	1	1	13800000002	1
+900005	boss01	1	1	13800000003	1
+900006	operator01	1	1	13800000004	1
+s
+=== 9. 无 phone 的 sys_user（无法用 phone 映射）===
+s
+=== 10. 备用映射键抽样：employee_code 与 username 是否同域 ===
+emp_total	with_code	code_eq_username
+150	150	0
+s
+=== 11. sys_user 是否已存在 employee/user 关联列（若有则 M1 可免 DDL）===
+s
+=== 12. pos_employee 是否已存在反向关联列 ===

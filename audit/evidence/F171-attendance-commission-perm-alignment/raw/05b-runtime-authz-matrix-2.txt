@@ -1,0 +1,36 @@
+﻿
+######## USER=admin roles=SUPER_ADMIN,ADMIN permCount=384 dataScope= storeIds=
+  [GET] /commission/rules/1  need=commission:rule:detail =>  HTTP 200 body={"code":200,"message":"操作成功","data":{"id":1,"tenantId":1,"storeId":1,"ruleName":"服务项目通用提成10%","businessType":"SERVICE","targetId":null,"calculationMet
+  [GET] /commission/salary/export?salaryMonth=2026-08  need=commission:salary:export =>  HTTP  body=
+  [GET] /commission/settlement/1  need=commission:settlement:detail =>  HTTP 200 body={"code":404,"message":"结算单不存在","data":null,"traceId":"84b6b7b35f0e4a7c8ab1d5f8efe04b1c","timestamp":"2026-11-16 00:58:32"}
+  [GET] /commission/settlement/export?salaryMonth=2026-08  need=commission:settlement:export =>  HTTP  body=
+  [GET] /commission/records/page?storeId=99  need=commission:record:list + storeId out of scope =>  HTTP 200 body={"code":200,"message":"操作成功","data":{"records":[],"total":0,"size":20,"current":1,"pages":0},"traceId":"9233a5e6d9404be8aa5a21d2632cbdfc","timestamp":
+  [GET] /commission/records/page?employeeId=99999999  need=commission:record:list + employeeId not mine =>  HTTP 200 body={"code":200,"message":"操作成功","data":{"records":[],"total":0,"size":20,"current":1,"pages":0},"traceId":"778efb4f31db421ebc411f4bcef05831","timestamp":
+  [GET] /commission/records/export?salaryMonth=2026-08  need=commission:records/export (no backend route) =>  HTTP 404 body={"timestamp":"2026-11-16 00:58:35","status":404,"error":"Not Found","message":"No message available","path":"/commission/records/export"}
+  [GET] /attendance/records?employeeId=99999999  need=attendance:list + employeeId not mine =>  HTTP 200 body={"code":200,"message":"操作成功","data":[],"traceId":"7806158db8164b0c884da3c92c4dbe11","timestamp":"2026-11-16 00:58:35"}
+  [GET] /attendance/leave/my?employeeId=99999999  need=attendance:leave:list =>  HTTP 200 body={"code":200,"message":"操作成功","data":[],"traceId":"7e663ea7ca3b4223a2a142eefab5d7d0","timestamp":"2026-11-16 00:58:36"}
+  [GET] /commission/records/page  need=commission:record:list no storeId =>  HTTP 200 body={"code":200,"message":"操作成功","data":{"records":[{"sourceId":2962,"sourceItemId":307,"reversalStatus":0,"businessTime":"2026-08-24T22:18:29","settlemen
+
+######## USER=manager01 roles=MANAGER permCount=278 dataScope= storeIds=
+  [GET] /commission/rules/1  need=commission:rule:detail =>  HTTP 403 body={"code":403,"message":"权限不足: 需要权限码：commission:rule:detail","data":null,"traceId":"0eb7fe50caec48f4969f1be22163a8c5","timestamp":"2026-11-16 00:58:39"}
+  [GET] /commission/salary/export?salaryMonth=2026-08  need=commission:salary:export =>  HTTP 403 body={"code":403,"message":"权限不足: 需要权限码：commission:salary:export","data":null,"traceId":"f65260f4fbf448c9be9dd1e082fb7f44","timestamp":"2026-11-16 00:58:40
+  [GET] /commission/settlement/1  need=commission:settlement:detail =>  HTTP 403 body={"code":403,"message":"权限不足: 需要权限码：commission:settlement:detail","data":null,"traceId":"884058cfbd514422b44d5ab66c951bb1","timestamp":"2026-11-16 00:5
+  [GET] /commission/settlement/export?salaryMonth=2026-08  need=commission:settlement:export =>  HTTP 403 body={"code":403,"message":"权限不足: 需要权限码：commission:settlement:export","data":null,"traceId":"b9ec5211e1564db1ad25ed522fb3fc51","timestamp":"2026-11-16 00:5
+  [GET] /commission/records/page?storeId=99  need=commission:record:list + storeId out of scope =>  HTTP 403 body={"code":403,"message":"无权访问该门店数据","data":null,"traceId":"f5c3a72c79e1401a8acfeb8618e268c7","timestamp":"2026-11-16 00:58:41"}
+  [GET] /commission/records/page?employeeId=99999999  need=commission:record:list + employeeId not mine =>  HTTP 200 body={"code":200,"message":"操作成功","data":{"records":[],"total":0,"size":20,"current":1,"pages":0},"traceId":"835e5a691b994f4d87c0de16a3858d73","timestamp":
+  [GET] /commission/records/export?salaryMonth=2026-08  need=commission:records/export (no backend route) =>  HTTP 404 body={"timestamp":"2026-11-16 00:58:42","status":404,"error":"Not Found","message":"No message available","path":"/commission/records/export"}
+  [GET] /attendance/records?employeeId=99999999  need=attendance:list + employeeId not mine =>  HTTP 403 body={"code":403,"message":"权限不足: 需要权限码：attendance:list","data":null,"traceId":"95a4d02082ed4b1698822e812298b4fd","timestamp":"2026-11-16 00:58:43"}
+  [GET] /attendance/leave/my?employeeId=99999999  need=attendance:leave:list =>  HTTP 403 body={"code":403,"message":"权限不足: 需要权限码：attendance:leave:list","data":null,"traceId":"09ede9b5eb824ca896c431ba50863001","timestamp":"2026-11-16 00:58:43"}
+  [GET] /commission/records/page  need=commission:record:list no storeId =>  HTTP 200 body={"code":200,"message":"操作成功","data":{"records":[{"sourceId":2962,"sourceItemId":307,"reversalStatus":0,"businessTime":"2026-08-24T22:18:29","settlemen
+
+######## USER=boss01 roles=BOSS permCount=191 dataScope= storeIds=
+  [GET] /commission/rules/1  need=commission:rule:detail =>  HTTP 403 body={"code":403,"message":"权限不足: 需要权限码：commission:rule:detail","data":null,"traceId":"7400d6aaa5254b2c9271acfc12a5f528","timestamp":"2026-11-16 00:58:45"}
+  [GET] /commission/salary/export?salaryMonth=2026-08  need=commission:salary:export =>  HTTP 403 body={"code":403,"message":"权限不足: 需要权限码：commission:salary:export","data":null,"traceId":"5966c62b437149da8798b724fb91f99d","timestamp":"2026-11-16 00:58:46
+  [GET] /commission/settlement/1  need=commission:settlement:detail =>  HTTP 403 body={"code":403,"message":"权限不足: 需要权限码：commission:settlement:detail","data":null,"traceId":"40fd96e9e0a14273ab681b6d8ab2dfc8","timestamp":"2026-11-16 00:5
+  [GET] /commission/settlement/export?salaryMonth=2026-08  need=commission:settlement:export =>  HTTP 403 body={"code":403,"message":"权限不足: 需要权限码：commission:settlement:export","data":null,"traceId":"d64098888baa49bb91f76285692a7590","timestamp":"2026-11-16 00:5
+  [GET] /commission/records/page?storeId=99  need=commission:record:list + storeId out of scope =>  HTTP 403 body={"code":403,"message":"无权访问该门店数据","data":null,"traceId":"f2f485bcef564eb6a592046f4f0f43e5","timestamp":"2026-11-16 00:58:47"}
+  [GET] /commission/records/page?employeeId=99999999  need=commission:record:list + employeeId not mine =>  HTTP 200 body={"code":200,"message":"操作成功","data":{"records":[],"total":0,"size":20,"current":1,"pages":0},"traceId":"edecb8ddd1154e6fb8cbd4a676cdde13","timestamp":
+  [GET] /commission/records/export?salaryMonth=2026-08  need=commission:records/export (no backend route) =>  HTTP 404 body={"timestamp":"2026-11-16 00:58:48","status":404,"error":"Not Found","message":"No message available","path":"/commission/records/export"}
+  [GET] /attendance/records?employeeId=99999999  need=attendance:list + employeeId not mine =>  HTTP 403 body={"code":403,"message":"权限不足: 需要权限码：attendance:list","data":null,"traceId":"5105c3dbfe224445b2710166bf614a1d","timestamp":"2026-11-16 00:58:49"}
+  [GET] /attendance/leave/my?employeeId=99999999  need=attendance:leave:list =>  HTTP 403 body={"code":403,"message":"权限不足: 需要权限码：attendance:leave:list","data":null,"traceId":"f5f1f798938249c49ca14064307cbfbb","timestamp":"2026-11-16 00:58:50"}
+  [GET] /commission/records/page  need=commission:record:list no storeId =>  HTTP 200 body={"code":200,"message":"操作成功","data":{"records":[{"sourceId":2962,"sourceItemId":307,"reversalStatus":0,"businessTime":"2026-08-24T22:18:29","settlemen

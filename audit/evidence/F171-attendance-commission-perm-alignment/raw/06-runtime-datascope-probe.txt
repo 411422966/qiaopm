@@ -1,0 +1,24 @@
+﻿--- 鍓嶇瀹為檯璋冪敤 vs 鍚庣瀹為檯璺敱锛堟彁鎴?鑰冨嫟锛?---
+MANAGER [PUT] /commission/rules/1/toggle => HTTP 404 {"timestamp":"2026-11-16 00:26:02","status":404,"error":"Not Found","message":"No message available","path":"/commission/rules/1/toggle"}
+ADMIN [PUT] /commission/rules/1/toggle => HTTP 404 {"timestamp":"2026-11-16 00:26:02","status":404,"error":"Not Found","message":"No message available","path":"/commission/rules/1/toggle"}
+ADMIN [GET] /commission/rules/1 => HTTP 200 {"code":200,"message":"操作成功","data":{"id":1,"tenantId":1,"storeId":1,"ruleName":"服务项目通用提成10%","businessType":"SERVICE","targetId":null,"calculationMethod":"RATE","rate":0.1000,"fixedAmount":null,"priority":10,"versionNo"
+MANAGER [GET] /commission/rules/1 => HTTP 403 {"code":403,"message":"权限不足: 需要权限码：commission:rule:detail","data":null,"traceId":"a76204823b534fd49d291a45983c583c","timestamp":"2026-11-16 00:26:03"}
+ADMIN [GET] /commission/records/export => HTTP 404 {"timestamp":"2026-11-16 00:26:03","status":404,"error":"Not Found","message":"No message available","path":"/commission/records/export"}
+ADMIN [PUT] /commission/records/batch/settle => HTTP 404 {"timestamp":"2026-11-16 00:26:03","status":404,"error":"Not Found","message":"No message available","path":"/commission/records/batch/settle"}
+ADMIN [GET] /commission/rule/list => HTTP 404 {"timestamp":"2026-11-16 00:26:03","status":404,"error":"Not Found","message":"No message available","path":"/commission/rule/list"}
+ADMIN [GET] /commission/records/page?employeeId=4 => HTTP 200 {"code":200,"message":"操作成功","data":{"records":[{"sourceId":2962,"sourceItemId":307,"reversalStatus":0,"businessTime":"2026-08-24T22:18:29","settlementId":null,"calculationMethod":"RATE","rate":0.1000,"reversalId":null,"
+CLERK [GET] /commission/records/page?employeeId=4 => HTTP 403 {"code":403,"message":"权限不足: 需要权限码：commission:record:list","data":null,"traceId":"74d38399c39744648f7f02836c35964a","timestamp":"2026-11-16 00:26:05"}
+--- 鑰冨嫟锛歟mployeeId 鐢辫皟鐢ㄦ柟鎸囧畾 ---
+ADMIN [GET] /attendance/today?employeeId=99999999 => HTTP 200 {"code":200,"message":"操作成功","data":{"lateMinutes":0,"hasCheckedOut":false,"checkOutTime":null,"isLate":false,"checkInTime":null,"checkInStatus":null,"isEarlyLeave":false,"hasCheckedIn":false,"workMinutes":null},"traceId
+ADMIN [GET] /attendance/records?employeeId=99999999 => HTTP 200 {"code":200,"message":"操作成功","data":[],"traceId":"18477a9092dc483386fa59bcd6104b59","timestamp":"2026-11-16 00:26:05"}
+ADMIN [GET] /attendance/leave/my?employeeId=99999999 => HTTP 200 {"code":200,"message":"操作成功","data":[],"traceId":"3cf73f1c8b774476991cc3a58c702a53","timestamp":"2026-11-16 00:26:06"}
+ADMIN [GET] /attendance/leave/list?employeeId=99999999 => HTTP 200 {"code":200,"message":"操作成功","data":[],"traceId":"9baa381012f4490a9484315103d21e81","timestamp":"2026-11-16 00:26:07"}
+ADMIN [GET] /attendance/monthly-report?employeeId=99999999&year=2026&month=11 => HTTP 200 {"code":200,"message":"操作成功","data":{"earlyCount":0,"totalWorkMinutes":0,"total":0,"month":11,"year":2026,"lateCount":0},"traceId":"4dfdaeb5060c41a5b2d307a801fe7f4f","timestamp":"2026-11-16 00:26:07"}
+--- 鑰冨嫟閰嶇疆锛氳法闂ㄥ簵璇?---
+ADMIN [GET] /attendance/config/list?storeId=999 => HTTP 200 {"code":200,"message":"操作成功","data":[{"id":1,"tenantId":1,"storeId":null,"configName":"通用考勤配置","workStartTime":"09:00:00","workEndTime":"18:00:00","allowLateMinutes":5,"flexibleEnabled":0,"flexibleStartTime":null,"flexib
+ADMIN [GET] /attendance/config/active?storeId=999 => HTTP 200 {"code":200,"message":"操作成功","data":{"id":1,"tenantId":1,"storeId":null,"configName":"通用考勤配置","workStartTime":"09:00:00","workEndTime":"18:00:00","allowLateMinutes":5,"flexibleEnabled":0,"flexibleStartTime":null,"flexibl
+--- 鎻愭垚锛歟mployeeId/storeId 鐢辫皟鐢ㄦ柟鎸囧畾 ---
+ADMIN [GET] /commission/salary/page?employeeId=99999999 => HTTP 200 {"code":200,"message":"操作成功","data":{"records":[],"total":0,"size":20,"current":1,"pages":0},"traceId":"f834c55aaf304e5f850acc8db5d6b0d1","timestamp":"2026-11-16 00:26:09"}
+ADMIN [GET] /commission/salary/page?storeId=999 => HTTP 200 {"code":200,"message":"操作成功","data":{"records":[],"total":0,"size":20,"current":1,"pages":0},"traceId":"ed3fe587a63140a884c7af13924d7d9c","timestamp":"2026-11-16 00:26:10"}
+MANAGER [GET] /commission/salary/page?storeId=999 => HTTP 403 {"code":403,"message":"无权访问该门店数据","data":null,"traceId":"866fbea308444fb9baa905ed4a5f38ee","timestamp":"2026-11-16 00:26:10"}
+MANAGER [GET] /commission/settlement/page?storeId=999 => HTTP 403 {"code":403,"message":"无权访问该门店数据","data":null,"traceId":"89a2a6e0f3384d46959c3cacb3aab204","timestamp":"2026-11-16 00:26:10"}

@@ -1,0 +1,69 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+s
+=== A. sys_user 全量（5 条）===
+id	username	real_name	phone	tenant_id	store_id	status
+1	admin	系统管理员	13800138000	1	NULL	1
+900003	clerk01	测试店员	13800000001	1	1	1
+900004	manager01	测试店长	13800000002	1	1	1
+900005	boss01	测试老板	13800000003	1	1	1
+900006	operator01	测试运营	13800000004	1	1	1
+s
+=== B. pos_employee 抽样（store_id=1，10 条）===
+id	employee_code	employee_name	phone	tenant_id	store_id	status
+1	EMP001	王雪梅	13900139001	1	1	1
+2	EMP002	赵晓彤	13900139002	1	1	1
+3	EMP003	孙丽华	13900139003	1	1	1
+4	EMP004	周敏	13900139004	1	1	1
+5	EMP005	张丽	13900139005	1	1	1
+6	EMP006	李娜	13900139006	1	1	1
+219	UT3-A-854130	UT-3 测试员工 UT3-A-854130	13900018e70	NULL	1	1
+220	UT3-B-29c9d3	UT-3 测试员工 UT3-B-29c9d3	139000f5943	NULL	1	1
+221	UT3-A-15e0ac	UT-3 测试员工 UT3-A-15e0ac	13900016f00	NULL	1	1
+222	UT3-B-722f3f	UT-3 测试员工 UT3-B-722f3f	1390007185a	NULL	1	1
+s
+=== C. 备用键 1：real_name = employee_name 交集 ===
+matched_rows	distinct_users	distinct_employees
+0	0	0
+s
+=== D. 备用键 2：username = employee_code 交集 ===
+matched_rows
+0
+s
+=== E. 备用键 3：real_name LIKE employee_name 交集 ===
+matched_rows
+0
+s
+=== F. sys_user.phone 与 pos_employee.phone 值域形态抽样 ===
+src	phone
+sys_user	13800138000
+sys_user	13800000001
+sys_user	13800000002
+sys_user	13800000003
+sys_user	13800000004
+src	phone
+pos_employee	13900139001
+pos_employee	13900139002
+pos_employee	13900139003
+pos_employee	13900139004
+pos_employee	13900139005
+pos_employee	13900139006
+pos_employee	13900018e70
+pos_employee	139000f5943
+pos_employee	13900016f00
+pos_employee	1390007185a
+pos_employee	1390000b727
+pos_employee	139000467ff
+s
+=== G. phone 唯一性（各表内）===
+t	rows_with_phone	distinct_phone
+sys_user	5	5
+pos_employee	150	150
+s
+=== H. pos_employee 按 tenant/store 分布 ===
+tenant_id	store_id	emp_cnt
+NULL	1	144
+1	1	6
+s
+=== I. 结论口径：按 (tenant_id, phone) 交集再算一次 ===
+matched_rows_tp
+0

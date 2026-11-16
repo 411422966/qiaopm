@@ -1,0 +1,200 @@
+﻿docker : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-35447c27-2930-46d4-aef6-b09f830d2307.ps1:86 字符: 60
++ ... 2c-q2.sql | docker exec -i meiyetec-mysql mysql -uroot -proot123456 - ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
++----------------------+
+| s                    |
++----------------------+
+| === D. all roles === |
++----------------------+
++----+-------------+-----------------+--------+---------+-----------+
+| id | role_code   | role_name       | status | deleted | tenant_id |
++----+-------------+-----------------+--------+---------+-----------+
+|  1 | SUPER_ADMIN | 超级管理员      |      1 |       0 |      NULL |
+|  2 | STORE_ADMIN | 门店管理员      |      1 |       0 |      NULL |
+|  3 | EMPLOYEE    | 员工            |      1 |       0 |      NULL |
+|  4 | CLERK       | 店员            |      1 |       0 |      NULL |
+|  5 | MANAGER     | 店长            |      1 |       0 |      NULL |
+|  6 | BOSS        | 老板            |      1 |       0 |      NULL |
+|  7 | OPERATOR    | 运营            |      1 |       0 |      NULL |
+|  8 | ADMIN       | 系统管理员      |      1 |       0 |      NULL |
++----+-------------+-----------------+--------+---------+-----------+
++-----------------------------------+
+| s                                 |
++-----------------------------------+
+| === E. role_permission counts === |
++-----------------------------------+
++-------------+----------+
+| role_code   | perm_cnt |
++-------------+----------+
+| ADMIN       |      381 |
+| MANAGER     |      278 |
+| BOSS        |      192 |
+| SUPER_ADMIN |      118 |
+| OPERATOR    |      105 |
+| CLERK       |       50 |
+| STORE_ADMIN |       40 |
++-------------+----------+
++--------------------------+
+| s                        |
++--------------------------+
+| === F. users + roles === |
++--------------------------+
++--------+------------+-----------+----------+--------+-------------+
+| id     | username   | tenant_id | store_id | status | role_code   |
++--------+------------+-----------+----------+--------+-------------+
+|      1 | admin      |         1 |     NULL |      1 | SUPER_ADMIN |
+|      1 | admin      |         1 |     NULL |      1 | ADMIN       |
+| 900003 | clerk01    |         1 |        1 |      1 | CLERK       |
+| 900004 | manager01  |         1 |        1 |      1 | MANAGER     |
+| 900005 | boss01     |         1 |        1 |      1 | BOSS        |
+| 900006 | operator01 |         1 |        1 |      1 | OPERATOR    |
++--------+------------+-----------+----------+--------+-------------+
++--------------------------------+
+| s                              |
++--------------------------------+
+| === R. sys_role_data_scope === |
++--------------------------------+
++----+---------+-------------+------------+------------------+
+| id | role_id | role_code   | data_scope | data_scope_value |
++----+---------+-------------+------------+------------------+
+|  1 |       1 | SUPER_ADMIN | ALL        | NULL             |
+|  2 |       2 | STORE_ADMIN | STORE      | NULL             |
+|  3 |       3 | EMPLOYEE    | STORE      | NULL             |
+| 16 |       4 | CLERK       | STORE      | NULL             |
+| 12 |       5 | MANAGER     | STORE      | NULL             |
+| 13 |       6 | BOSS        | STORE      | NULL             |
+| 14 |       7 | OPERATOR    | STORE      | NULL             |
+| 15 |       8 | ADMIN       | ALL        | NULL             |
++----+---------+-------------+------------+------------------+
++-----------------------------+
+| s                           |
++-----------------------------+
+| === S. menu-like tables === |
++-----------------------------+
++-----------------------------------------+
+| TABLE_NAME                              |
++-----------------------------------------+
+| backup_sys_menu_permission_bak_20261106 |
+| sys_menu_permission                     |
++-----------------------------------------+
++---------------------------------------+
+| s                                     |
++---------------------------------------+
+| === T. sys_menu_permission schema === |
++---------------------------------------+
++----------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| Field          | Type         | Null | Key | Default           | Extra                                         |
++----------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| id             | bigint       | NO   | PRI | NULL              | auto_increment                                |
+| permission_id  | bigint       | NO   | UNI | NULL              |                                               |
+| route_path     | varchar(255) | NO   | MUL | NULL              |                                               |
+| component_path | varchar(255) | YES  |     | NULL              |                                               |
+| redirect_path  | varchar(255) | YES  |     | NULL              |                                               |
+| icon           | varchar(64)  | YES  |     | NULL              |                                               |
+| active_paths   | varchar(512) | YES  |     | NULL              |                                               |
+| hidden         | tinyint      | YES  |     | 0                 |                                               |
+| keep_alive     | tinyint      | YES  |     | 1                 |                                               |
+| sort_order     | int          | YES  |     | 0                 |                                               |
+| create_time    | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
+| update_time    | datetime     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++----------------+--------------+------+-----+-------------------+-----------------------------------------------+
++-------------------------------------------------------+
+| s                                                     |
++-------------------------------------------------------+
+| === U. tables existence for attendance/commission === |
++-------------------------------------------------------+
++----------------------------------+------------+
+| TABLE_NAME                       | TABLE_ROWS |
++----------------------------------+------------+
+| attendance_config                |          1 |
+| attendance_leave_request         |          0 |
+| attendance_record                |          0 |
+| biz_commission_condition         |          0 |
+| biz_commission_simulation        |          0 |
+| biz_commission_tier              |          0 |
+| commission_record                |         10 |
+| commission_reversal              |          0 |
+| commission_rule                  |          1 |
+| commission_rule_version          |          0 |
+| commission_salary                |          0 |
+| commission_settlement            |          0 |
+| commission_settlement_batch      |          0 |
+| commission_settlement_batch_item |          0 |
+| commission_settlement_record     |          0 |
++----------------------------------+------------+
++-----------------------+
+| s                     |
++-----------------------+
+| === V. row counts === |
++-----------------------+
++----------------------------------+-----+
+| t                                | c   |
++----------------------------------+-----+
+| attendance_record                |   0 |
+| attendance_config                |   1 |
+| attendance_leave_request         |   0 |
+| commission_rule                  |   1 |
+| commission_record                |  10 |
+| commission_salary                |   0 |
+| commission_settlement            |   0 |
+| commission_settlement_batch      |   0 |
+| commission_settlement_batch_item |   0 |
+| commission_reversal              |   0 |
+| commission_settlement_record     |   0 |
+| pos_employee                     | 171 |
++----------------------------------+-----+
++--------------------------------------------------------+
+| s                                                      |
++--------------------------------------------------------+
+| === K. attendance_record tenant/store distribution === |
++--------------------------------------------------------+
++--------------------------------------------------+
+| s                                                |
++--------------------------------------------------+
+| === L. attendance_leave_request distribution === |
++--------------------------------------------------+
++-------------------------------------------+
+| s                                         |
++-------------------------------------------+
+| === M. commission_record distribution === |
++-------------------------------------------+
++-----------+----------+-----+---------+---------+
+| tenant_id | store_id | cnt | min_m   | max_m   |
++-----------+----------+-----+---------+---------+
+|         1 |        1 |  10 | 2026-08 | 2026-08 |
++-----------+----------+-----+---------+---------+
++-------------------------------------------+
+| s                                         |
++-------------------------------------------+
+| === N. commission_salary distribution === |
++-------------------------------------------+
++-----------------------------------------------+
+| s                                             |
++-----------------------------------------------+
+| === O. commission_settlement distribution === |
++-----------------------------------------------+
++--------------------------------------+
+| s                                    |
++--------------------------------------+
+| === P. pos_employee distribution === |
++--------------------------------------+
++-----------+----------+-----+
+| tenant_id | store_id | cnt |
++-----------+----------+-----+
+|      NULL |        1 | 144 |
+|         1 |        1 |  27 |
++-----------+----------+-----+
++-------------------------------------------+
+| s                                         |
++-------------------------------------------+
+| === Q. attendance_config distribution === |
++-------------------------------------------+
++-----------+----------+-----+
+| tenant_id | store_id | cnt |
++-----------+----------+-----+
+|         1 |     NULL |   1 |
++-----------+----------+-----+

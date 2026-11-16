@@ -1,0 +1,234 @@
+﻿docker : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-7cad4be4-7f7c-4585-8158-a631dc65d766.ps1:86 字符: 60
++ ... 2c-q3.sql | docker exec -i meiyetec-mysql mysql -uroot -proot123456 - ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
++-------------------------------------------------+
+| s                                               |
++-------------------------------------------------+
+| === W1. SUPER_ADMIN role1 codes of interest === |
++-------------------------------------------------+
++---------+-------------+-----------------+
+| role_id | role_code   | permission_code |
++---------+-------------+-----------------+
+|       1 | SUPER_ADMIN | booking         |
+|       1 | SUPER_ADMIN | member          |
+|       1 | SUPER_ADMIN | setting         |
++---------+-------------+-----------------+
++----------------------------------------------------------------+
+| s                                                              |
++----------------------------------------------------------------+
+| === W2. does SUPER_ADMIN hold attendance/commission codes? === |
++----------------------------------------------------------------+
++-------------+-----------------------+
+| role_code   | permission_code       |
++-------------+-----------------------+
+| SUPER_ADMIN | biz                   |
+| SUPER_ADMIN | biz:service-item:edit |
+| SUPER_ADMIN | biz.service-item      |
+| SUPER_ADMIN | biz.treatment-plan    |
+| SUPER_ADMIN | blockchain            |
+| SUPER_ADMIN | blockchain:chain      |
+| SUPER_ADMIN | blockchain:monitor    |
+| SUPER_ADMIN | blockchain:record     |
+| SUPER_ADMIN | blockchain:trace      |
+| SUPER_ADMIN | booking               |
+| SUPER_ADMIN | booking.calendar      |
+| SUPER_ADMIN | booking.list          |
+| SUPER_ADMIN | booking.noshow        |
+| SUPER_ADMIN | booking.resource      |
+| SUPER_ADMIN | booking.schedule      |
+| SUPER_ADMIN | booking.waitlist      |
+| SUPER_ADMIN | commission            |
+| SUPER_ADMIN | commission.batch      |
+| SUPER_ADMIN | commission.records    |
+| SUPER_ADMIN | commission.reversal   |
+| SUPER_ADMIN | commission.rules      |
+| SUPER_ADMIN | commission.salary     |
+| SUPER_ADMIN | commission.settlement |
+| SUPER_ADMIN | crm                   |
+| SUPER_ADMIN | crm.care-overview     |
+| SUPER_ADMIN | crm.complaint         |
+| SUPER_ADMIN | crm.cross-record      |
+| SUPER_ADMIN | crm.cross-rule        |
+| SUPER_ADMIN | crm.follow-plan       |
+| SUPER_ADMIN | crm.follow-task       |
+| SUPER_ADMIN | crm.ltv               |
+| SUPER_ADMIN | crm.review            |
+| SUPER_ADMIN | crm.review-tpl        |
+| SUPER_ADMIN | crm.rfm               |
+| SUPER_ADMIN | dashboard             |
+| SUPER_ADMIN | dev                   |
+| SUPER_ADMIN | dev.care-memberday    |
+| SUPER_ADMIN | dev.care-plan         |
+| SUPER_ADMIN | dev.datahub           |
+| SUPER_ADMIN | dev.forecast          |
++-------------+-----------------------+
++------------------------------------------------+
+| s                                              |
++------------------------------------------------+
+| === W3. any role bound to attendance codes === |
++------------------------------------------------+
++-----+
+| cnt |
++-----+
+|   0 |
++-----+
++-------------------------------------------------------------------------------------------------------------------------------+
+| s                                                                                                                             |
++-------------------------------------------------------------------------------------------------------------------------------+
+| === W4. employee:attendance / employee:leave / commission:rule / commission:simulation / commission:rule:config existence === |
++-------------------------------------------------------------------------------------------------------------------------------+
++-----------------------------+-----+
+| code                        | cnt |
++-----------------------------+-----+
+| employee:attendance         |   0 |
+| employee:attendance:list    |   0 |
+| employee:attendance:stat    |   0 |
+| employee:attendance:config  |   0 |
+| employee:leave              |   0 |
+| commission:rule             |   0 |
+| commission:rule:config      |   0 |
+| commission:simulation       |   0 |
+| commission:settlement:audit |   1 |
+| attendance:check            |   1 |
++-----------------------------+-----+
++--------------------------------------------------------------+
+| s                                                            |
++--------------------------------------------------------------+
+| === W5. sys_menu_permission attendance/commission routes === |
++--------------------------------------------------------------+
++-----+---------------+------------------------+--------+-----------------------+
+| id  | permission_id | route_path             | hidden | permission_code       |
++-----+---------------+------------------------+--------+-----------------------+
+| 302 |          1239 | /commission/batch      |      0 | commission.batch      |
+| 299 |          1236 | /commission/records    |      0 | commission.records    |
+| 303 |          1240 | /commission/reversal   |      0 | commission.reversal   |
+| 266 |          1203 | /commission/rules      |      0 | commission            |
+| 298 |          1235 | /commission/rules      |      0 | commission.rules      |
+| 300 |          1237 | /commission/salary     |      0 | commission.salary     |
+| 301 |          1238 | /commission/settlement |      0 | commission.settlement |
++-----+---------------+------------------------+--------+-----------------------+
++---------------------------------------------------------------------+
+| s                                                                   |
++---------------------------------------------------------------------+
+| === W6. all sys_menu_permission route->perm for reference count === |
++---------------------------------------------------------------------+
++-------+
+| total |
++-------+
+|   123 |
++-------+
++------------------------------------------+
+| s                                        |
++------------------------------------------+
+| === W7. permission_type distribution === |
++------------------------------------------+
++-----------------+-----+
+| permission_type | cnt |
++-----------------+-----+
+| button          | 334 |
+| menu            | 124 |
+| API             |  51 |
++-----------------+-----+
++--------------------------------------------------------------------+
+| s                                                                  |
++--------------------------------------------------------------------+
+| === W8. API-type permission codes bound to zero roles (top 40) === |
++--------------------------------------------------------------------+
++-------------------------------------+-----------------+
+| permission_code                     | permission_type |
++-------------------------------------+-----------------+
+| bnpl:cancel                         | API             |
+| bnpl:create                         | API             |
+| bnpl:credit                         | API             |
+| bnpl:list                           | API             |
+| bnpl:statistics                     | API             |
+| commission:calculate                | API             |
+| commission:record:stat              | API             |
+| commission:rule:detail              | API             |
+| commission:rule:stat                | API             |
+| commission:rule:status              | API             |
+| commission:salary:add               | API             |
+| commission:salary:adjust            | API             |
+| commission:salary:batch-confirm     | API             |
+| commission:salary:batch-pay         | API             |
+| commission:salary:export            | API             |
+| commission:salary:stat              | API             |
+| commission:settlement:add           | API             |
+| commission:settlement:batch-confirm | API             |
+| commission:settlement:batch-pay     | API             |
+| commission:settlement:confirm       | API             |
+| commission:settlement:detail        | API             |
+| commission:settlement:export        | API             |
+| commission:settlement:pay           | API             |
+| commission:settlement:stat          | API             |
+| huabei:cancel                       | API             |
+| huabei:create                       | API             |
+| huabei:credit                       | API             |
+| huabei:list                         | API             |
+| sys:permission:add                  | API             |
+| sys:permission:delete               | API             |
+| sys:permission:edit                 | API             |
+| sys:permission:sync                 | API             |
+| wallet:freeze                       | API             |
++-------------------------------------+-----------------+
++----------------------------------------------------+
+| s                                                  |
++----------------------------------------------------+
+| === W9. attendance/commission API-type unbound === |
++----------------------------------------------------+
++------+-------------------------------------+-----------------+--------+-------------+
+| id   | permission_code                     | permission_type | status | bound_roles |
++------+-------------------------------------+-----------------+--------+-------------+
+| 1453 | attendance:check                    | button          |      1 |           0 |
+| 1452 | attendance:config:edit              | button          |      1 |           0 |
+| 1451 | attendance:config:list              | button          |      1 |           0 |
+| 1456 | attendance:edit                     | button          |      1 |           0 |
+| 1458 | attendance:leave:approve            | button          |      1 |           0 |
+| 1459 | attendance:leave:list               | button          |      1 |           0 |
+| 1457 | attendance:leave:submit             | button          |      1 |           0 |
+| 1454 | attendance:list                     | button          |      1 |           0 |
+| 1455 | attendance:stat                     | button          |      1 |           0 |
+| 1203 | commission                          | menu            |      1 |           4 |
+| 1129 | commission:batch                    | button          |      1 |           3 |
+| 1328 | commission:calculate                | API             |      1 |           0 |
+| 1118 | commission:list                     | button          |      1 |           0 |
+| 1123 | commission:record:list              | button          |      1 |           3 |
+| 1330 | commission:record:stat              | API             |      1 |           0 |
+| 1130 | commission:reversal                 | button          |      1 |           3 |
+| 1120 | commission:rule:add                 | button          |      1 |           0 |
+| 1122 | commission:rule:delete              | button          |      1 |           0 |
+| 1331 | commission:rule:detail              | API             |      1 |           0 |
+| 1121 | commission:rule:edit                | button          |      1 |           0 |
+| 1119 | commission:rule:list                | button          |      1 |           3 |
+| 1332 | commission:rule:stat                | API             |      1 |           0 |
+| 1329 | commission:rule:status              | API             |      1 |           0 |
+| 1335 | commission:salary:add               | API             |      1 |           0 |
+| 1336 | commission:salary:adjust            | API             |      1 |           0 |
+| 1339 | commission:salary:batch-confirm     | API             |      1 |           0 |
+| 1337 | commission:salary:batch-pay         | API             |      1 |           0 |
+| 1125 | commission:salary:confirm           | button          |      1 |           0 |
+| 1333 | commission:salary:export            | API             |      1 |           0 |
+| 1124 | commission:salary:list              | button          |      1 |           3 |
+| 1126 | commission:salary:pay               | button          |      1 |           0 |
+| 1334 | commission:salary:stat              | API             |      1 |           0 |
+| 1345 | commission:settlement:add           | API             |      1 |           0 |
+| 1128 | commission:settlement:audit         | button          |      1 |           0 |
+| 1327 | commission:settlement:batch-confirm | API             |      1 |           0 |
+| 1341 | commission:settlement:batch-pay     | API             |      1 |           0 |
+| 1344 | commission:settlement:confirm       | API             |      1 |           0 |
+| 1343 | commission:settlement:detail        | API             |      1 |           0 |
+| 1342 | commission:settlement:export        | API             |      1 |           0 |
+| 1127 | commission:settlement:list          | button          |      1 |           3 |
+| 1340 | commission:settlement:pay           | API             |      1 |           0 |
+| 1338 | commission:settlement:stat          | API             |      1 |           0 |
+| 1239 | commission.batch                    | menu            |      1 |           3 |
+| 1236 | commission.records                  | menu            |      1 |           4 |
+| 1240 | commission.reversal                 | menu            |      1 |           3 |
+| 1235 | commission.rules                    | menu            |      1 |           4 |
+| 1237 | commission.salary                   | menu            |      1 |           4 |
+| 1238 | commission.settlement               | menu            |      1 |           4 |
++------+-------------------------------------+-----------------+--------+-------------+

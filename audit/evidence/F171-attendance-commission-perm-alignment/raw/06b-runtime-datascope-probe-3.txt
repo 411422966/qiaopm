@@ -1,0 +1,26 @@
+﻿=== A. 闂ㄥ簵鑼冨洿锛歴toreId 缂虹渷 vs 鎸囧畾浠栧簵锛圡ANAGER dataScope=STORE, storeIds={1}锛?===
+MANAGER [GET] /commission/records/page => HTTP 200 {"code":200,"message":"操作成功","data":{"records":[{"sourceId":2962,"sourceItemId":307,"reversalStatus":0,"businessTime":"2026-08-24T22:18:29","settlementId":null,"calculationMethod":"RATE","rate":0.1000,"reversalId":null,"ruleName":"服务项目通用提成10%","id":717,"fixedAmount":null,"ruleId":1,"serviceId":1,"em
+MANAGER [GET] /commission/records/page?storeId=1 => HTTP 200 {"code":200,"message":"操作成功","data":{"records":[{"sourceId":2962,"sourceItemId":307,"reversalStatus":0,"businessTime":"2026-08-24T22:18:29","settlementId":null,"calculationMethod":"RATE","rate":0.1000,"reversalId":null,"ruleName":"服务项目通用提成10%","id":717,"fixedAmount":null,"ruleId":1,"serviceId":1,"em
+MANAGER [GET] /commission/records/page?storeId=5 => HTTP 403 {"code":403,"message":"无权访问该门店数据","data":null,"traceId":"abd244df807e48ad96c23b8b5c3866ad","timestamp":"2026-11-16 03:10:03"}
+MANAGER [GET] /commission/salary/page => HTTP 200 {"code":200,"message":"操作成功","data":{"records":[],"total":0,"size":20,"current":1,"pages":0},"traceId":"d99b6dc499d64ac3a7b903305c70a5e9","timestamp":"2026-11-16 03:10:03"}
+MANAGER [GET] /commission/salary/page?storeId=5 => HTTP 403 {"code":403,"message":"无权访问该门店数据","data":null,"traceId":"50f7ad4b958140a4828a9a0e9f2c8ef0","timestamp":"2026-11-16 03:10:03"}
+MANAGER [GET] /commission/settlement/page => HTTP 200 {"code":200,"message":"操作成功","data":{"records":[],"total":0,"size":20,"current":1,"pages":0},"traceId":"351219d0d667481586d8a5758c224ac7","timestamp":"2026-11-16 03:10:03"}
+MANAGER [GET] /commission/settlement/page?storeId=5 => HTTP 403 {"code":403,"message":"无权访问该门店数据","data":null,"traceId":"479e6c58226943a39370d15b816c3aa6","timestamp":"2026-11-16 03:10:04"}
+MANAGER [GET] /commission/rules/page => HTTP 200 {"code":200,"message":"操作成功","data":{"records":[{"id":1,"tenantId":1,"storeId":1,"ruleName":"服务项目通用提成10%","businessType":"SERVICE","targetId":null,"calculationMethod":"RATE","rate":0.1000,"fixedAmount":null,"priority":10,"versionNo":1,"effectiveDate":"2000-01-01","expiryDate":null,"status":1,"isActi
+MANAGER [GET] /commission/rules/page?storeId=5 => HTTP 403 {"code":403,"message":"无权访问该门店数据","data":null,"traceId":"39d84322adcb4a0eb0f52e92a8b9b9a2","timestamp":"2026-11-16 03:10:05"}
+=== B. BOSS 鍚屾牱楠岃瘉 ===
+BOSS [GET] /commission/records/page => HTTP 200 {"code":200,"message":"操作成功","data":{"records":[{"sourceId":2962,"sourceItemId":307,"reversalStatus":0,"businessTime":"2026-08-24T22:18:29","settlementId":null,"calculationMethod":"RATE","rate":0.1000,"reversalId":null,"ruleName":"服务项目通用提成10%","id":717,"fixedAmount":null,"ruleId":1,"serviceId":1,"em
+BOSS [GET] /commission/records/page?storeId=5 => HTTP 403 {"code":403,"message":"无权访问该门店数据","data":null,"traceId":"255128bb78214f73aad5a2367ed6d125","timestamp":"2026-11-16 03:10:06"}
+BOSS [GET] /commission/rules/page?storeId=5 => HTTP 403 {"code":403,"message":"无权访问该门店数据","data":null,"traceId":"4f8c9900ca09446091b3d2429de1e5a6","timestamp":"2026-11-16 03:10:06"}
+=== C. 鍓嶇璋冪敤浣嗗悗绔棤 handler 鐨勮矾鐢憋紙GET 鎺㈡祴璺緞瀛樺湪鎬э細405=璺緞瀛樺湪浠呮柟娉曚笉绗?/ 404=璺緞涓嶅瓨鍦級 ===
+ADMIN [GET] /commission/records/batch/invalidate => HTTP 404 {"timestamp":"2026-11-16 03:10:06","status":404,"error":"Not Found","message":"No message available","path":"/commission/records/batch/invalidate"}
+ADMIN [GET] /commission/simulation => HTTP 404 {"timestamp":"2026-11-16 03:10:06","status":404,"error":"Not Found","message":"No message available","path":"/commission/simulation"}
+ADMIN [GET] /commission/tier/by-rule/1 => HTTP 404 {"timestamp":"2026-11-16 03:10:06","status":404,"error":"Not Found","message":"No message available","path":"/commission/tier/by-rule/1"}
+ADMIN [GET] /commission/records/export => HTTP 404 {"timestamp":"2026-11-16 03:10:06","status":404,"error":"Not Found","message":"No message available","path":"/commission/records/export"}
+ADMIN [GET] /commission/rules/1/toggle => HTTP 404 {"timestamp":"2026-11-16 03:10:06","status":404,"error":"Not Found","message":"No message available","path":"/commission/rules/1/toggle"}
+ADMIN [GET] /attendance/leave/99999999/cancel => HTTP 200 {"code":500,"message":"系统繁忙，请稍后重试","data":null,"traceId":"42925414fbbe49429942064f44f3e7f5","timestamp":"2026-11-16 03:10:06"}
+=== D. 鑰冨嫟锛歟mployeeId 缂虹渷/浠栧簵鍛樺伐 ===
+ADMIN [GET] /attendance/records?storeId=5 => HTTP 200 {"code":200,"message":"操作成功","data":[],"traceId":"225970dd4d8140fbbcd1156556330add","timestamp":"2026-11-16 03:10:07"}
+ADMIN [GET] /attendance/leave/pending-count?storeId=5 => HTTP 200 {"code":200,"message":"操作成功","data":0,"traceId":"7d11ace9c38a4046a023697061bf07b2","timestamp":"2026-11-16 03:10:08"}
+ADMIN [GET] /attendance/statistics?storeId=5 => HTTP 200 {"code":200,"message":"操作成功","data":{"earlyCount":0,"totalRecords":0,"absenceCount":0,"lateCount":0,"normalCount":0,"avgWorkMinutes":0.0},"traceId":"e987f15284c9468d9e00cfc6494ea74c","timestamp":"2026-11-16 03:10:09"}
+MANAGER [GET] /attendance/records?storeId=5 => HTTP 403 {"code":403,"message":"无权访问该门店数据","data":null,"traceId":"1a8064f4c8b84402827381846d2af6d0","timestamp":"2026-11-16 03:10:10"}
