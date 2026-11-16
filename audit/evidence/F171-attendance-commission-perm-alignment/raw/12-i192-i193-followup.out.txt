@@ -1,0 +1,71 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+s
+=== A. pos_employee 按 tenant/store/status/deleted 分布 + UT 码计数 ===
+tenant_id	store_id	status	deleted	cnt	min_id	max_id	ut_codes	null_entry_date
+NULL	1	1	0	144	219	423	144	144
+1	1	1	1	14	582	627	0	14
+1	1	2	1	7	581	625	0	7
+1	1	1	0	6	1	6	0	6
+s
+=== B. 存活行（deleted=0）中 tenant_id IS NULL 的数量 ===
+live_with_null_tenant
+144
+s
+=== C. 存活行按 tenant_id 分布 ===
+tenant_id	live_cnt
+NULL	144
+1	6
+s
+=== D. tenant_id IS NULL 行样本（前 5）===
+id	employee_code	employee_name	phone	tenant_id	store_id	status	deleted	create_time	entry_date	salary
+219	UT3-A-854130	UT-3 测试员工 UT3-A-854130	13900018e70	NULL	1	1	0	2026-08-15 06:42:55	NULL	5000.00
+220	UT3-B-29c9d3	UT-3 测试员工 UT3-B-29c9d3	139000f5943	NULL	1	1	0	2026-08-15 06:42:55	NULL	5000.00
+221	UT3-A-15e0ac	UT-3 测试员工 UT3-A-15e0ac	13900016f00	NULL	1	1	0	2026-08-15 06:42:55	NULL	5000.00
+222	UT3-B-722f3f	UT-3 测试员工 UT3-B-722f3f	1390007185a	NULL	1	1	0	2026-08-15 06:42:55	NULL	5000.00
+223	UT3-A-7b120c	UT-3 测试员工 UT3-A-7b120c	1390000b727	NULL	1	1	0	2026-08-15 06:42:55	NULL	5000.00
+s
+=== E. tenant_id IS NULL 行的 create_time 区间（判定是否批量生成）===
+min_ct	max_ct	c
+2026-08-15 06:42:55	2026-08-15 06:58:29	144
+s
+=== F. 存活且 tenant_id=1 的员工全量 ===
+id	employee_code	employee_name	phone	tenant_id	store_id	status	create_time
+1	EMP001	王雪梅	13900139001	1	1	1	2026-08-14 23:19:55
+2	EMP002	赵晓彤	13900139002	1	1	1	2026-08-14 23:19:55
+3	EMP003	孙丽华	13900139003	1	1	1	2026-08-14 23:19:55
+4	EMP004	周敏	13900139004	1	1	1	2026-08-14 23:19:55
+5	EMP005	张丽	13900139005	1	1	1	2026-08-14 23:19:55
+6	EMP006	李娜	13900139006	1	1	1	2026-08-14 23:19:55
+s
+=== G. 业务表行数（是否有人引用 UT 员工）===
+commission_salary	commission_settlement	commission_settlement_record	attendance_record	attendance_leave_request	commission_record
+0	0	0	0	0	10
+s
+=== H. commission_record 的员工引用分布 ===
+total	distinct_emps	ut_range_refs	null_tenant_rows	stores
+10	1	0	0	1
+s
+=== I. 存活员工按门店分布 ===
+store_id	live_emps	null_tenant	tenant1
+1	150	144	6
+s
+=== J. pos_store 列表（门店维度是否有第二个租户）===
+id	store_name	tenant_id
+1	美业SaaS示范店	1
+5	软删除测试-1787645628107	1
+9	软删除测试-1787645676856	1
+13	软删除测试-1787646822143	1
+17	软删除测试-1787647230606	1
+21	软删除测试-1787651216055	1
+s
+=== K. sys_user 是否存在员工关联列 ===
+s
+=== L. pos_employee 是否存在用户关联列 ===
+s
+=== M. sys_user 全量（账号性质判定）===
+id	username	real_name	phone	tenant_id	store_id	status	deleted
+1	admin	系统管理员	13800138000	1	NULL	1	0
+900003	clerk01	测试店员	13800000001	1	1	1	0
+900004	manager01	测试店长	13800000002	1	1	1	0
+900005	boss01	测试老板	13800000003	1	1	1	0
+900006	operator01	测试运营	13800000004	1	1	1	0
