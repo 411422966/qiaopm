@@ -1,0 +1,69 @@
+﻿=== I196 evidence summary (generated 2026-11-17) ===
+
+--- [1] mvn test-compile BEFORE fix: error lines ---
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/InventoryConsumptionFlowTest.java:[48,19] 无法将类 com.meiyetec.service.InventoryConsumptionService中的构造器 InventoryConsumptionService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/InventoryConsumptionBomMissingTest.java:[62,19] 无法将类 com.meiyetec.service.InventoryConsumptionService中的构造器 InventoryConsumptionService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/BookingWaitlistScoreServiceTest.java:[38,12] jdbc 在 com.meiyetec.service.BookingWaitlistScoreService 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/BookingWaitlistScoreServiceTest.java:[42,12] 找不到符号
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/AttendIsLateAlgorithmTest.java:[22,53] 无法将类 com.meiyetec.service.impl.AttendanceConfigServiceImpl中的构造器 AttendanceConfigServiceImpl应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[245,12] wDistance 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[245,34] wSkill 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[245,53] wRating 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[246,12] wLoad 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[246,30] wTime 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[247,12] minDispatchScore 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[283,12] wDistance 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[283,34] wSkill 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[283,53] wRating 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[284,12] wLoad 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[284,30] wTime 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[285,12] minDispatchScore 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[317,12] wDistance 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[317,34] wSkill 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[317,53] wRating 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[318,12] wLoad 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[318,30] wTime 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[319,12] minDispatchScore 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/RefundAuditWorkflowServiceE2eTest.java:[71,12] 找不到符号
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/RefundAuditWorkflowServiceE2eTest.java:[95,22] 找不到符号
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/plugin/PluginRuntimeTest.java:[89,36] 无法将类 com.meiyetec.plugin.PluginRuntimeService中的构造器 PluginRuntimeService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/plugin/PluginRuntimeTest.java:[100,36] 无法将类 com.meiyetec.plugin.PluginRuntimeService中的构造器 PluginRuntimeService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/plugin/PluginRuntimeTest.java:[112,36] 无法将类 com.meiyetec.plugin.PluginRuntimeService中的构造器 PluginRuntimeService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/plugin/PluginRuntimeTest.java:[131,36] 无法将类 com.meiyetec.plugin.PluginRuntimeService中的构造器 PluginRuntimeService应用到给定类型;
+
+--- [2] mvn test (default profile) totals ---
+[ERROR] Tests run: 1503, Failures: 23, Errors: 171, Skipped: 3
+[INFO] BUILD FAILURE
+[INFO] Total time:  03:52 min
+
+--- [3] mvn test -Dspring.profiles.active=test: failing classes ---
+[ERROR] Tests run: 11, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 3.691 s <<< FAILURE! - in com.meiyetec.booking.BookingConfirmationServiceTest
+[ERROR] Tests run: 15, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 0.164 s <<< FAILURE! - in com.meiyetec.booking.BookingConfirmationTemplateResolverTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0 s <<< FAILURE! - in com.meiyetec.controller.BookingCrossTenantStoreIsolationTest
+[ERROR] Tests run: 9, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.696 s <<< FAILURE! - in com.meiyetec.crm.CrmAdapterTest
+[ERROR] Tests run: 17, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 4.269 s <<< FAILURE! - in com.meiyetec.crm.HubspotZohoAdapterTest
+[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.065 s <<< FAILURE! - in com.meiyetec.dcep.DcepAdapterFactoryTest
+[ERROR] Tests run: 9, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.011 s <<< FAILURE! - in com.meiyetec.googlemaps.GoogleMapsGeocodingTest
+[ERROR] Tests run: 6, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.056 s <<< FAILURE! - in com.meiyetec.service.AiModulesPresenceTest
+[ERROR] Tests run: 3, Failures: 1, Errors: 2, Skipped: 0, Time elapsed: 4.207 s <<< FAILURE! - in com.meiyetec.service.BookingCreateConflictTest
+[ERROR] Tests run: 3, Failures: 1, Errors: 2, Skipped: 0, Time elapsed: 13.419 s <<< FAILURE! - in com.meiyetec.service.BookingRoomConflictTest
+[ERROR] Tests run: 28, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.209 s <<< FAILURE! - in com.meiyetec.service.BookingWaitlistScoreServiceTest
+[ERROR] Tests run: 6, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.358 s <<< FAILURE! - in com.meiyetec.service.FiscalModulesPresenceTest
+[ERROR] Tests run: 9, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.003 s <<< FAILURE! - in com.meiyetec.service.IotControllersPresenceTest
+[ERROR] Tests run: 39, Failures: 7, Errors: 0, Skipped: 0, Time elapsed: 0.02 s <<< FAILURE! - in com.meiyetec.service.LbsRouteOptimizerTest
+[ERROR] Tests run: 5, Failures: 0, Errors: 5, Skipped: 0, Time elapsed: 7.704 s <<< FAILURE! - in com.meiyetec.service.RefundAuditWorkflowServiceE2eTest
+[ERROR] Tests run: 12, Failures: 5, Errors: 0, Skipped: 0, Time elapsed: 0.121 s <<< FAILURE! - in com.meiyetec.service.RefundReverseLogBackfillTest
+[ERROR] Tests run: 3, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.001 s <<< FAILURE! - in com.meiyetec.service.ReportControllersPresenceTest
+[ERROR] Tests run: 8, Failures: 0, Errors: 8, Skipped: 0, Time elapsed: 19.262 s <<< FAILURE! - in com.meiyetec.service.ReportQueryTest
+[ERROR] Tests run: 9, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.91 s <<< FAILURE! - in com.meiyetec.service.SubsModulesPresenceTest
+[ERROR] Tests run: 5, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.08 s <<< FAILURE! - in com.meiyetec.service.SysLoginLogServiceImplTest
+[ERROR] Tests run: 10, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 0.162 s <<< FAILURE! - in com.meiyetec.service.T06ReverseLogRefIdTest
+[ERROR] Tests run: 14, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.484 s <<< FAILURE! - in com.meiyetec.service.TreatmentReportServiceTest
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 46.721 s <<< FAILURE! - in com.meiyetec.service.WalletConsumeConcurrencyTest
+[ERROR] Tests run: 10, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 6.363 s <<< FAILURE! - in com.meiyetec.service.WalletNullTenantBackfillTest
+[ERROR] Tests run: 1552, Failures: 37, Errors: 23, Skipped: 3
+
+--- [4] totals (test profile) ---
+[ERROR] Tests run: 1552, Failures: 37, Errors: 23, Skipped: 3
+[INFO] BUILD FAILURE
+[INFO] Total time:  08:44 min

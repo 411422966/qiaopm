@@ -1,0 +1,225 @@
+﻿# I196 证据 02 —— mvn test（默认 profile）失败摘要
+# 原始全量日志 24MB，未入库（命中 .gitignore *.log / *.zip）；仅保留可核查摘录
+# 命令：cd backend && mvn test -Dmaven.test.skip=false   （EXIT=1）
+
+--- 汇总 ---
+[ERROR] Tests run: 1503, Failures: 23, Errors: 171, Skipped: 3
+[INFO] BUILD FAILURE
+[INFO] Total time:  03:52 min
+
+--- 根因（全部 148 个上下文类 error 的共同来源）---
+2026-11-17 16:24:37.530 [main] INFO  c.m.c.PosControllerTenantIsolationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+Caused by: java.lang.IllegalStateException: [JwtUtil] jwt.secret 鍛戒腑寮卞?兼娴嬶紙pattern: (?i)meiyetec锛夈?傜敓浜?/榛樿 profile 绂佹浣跨敤姝ょ被瀵嗛挜銆傝璁剧疆鐪熷疄闅忔満瀵嗛挜鍒扮幆澧冨彉閲? JWT_SECRET銆?
+Caused by: java.lang.IllegalStateException: [JwtUtil] jwt.secret 命中弱值检测（pattern: (?i)meiyetec）。生产/默认 profile 禁止使用此类密钥。请设置真实随机密钥到环境变量 JWT_SECRET。
+2026-11-17 16:24:56.258 [main] INFO  c.m.dcep.DcepAdapterFactoryTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:24:58.531 [main] INFO  c.m.dcep.DcepAdapterFactoryTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:00.519 [main] INFO  c.m.dcep.DcepAdapterFactoryTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:02.254 [main] INFO  c.m.dcep.DcepAdapterFactoryTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:08.748 [main] INFO  c.m.s.BookingCreateConflictTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:10.573 [main] INFO  c.m.s.BookingCreateConflictTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:12.269 [main] INFO  c.m.s.BookingCreateConflictTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:13.836 [main] INFO  c.m.service.BookingRoomConflictTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:15.475 [main] INFO  c.m.service.BookingRoomConflictTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:16.942 [main] INFO  c.m.service.BookingRoomConflictTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:18.807 [main] INFO  c.m.s.CommissionCalculationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:20.323 [main] INFO  c.m.s.CommissionCalculationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:21.686 [main] INFO  c.m.s.CommissionCalculationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:22.912 [main] INFO  c.m.s.CommissionCalculationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:25.158 [main] INFO  c.m.s.CommissionCalculationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:26.441 [main] INFO  c.m.s.CommissionCalculationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:27.549 [main] INFO  c.m.s.CommissionCalculationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:28.752 [main] INFO  c.m.s.CommissionCalculationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:29.938 [main] INFO  c.m.s.CommissionCalculationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:31.198 [main] INFO  c.m.service.CommissionSettlementTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:32.380 [main] INFO  c.m.service.CommissionSettlementTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:33.473 [main] INFO  c.m.service.CommissionSettlementTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:34.505 [main] INFO  c.m.service.CommissionSettlementTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:35.625 [main] INFO  c.m.service.CommissionSettlementTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:36.653 [main] INFO  c.m.service.CommissionSettlementTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:37.668 [main] INFO  c.m.service.CommissionSettlementTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:38.784 [main] INFO  c.m.service.CommissionSettlementTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:40.640 [main] INFO  c.m.s.ConcurrencyIntegrationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:41.871 [main] INFO  c.m.s.ConcurrencyIntegrationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:43.270 [main] INFO  c.m.s.ConcurrencyIntegrationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:44.534 [main] INFO  c.m.service.DcepChannelEnvModeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:45.742 [main] INFO  c.meiyetec.service.DcepMockEnvTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:46.802 [main] INFO  c.m.service.DcepNotifyExtraTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:47.818 [main] INFO  c.m.service.DcepNotifyExtraTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:49.214 [main] INFO  c.m.service.DcepNotifyExtraTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:50.631 [main] INFO  c.m.service.DcepNotifyExtraTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:51.900 [main] INFO  c.m.service.DcepNotifyExtraTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:53.009 [main] INFO  c.m.service.DcepNotifyExtraTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:54.079 [main] INFO  c.m.service.DcepNotifyExtraTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:55.202 [main] INFO  com.meiyetec.service.DcepNotifyTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:56.274 [main] INFO  c.m.s.DcepServiceAdapterRoutingTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:57.420 [main] INFO  c.m.service.DcepStartupValidateTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:58.583 [main] INFO  c.m.service.DcepVerifySignTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:25:59.702 [main] INFO  c.m.service.EmployeeServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:00.922 [main] INFO  c.m.service.EmployeeServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:04.094 [main] INFO  c.meiyetec.service.MemberServiceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:05.142 [main] INFO  c.meiyetec.service.MemberServiceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:06.170 [main] INFO  c.meiyetec.service.MemberServiceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:07.128 [main] INFO  c.meiyetec.service.MemberServiceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:08.209 [main] INFO  c.meiyetec.service.MemberServiceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:09.315 [main] INFO  c.meiyetec.service.MemberServiceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:10.408 [main] INFO  c.meiyetec.service.MemberServiceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:11.511 [main] INFO  c.m.s.MultiTenantWalletStabilityTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:13.231 [main] INFO  c.m.s.MultiTenantWalletStabilityTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:14.343 [main] INFO  c.m.s.MultiTenantWalletStabilityTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:15.412 [main] INFO  c.m.s.MultiTenantWalletStabilityTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:16.413 [main] INFO  c.m.s.MultiTenantWalletStabilityTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:18.197 [main] INFO  c.m.service.MultiTenantWalletTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:19.226 [main] INFO  c.m.service.MultiTenantWalletTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:20.289 [main] INFO  c.m.service.MultiTenantWalletTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:21.319 [main] INFO  c.m.service.MultiTenantWalletTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:22.764 [main] INFO  c.m.service.MultiTenantWalletTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:23.774 [main] INFO  c.m.service.MultiTenantWalletTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:25.489 [main] INFO  c.m.service.PosRefundIntegrationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:26.519 [main] INFO  c.m.service.PosRefundIntegrationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:27.506 [main] INFO  c.m.service.PosRefundIntegrationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:28.537 [main] INFO  c.m.service.PosRefundIntegrationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:29.552 [main] INFO  c.m.service.PosRefundIntegrationTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:30.667 [main] INFO  c.m.s.RbacServiceBuildMenuTreeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:31.666 [main] INFO  c.m.s.RbacServiceBuildMenuTreeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:32.695 [main] INFO  c.m.s.RbacServiceBuildMenuTreeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:33.667 [main] INFO  c.m.s.RbacServiceBuildMenuTreeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:34.642 [main] INFO  c.m.s.RbacServiceBuildMenuTreeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:35.736 [main] INFO  c.m.s.RbacServiceBuildMenuTreeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:36.808 [main] INFO  c.m.s.RbacServiceBuildMenuTreeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:37.856 [main] INFO  c.m.s.RbacServiceBuildMenuTreeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:38.934 [main] INFO  c.m.s.RbacServiceLoadSessionTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:39.984 [main] INFO  c.m.s.RbacServiceLoadSessionTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:41.045 [main] INFO  c.m.s.RbacServiceLoadSessionTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:42.083 [main] INFO  c.m.s.RbacServiceLoadSessionTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:43.078 [main] INFO  c.m.s.RbacServiceLoadSessionTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:50.258 [main] INFO  c.m.s.RefundReverseLogBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:51.284 [main] INFO  c.m.s.RefundReverseLogBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:52.309 [main] INFO  c.m.s.RefundReverseLogBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:53.239 [main] INFO  c.m.s.RefundReverseLogBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:54.229 [main] INFO  c.m.s.RefundReverseLogBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:55.201 [main] INFO  c.m.s.RefundReverseLogBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:56.250 [main] INFO  c.m.s.RefundReverseLogBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:57.250 [main] INFO  c.m.s.RefundReverseLogBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:58.221 [main] INFO  c.m.s.RefundReverseLogBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:26:59.270 [main] INFO  c.m.s.RefundReverseLogBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:00.356 [main] INFO  c.m.s.RefundReverseLogBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:01.370 [main] INFO  c.m.s.RefundReverseLogBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:02.392 [main] INFO  c.meiyetec.service.ReportQueryTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:03.316 [main] INFO  c.meiyetec.service.ReportQueryTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:04.379 [main] INFO  c.meiyetec.service.ReportQueryTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:05.456 [main] INFO  c.meiyetec.service.ReportQueryTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:06.440 [main] INFO  c.meiyetec.service.ReportQueryTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:07.361 [main] INFO  c.meiyetec.service.ReportQueryTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:08.331 [main] INFO  c.meiyetec.service.ReportQueryTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:09.367 [main] INFO  c.meiyetec.service.ReportQueryTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:10.487 [main] INFO  c.m.service.StoreServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:11.488 [main] INFO  c.m.service.StoreServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:12.489 [main] INFO  c.m.service.StoreServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:13.452 [main] INFO  c.m.service.StoreServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:14.417 [main] INFO  c.m.service.StoreServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:15.470 [main] INFO  c.m.service.StoreServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:16.426 [main] INFO  c.m.service.StoreServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:17.375 [main] INFO  c.m.service.StoreServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:18.330 [main] INFO  c.m.service.StoreServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:19.321 [main] INFO  c.m.service.StoreServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:20.447 [main] INFO  c.m.service.StoreServiceOrgTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:22.483 [main] INFO  c.m.service.T06ReverseLogRefIdTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:23.419 [main] INFO  c.m.service.T06ReverseLogRefIdTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:24.388 [main] INFO  c.m.service.T06ReverseLogRefIdTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:25.390 [main] INFO  c.m.service.T06ReverseLogRefIdTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:26.321 [main] INFO  c.m.service.T06ReverseLogRefIdTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:27.309 [main] INFO  c.m.service.T06ReverseLogRefIdTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:28.454 [main] INFO  c.m.service.T06ReverseLogRefIdTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:29.635 [main] INFO  c.m.service.T06ReverseLogRefIdTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:30.942 [main] INFO  c.m.service.T06ReverseLogRefIdTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:31.997 [main] INFO  c.m.service.T06ReverseLogRefIdTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:33.582 [main] INFO  c.m.s.WalletConsumeConcurrencyTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:35.098 [main] INFO  c.m.s.WalletConsumeConcurrencyTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:36.210 [main] INFO  c.m.s.WalletNullTenantBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:37.168 [main] INFO  c.m.s.WalletNullTenantBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:38.189 [main] INFO  c.m.s.WalletNullTenantBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:39.305 [main] INFO  c.m.s.WalletNullTenantBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:41.461 [main] INFO  c.m.s.WalletNullTenantBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:42.432 [main] INFO  c.m.s.WalletNullTenantBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:43.412 [main] INFO  c.m.s.WalletNullTenantBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:44.369 [main] INFO  c.m.s.WalletNullTenantBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:45.422 [main] INFO  c.m.s.WalletNullTenantBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:46.342 [main] INFO  c.m.s.WalletNullTenantBackfillTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:47.503 [main] INFO  c.m.s.WalletRechargeConcurrencyTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:49.172 [main] INFO  c.m.s.WalletRefundIdempotentTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:50.271 [main] INFO  c.m.s.WalletRefundIdempotentTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:51.282 [main] INFO  c.m.service.WalletSingleSourceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:52.395 [main] INFO  c.m.service.WalletSingleSourceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:53.841 [main] INFO  c.m.service.WalletSingleSourceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:54.955 [main] INFO  c.m.service.WalletSingleSourceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:56.246 [main] INFO  c.m.service.WalletSingleSourceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:57.296 [main] INFO  c.m.service.WalletSingleSourceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:58.460 [main] INFO  c.m.service.WalletSingleSourceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:27:59.582 [main] INFO  c.m.service.WalletSingleSourceTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:00.968 [main] INFO  c.m.service.WalletTenantInsertTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:02.026 [main] INFO  c.m.service.WalletTenantInsertTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:03.058 [main] INFO  c.m.service.WalletTenantInsertTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:04.028 [main] INFO  c.m.service.WalletTenantInsertTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:05.154 [main] INFO  c.m.service.WalletTenantInsertTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:06.325 [main] INFO  c.m.task.LogRetentionTaskSmokeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:07.582 [main] INFO  c.m.task.LogRetentionTaskSmokeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:08.758 [main] INFO  c.m.task.LogRetentionTaskSmokeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:09.698 [main] INFO  c.m.task.LogRetentionTaskSmokeTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:10.840 [main] INFO  com.meiyetec.util.IdGeneratorTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:11.858 [main] INFO  com.meiyetec.util.IdGeneratorTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:12.882 [main] INFO  com.meiyetec.util.IdGeneratorTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:13.856 [main] INFO  com.meiyetec.util.IdGeneratorTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:14.991 [main] INFO  com.meiyetec.util.IdGeneratorTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+2026-11-17 16:28:16.422 [main] INFO  com.meiyetec.util.IdGeneratorTest [traceId=] [tenant=] [order=] [pay=] No active profile set, falling back to 1 default profile: "default"
+
+--- 失败类清单 ---
+[ERROR] Tests run: 11, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 4.168 s <<< FAILURE! - in com.meiyetec.booking.BookingConfirmationServiceTest
+[ERROR] Tests run: 15, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 0.184 s <<< FAILURE! - in com.meiyetec.booking.BookingConfirmationTemplateResolverTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0 s <<< FAILURE! - in com.meiyetec.controller.BookingCrossTenantStoreIsolationTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 11.052 s <<< FAILURE! - in com.meiyetec.controller.PosControllerTenantIsolationTest
+[ERROR] Tests run: 9, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.89 s <<< FAILURE! - in com.meiyetec.crm.CrmAdapterTest
+[ERROR] Tests run: 17, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 8.099 s <<< FAILURE! - in com.meiyetec.crm.HubspotZohoAdapterTest
+[ERROR] Tests run: 4, Failures: 0, Errors: 4, Skipped: 0, Time elapsed: 7.662 s <<< FAILURE! - in com.meiyetec.dcep.DcepAdapterFactoryTest
+[ERROR] Tests run: 9, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.013 s <<< FAILURE! - in com.meiyetec.googlemaps.GoogleMapsGeocodingTest
+[ERROR] Tests run: 6, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.078 s <<< FAILURE! - in com.meiyetec.service.AiModulesPresenceTest
+[ERROR] Tests run: 3, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 5.145 s <<< FAILURE! - in com.meiyetec.service.BookingCreateConflictTest
+[ERROR] Tests run: 3, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 4.493 s <<< FAILURE! - in com.meiyetec.service.BookingRoomConflictTest
+[ERROR] Tests run: 28, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.285 s <<< FAILURE! - in com.meiyetec.service.BookingWaitlistScoreServiceTest
+[ERROR] Tests run: 9, Failures: 0, Errors: 9, Skipped: 0, Time elapsed: 12.418 s <<< FAILURE! - in com.meiyetec.service.CommissionCalculationTest
+[ERROR] Tests run: 8, Failures: 0, Errors: 8, Skipped: 0, Time elapsed: 8.655 s <<< FAILURE! - in com.meiyetec.service.CommissionSettlementTest
+[ERROR] Tests run: 3, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 3.834 s <<< FAILURE! - in com.meiyetec.service.ConcurrencyIntegrationTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.209 s <<< FAILURE! - in com.meiyetec.service.DcepChannelEnvModeTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.035 s <<< FAILURE! - in com.meiyetec.service.DcepMockEnvTest
+[ERROR] Tests run: 7, Failures: 0, Errors: 7, Skipped: 0, Time elapsed: 8.403 s <<< FAILURE! - in com.meiyetec.service.DcepNotifyExtraTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.091 s <<< FAILURE! - in com.meiyetec.service.DcepNotifyTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.144 s <<< FAILURE! - in com.meiyetec.service.DcepServiceAdapterRoutingTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.14 s <<< FAILURE! - in com.meiyetec.service.DcepStartupValidateTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.119 s <<< FAILURE! - in com.meiyetec.service.DcepVerifySignTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.392 s <<< FAILURE! - in com.meiyetec.service.EmployeeServiceOrgTest
+[ERROR] Tests run: 6, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.361 s <<< FAILURE! - in com.meiyetec.service.FiscalModulesPresenceTest
+[ERROR] Tests run: 9, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.006 s <<< FAILURE! - in com.meiyetec.service.IotControllersPresenceTest
+[ERROR] Tests run: 39, Failures: 7, Errors: 0, Skipped: 0, Time elapsed: 0.024 s <<< FAILURE! - in com.meiyetec.service.LbsRouteOptimizerTest
+[ERROR] Tests run: 7, Failures: 0, Errors: 7, Skipped: 0, Time elapsed: 7.389 s <<< FAILURE! - in com.meiyetec.service.MemberServiceTest
+[ERROR] Tests run: 5, Failures: 0, Errors: 5, Skipped: 0, Time elapsed: 6.693 s <<< FAILURE! - in com.meiyetec.service.MultiTenantWalletStabilityTest
+[ERROR] Tests run: 6, Failures: 0, Errors: 6, Skipped: 0, Time elapsed: 6.956 s <<< FAILURE! - in com.meiyetec.service.MultiTenantWalletTest
+[ERROR] Tests run: 5, Failures: 0, Errors: 5, Skipped: 0, Time elapsed: 5.18 s <<< FAILURE! - in com.meiyetec.service.PosRefundIntegrationTest
+[ERROR] Tests run: 8, Failures: 0, Errors: 8, Skipped: 0, Time elapsed: 8.263 s <<< FAILURE! - in com.meiyetec.service.RbacServiceBuildMenuTreeTest
+[ERROR] Tests run: 5, Failures: 0, Errors: 5, Skipped: 0, Time elapsed: 5.269 s <<< FAILURE! - in com.meiyetec.service.RbacServiceLoadSessionTest
+[ERROR] Tests run: 5, Failures: 0, Errors: 5, Skipped: 0, Time elapsed: 5.706 s <<< FAILURE! - in com.meiyetec.service.RefundAuditWorkflowServiceE2eTest
+[ERROR] Tests run: 12, Failures: 0, Errors: 12, Skipped: 0, Time elapsed: 12.147 s <<< FAILURE! - in com.meiyetec.service.RefundReverseLogBackfillTest
+[ERROR] Tests run: 3, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.002 s <<< FAILURE! - in com.meiyetec.service.ReportControllersPresenceTest
+[ERROR] Tests run: 8, Failures: 0, Errors: 8, Skipped: 0, Time elapsed: 8.077 s <<< FAILURE! - in com.meiyetec.service.ReportQueryTest
+[ERROR] Tests run: 11, Failures: 0, Errors: 11, Skipped: 0, Time elapsed: 10.935 s <<< FAILURE! - in com.meiyetec.service.StoreServiceOrgTest
+[ERROR] Tests run: 9, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.949 s <<< FAILURE! - in com.meiyetec.service.SubsModulesPresenceTest
+[ERROR] Tests run: 5, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.099 s <<< FAILURE! - in com.meiyetec.service.SysLoginLogServiceImplTest
+[ERROR] Tests run: 10, Failures: 0, Errors: 10, Skipped: 0, Time elapsed: 10.513 s <<< FAILURE! - in com.meiyetec.service.T06ReverseLogRefIdTest
+[ERROR] Tests run: 14, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.55 s <<< FAILURE! - in com.meiyetec.service.TreatmentReportServiceTest
+[ERROR] Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 2.642 s <<< FAILURE! - in com.meiyetec.service.WalletConsumeConcurrencyTest
+[ERROR] Tests run: 10, Failures: 0, Errors: 10, Skipped: 0, Time elapsed: 11.289 s <<< FAILURE! - in com.meiyetec.service.WalletNullTenantBackfillTest
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.656 s <<< FAILURE! - in com.meiyetec.service.WalletRechargeConcurrencyTest
+[ERROR] Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 2.123 s <<< FAILURE! - in com.meiyetec.service.WalletRefundIdempotentTest
+[ERROR] Tests run: 8, Failures: 0, Errors: 8, Skipped: 0, Time elapsed: 9.68 s <<< FAILURE! - in com.meiyetec.service.WalletSingleSourceTest
+[ERROR] Tests run: 5, Failures: 0, Errors: 5, Skipped: 0, Time elapsed: 5.341 s <<< FAILURE! - in com.meiyetec.service.WalletTenantInsertTest
+[ERROR] Tests run: 4, Failures: 0, Errors: 4, Skipped: 0, Time elapsed: 4.505 s <<< FAILURE! - in com.meiyetec.task.LogRetentionTaskSmokeTest
+[ERROR] Tests run: 6, Failures: 0, Errors: 6, Skipped: 0, Time elapsed: 6.742 s <<< FAILURE! - in com.meiyetec.util.IdGeneratorTest
+[ERROR] Tests run: 1503, Failures: 23, Errors: 171, Skipped: 3

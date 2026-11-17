@@ -1,0 +1,66 @@
+﻿# I196 证据 01 —— mvn test-compile 修复前完整编译错误输出
+# 原始日志：.audit-tmp/i186-testcompile.log（未入库：命中 .gitignore *.log 规则）
+# 命令：cd backend && mvn test-compile -Dmaven.test.skip=false   （EXIT=1）
+
+[WARNING] Parameter 'sourceExcludes' is unknown for plugin 'maven-compiler-plugin:3.11.0:testCompile (default-testCompile)'
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/InventoryConsumptionFlowTest.java:[48,19] 无法将类 com.meiyetec.service.InventoryConsumptionService中的构造器 InventoryConsumptionService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/InventoryConsumptionBomMissingTest.java:[62,19] 无法将类 com.meiyetec.service.InventoryConsumptionService中的构造器 InventoryConsumptionService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/BookingWaitlistScoreServiceTest.java:[38,12] jdbc 在 com.meiyetec.service.BookingWaitlistScoreService 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/BookingWaitlistScoreServiceTest.java:[42,12] 找不到符号
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/AttendIsLateAlgorithmTest.java:[22,53] 无法将类 com.meiyetec.service.impl.AttendanceConfigServiceImpl中的构造器 AttendanceConfigServiceImpl应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[245,12] wDistance 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[245,34] wSkill 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[245,53] wRating 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[246,12] wLoad 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[246,30] wTime 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[247,12] minDispatchScore 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[283,12] wDistance 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[283,34] wSkill 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[283,53] wRating 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[284,12] wLoad 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[284,30] wTime 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[285,12] minDispatchScore 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[317,12] wDistance 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[317,34] wSkill 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[317,53] wRating 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[318,12] wLoad 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[318,30] wTime 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[319,12] minDispatchScore 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/RefundAuditWorkflowServiceE2eTest.java:[71,12] 找不到符号
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/RefundAuditWorkflowServiceE2eTest.java:[95,22] 找不到符号
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/plugin/PluginRuntimeTest.java:[89,36] 无法将类 com.meiyetec.plugin.PluginRuntimeService中的构造器 PluginRuntimeService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/plugin/PluginRuntimeTest.java:[100,36] 无法将类 com.meiyetec.plugin.PluginRuntimeService中的构造器 PluginRuntimeService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/plugin/PluginRuntimeTest.java:[112,36] 无法将类 com.meiyetec.plugin.PluginRuntimeService中的构造器 PluginRuntimeService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/plugin/PluginRuntimeTest.java:[131,36] 无法将类 com.meiyetec.plugin.PluginRuntimeService中的构造器 PluginRuntimeService应用到给定类型;
+[INFO] 29 errors
+[INFO] BUILD FAILURE
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:testCompile (default-testCompile) on project meiyetec-api: Compilation failure: Compilation failure:
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/InventoryConsumptionFlowTest.java:[48,19] 无法将类 com.meiyetec.service.InventoryConsumptionService中的构造器 InventoryConsumptionService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/InventoryConsumptionBomMissingTest.java:[62,19] 无法将类 com.meiyetec.service.InventoryConsumptionService中的构造器 InventoryConsumptionService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/BookingWaitlistScoreServiceTest.java:[38,12] jdbc 在 com.meiyetec.service.BookingWaitlistScoreService 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/BookingWaitlistScoreServiceTest.java:[42,12] 找不到符号
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/AttendIsLateAlgorithmTest.java:[22,53] 无法将类 com.meiyetec.service.impl.AttendanceConfigServiceImpl中的构造器 AttendanceConfigServiceImpl应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[245,12] wDistance 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[245,34] wSkill 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[245,53] wRating 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[246,12] wLoad 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[246,30] wTime 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[247,12] minDispatchScore 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[283,12] wDistance 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[283,34] wSkill 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[283,53] wRating 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[284,12] wLoad 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[284,30] wTime 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[285,12] minDispatchScore 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[317,12] wDistance 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[317,34] wSkill 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[317,53] wRating 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[318,12] wLoad 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[318,30] wTime 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/LbsRouteOptimizerTest.java:[319,12] minDispatchScore 在 com.meiyetec.service.LbsRouteOptimizer.DispatchConfig 中是 private 访问控制
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/RefundAuditWorkflowServiceE2eTest.java:[71,12] 找不到符号
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/service/RefundAuditWorkflowServiceE2eTest.java:[95,22] 找不到符号
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/plugin/PluginRuntimeTest.java:[89,36] 无法将类 com.meiyetec.plugin.PluginRuntimeService中的构造器 PluginRuntimeService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/plugin/PluginRuntimeTest.java:[100,36] 无法将类 com.meiyetec.plugin.PluginRuntimeService中的构造器 PluginRuntimeService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/plugin/PluginRuntimeTest.java:[112,36] 无法将类 com.meiyetec.plugin.PluginRuntimeService中的构造器 PluginRuntimeService应用到给定类型;
+[ERROR] /D:/QiaoPM/backend/src/test/java/com/meiyetec/plugin/PluginRuntimeTest.java:[131,36] 无法将类 com.meiyetec.plugin.PluginRuntimeService中的构造器 PluginRuntimeService应用到给定类型;
