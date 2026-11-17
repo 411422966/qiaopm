@@ -35,11 +35,13 @@ class BookingWaitlistScoreServiceTest {
     void setUp() {
         jdbc = mock(JdbcTemplate.class);
         svc = new BookingWaitlistScoreService();
-        svc.jdbc = jdbc;
+        // BookingWaitlistScoreService.jdbc 是 @Autowired 私有字段（无构造器注入），
+        // 用 Spring 的 ReflectionTestUtils 注入，避免为迁就测试放宽生产可见性。
+        org.springframework.test.util.ReflectionTestUtils.setField(svc, "jdbc", jdbc);
         // 设置测试租户上下文
         TenantContext ctx = TenantContext.empty();
         ctx.setTenantId(1L);
-        ctx.setStoreId(1L);
+        ctx.setStoreIds(java.util.Set.of(1L));
         ctx.setUserId(999L);
         ctx.setUsername("tester");
         TenantContextHolder.set(ctx);

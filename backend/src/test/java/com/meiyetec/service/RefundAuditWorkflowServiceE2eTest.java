@@ -68,7 +68,7 @@ class RefundAuditWorkflowServiceE2eTest {
     void setUp() {
         TenantContext ctx = new TenantContext();
         ctx.setTenantId(TENANT_ID);
-        ctx.setStoreId(STORE_ID);
+        ctx.setStoreIds(java.util.Set.of(STORE_ID));
         TenantContextHolder.set(ctx);
     }
 
@@ -92,7 +92,8 @@ class RefundAuditWorkflowServiceE2eTest {
 
         // 2) 门店审核（≤ 500 → 直接 APPROVED）
         var r1 = workflowService.auditByStore(refundId, 10L, "店长A", "STORE", null);
-        assertTrue(r1.isSuccess(), "门店审核应成功");
+        // Result 无 isSuccess()，成功语义由 code == 200 表达（Result.success 统一置 200）
+        assertTrue(r1.getCode() == 200, "门店审核应成功，实际 code=" + r1.getCode());
         assertEquals("APPROVED", r1.getData().getAuditStatus(),
                 "≤500 门店终审 → auditStatus = APPROVED");
         assertEquals(RefundStatus.APPROVED.name(), r1.getData().getStatus(),

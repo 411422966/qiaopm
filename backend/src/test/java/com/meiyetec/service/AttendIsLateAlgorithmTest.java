@@ -1,6 +1,7 @@
 package com.meiyetec.service;
 
 import com.meiyetec.mapper.AttendanceConfigMapper;
+import com.meiyetec.security.DataScopeService;
 import com.meiyetec.service.impl.AttendanceConfigServiceImpl;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,11 @@ import static org.mockito.Mockito.when;
 class AttendIsLateAlgorithmTest {
 
     private final AttendanceConfigMapper mapper = mock(AttendanceConfigMapper.class);
-    private final AttendanceConfigServiceImpl svc = new AttendanceConfigServiceImpl(mapper);
+    // I186 第 1 批起 AttendanceConfigServiceImpl 增加 DataScopeService 依赖；
+    // 本用例只覆盖 isLate / isEarlyLeave / getAllowLateMinutes / getActiveConfig，
+    // 这四个方法都不经过 dataScopeService，因此传 mock 即可，不改变断言语义。
+    private final DataScopeService dataScopeService = mock(DataScopeService.class);
+    private final AttendanceConfigServiceImpl svc = new AttendanceConfigServiceImpl(mapper, dataScopeService);
 
     @Test
     void config_null_returns_not_late_and_not_early_leave() {

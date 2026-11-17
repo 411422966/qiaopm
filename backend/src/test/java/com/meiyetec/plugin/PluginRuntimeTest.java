@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * EXT-09：插件运行时单元测试
@@ -86,7 +87,7 @@ class PluginRuntimeTest {
     @DisplayName("禁用模式：listPlugins 返回 RUNTIME_DISABLED 标记")
     void listPluginsWhenDisabled() {
         props.setEnabled(false);
-        PluginRuntimeService svc = new PluginRuntimeService(props);
+        PluginRuntimeService svc = new PluginRuntimeService(props, mock(PluginPersistenceService.class), mock(PluginTenantService.class));
         // 注意：不要调用 init()，避免触发 pf4j 启动
         List<PluginRuntimeInfo> result = svc.listPlugins();
         assertEquals(1, result.size());
@@ -97,7 +98,7 @@ class PluginRuntimeTest {
     @DisplayName("禁用模式：dashboard 返回 total=0 / started=0")
     void dashboardWhenDisabled() {
         props.setEnabled(false);
-        PluginRuntimeService svc = new PluginRuntimeService(props);
+        PluginRuntimeService svc = new PluginRuntimeService(props, mock(PluginPersistenceService.class), mock(PluginTenantService.class));
         Map<String, Object> data = svc.dashboard();
         assertEquals(false, data.get("runtimeEnabled"));
         assertEquals(0, ((Number) data.get("total")).intValue());
@@ -109,7 +110,7 @@ class PluginRuntimeTest {
     @DisplayName("禁用模式：load / enable / disable / unload 都安全返回 disabled 标记")
     void lifecycleWhenDisabled() {
         props.setEnabled(false);
-        PluginRuntimeService svc = new PluginRuntimeService(props);
+        PluginRuntimeService svc = new PluginRuntimeService(props, mock(PluginPersistenceService.class), mock(PluginTenantService.class));
 
         PluginRuntimeInfo load = svc.loadPlugin("any", "1.0.0");
         assertEquals("RUNTIME_DISABLED", load.getState());
@@ -128,7 +129,7 @@ class PluginRuntimeTest {
     @DisplayName("loadPlugin(null code)：抛 IllegalArgumentException")
     void loadPluginNullCode() {
         props.setEnabled(true);
-        PluginRuntimeService svc = new PluginRuntimeService(props);
+        PluginRuntimeService svc = new PluginRuntimeService(props, mock(PluginPersistenceService.class), mock(PluginTenantService.class));
         // 不调 init()，仅触发校验：ensureManager 才会被调用
         assertThrows(IllegalArgumentException.class, () -> svc.loadPlugin(null, "1.0.0"));
         assertThrows(IllegalArgumentException.class, () -> svc.loadPlugin("", "1.0.0"));

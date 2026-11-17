@@ -242,9 +242,9 @@ class LbsRouteOptimizerTest {
     @Test
     void scoreDispatch_perfectMatch_isEligible() {
         LbsRouteOptimizer.DispatchConfig cfg = new LbsRouteOptimizer.DispatchConfig();
-        cfg.wDistance = 0.35; cfg.wSkill = 0.25; cfg.wRating = 0.15;
-        cfg.wLoad = 0.15; cfg.wTime = 0.10;
-        cfg.minDispatchScore = 40.0;
+        cfg.setWDistance(0.35); cfg.setWSkill(0.25); cfg.setWRating(0.15);
+        cfg.setWLoad(0.15); cfg.setWTime(0.10);
+        cfg.setMinDispatchScore(40.0);
 
         com.meiyetec.entity.LbsServiceOrder order = new com.meiyetec.entity.LbsServiceOrder();
         order.setId(1L);
@@ -280,9 +280,9 @@ class LbsRouteOptimizerTest {
     @Test
     void scoreDispatch_farDistance_lowScore() {
         LbsRouteOptimizer.DispatchConfig cfg = new LbsRouteOptimizer.DispatchConfig();
-        cfg.wDistance = 0.35; cfg.wSkill = 0.25; cfg.wRating = 0.15;
-        cfg.wLoad = 0.15; cfg.wTime = 0.10;
-        cfg.minDispatchScore = 40.0;
+        cfg.setWDistance(0.35); cfg.setWSkill(0.25); cfg.setWRating(0.15);
+        cfg.setWLoad(0.15); cfg.setWTime(0.10);
+        cfg.setMinDispatchScore(40.0);
 
         com.meiyetec.entity.LbsServiceOrder order = new com.meiyetec.entity.LbsServiceOrder();
         order.setId(2L);
@@ -314,9 +314,9 @@ class LbsRouteOptimizerTest {
     @Test
     void scoreDispatch_skillMismatch_reducesScore() {
         LbsRouteOptimizer.DispatchConfig cfg = new LbsRouteOptimizer.DispatchConfig();
-        cfg.wDistance = 0.35; cfg.wSkill = 0.25; cfg.wRating = 0.15;
-        cfg.wLoad = 0.15; cfg.wTime = 0.10;
-        cfg.minDispatchScore = 40.0;
+        cfg.setWDistance(0.35); cfg.setWSkill(0.25); cfg.setWRating(0.15);
+        cfg.setWLoad(0.15); cfg.setWTime(0.10);
+        cfg.setMinDispatchScore(40.0);
 
         com.meiyetec.entity.LbsServiceOrder order = new com.meiyetec.entity.LbsServiceOrder();
         order.setId(3L);

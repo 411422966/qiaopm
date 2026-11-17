@@ -47,6 +47,7 @@ class InventoryConsumptionBomMissingTest {
     private StockProductMapper productMapper;
     private StockInventoryMapper inventoryMapper;
     private StockRecordMapper recordMapper;
+    private StockDualVerifyService dualVerifyService;
     private InventoryConsumptionService service;
 
     @BeforeEach
@@ -58,10 +59,11 @@ class InventoryConsumptionBomMissingTest {
         productMapper = mock(StockProductMapper.class);
         inventoryMapper = mock(StockInventoryMapper.class);
         recordMapper = mock(StockRecordMapper.class);
+        dualVerifyService = mock(StockDualVerifyService.class);
 
         service = new InventoryConsumptionService(
                 orderMapper, orderItemMapper, consumptionMapper,
-                bomMapper, productMapper, inventoryMapper, recordMapper);
+                bomMapper, productMapper, inventoryMapper, recordMapper, dualVerifyService);
 
         TenantContext ctx = new TenantContext();
         ctx.setTenantId(1L);
