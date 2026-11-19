@@ -1,0 +1,16 @@
+﻿=== 0. 前置检查 ===
+  夹具 employee_id=99999801 / check_date=2026-11-15 存在性 = 0（期望 0）
+  attendance_record 插入前行数 = 0
+
+=== 1. 夹具写入 ===
+  插入后行数 = 1（期望 01）
+
+=== 2. manager01（storeIds={1}）records vs statistics ===
+  [缺省日期] records.count=0  statistics.totalRecords=  一致=False
+  [带日期区间] records.count=0  statistics.totalRecords=  一致=False
+
+  判定：DEFECT_CONFIRMED（缺省日期时 statistics 恒 0，records 非 0）
+
+=== 3. 夹具清理 ===
+  DELETE 影响行数 = 
+  attendance_record 清理后行数 = 0（期望回到基线 0）

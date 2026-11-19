@@ -8,6 +8,7 @@
 > **验证等级**：**VERIFIED（运行期 L5a + 静态）** —— 运行期以 `admin` / `manager01` / `boss01` / `clerk01` 四个账号实测 22 个 endpoint，并读取 `sys_permission` / `sys_role_permission` 实际绑定
 > **DB 快照**：`backup/meiyetec_20261116_020004.sql`（2026-11-16 02:00）
 > **证据**：`audit/evidence/F171-attendance-commission-perm-alignment/`（`raw/01-static-endpoint-matrix.md` §1、`raw/04b-db-permission-binding-verification.txt` V1、`raw/05-runtime-authz-matrix.txt`、`raw/09-frontend-route-and-permission-codes.txt` H 段）
+> **复核快照（实测时间 2026-11-18 16:44:52 SQL / 16:40:06–16:40:14 HTTP，临时授权撤销后）**：`attendance:*` 9 码在 `sys_role_permission` 中绑定数**仍为 0**（`sys_role_permission` 总行数 1164、role 5 = 278、夹具残留 0）；manager01 对 `/attendance/records`、`/attendance/statistics`、`/attendance/leave/list`、`/attendance/config/list`、`/attendance/config/active` 实测**全部 403** → **I183 结论不受 11-16 23:34:53 临时授权、也不受 11-17 02:00 污染备份影响**（`raw/05` 证据采集于 11-16 00:57，早于授权窗口）。**实测命令**：`docker exec meiyetec-mysql mysql -uroot -proot123456 --default-character-set=utf8mb4 meiyetec -e "SELECT ... FROM sys_permission p LEFT JOIN sys_role_permission rp ..."`（绑定计数）+ `Invoke-WebRequest` 登录 `POST /auth/login`（manager01）取 token 后逐端点 `GET`，异常分支取 `$_.Exception.Response.StatusCode.value__`。详见 `audit/evidence/F173-i186-batch1-runtime-verification/raw/04-post-selfcheck-perm-recheck-20261118.txt` §1/§2/§3、`raw/13-perm-binding-timeline-20261117.txt` §8 与 `audit/issues/I198-i186-verify-evidence-tainted-and-backup-pollution.md`
 > **关联**：I184（提成模块同类死码）、I185（前后端码双轨）、I117（`DataScopeInterceptor` 覆盖路径不全）、I115（权限注解覆盖率）
 
 ---

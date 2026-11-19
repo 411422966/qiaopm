@@ -54,6 +54,10 @@
 | `raw/09-frontend-route-and-permission-codes.txt` | 前端路由 `meta.permission` / `v-permission` 使用 / API 路径 + **运行期 `/auth/me/permissions` 下发载荷** |
 | `raw/10-m1-mapping-key-phone.sql` / `.out.txt` | **M1 映射键「手机号」只读核验**（Q2 前置）：`sys_user.phone` ∩ `pos_employee.phone` 交集 / 唯一性 / 冲突统计 |
 | `raw/11-m1-mapping-key-alternatives.sql` / `.out.txt` | **M1 备用映射键只读核验**（`real_name`= `employee_name` / `username`=`employee_code` / LIKE 模糊 / `(tenant_id, phone)` 复合口径）+ `pos_employee` 按 tenant/store 分布 |
+| `raw/13-perm-binding-timeline-20261117.txt` | **权限码绑定时间线（2026-11-16 ~ 11-18 补充核查）** —— 11-16 23:34:53 的 12 条临时授权、11-17 01:17:35 的 I186 夹具、11-17 23:36:34 的撤销、撤销后复检；含「F171 / I183 / I184 结论是否受影响」的逐项评估 |
+| `raw/14-perm-binding-timeline.sql` | **时间线只读回放 SQL**（非正式工具；全部 SELECT，含备份文件文本统计的库外执行提示） |
+
+> ⚠️ **补充说明**：`raw/13` / `raw/14` 是 **2026-11-18** 的追加核查（只读），用于澄清「11-17 02:00 备份里 role 5 绑定了 4 个 attendance 码」的易误读点 —— 那 4 条绑定来自 11-16 23:34:53 的**临时授权**（F171 证据采集于 11-16 00:57，**早于**该窗口），已于 11-17 23:36:34 撤销，**I183 / I184 结论不受影响**。I186 第 1 批的运行期 PASS 则**依赖**该授权，撤销后不可复现（见 `audit/issues/I198-i186-verify-evidence-tainted-and-backup-pollution.md`）。
 
 ---
 

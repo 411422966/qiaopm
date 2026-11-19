@@ -1,0 +1,192 @@
+================================================================================
+F171 补充证据 —— 考勤 / 提成权限码绑定时间线（2026-11-16 ~ 2026-11-18）
+================================================================================
+落盘时间   : 2026-11-18
+性质       : **只读核查**（未修改任何业务代码、未写库、未执行任何 DDL、未做 DELETE/UPDATE）
+执行者     : Cursor
+绑定 commit : 7a4e72a79263823a5be311f527ccd6e4d1d86233（branch main）
+环境       : audit/evidence/env.md
+DB 快照    : backup/meiyetec_20261116_020004.sql（2026-11-16 02:00，**干净基线**）
+              backup/meiyetec_20261117_020004.sql（2026-11-17 02:00，**已污染**，不可用于回滚/恢复
+                                              -> backup/README-DO-NOT-RESTORE.txt）
+运行栈     : docker meiyetec-mysql（MySQL 8.0 / 库 meiyetec / 127.0.0.1:3307）
+              + meiyetec-api（localhost:8080）
+binlog     : 容器 meiyetec-mysql 内 binlog.000139 / 000140 / 000141，
+              经 `docker cp` 复制到 %TEMP% 后用本机 mysqlbinlog --base64-output=DECODE-ROWS -v 解析
+关联       : I183（考勤 9 码死码）、I184（提成 24 码死码）、I185（前后端码双轨）、
+              I186（第 1 批运行期证据污染）、I188（种子与运行期漂移）、
+              I198（本时间线对应的新登记 Issue：证据污染 + 备份污染 + 授权来源待查）
+
+
+--------------------------------------------------------------------------------
+§1. 为什么补这份时间线
+--------------------------------------------------------------------------------
+F171 的运行期证据（raw/05 / raw/05b / raw/06b）采集于 **2026-11-16 00:57**。
+之后本机库又发生了三件与「权限码绑定」直接相关的事：
+
+  (a) 11-16 23:34:53  给 role 5（MANAGER）授予 12 条 attendance / commission 权限码；
+  (b) 11-17 01:17:35/36  创建 I186 验证夹具（3 角色 @01:17:35 + 3 用户 @01:17:36），
+                         并给 3 个夹具角色授予全量权限 871 行；
+  (c) 11-17 23:36:34  撤销 (a) + (b)（DELETE 883 行），库回到基线。
+
+其中 (a) 发生在 **F171 证据采集之后**，因此 **F171 的结论不受影响**；
+但 (a)(b) 与 (c) 之间存在一个 **~24 小时的授权窗口**，F173（I186 第 1 批运行期验证）
+的全部 PASS 都落在这个窗口内 -> 必须在本证据目录内留下明确时间线，避免后来人把
+「11-17 02:00 备份里 role 5 绑定了 4 个 attendance 码」误读成「I183 结论被推翻」。
+
+
+--------------------------------------------------------------------------------
+§2. 时间线总表
+--------------------------------------------------------------------------------
+  时间              事件                                                       证据来源
+  ----------------- --------------------------------------------------------- --------------------------
+  11-16 00:57       F171 运行期鉴权矩阵 / 数据范围探测采集                   raw/05 / 05b / 06b / 06b
+                     -> 此刻 role 5 尚未被授予任何 attendance / commission 细粒度码
+  11-16 02:00:13    定时备份 meiyetec_20261116_020004.sql（**干净基线**）      backup/logs/backup-20261116.log
+  11-16 23:34:43    GET /commission/records/page -> 403（manager01）           sys_log
+  11-16 23:34:53    ★ 单事务给 role 5 授予 12 条权限码                        binlog.000139
+  11-17 01:17:35/36 ★ 建 3 夹具角色（01:17:35）+ 3 夹具用户（01:17:36）；             binlog.000140
+                     3 夹具角色各获全量权限 871 行
+  11-17 02:00:04    定时备份 meiyetec_20261117_020004.sql（**含污染**）        backup/logs/backup-20261117.log
+  11-17 23:20-23:21 I186 第 1 批首轮验证（ITEM5 / ITEM12 FAIL）              .audit-tmp/verify-result.txt
+  11-17 23:33       F173 主验证第二轮（V1-V13 PASS）                          F173 raw/01
+  11-17 23:36:34    ★ 单事务撤销：删除 12 条临时授权 + 871 行夹具权限          binlog.000141
+  11-17 23:37       夹具清理脚本执行                                          F173 raw/cleanup-output.txt
+  11-17 23:41:07    清理后只读复核（夹具类计数全 0）                          F173 raw/cleanup-output.txt
+                    ※ 时间戳依据：raw/cleanup-output.txt 文件 mtime 实测 23:41:07（CreationTime 23:36:07）
+                      —— 文件自述「2026-11-17 23:5x 复跑」与 mtime 冲突，以 mtime 为准
+  11-17 23:46:27    ITEM5 定点复验 -> "DEFECT_CONFIRMED"（**误判**）           F173 raw/02-item5-recheck.txt
+  11-17 23:53       人工重新登录复测 5 个端点 -> 全部 403                      本次会话只读 GET
+  11-18 01:11-01:12 逐项只读复检 -> 11 处 200 -> 403 状态翻转                 F173 raw/03
+
+
+--------------------------------------------------------------------------------
+§3. 11-16 23:34:53 —— 12 条临时授权的完整清单
+--------------------------------------------------------------------------------
+【binlog 特征】单事务，事件 id 2025 -> 2036 连续；客户端 charset=latin1、thread_id=2448
+              （与应用 JDBC 连接不同源 -> 来自 MySQL 命令行客户端）
+
+  权限码 id   permission_code               类型    permission_name
+  ----------- ----------------------------- ------ ------------------
+  1451        attendance:config:list        button  考勤配置列表
+  1454        attendance:list                button  考勤记录列表
+  1455        attendance:stat                button  考勤统计
+  1459        attendance:leave:list          button  请假列表
+  1330        commission:record:stat         API     commission·record:stat
+  1332        commission:rule:stat           API     commission·rule:stat
+  1333        commission:salary:export       API     commission·salary:export
+  1334        commission:salary:stat         API     commission·salary:stat
+  1335        commission:salary:add          API     commission·salary:add
+  1338        commission:settlement:stat     API     commission·settlement:stat
+  1342        commission:settlement:export   API     commission·settlement:export
+  1345        commission:settlement:add      API     commission·settlement:add
+
+  合计：attendance 4 条 + commission 8 条 = **12 条**，全部绑定到 role_id = 5（MANAGER）。
+
+【关键对应关系】这 12 条码**恰好**等于 F173 主验证所需的受限端点权限集：
+
+  attendance:list(1454)            -> GET /attendance/records
+  attendance:stat(1455)            -> GET /attendance/statistics
+  attendance:leave:list(1459)      -> GET /attendance/leave/list
+  attendance:config:list(1451)     -> GET /attendance/config/list, GET /attendance/config/active
+  commission:record:stat(1330)     -> GET /commission/records/stats
+  commission:salary:stat(1334)     -> GET /commission/salary/stats
+  commission:settlement:stat(1338) -> GET /commission/settlement/stats
+  commission:salary:export(1333)   -> GET /commission/salary/export
+  commission:settlement:export(1342)-> GET /commission/settlement/export
+  commission:salary:add(1335)      -> POST /commission/salary/generate
+  commission:settlement:add(1345)  -> POST /commission/settlement/generate
+  commission:rule:stat(1332)       -> 提成规则统计（主验证未直接探测）
+
+  => F173 主验证之所以能全部跑通，是因为这 12 条码**在验证开始前 23 小时 45 分**
+     被一次性授予；验证结束 3 分钟后又被撤销。
+
+【来源】**仓库内无脚本产生这批 INSERT**；操作者与来源脚本**未确认**（见 I198 §C）。
+
+
+--------------------------------------------------------------------------------
+§4. 11-17 01:17:35 —— I186 验证夹具
+--------------------------------------------------------------------------------
+  角色：I186FIX_S1 / I186FIX_S5 / I186FIX_MULTI（role_id 900004 / 900005 / 900006）
+  账号：i186fix_s1 / i186fix_s5 / i186fix_multi（user_id 99999704 / 99999705 / 99999706）
+  建行时间：角色 create_time = 2026-11-17 01:17:35；账号 create_time = 2026-11-17 01:17:36
+            （备份 sys_role / sys_user INSERT 实测；两者相差 1 秒，勿合并叙述）
+  密码：三个账号的密码哈希对应的明文已知（`123456`）—— ⚠️ 见 backup/README-DO-NOT-RESTORE.txt
+  同时：给 **3 个夹具角色**授予「全量权限」绑定，合计 **871 行**
+        （900004 = 291 行 / 900005 = 290 行 / 900006 = 290 行；
+          其中 870 行建于 01:17:35，另有 1 行于 01:17:48 补入 900004 —— permission_id 1453）
+
+  871 行的含义：3 个夹具角色被一次性授予「拥有全部权限码」的形态，
+  以便作为单店 / 多店账号（storeIds={1,5}）的测试载体。
+  ⚠️ role 5（MANAGER）**并未**获得这 871 行：它在污染备份中仅 290 行
+     = 基线 278 + 11-16 23:34:53 的 12 条临时授权。
+  => 这 871 行**不是**生产语义下的权限配置，**任何环境都不应保留**。
+
+
+--------------------------------------------------------------------------------
+§5. 11-17 02:00:04 —— 污染备份
+--------------------------------------------------------------------------------
+  文件：backup/meiyetec_20261117_020004.sql（24,964,139 字节）
+  sys_role_permission：**2047** 行 vs 基线 **1164** 行 -> **+883 行**（= 871 + 12）
+  另含 3 个夹具角色 + 3 个夹具账号
+  => **不可用于任何回滚 / 恢复**，详见 backup/README-DO-NOT-RESTORE.txt 与 I198 §B
+
+
+--------------------------------------------------------------------------------
+§6. 11-17 23:36:34 —— 撤销
+--------------------------------------------------------------------------------
+  单事务 DELETE：12 条临时授权（role 5）+ 871 行夹具权限 = **883 行**
+  撤销后 role 5 的绑定行数回到 **278** 条（基线），库回到干净状态
+  撤销后的只读复核见 F173 raw/cleanup-output.txt（夹具类计数全 0）
+
+
+--------------------------------------------------------------------------------
+§7. 撤销后运行期实测（11-17 23:53 / 11-18 01:12）
+--------------------------------------------------------------------------------
+  11-17 23:53   manager01 对以下 5 个端点实测**全部 403**：
+                 GET /attendance/records            -> 403 需 attendance:list
+                 GET /attendance/statistics        -> 403 需 attendance:stat
+                 GET /attendance/leave/list        -> 403 需 attendance:leave:list
+                 GET /commission/salary/stats       -> 403 需 commission:salary:stat
+                 GET /commission/records/stats      -> 403 需 commission:record:stat
+
+  11-18 01:12   逐项复检（manager01）：**11 处 200 -> 403 状态翻转**，403 原因全部为
+                 「权限不足: 需要权限码：X」，X 精确命中 §3 的 12 条临时授权码；
+                 admin（SUPER_ADMIN 通配 `*`）全部保持 200 -> 反证翻转由授权缺失造成，
+                 而非代码回归。逐项清单见 F173 raw/03-post-cleanup-permission-recheck.txt。
+
+  夹具账号 i186fix_s1 / i186fix_s5 / i186fix_multi 在 01:12 **login_ok=False**
+  -> 主验证 V9 / V10 / V11、补测 2、补测 3 **无法复跑**。
+
+
+--------------------------------------------------------------------------------
+§8. 对 F171 / I183 / I184 结论的影响评估
+--------------------------------------------------------------------------------
+  结论项                          是否受影响   依据
+  ------------------------------ ------------ --------------------------------------------
+  F171 F1（考勤 9 码绑定数 = 0）   **不受影响**  raw/04b V1 采集于 11-16（授权窗口之前）
+  F171 F2（提成 24 码绑定数 = 0）  **不受影响**  同上
+  F171 F8（缺省 storeId 越权）      **不受影响**  raw/06b 采集于 11-16 00:57
+  I183（考勤模块 9 码死码）         **不受影响**  11-18 01:12 复测：绑定数仍为 0，端点仍 403
+  I184（提成模块 24 码死码）        **不受影响**  11-18 01:12 复测：绑定数仍为 0，端点仍 403
+  I185（前后端码双轨）              **不受影响**  纯静态结论
+  I186 第 1 批运行期 PASS          **受影响**    依赖 11-16 23:34:53 的临时授权，撤销后不可复现
+                                                       -> F173 raw/01 已打污染标记；见 I198 §A
+
+  ⚠️ **易误读点澄清**：「11-17 02:00 的备份里 role 5 绑定了 4 个 attendance 码」
+  **不能**读作「I183 的结论被推翻」——那 4 条绑定来自 11-16 23:34:53 的临时授权，
+  已在 11-17 23:36:34 撤销；基线快照（11-16 02:00）中同样为 0 绑定。
+
+
+--------------------------------------------------------------------------------
+§9. 只读回放
+--------------------------------------------------------------------------------
+  完整的只读核对 SQL 见同目录 raw/14-perm-binding-timeline.sql（**非正式工具**，不接入 CI）。
+  快速复核（4 条）：
+
+    SELECT COUNT(*) FROM sys_role_permission;                          -- 期望 1164
+    SELECT COUNT(*) FROM sys_role_permission WHERE role_id = 5;       -- 期望 278
+    SELECT COUNT(*) FROM sys_user WHERE username LIKE 'i186fix%';     -- 期望 0
+    SELECT COUNT(*) FROM sys_role WHERE role_code LIKE 'I186FIX%';    -- 期望 0
+
+================================================================================

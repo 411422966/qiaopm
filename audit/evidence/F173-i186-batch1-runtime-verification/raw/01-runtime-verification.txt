@@ -1,0 +1,100 @@
+﻿================================================================================
+【污染标记 / POLLUTION NOTICE】—— 2026-11-18 追加
+================================================================================
+本文件是 F173 主验证的**原始输出**，采集于 2026-11-17 23:20 - 23:33。
+但**必须与 raw/03-post-cleanup-permission-recheck.txt 一起阅读**，不可单独作为
+I186 第 1 批的验收证据。原因：
+
+  1) 本文件中的 PASS 是在 **2026-11-16 23:34:53 单事务授予 role 5（MANAGER）
+     12 条权限码**（attendance 4 + commission 8）的**临时授权窗口内**取得的。
+  2) 该临时授权已于 **2026-11-17 23:36:34 被单事务撤销**（DELETE 883 行）。
+  3) 撤销后同账号（manager01）同端点复检：**11 处 200 -> 403 状态翻转**，
+     403 响应体全部为「权限不足: 需要权限码：X」，X 精确命中那 12 条授权码。
+     逐项清单见 raw/03 §5。
+  4) 依赖已删除夹具账号（i186fix_s1 / i186fix_s5 / i186fix_multi）的
+     V9 / V10 / V11、补测 2、补测 3 **无法复跑**。
+
+**结论**：F173 主验证 PASS 依赖临时授权，清理后不可复现，不能单独作为 I186 验收证据。
+I186 第 1 批的运行期结论必须在基线授权状态（补齐 I183 / I184 的权限码绑定）之下重跑。
+
+依据     : audit/issues/I198-i186-verify-evidence-tainted-and-backup-pollution.md §A
+           audit/evidence/F171-attendance-commission-perm-alignment/raw/13-perm-binding-timeline-20261117.txt
+下方为 2026-11-17 23:33 的原始输出，内容未做任何修改。
+================================================================================
+=== 账号作用域（登录后 /auth/me/permissions）===
+  admin          dataScope=ALL    storeIds=[-1]
+  manager01      dataScope=STORE  storeIds=[1]
+  i186fix_s1     dataScope=STORE  storeIds=[1]
+  i186fix_s5     dataScope=STORE  storeIds=[5]
+  i186fix_multi  dataScope=STORE  storeIds=[1,5]
+
+=== V1  manager01 GET /commission/records/page 缺省 -> 仅 store 1 ===
+  http=200 total=10 stores=[1]
+=== V2  manager01 GET /commission/records/page?storeId=5 -> 403 ===
+  http=403 body={"code":403,"message":"无权访问该门店数据","data":null,"traceId":"7aae3dbe38344b598532b694241777b8","timestamp":"2026-11-17 23:33:17"}
+=== V3  manager01 salary/page + settlement/page 缺省 -> 仅 store 1 ===
+  salary      http=200 total=152 stores=[1]
+  settlement  http=200 total=1 stores=[1]
+=== V4  Q1 导出接口移出白名单：缺省 -> 仅本店集合；storeId=5 -> 403 ===
+  salary/export 缺省 http=200 bytes=8319 数据行=152 | DB(store_id=1,tenant=1,2026-10)=152 一致=True
+  salary/export?storeId=5 http=403
+  settlement/export?storeId=5 http=403
+=== V5  manager01 GET /attendance/records 缺省 -> 仅 store 1 ===
+  http=200 count=1 stores=[1]
+=== V6  DB 结算单重复检查（store_id, salary_month, tenant_id）-> 期望 0 行 ===
+  重复组数=0 -> PASS
+=== V7  manager01 GET /attendance/config/list 缺省 -> 仅本租户行 ===
+  http=200 count=3
+    id=2 tenantId=1 storeId=1
+    id=3 tenantId=1 storeId=
+    id=1 tenantId=1 storeId=
+=== V8  manager01 GET /attendance/config/active 缺省 -> 本店行优先 ===
+  http=200 id=2 tenantId=1 storeId=1
+=== V9  跨租户同店同月结算单不复用（tenant2 已有 99999998/2026-09）===
+  before: 171	2	I186-FIX-T2-SX-202609 | 172	1	CS202609999999987236
+  POST /commission/settlement/generate http=200 body=code      : 200
+message   : 结算单生成成功
+data      : @{id=172; tenantId=1; storeId=99999998; settlementNo=CS202609999999987236; salaryMonth=2026-09; employeeCou
+            nt=1; totalCommission=0.00; totalAdjustment=0.00; totalPayable=0.00; status=1; confirmTime=; confirmBy=; pa
+            yTime=; payBy=; remark=; createTime=2026-11-17T00:28:25; updateTime=2026-11-17T00:28:25; deleted=0}
+traceId   : ae6a8a6ca56e4e07a517daab8c3ae5c1
+timestamp : 2026-11-17 23:33:22
+  after : 171	2	I186-FIX-T2-SX-202609 | 172	1	CS202609999999987236
+=== V10 单店账号 i186fix_s5 POST /commission/salary/generate 缺省 -> 门店 5 ===
+  http=200 storeIds=[5]
+=== V11 多店账号 i186fix_multi POST /commission/salary/generate 缺省 -> 400 ===
+  http=400 body={"code":400,"message":"当前账号可访问多个门店，请指定 storeId","data":null,"traceId":"8e88e8e2d246470da8fcf94cc6b52d09","timestamp":"2026-11-17 23:33:23"}
+=== V12 admin(dataScope=ALL) 缺省 -> 全量语义不受影响 ===
+  records    total=14 stores=[1,5,99999998]
+  salary     total=154 stores=[1,5,99999998]
+  attendance count=4 stores=[1,5,99999998]
+  salary/export 缺省 http=200 bytes=8376 数据行=154 | DB(tenant=1 全部门店)=154 一致=True
+=== V13 statistics 与 records 口径一致性（N3：NULL 日期容错 + 集合语义）===
+  manager01      records=1 statistics.totalRecords=1 一致=True
+  i186fix_multi  records=2 statistics.totalRecords=2 一致=True
+  admin          records=4 statistics.totalRecords=4 一致=True
+
+########## 补测 2：多店账号（storeIds={1,5}）集合语义端到端 ##########
+  records/page 缺省           total=12 stores=[1,5]
+  records/page?storeId=1      total=10 stores=[1]
+  records/page?storeId=9(外)  http=403
+  attendance/records 缺省     count=2 stores=[1,5]
+  attendance/statistics 缺省  totalRecords=2
+  attendance/leave/list 缺省  count=1 stores=[1]
+  salary/page 缺省            total=153 stores=[1,5]
+  settlement/page 缺省        total=1 stores=[1]
+  salary/export 缺省 http=200 bytes=8346 数据行=153 | DB(store_id IN(1,5))=153 一致=True
+
+########## 补测 3：写侧越权与多店写接口语义 ##########
+  salary/generate?storeId=9(集合外)   http=403
+  settlement/generate 缺省(多店)      http=200 body=code      : 400
+message   : 请求参数错误: storeId 必填
+data      : 
+traceId   : f0500de5c3ad404b98e5c0742719f85c
+timestamp : 2026-11-17 23:33:34
+  settlement/generate 缺省(单店 s5)   http=200 body=code      : 400
+message   : 请求参数错误: storeId 必填
+data      : 
+traceId   : 0bd8f9157af14db28b7103ee9064f574
+timestamp : 2026-11-17 23:33:35
+  salary/generate?storeId=9(单店越权) http=403

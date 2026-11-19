@@ -1,0 +1,23 @@
+﻿=== I186 第 1 批验证夹具清理 —— 只读复核（2026-11-17 23:5x 复跑） ===
+说明：清理动作已于 23:37 执行完毕（各表残留为 0）；本文件为执行后只读复核快照，未再执行任何 DELETE。
+
+--- 期望：夹具类计数全为 0；保留类计数为验证前基线 ---
+commission_settlement(169-172)	0
+commission_settlement_record(169-172)	0
+commission_salary(all)	0
+commission_record(fixture 747-750)	0
+commission_record(total kept)	10
+attendance_record(total)	0
+attendance_leave_request(total)	0
+attendance_config(total)	1
+attendance_config(detail)	1
+pos_employee(I186_FIX)	0
+pos_employee(total)	175
+sys_user(i186fix%)	0
+sys_role(I186FIX%)	0
+sys_role_data_scope(role>=900000)	0
+sys_user_role(user>=99999700)	0
+sys_role_permission(role>=900000)	0
+sys_role_permission(role=5 recent)	0
+
+DONE

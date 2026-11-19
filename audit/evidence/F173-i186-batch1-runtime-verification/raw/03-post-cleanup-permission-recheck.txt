@@ -1,0 +1,252 @@
+================================================================================
+F173 补强证据 —— 临时授权撤销后（清理后）权限逐项复检 + ITEM5 脚本盲区复刻
+================================================================================
+落盘时间     : 2026-11-18（复检实际执行 2026-11-18 01:11:50 - 01:12:17）
+复检脚本     : .audit-tmp/post-cleanup-recheck.ps1
+               （非正式工具：只发 GET + 登录取 token，不做任何 POST/PUT/DELETE，不写库）
+复检原始输出 : .audit-tmp/post-cleanup-recheck.out.txt
+               （该文件的中文小标题为控制台编码错位产生的乱码；JSON 响应体中的中文正常）
+绑定 commit  : 7a4e72a79263823a5be311f527ccd6e4d1d86233（branch main）
+环境         : audit/evidence/env.md
+DB 快照      : backup/meiyetec_20261116_020004.sql（2026-11-16 02:00，本调查的干净基线）
+               backup/meiyetec_20261117_020004.sql（2026-11-17 02:00，**已污染**，不可用于回滚/恢复，
+                                                  见 audit/issues/I198-i186-verify-evidence-tainted-and-backup-pollution.md §B）
+运行栈       : docker meiyetec-mysql（MySQL 8.0 / meiyetec）+ meiyetec-api（localhost:8080）
+写操作       : 无
+================================================================================
+
+
+--------------------------------------------------------------------------------
+§1. 本文件要回答的问题
+--------------------------------------------------------------------------------
+F173 主验证（2026-11-17 23:20 - 23:33）给出大量 PASS。临时授权已于
+2026-11-17 23:36:34 被单事务撤销。本文件回答两件事：
+
+  Q1  清理后（授权已撤销）主验证各 V 项的真实 HTTP 状态码是什么？
+  Q2  raw/02-item5-recheck.txt 的 "DEFECT_CONFIRMED" 是否成立？
+
+
+--------------------------------------------------------------------------------
+§2. 时间轴（binlog.000139/140/141 解码 + 文件时间戳）
+--------------------------------------------------------------------------------
+  11-16 23:34:53   单事务给 role 5（MANAGER）授予 12 条权限码
+                    attendance 4：1451 / 1454 / 1455 / 1459
+                    commission 8：1330 / 1332 / 1333 / 1334 / 1335 / 1338 / 1342 / 1345
+                    来源：binlog.000139（事件 id 2025 -> 2036），客户端 charset=latin1、thread_id=2448
+                    仓库内**无脚本**产生这批授权
+  11-17 01:17:35   建 3 个夹具角色 + 3 个夹具用户（i186fix_s1 / i186fix_s5 / i186fix_multi，
+                    role_id 900004 / 900005 / 900006，user_id 99999704 / 99999705 / 99999706），
+                    并给 3 个夹具角色授予全量权限 871 行（291 / 290 / 290）
+                    ※ role 5 并未获得这 871 行，其在污染备份中仅 290 行 = 基线 278 + 12 条临时授权
+                    来源：binlog.000140
+  11-17 02:00:04   定时备份 meiyetec_20261117_020004.sql 落盘（**含上述夹具，污染**）
+  11-17 23:20-23:21 首轮验证（.audit-tmp/verify-result.txt）—— ITEM5 / ITEM12 FAIL
+  11-17 23:33     F173 主验证第二轮（raw/01-runtime-verification.txt）—— V1-V13 全部 PASS
+  11-17 23:36:34  单事务撤销：删除 role 5 的 12 条临时授权 + 871 行夹具权限（DELETE 883 行）
+  11-17 23:37     清理脚本执行完毕（raw/cleanup-output.txt）
+  11-17 23:41:07    清理后只读复核（raw/cleanup-output.txt）—— 夹具类计数全部归 0
+                    ※ 时间戳依据：raw/cleanup-output.txt 文件 mtime 实测 23:41:07（CreationTime 23:36:07）
+                      —— 文件自述「23:5x 复跑」与 mtime 冲突，以 mtime 为准
+  11-17 23:46:27  raw/02-item5-recheck.txt —— 判定 "DEFECT_CONFIRMED"（**误判，见 §4**）
+  11-17 23:53     人工重新登录复测 5 个端点 —— 全部 403
+  11-18 01:12     本文件的逐项只读复检
+
+
+--------------------------------------------------------------------------------
+§3. 账号态（清理后）
+--------------------------------------------------------------------------------
+  admin          login_ok=True
+  manager01      login_ok=True   dataScope=STORE  storeIds=[1]  roles=[MANAGER]
+  i186fix_s1     login_ok=False  no token in response
+  i186fix_s5     login_ok=False  no token in response
+  i186fix_multi  login_ok=False  no token in response
+
+  => 3 个夹具账号已被清理删除 -> 主验证「补测 2（多店账号集合语义）」与
+     「补测 3（写侧越权与多店写接口语义）」**无法复跑**（前提账号不存在）。
+  => manager01 的权限集快照（/auth/me/permissions，http=200）中已**不含** attendance:* 与
+     commission:*:stat / commission:*:export 任一码，与 I183 / I184 的「死码」结论一致。
+
+
+--------------------------------------------------------------------------------
+§4. ITEM5 误判复刻（raw/02-item5-recheck.txt 的脚本盲区）
+--------------------------------------------------------------------------------
+【脚本盲区】raw/recheck-item5.ps1 的 GetJson 函数在 catch 分支里**丢弃了 HTTP 状态码**：
+
+    function GetJson($path, $tok) {
+        try {
+            $r = Invoke-RestMethod -Uri "$base$path" -Headers @{Authorization="Bearer $tok"} -Method Get
+            return @{ ok=$true; http=200; data=$r.data }
+        } catch {
+            return @{ ok=$false; http=-1; data=$null }     # <-- 403 与 404/500 全部塌缩成 http=-1
+        }
+    }
+
+  Invoke-RestMethod 对 HTTP 403 抛异常 -> catch -> data=$null。
+  于是 `records.count` 被判为 0、`statistics.totalRecords` 被判为 $null，
+  脚本再据此写出 "DEFECT_CONFIRMED（缺省日期时 statistics 恒 0，records 非 0）"。
+
+【按同一取数逻辑复刻，逐字对齐脚本输出】
+  脚本视角                          真实 HTTP
+  ---------------------------------------------------------------------------
+  records.count=0                   403  "权限不足: 需要权限码：attendance:list"
+  statistics.totalRecords=(空)      403  "权限不足: 需要权限码：attendance:stat"
+  判定 DEFECT_CONFIRMED            <-- 事实为「权限不足」，非「统计恒 0」
+
+【结论】raw/02-item5-recheck.txt 的 DEFECT_CONFIRMED **不成立**，属于脚本缺陷导致的假阳性。
+          该文件本身**不构成独立证据**（其结论方向与事实相反）。
+
+【与首轮运行的对照】首轮运行（11-17 23:21）确实记录到 ITEM5 FAIL
+（records=1 / statistics.totalRecords=0），主验证脚本本身**记录了 http=403 与响应体**，
+两个端点的真实状态码在主验证文件内可核（raw/01 V13 一行给出 records 与 statistics 的数值），
+但主验证**未记录这两个端点各自的 HTTP 状态码**——这是主验证脚本的第二处盲区，
+只能由本次复检补上。
+
+
+--------------------------------------------------------------------------------
+§5. 主验证各 V 项 HTTP 状态码逐项清单（23:20-23:33 主验证  vs  11-18 01:12 清理后复检）
+--------------------------------------------------------------------------------
+【必须先读的声明】
+
+  ⚠️ 下表左列的 **200 / PASS 全部是在 2026-11-16 23:34:53 的临时授权窗口内**取得的；
+     该临时授权（role 5 + 12 条 attendance / commission 权限码）已于
+     **2026-11-17 23:36:34 被单事务撤销**。
+     右列（清理后复检）显示：**同一账号、同一端点的状态码发生 11 处 200 -> 403 翻转**
+     -> **左列的 PASS 在撤销后不可复现**，不能单独作为 I186 验收证据。
+
+  左列的「主验证」数据源：raw/01-runtime-verification.txt（2026-11-17 23:33）
+  右列的「清理后」数据源：.audit-tmp/post-cleanup-recheck.out.txt（2026-11-18 01:12）
+
+【manager01 参与项】
+
+  #   端点                                             主验证 23:20-23:33   清理后 01:12        判定
+  --- ----------------------------------------------- ------------------ ------------------ -----------
+  V1  GET /commission/records/page（缺省）             200 total=10        200 total=10        一致
+  V2  GET /commission/records/page?storeId=5          403 数据越权        403 数据越权        一致
+  V3a GET /commission/salary/page（缺省）              200 total=152       200 total=0         状态一致
+  V3b GET /commission/settlement/page（缺省）          200 total=1         200 total=0         状态一致
+  V4a GET /commission/salary/export（缺省）            200 bytes=8319      403 权限不足         **状态翻转**
+      └ 缺权限码：commission:salary:export（1333）
+  V4b GET /commission/salary/export?storeId=5         403 数据越权        403 数据越权        一致
+  V4c GET /commission/settlement/export（缺省）        200 bytes=3522      403 权限不足         **状态翻转**
+      └ 缺权限码：commission:settlement:export（1342）
+  V4d GET /commission/settlement/export?storeId=5     403 数据越权        403 数据越权        一致
+  V5  GET /attendance/records（缺省）                 200 count=1         403 权限不足         **状态翻转**
+      └ 缺权限码：attendance:list（1454）
+  V6  GET /attendance/leave/list（缺省）               200 count=1         403 权限不足         **状态翻转**
+      └ 缺权限码：attendance:leave:list（1459）
+  V7  GET /attendance/config/list（缺省）              200 count=3         403 权限不足         **状态翻转**
+      └ 缺权限码：attendance:config:list（1451）
+  V8  GET /attendance/config/active（缺省）           200 id=2            403 权限不足         **状态翻转**
+      └ 缺权限码：attendance:config:list（1451）
+  V9  GET /commission/records/stats                   （主验证 200）      403 权限不足         **状态翻转**
+      └ 缺权限码：commission:record:stat（1330）
+  V10 GET /commission/salary/stats                    （主验证 200）      403 权限不足         **状态翻转**
+      └ 缺权限码：commission:salary:stat（1334）
+  V11 GET /commission/settlement/stats                （主验证 200）      403 权限不足         **状态翻转**
+      └ 缺权限码：commission:settlement:stat（1338）
+  V13 GET /attendance/statistics?startDate&endDate    （主验证 200）      403 权限不足         **状态翻转**
+      └ 缺权限码：attendance:stat（1455）
+
+【admin（dataScope=ALL）项】
+
+  #   端点                                             主验证 23:20-23:33   清理后 01:12        判定
+  --- ----------------------------------------------- ------------------ ------------------ -----------
+  V12 GET /commission/records/page?pageSize=300       200 total=14        200 total=10        数据变化
+  V12 GET /commission/salary/page?pageSize=300        200 total=154       200 total=0         数据变化
+  V12 GET /commission/salary/export（缺省）            200 bytes=8376      200                一致（admin 持 *）
+  V12 GET /attendance/records                         200 count=4         200 list[]          数据变化
+  V12 GET /attendance/statistics?startDate&endDate    200 totalRecords=4  200 totalRecords=1  数据变化
+  V12 GET /attendance/statistics（缺省日期）           —                  200 totalRecords=0  —
+
+  说明：admin 走 SUPER_ADMIN 通配 `*`，**不依赖**那 12 条临时授权 -> 状态全部保持 200，
+        仅数据量因夹具清理而下降（commission_record 保留 10 行、commission_salary 归 0）。
+
+【未复跑项（无法复现，非「通过」）】
+
+  主验证 V6  （DB 层：commission_settlement (store_id, salary_month, tenant_id) 重复组检查）
+             —— 纯 SQL，不经 HTTP；清理未触及 commission_settlement -> 结论（重复组=0）**仍成立**
+  主验证 V9  （POST /commission/settlement/generate 跨租户不复用）
+             —— 写接口，依赖 commission:settlement:add（1345）+ 夹具账号 -> **本轮未复跑**
+  主验证 V10 （POST /commission/salary/generate 单店账号 storeIds=[5]）
+             —— 依赖 commission:salary:add（1335）+ 夹具账号 -> **本轮未复跑**
+  主验证 V11 （POST /commission/salary/generate 多店账号 -> 400）
+             —— 同上 -> **本轮未复跑**
+  补测 2    （多店账号 i186fix_multi 集合语义 9 个端点）
+             —— 夹具账号已删除 -> **无法复跑**
+  补测 3    （写侧越权与多店写接口语义 4 个端点）
+             —— 同上 -> **无法复跑**
+
+【清理后复检中 403 的响应体原文（逐字，manager01）】
+
+  /commission/salary/export      403 {"code":403,"message":"权限不足: 需要权限码：commission:salary:export","traceId":"d2c70f848d4c46fe884d70fbd81b5b99","timestamp":"2026-11-18 01:12:07"}
+  /commission/settlement/export  403 {"code":403,"message":"权限不足: 需要权限码：commission:settlement:export","traceId":"6367d607b5444a04a0978dd92a5a89e9","timestamp":"2026-11-18 01:12:08"}
+  /attendance/records            403 {"code":403,"message":"权限不足: 需要权限码：attendance:list","traceId":"a8e18085ff5842e99c59e4c1a0462f71","timestamp":"2026-11-18 01:12:08"}
+  /attendance/leave/list         403 {"code":403,"message":"权限不足: 需要权限码：attendance:leave:list","traceId":"cb3152e165d444a692f2ae5e5bacf203","timestamp":"2026-11-18 01:12:09"}
+  /attendance/config/list        403 {"code":403,"message":"权限不足: 需要权限码：attendance:config:list","traceId":"bbabc37286094a22a4d741b87345b7f0","timestamp":"2026-11-18 01:12:09"}
+  /attendance/config/active      403 {"code":403,"message":"权限不足: 需要权限码：attendance:config:list","traceId":"695f704ba06c46c79d31d00433d900bc","timestamp":"2026-11-18 01:12:10"}
+  /commission/records/stats      403 {"code":403,"message":"权限不足: 需要权限码：commission:record:stat","traceId":"47547a79c84549408ec160011d924dbd","timestamp":"2026-11-18 01:12:10"}
+  /commission/salary/stats       403 {"code":403,"message":"权限不足: 需要权限码：commission:salary:stat","traceId":"ef78c6dabbef4d1daf63d389c9d00afd","timestamp":"2026-11-18 01:12:11"}
+  /commission/settlement/stats   403 {"code":403,"message":"权限不足: 需要权限码：commission:settlement:stat","traceId":"c27f65b3aec04d7ca6f876dd25a68f46","timestamp":"2026-11-18 01:12:12"}
+  /attendance/statistics(带区间)  403 {"code":403,"message":"权限不足: 需要权限码：attendance:stat","traceId":"855b2bf163c84041a579d14f1032508b","timestamp":"2026-11-18 01:12:12"}
+  /attendance/statistics(缺省)    403 {"code":403,"message":"权限不足: 需要权限码：attendance:stat","traceId":"b98b1867b6064c9fb02850108dc5e7ae","timestamp":"2026-11-18 01:12:13"}
+
+  => 全部 403 均为「权限不足：需要权限码：X」，X 精确命中 11-16 23:34:53 那 12 条临时授权码。
+
+
+--------------------------------------------------------------------------------
+§6. 观察项（未确认，不作结论）
+--------------------------------------------------------------------------------
+  1) 清理后 admin 的 `GET /attendance/records` 返回**非空数组**（脚本记为 list[]），
+     且 `GET /attendance/statistics?startDate=2026-11-01&endDate=2026-11-30` 返回
+     totalRecords=1；而同一时刻 `GET /attendance/statistics`（缺省日期）返回 totalRecords=0。
+     但 raw/cleanup-output.txt（11-17 23:41:07 复跑，文件 mtime 实测）与 raw/02-item5-recheck.txt（11-17 23:46）
+     两次只读快照均记录 attendance_record 全表 0 行。
+     => 23:46 - 01:12 之间 attendance_record 又出现 1 行（check_date 落在 2026-11），
+        **来源未确认**（本轮为只读 GET，未做任何写入，未追查）。
+        该现象**不影响**上面的 403 结论（manager01 的所有被测端点均为 403，与行数无关）。
+
+  2) 复检脚本自身的 V 编号与 F173 主验证的 V 编号**不是同一套**：
+     复检脚本把 /attendance/leave/list 记为 V6、/attendance/config/list 记为 V7，
+     而主验证把 V6 定义为「DB 结算单重复检查」、V7 定义为 config/list。
+     本文件 §5 的对照表**按端点**对齐，不按脚本内编号对齐。
+
+
+--------------------------------------------------------------------------------
+§7. 结论
+--------------------------------------------------------------------------------
+  1) F173 主验证（2026-11-17 23:20 - 23:33）取得的 PASS **是在 11-16 23:34:53 的临时授权
+     窗口内**取得的；该临时授权已于 11-17 23:36:34 被单事务撤销。
+
+  2) 撤销之后，**同一账号（manager01）、同一端点**的 HTTP 状态码发生 11 处状态翻转
+     （200 -> 403，403 原因全部为「权限不足：需要权限码：X」），其余项状态不变
+     （本就已经是 403 的越权项）或因夹具清理数据量下降。
+     => **主验证 PASS 在清理后不可复现**。
+
+  3) 依赖已删除夹具账号的主验证 V9 / V10 / V11、补测 2、补测 3 **本轮无法复跑**，
+     其 PASS 同样无法在当前基线上复现。
+
+  4) raw/02-item5-recheck.txt 的 "DEFECT_CONFIRMED" 为**脚本盲区导致的误判**，
+     真实原因是 403 权限不足，非统计口径缺陷。
+
+  5) **F173 主验证 PASS 依赖临时授权，清理后不可复现，不能单独作为 I186 验收证据。**
+     I186 第 1 批的运行期结论必须在**基线授权状态**（补齐 I183 / I184 的权限码绑定）
+     之下重跑，才能作为验收证据。
+
+  6) 本文件为**只读复检**证据：未修改任何业务代码、未写库、未做 DDL、未动任何部署产物。
+
+
+--------------------------------------------------------------------------------
+§8. 证据索引
+--------------------------------------------------------------------------------
+  本文件（03-post-cleanup-permission-recheck.txt）
+  .audit-tmp/post-cleanup-recheck.ps1          复检脚本（非正式工具，只读）
+  .audit-tmp/post-cleanup-recheck.out.txt       复检原始输出
+  raw/01-runtime-verification.txt               主验证原始输出（23:33）
+  raw/02-item5-recheck.txt                      ITEM5 复验输出（23:46，结论误判）
+  raw/cleanup-output.txt                        清理后只读复核（23:41:07，文件 mtime 实测；文件自述 23:5x 与 mtime 冲突）
+  .audit-tmp/verify-result.txt                  首轮验证输出（23:21）
+  audit/issues/I198-i186-verify-evidence-tainted-and-backup-pollution.md
+                                               时间线 + 备份污染 + 授权来源待查
+  audit/evidence/F171-attendance-commission-perm-alignment/raw/13-perm-binding-timeline-20261117.txt
+                                               权限绑定时间线（binlog 解码摘录）
+================================================================================

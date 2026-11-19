@@ -1,0 +1,141 @@
+================================================================================
+【F173 补采复检 / POST-SELFCHECK PERMISSION RECHECK】—— 2026-11-18 16:36 ~ 16:45
+================================================================================
+用途：为 I183 / I184 的「复核」行提供**实测时间 + 实测命令 + 实测输出**，
+      并为 I198 §D / 审计报告 §6 提供当前基线授权状态的只读快照。
+性质：**只读**（全部为 SELECT + 只读 GET；零写操作、零 DDL、零 DELETE/UPDATE）。
+环境：docker `meiyetec-mysql`（MySQL 8.0，库 `meiyetec`，root/root123456）
+      API `http://localhost:8080`；账号 `manager01`（roles=[MANAGER]，dataScope=STORE，storeIds=[1]）
+绑定基线：HEAD `7a4e72a79263823a5be311f527ccd6e4d1d86233`（branch `main`）
+================================================================================
+
+
+--------------------------------------------------------------------------------
+§1. 权限码绑定现状（SQL）—— 实测时间 2026-11-18 16:44:52
+--------------------------------------------------------------------------------
+【实测命令】
+  docker exec meiyetec-mysql mysql -uroot -proot123456 --default-character-set=utf8mb4 meiyetec -e "
+    SELECT p.permission_code, COUNT(rp.id) AS bindings
+    FROM sys_permission p
+    LEFT JOIN sys_role_permission rp ON rp.permission_id = p.id
+    WHERE p.permission_code LIKE 'attendance:%' OR p.permission_code LIKE 'commission:%'
+    GROUP BY p.permission_code ORDER BY p.permission_code;"
+
+【实测输出】（共 37 个码：attendance 9 + commission 28）
+  attendance:check                     0
+  attendance:config:edit               0
+  attendance:config:list               0
+  attendance:edit                      0
+  attendance:leave:approve             0
+  attendance:leave:list                0
+  attendance:leave:submit              0
+  attendance:list                      0
+  attendance:stat                      0
+  commission:batch                     3
+  commission:calculate                 0
+  commission:list                      0
+  commission:record:list               3
+  commission:record:stat               0
+  commission:reversal                  3
+  commission:rule:add                  0
+  commission:rule:delete               0
+  commission:rule:detail               0
+  commission:rule:edit                 0
+  commission:rule:list                 3
+  commission:rule:stat                 0
+  commission:rule:status               0
+  commission:salary:add                0
+  commission:salary:adjust             0
+  commission:salary:batch-confirm      0
+  commission:salary:batch-pay          0
+  commission:salary:confirm            0
+  commission:salary:export             0
+  commission:salary:list               3
+  commission:salary:pay                0
+  commission:salary:stat               0
+  commission:settlement:add            0
+  commission:settlement:audit          0
+  commission:settlement:batch-confirm  0
+  commission:settlement:batch-pay      0
+  commission:settlement:confirm        0
+  commission:settlement:detail         0
+  commission:settlement:export         0
+  commission:settlement:list           3
+  commission:settlement:pay            0
+  commission:settlement:stat           0
+
+  => attendance 9 码绑定数**全为 0**（I183 结论复核成立）
+  => commission 侧绑定数非 0 的仅 6 个码：batch / record:list / reversal / rule:list /
+     salary:list / settlement:list；其余 26 个码绑定数为 0（I184「24/28 死码」口径成立：
+     backend java 引用的 28 个 commission 码中，4 个已绑定 = record:list / rule:list /
+     salary:list / settlement:list，其余 24 个零绑定；batch 与 reversal 不在 java 的
+     28 码引用集内，但库中已有 3 个角色绑定）
+
+--------------------------------------------------------------------------------
+§2. 基线行数与夹具残留（SQL）—— 同一实测时间 2026-11-18 16:44:52
+--------------------------------------------------------------------------------
+【实测命令】
+  docker exec meiyetec-mysql mysql -uroot -proot123456 --default-character-set=utf8mb4 meiyetec -e "
+    SELECT (SELECT COUNT(*) FROM sys_role_permission) AS rp_total,
+           (SELECT COUNT(*) FROM sys_role_permission WHERE role_id = 5) AS role5_total,
+           (SELECT COUNT(*) FROM sys_user WHERE username LIKE 'i186fix%') AS fixture_users,
+           (SELECT COUNT(*) FROM sys_role WHERE role_code LIKE 'I186FIX%') AS fixture_roles;"
+
+【实测输出】
+  rp_total  role5_total  fixture_users  fixture_roles
+  1164      278          0              0
+
+  => 与基线完全一致（sys_role_permission 1164 / role 5 = 278），夹具账号与夹具角色残留为 0
+  => 确认 I198 §1.3「污染窗口仅限 meiyetec_20261117_020004.sql 一个文件」的结论成立
+
+--------------------------------------------------------------------------------
+§3. HTTP 端点复检 —— 实测时间 2026-11-18 16:40:06 - 16:40:14
+--------------------------------------------------------------------------------
+【实测命令】（PowerShell，登录取 token 后逐端点 GET，记录 HTTP 状态码）
+  $base='http://localhost:8080'
+  $r = Invoke-RestMethod -Uri "$base/auth/login" -Method Post -ContentType 'application/json' `
+       -Body (@{username='manager01';password='123456'} | ConvertTo-Json)
+  $tok = $r.data.token
+  # 对每个路径：
+  Invoke-WebRequest -Uri "$base<path>" -Headers @{Authorization="Bearer $tok"} -Method Get -UseBasicParsing
+  # 异常分支取 $_.Exception.Response.StatusCode.value__
+
+【实测输出】
+  login_ok=True
+  /attendance/records                        need=attendance:list              http=403
+  /attendance/statistics                     need=attendance:stat              http=403
+  /attendance/leave/list                     need=attendance:leave:list        http=403
+  /attendance/config/list                    need=attendance:config:list       http=403
+  /attendance/config/active                  need=attendance:config:list       http=403
+  /commission/records/stats                  need=commission:record:stat       http=403
+  /commission/salary/stats                   need=commission:salary:stat        http=403
+  /commission/settlement/stats               need=commission:settlement:stat   http=403
+  /commission/salary/export                  need=commission:salary:export     http=403
+  /commission/settlement/export              need=commission:settlement:export http=403
+  /commission/rules/stats                    need=commission:rule:stat         http=403
+
+  => 11 个受限端点**全部 403**，与 I198 §1.2 的 11 处 200→403 翻转结论一致（当前基线授权状态）
+  => 与 §1 SQL 绑定数为 0 的码**一一对应**（attendance 5 个 + commission 6 个）
+  => 复检时刻 16:40:06（登录）→ 16:40:14（探测结束），共 8 秒
+
+--------------------------------------------------------------------------------
+§4. 运行时栈状态 —— 实测时间 2026-11-18 16:44:52
+--------------------------------------------------------------------------------
+【实测命令】
+  docker ps --format "{{.Names}}|{{.Status}}|{{.Ports}}"
+
+【实测输出】
+  meiyetec-api|Up 3 hours (healthy)|0.0.0.0:8080->8080/tcp
+  meiyetec-web|Up 3 hours (healthy)|0.0.0.0:8088->80/tcp
+  meiyetec-redis|Up 3 hours (healthy)|0.0.0.0:6379->6379/tcp
+  meiyetec-mysql|Up 3 hours (healthy)|0.0.0.0:3307->3306/tcp
+
+  => 四个容器全部 healthy；**主验证当时（11-17 23:33）的容器状态与启动日志未留存**，无法追溯
+
+================================================================================
+结论：本文件是 2026-11-18 当前基线授权状态的**只读实测快照**，用于：
+  (1) I183 / I184 的「复核」行（实测时间 + 实测命令）；
+  (2) 证明 I198 §1.2 的 11 处 200→403 在 2026-11-18 仍然成立、并未因时间推移而自愈；
+  (3) 证明 I198 §1.3 的备份污染结论（污染窗口仅限 11-17 那一个备份文件）依然成立。
+本文件**不构成** I186 第 1 批的验收证据 —— 运行期 PASS 仍需在 I183 / I184 修复后重跑。
+================================================================================
