@@ -1,0 +1,21 @@
+﻿chk	codes	bindings
+chk1_codes_bindings	33	100
+chk	role_id	delta_d1_only	delta_with_d5a_FIXED
+chk2_delta_by_role_FIXED	2	7	7
+chk2_delta_by_role_FIXED	4	4	4
+chk2_delta_by_role_FIXED	5	25	26
+chk2_delta_by_role_FIXED	6	31	32
+chk2_delta_by_role_FIXED	8	33	34
+chk	role_id	role_code	current_cnt	delta_d1_only	delta_with_d5a_FIXED	after_cnt_FIXED	after_cnt_OLD_BUGGY
+chk3_after_cnt_FIXED	1	SUPER_ADMIN	118	0	0	118	118
+chk3_after_cnt_FIXED	2	STORE_ADMIN	40	7	7	47	47
+chk3_after_cnt_FIXED	3	EMPLOYEE	0	0	0	0	0
+chk3_after_cnt_FIXED	4	CLERK	50	4	4	54	54
+chk3_after_cnt_FIXED	5	MANAGER	278	25	26	304	306
+chk3_after_cnt_FIXED	6	BOSS	192	31	32	224	226
+chk3_after_cnt_FIXED	7	OPERATOR	105	0	0	105	105
+chk3_after_cnt_FIXED	8	ADMIN	381	33	34	415	417
+chk	total_now	total_after
+chk4_total	1164	1267
+chk	simulation_exists	max_permission_id	perm_total
+chk6_simulation	0	1624	509

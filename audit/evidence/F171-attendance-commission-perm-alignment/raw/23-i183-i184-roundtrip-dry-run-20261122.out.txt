@@ -1,0 +1,26 @@
+﻿chk	rp_total
+STEP1_after_bind	1267
+chk	role_id	cnt
+STEP1_byrole	1	118
+STEP1_byrole	2	47
+STEP1_byrole	4	54
+STEP1_byrole	5	304
+STEP1_byrole	6	224
+STEP1_byrole	7	105
+STEP1_byrole	8	415
+chk	cnt
+STEP1_perm_total	510
+chk	rp_total
+STEP2_after_rollback	1164
+chk	role_id	cnt
+STEP2_byrole	1	118
+STEP2_byrole	2	40
+STEP2_byrole	4	50
+STEP2_byrole	5	278
+STEP2_byrole	6	192
+STEP2_byrole	7	105
+STEP2_byrole	8	381
+chk	cnt
+STEP2_perm_total	509
+chk	cnt
+STEP2_simulation	0

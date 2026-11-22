@@ -1,0 +1,58 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+codes	bindings
+33	100
+role_id	delta_with_d5a	delta_d1_only
+2	7	7
+4	4	4
+5	25	28
+6	31	34
+8	33	36
+role_id	role_code	role_name	current_cnt	delta_d1_only	delta_with_d5a	after_cnt
+1	SUPER_ADMIN	超级管理员	118	0	0	118
+2	STORE_ADMIN	门店管理员	40	7	7	47
+3	EMPLOYEE	员工	0	0	0	0
+4	CLERK	店员	50	4	4	54
+5	MANAGER	店长	278	25	28	306
+6	BOSS	老板	192	31	34	226
+7	OPERATOR	运营	105	0	0	105
+8	ADMIN	系统管理员	381	33	36	417
+total_now	total_after
+1164	1267
+permission_code	permission_id	already_bound
+attendance:check	1453	0
+attendance:config:edit	1452	0
+attendance:config:list	1451	0
+attendance:edit	1456	0
+attendance:leave:approve	1458	0
+attendance:leave:list	1459	0
+attendance:leave:submit	1457	0
+attendance:list	1454	0
+attendance:stat	1455	0
+commission:calculate	1328	0
+commission:record:stat	1330	0
+commission:rule:add	1120	0
+commission:rule:delete	1122	0
+commission:rule:detail	1331	0
+commission:rule:edit	1121	0
+commission:rule:stat	1332	0
+commission:rule:status	1329	0
+commission:salary:add	1335	0
+commission:salary:adjust	1336	0
+commission:salary:batch-confirm	1339	0
+commission:salary:batch-pay	1337	0
+commission:salary:confirm	1125	0
+commission:salary:export	1333	0
+commission:salary:pay	1126	0
+commission:salary:stat	1334	0
+commission:settlement:add	1345	0
+commission:settlement:batch-confirm	1327	0
+commission:settlement:batch-pay	1341	0
+commission:settlement:confirm	1344	0
+commission:settlement:detail	1343	0
+commission:settlement:export	1342	0
+commission:settlement:pay	1340	0
+commission:settlement:stat	1338	0
+simulation_exists
+0
+max_permission_id	perm_total
+1624	509

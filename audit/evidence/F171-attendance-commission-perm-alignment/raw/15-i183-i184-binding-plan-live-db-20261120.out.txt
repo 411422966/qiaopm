@@ -1,0 +1,187 @@
+﻿section
+== A1 ???? ==
+id	role_code	role_name	status	deleted
+1	SUPER_ADMIN	瓒呯骇绠＄悊鍛?1	0
+2	STORE_ADMIN	闂ㄥ簵绠＄悊鍛?1	0
+3	EMPLOYEE	鍛樺伐	1	0
+4	CLERK	搴楀憳	1	0
+5	MANAGER	搴楅暱	1	0
+6	BOSS	鑰佹澘	1	0
+7	OPERATOR	杩愯惀	1	0
+8	ADMIN	绯荤粺绠＄悊鍛?1	0
+section
+== A2 ?????????? ==
+total
+1164
+role_id	cnt
+1	118
+2	40
+4	50
+5	278
+6	192
+7	105
+8	381
+section
+== A3 ??/????????bind_cnt=0 ? A ?? ==
+id	permission_code	permission_type	roles	bind_cnt
+1453	attendance:check	button	NULL	0
+1452	attendance:config:edit	button	NULL	0
+1451	attendance:config:list	button	NULL	0
+1456	attendance:edit	button	NULL	0
+1458	attendance:leave:approve	button	NULL	0
+1459	attendance:leave:list	button	NULL	0
+1457	attendance:leave:submit	button	NULL	0
+1454	attendance:list	button	NULL	0
+1455	attendance:stat	button	NULL	0
+1203	commission	menu	1,5,6,8	4
+1129	commission:batch	button	5,6,8	3
+1328	commission:calculate	API	NULL	0
+1118	commission:list	button	NULL	0
+1123	commission:record:list	button	5,6,8	3
+1330	commission:record:stat	API	NULL	0
+1130	commission:reversal	button	5,6,8	3
+1120	commission:rule:add	button	NULL	0
+1122	commission:rule:delete	button	NULL	0
+1331	commission:rule:detail	API	NULL	0
+1121	commission:rule:edit	button	NULL	0
+1119	commission:rule:list	button	5,6,8	3
+1332	commission:rule:stat	API	NULL	0
+1329	commission:rule:status	API	NULL	0
+1335	commission:salary:add	API	NULL	0
+1336	commission:salary:adjust	API	NULL	0
+1339	commission:salary:batch-confirm	API	NULL	0
+1337	commission:salary:batch-pay	API	NULL	0
+1125	commission:salary:confirm	button	NULL	0
+1333	commission:salary:export	API	NULL	0
+1124	commission:salary:list	button	5,6,8	3
+1126	commission:salary:pay	button	NULL	0
+1334	commission:salary:stat	API	NULL	0
+1345	commission:settlement:add	API	NULL	0
+1128	commission:settlement:audit	button	NULL	0
+1327	commission:settlement:batch-confirm	API	NULL	0
+1341	commission:settlement:batch-pay	API	NULL	0
+1344	commission:settlement:confirm	API	NULL	0
+1343	commission:settlement:detail	API	NULL	0
+1342	commission:settlement:export	API	NULL	0
+1127	commission:settlement:list	button	5,6,8	3
+1340	commission:settlement:pay	API	NULL	0
+1338	commission:settlement:stat	API	NULL	0
+1239	commission.batch	menu	1,5,8	3
+1236	commission.records	menu	1,5,6,8	4
+1240	commission.reversal	menu	1,5,8	3
+1235	commission.rules	menu	1,5,6,8	4
+1237	commission.salary	menu	1,5,6,8	4
+1238	commission.settlement	menu	1,5,6,8	4
+section
+== A4 ????? role ?? ==
+permission_code	roles
+biz:service-item:edit	1,5,6,8
+booking:checkin	5,8
+booking:delete	5,8
+booking:detail	4,5,6,8
+booking:edit	5,8
+booking:export	5,8
+booking:list	4,5,6,8
+booking:stat	4,5,6,8
+commission:record:list	5,6,8
+commission:rule:list	5,6,8
+commission:salary:list	5,6,8
+commission:settlement:list	5,6,8
+crm:follow-up	5,6,8
+employee:list	2,4,5,6,7,8
+pos:order:add	5,8
+pos:order:list	4,5,8
+pos:order:pay	5,8
+pos:order:void	5,8
+pos:refund	5,8
+pos:refund:audit:store	2,8
+report:export:list	5,6,7,8
+stock:alert	2,5,8
+stock:check	2,5,8
+stock:export	2,5,8
+sys:config:edit	6,8
+sys:log:export	6,8
+section
+== A5 ??? x ????????????33 ??already_bound ? 0? ==
+permission_code	permission_id	expected_roles	n	already_bound
+attendance:check	1453	2,4,5,6,8	5	0
+attendance:config:edit	1452	2,5,8	3	0
+attendance:config:list	1451	2,5,8	3	0
+attendance:edit	1456	2,5,8	3	0
+attendance:leave:approve	1458	2,5,6,8	4	0
+attendance:leave:list	1459	2,4,5,6,8	5	0
+attendance:leave:submit	1457	2,4,5,6,8	5	0
+attendance:list	1454	2,4,5,6,8	5	0
+attendance:stat	1455	2,5,6,8	4	0
+commission:calculate	1328	5,6,8	3	0
+commission:record:stat	1330	5,6,8	3	0
+commission:rule:add	1120	5,6,8	3	0
+commission:rule:delete	1122	5,6,8	3	0
+commission:rule:detail	1331	5,6,8	3	0
+commission:rule:edit	1121	5,6,8	3	0
+commission:rule:stat	1332	5,6,8	3	0
+commission:rule:status	1329	5,6,8	3	0
+commission:salary:add	1335	5,6,8	3	0
+commission:salary:adjust	1336	5,8	2	0
+commission:salary:batch-confirm	1339	5,8	2	0
+commission:salary:batch-pay	1337	5,8	2	0
+commission:salary:confirm	1125	5,8	2	0
+commission:salary:export	1333	5,6,7,8	4	0
+commission:salary:pay	1126	5,8	2	0
+commission:salary:stat	1334	5,6,8	3	0
+commission:settlement:add	1345	5,6,8	3	0
+commission:settlement:batch-confirm	1327	5,8	2	0
+commission:settlement:batch-pay	1341	5,8	2	0
+commission:settlement:confirm	1344	5,8	2	0
+commission:settlement:detail	1343	5,6,8	3	0
+commission:settlement:export	1342	5,6,7,8	4	0
+commission:settlement:pay	1340	5,8	2	0
+commission:settlement:stat	1338	5,6,8	3	0
+section
+== A6 ??????? ==
+Field	Type	Null	Key	Default	Extra
+id	bigint	NO	PRI	NULL	auto_increment
+role_id	bigint	NO	MUL	NULL	
+permission_id	bigint	NO	MUL	NULL	
+create_time	datetime	YES		CURRENT_TIMESTAMP	DEFAULT_GENERATED
+Table	Non_unique	Key_name	Seq_in_index	Column_name	Collation	Cardinality	Sub_part	Packed	Null	Index_type	Comment	Index_comment	Visible	Expression
+sys_role_permission	0	PRIMARY	1	id	A	1164	NULL	NULL		BTREE			YES	NULL
+sys_role_permission	0	uk_role_permission	1	role_id	A	7	NULL	NULL		BTREE			YES	NULL
+sys_role_permission	0	uk_role_permission	2	permission_id	A	1164	NULL	NULL		BTREE			YES	NULL
+sys_role_permission	1	idx_role_id	1	role_id	A	7	NULL	NULL		BTREE			YES	NULL
+sys_role_permission	1	idx_permission_id	1	permission_id	A	384	NULL	NULL		BTREE			YES	NULL
+mysql_version
+8.0.46
+section
+== A7 ????????? @RequirePermission ??? ==
+id	permission_code	permission_type
+1118	commission:list	button
+1128	commission:settlement:audit	button
+section
+== A8 ???????????? 94 ??? 23? ==
+sys_permission_total
+509
+frontend_code_missing_in_db
+biz:room
+biz:service-item
+commission:rule
+commission:rule:config
+commission:simulation
+dcep:hardware-wallet
+dev:access
+employee:attendance
+employee:attendance:config
+employee:attendance:list
+employee:attendance:stat
+employee:leave
+employee:level:evaluation
+iot:device:manage
+mh:consent
+mh:visual
+org:brand
+org:hq
+org:store
+pay:dcep
+pay:order
+payment:overseas:gateway
+resource:schedule

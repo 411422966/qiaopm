@@ -1,0 +1,86 @@
+﻿chk	val
+V1_total	1267
+chk	role_id	role_code	val
+V1_byrole	1	SUPER_ADMIN	118
+V1_byrole	2	STORE_ADMIN	47
+V1_byrole	4	CLERK	54
+V1_byrole	5	MANAGER	304
+V1_byrole	6	BOSS	224
+V1_byrole	7	OPERATOR	105
+V1_byrole	8	ADMIN	415
+chk	permission_code	expected_roles	actual_roles	verdict
+V2	attendance:check	2,4,5,6,8	2,4,5,6,8	PASS
+V2	attendance:config:edit	5,8	5,8	PASS
+V2	attendance:config:list	2,5,6,8	2,5,6,8	PASS
+V2	attendance:edit	5,8	5,8	PASS
+V2	attendance:leave:approve	2,5,6,8	2,5,6,8	PASS
+V2	attendance:leave:list	2,4,5,6,8	2,4,5,6,8	PASS
+V2	attendance:leave:submit	2,4,5,6,8	2,4,5,6,8	PASS
+V2	attendance:list	2,4,5,6,8	2,4,5,6,8	PASS
+V2	attendance:stat	2,5,6,8	2,5,6,8	PASS
+V2	commission:calculate	5,6,8	5,6,8	PASS
+V2	commission:record:stat	5,6,8	5,6,8	PASS
+V2	commission:rule:add	5,6,8	5,6,8	PASS
+V2	commission:rule:delete	5,6,8	5,6,8	PASS
+V2	commission:rule:detail	5,6,8	5,6,8	PASS
+V2	commission:rule:edit	5,6,8	5,6,8	PASS
+V2	commission:rule:stat	5,6,8	5,6,8	PASS
+V2	commission:rule:status	5,6,8	5,6,8	PASS
+V2	commission:salary:add	5,6,8	5,6,8	PASS
+V2	commission:salary:adjust	5,6,8	5,6,8	PASS
+V2	commission:salary:batch-confirm	6,8	6,8	PASS
+V2	commission:salary:batch-pay	6,8	6,8	PASS
+V2	commission:salary:confirm	6,8	6,8	PASS
+V2	commission:salary:export	5,6,8	5,6,8	PASS
+V2	commission:salary:pay	6,8	6,8	PASS
+V2	commission:salary:stat	5,6,8	5,6,8	PASS
+V2	commission:settlement:add	5,6,8	5,6,8	PASS
+V2	commission:settlement:batch-confirm	6,8	6,8	PASS
+V2	commission:settlement:batch-pay	6,8	6,8	PASS
+V2	commission:settlement:confirm	6,8	6,8	PASS
+V2	commission:settlement:detail	5,6,8	5,6,8	PASS
+V2	commission:settlement:export	5,6,8	5,6,8	PASS
+V2	commission:settlement:pay	6,8	6,8	PASS
+V2	commission:settlement:stat	5,6,8	5,6,8	PASS
+V2	commission:simulation	5,6,8	5,6,8	PASS
+chk	permission_code	permission_id	bind_cnt
+V5	attendance:check	1453	5
+V5	attendance:config:edit	1452	2
+V5	attendance:config:list	1451	4
+V5	attendance:edit	1456	2
+V5	attendance:leave:approve	1458	4
+V5	attendance:leave:list	1459	5
+V5	attendance:leave:submit	1457	5
+V5	attendance:list	1454	5
+V5	attendance:stat	1455	4
+V5	commission:calculate	1328	3
+V5	commission:record:stat	1330	3
+V5	commission:rule:add	1120	3
+V5	commission:rule:delete	1122	3
+V5	commission:rule:detail	1331	3
+V5	commission:rule:edit	1121	3
+V5	commission:rule:stat	1332	3
+V5	commission:rule:status	1329	3
+V5	commission:salary:add	1335	3
+V5	commission:salary:adjust	1336	3
+V5	commission:salary:batch-confirm	1339	2
+V5	commission:salary:batch-pay	1337	2
+V5	commission:salary:confirm	1125	2
+V5	commission:salary:export	1333	3
+V5	commission:salary:pay	1126	2
+V5	commission:salary:stat	1334	3
+V5	commission:settlement:add	1345	3
+V5	commission:settlement:batch-confirm	1327	2
+V5	commission:settlement:batch-pay	1341	2
+V5	commission:settlement:confirm	1344	2
+V5	commission:settlement:detail	1343	3
+V5	commission:settlement:export	1342	3
+V5	commission:settlement:pay	1340	2
+V5	commission:settlement:stat	1338	3
+V5	commission:simulation	1631	3
+chk	permission_code	id	bind_cnt
+orphan_check	commission:list	1118	0
+orphan_check	commission:settlement:audit	1128	0
+chk	role_id	cnt
+untouched_roles	1	118
+untouched_roles	7	105

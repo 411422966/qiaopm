@@ -1,0 +1,55 @@
+﻿docker : mysql: [Warning] Using a password on the command line interface can be insecure.
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-cf363064-b4f8-4c71-86b1-5625ee14b216.ps1:80 字符: 422
++ ... UTF8 $src | docker exec -i meiyetec-mysql mysql -uroot -proot123456 m ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mysql: [Warning...an be insecure.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+chk	val
+V1_total	1267
+chk	role_id	role_code	val
+V1_byrole	1	SUPER_ADMIN	118
+V1_byrole	2	STORE_ADMIN	47
+V1_byrole	4	CLERK	54
+V1_byrole	5	MANAGER	304
+V1_byrole	6	BOSS	224
+V1_byrole	7	OPERATOR	105
+V1_byrole	8	ADMIN	415
+chk	permission_code	permission_id	bind_cnt
+V5	attendance:check	1453	5
+V5	attendance:config:edit	1452	2
+V5	attendance:config:list	1451	4
+V5	attendance:edit	1456	2
+V5	attendance:leave:approve	1458	4
+V5	attendance:leave:list	1459	5
+V5	attendance:leave:submit	1457	5
+V5	attendance:list	1454	5
+V5	attendance:stat	1455	4
+V5	commission:calculate	1328	3
+V5	commission:record:stat	1330	3
+V5	commission:rule:add	1120	3
+V5	commission:rule:delete	1122	3
+V5	commission:rule:detail	1331	3
+V5	commission:rule:edit	1121	3
+V5	commission:rule:stat	1332	3
+V5	commission:rule:status	1329	3
+V5	commission:salary:add	1335	3
+V5	commission:salary:adjust	1336	3
+V5	commission:salary:batch-confirm	1339	2
+V5	commission:salary:batch-pay	1337	2
+V5	commission:salary:confirm	1125	2
+V5	commission:salary:export	1333	3
+V5	commission:salary:pay	1126	2
+V5	commission:salary:stat	1334	3
+V5	commission:settlement:add	1345	3
+V5	commission:settlement:batch-confirm	1327	2
+V5	commission:settlement:batch-pay	1341	2
+V5	commission:settlement:confirm	1344	2
+V5	commission:settlement:detail	1343	3
+V5	commission:settlement:export	1342	3
+V5	commission:settlement:pay	1340	2
+V5	commission:settlement:stat	1338	3
+V5	commission:simulation	1626	3
+chk	permission_code	id	bind_cnt
+orphan	commission:list	1118	0
+orphan	commission:settlement:audit	1128	0

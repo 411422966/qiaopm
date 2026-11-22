@@ -1,0 +1,48 @@
+section
+== T1 GROUP_CONCAT(DISTINCT ... ORDER BY role_id) 顺序实证 ==
+permission_code	actual_roles	matches_literal
+employee:list	2,4,5,6,7,8	1
+section
+== T2 无 ORDER BY 对照组 ==
+no_order	with_order	same_string
+2,4,5,6,7,8	2,4,5,6,7,8	1
+section
+== T3 group_concat_max_len 与 MySQL 版本 ==
+gcml	mysql_version
+1024	8.0.46
+section
+== T4 33 码 permission_id 复核（供正向/回滚 SQL 常量比对） ==
+permission_code	permission_id	permission_type
+attendance:check	1453	button
+attendance:config:edit	1452	button
+attendance:config:list	1451	button
+attendance:edit	1456	button
+attendance:leave:approve	1458	button
+attendance:leave:list	1459	button
+attendance:leave:submit	1457	button
+attendance:list	1454	button
+attendance:stat	1455	button
+commission:calculate	1328	API
+commission:record:stat	1330	API
+commission:rule:add	1120	button
+commission:rule:delete	1122	button
+commission:rule:detail	1331	API
+commission:rule:edit	1121	button
+commission:rule:stat	1332	API
+commission:rule:status	1329	API
+commission:salary:add	1335	API
+commission:salary:adjust	1336	API
+commission:salary:batch-confirm	1339	API
+commission:salary:batch-pay	1337	API
+commission:salary:confirm	1125	button
+commission:salary:export	1333	API
+commission:salary:pay	1126	button
+commission:salary:stat	1334	API
+commission:settlement:add	1345	API
+commission:settlement:batch-confirm	1327	API
+commission:settlement:batch-pay	1341	API
+commission:settlement:confirm	1344	API
+commission:settlement:detail	1343	API
+commission:settlement:export	1342	API
+commission:settlement:pay	1340	API
+commission:settlement:stat	1338	API

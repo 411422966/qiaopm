@@ -1,0 +1,71 @@
+﻿chk	permission_code	permission_id	already_bound
+PRECHECK_bound_nonzero	attendance:check	1453	5
+PRECHECK_bound_nonzero	attendance:config:edit	1452	2
+PRECHECK_bound_nonzero	attendance:config:list	1451	4
+PRECHECK_bound_nonzero	attendance:edit	1456	2
+PRECHECK_bound_nonzero	attendance:leave:approve	1458	4
+PRECHECK_bound_nonzero	attendance:leave:list	1459	5
+PRECHECK_bound_nonzero	attendance:leave:submit	1457	5
+PRECHECK_bound_nonzero	attendance:list	1454	5
+PRECHECK_bound_nonzero	attendance:stat	1455	4
+PRECHECK_bound_nonzero	commission:calculate	1328	3
+PRECHECK_bound_nonzero	commission:record:stat	1330	3
+PRECHECK_bound_nonzero	commission:rule:add	1120	3
+PRECHECK_bound_nonzero	commission:rule:delete	1122	3
+PRECHECK_bound_nonzero	commission:rule:detail	1331	3
+PRECHECK_bound_nonzero	commission:rule:edit	1121	3
+PRECHECK_bound_nonzero	commission:rule:stat	1332	3
+PRECHECK_bound_nonzero	commission:rule:status	1329	3
+PRECHECK_bound_nonzero	commission:salary:add	1335	3
+PRECHECK_bound_nonzero	commission:salary:adjust	1336	3
+PRECHECK_bound_nonzero	commission:salary:batch-confirm	1339	2
+PRECHECK_bound_nonzero	commission:salary:batch-pay	1337	2
+PRECHECK_bound_nonzero	commission:salary:confirm	1125	2
+PRECHECK_bound_nonzero	commission:salary:export	1333	3
+PRECHECK_bound_nonzero	commission:salary:pay	1126	2
+PRECHECK_bound_nonzero	commission:salary:stat	1334	3
+PRECHECK_bound_nonzero	commission:settlement:add	1345	3
+PRECHECK_bound_nonzero	commission:settlement:batch-confirm	1327	2
+PRECHECK_bound_nonzero	commission:settlement:batch-pay	1341	2
+PRECHECK_bound_nonzero	commission:settlement:confirm	1344	2
+PRECHECK_bound_nonzero	commission:settlement:detail	1343	3
+PRECHECK_bound_nonzero	commission:settlement:export	1342	3
+PRECHECK_bound_nonzero	commission:settlement:pay	1340	2
+PRECHECK_bound_nonzero	commission:settlement:stat	1338	3
+chk	cnt
+PRECHECK_simulation_exists	1
+chk	total
+PRECHECK_total_now	1267
+chk	permission_code	id
+PRECHECK_permission_ids	commission:rule:add	1120
+PRECHECK_permission_ids	commission:rule:edit	1121
+PRECHECK_permission_ids	commission:rule:delete	1122
+PRECHECK_permission_ids	commission:salary:confirm	1125
+PRECHECK_permission_ids	commission:salary:pay	1126
+PRECHECK_permission_ids	commission:settlement:batch-confirm	1327
+PRECHECK_permission_ids	commission:calculate	1328
+PRECHECK_permission_ids	commission:rule:status	1329
+PRECHECK_permission_ids	commission:record:stat	1330
+PRECHECK_permission_ids	commission:rule:detail	1331
+PRECHECK_permission_ids	commission:rule:stat	1332
+PRECHECK_permission_ids	commission:salary:export	1333
+PRECHECK_permission_ids	commission:salary:stat	1334
+PRECHECK_permission_ids	commission:salary:add	1335
+PRECHECK_permission_ids	commission:salary:adjust	1336
+PRECHECK_permission_ids	commission:salary:batch-pay	1337
+PRECHECK_permission_ids	commission:salary:batch-confirm	1339
+PRECHECK_permission_ids	commission:settlement:pay	1340
+PRECHECK_permission_ids	commission:settlement:batch-pay	1341
+PRECHECK_permission_ids	commission:settlement:export	1342
+PRECHECK_permission_ids	commission:settlement:detail	1343
+PRECHECK_permission_ids	commission:settlement:confirm	1344
+PRECHECK_permission_ids	commission:settlement:add	1345
+PRECHECK_permission_ids	attendance:config:list	1451
+PRECHECK_permission_ids	attendance:config:edit	1452
+PRECHECK_permission_ids	attendance:check	1453
+PRECHECK_permission_ids	attendance:list	1454
+PRECHECK_permission_ids	attendance:stat	1455
+PRECHECK_permission_ids	attendance:edit	1456
+PRECHECK_permission_ids	attendance:leave:submit	1457
+PRECHECK_permission_ids	attendance:leave:approve	1458
+PRECHECK_permission_ids	attendance:leave:list	1459
