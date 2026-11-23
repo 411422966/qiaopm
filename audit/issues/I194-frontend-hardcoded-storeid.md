@@ -1,12 +1,12 @@
 # I194 — 前端 8 处硬编码 `storeId: 1`（+1 处关联缺陷），使 I186 第 1 批「缺省按门店集合过滤」在真实链路上被绕过
 
-> **状态**：**Open（仅登记 + 只读调查结论，不改代码）** —— 本条**独立批次**处理，I186 第 1 批**不包含**前端改动
+> **状态**：**Open（I194-0 已实施并验收；I194-1/-2 待执行）** —— 本条**独立批次**处理，I186 第 1 批**不包含**前端改动
 > **严重度**：**P1**（不是「越权漏洞」，而是**修复被绕过** —— 后端修好后，前端仍把 `storeId=1` 显式传下去，后端拿到的永远是显式单值 → 集合过滤形同虚设）
 > **发现日期**：2026-11-16（I186 第 1 批修复草案 §4.3 核对前端调用点时发现）
-> **本次更新**：2026-11-17（只读调查报告回写：逐处定性 + 新发现 2 处 + 前置依赖确认 + 修正方案 + 分批排期）
+> **本次更新**：2026-11-17（只读调查报告回写：逐处定性 + 新发现 2 处 + 前置依赖确认 + 修正方案 + 分批排期）；2026-11-23 I194-0 实施 + 验收（commit `0b3e281`）
 > **登记人**：Cursor
-> **绑定基线**：HEAD `7a4e72a`（含 I186 第 1 批 `c37a549`）
-> **验证等级**：**静态 VERIFIED**（前端源码行号 + 后端取参路径 + 控制器实现均可复核）；**运行期后果 PARTIAL**（I186 第 1 批的后端行为已运行期实测，见 `audit/evidence/F173-i186-batch1-runtime-verification/`；但**前端不改则修复在真实链路上仍不可达**，该结论为静态推导）
+> **绑定基线**：HEAD `7a4e72a`（含 I186 第 1 批 `c37a549`）；当前 HEAD `8cf83da`（2026-11-23）
+> **验证等级**：**静态 VERIFIED**（前端源码行号 + 后端取参路径 + 控制器实现均可复核）；**运行期后果 PARTIAL**（I186 第 1 批的后端行为已运行期实测，见 `audit/evidence/F173-i186-batch1-runtime-verification/`；但**前端不改则修复在真实链路上仍不可达**，该结论为静态推导（I194-0 后 records.vue 路径已 VERIFIED admin；主表 8 处仍适用此限定）
 > ⚠️ **证据依赖临时授权，需重跑（2026-11-18 追加）**：本条引用的 `audit/evidence/F173-i186-batch1-runtime-verification/raw/01-runtime-verification.txt` **依赖 2026-11-16 23:34:53 的临时授权**（role 5 被授予 12 条 attendance / commission 权限码），该授权已于 **2026-11-17 23:36:34 撤销** → 清理后复检出现 **11 处 200 -> 403 状态翻转**（manager01，403 原因均为「权限不足: 需要权限码：X」），主验证 PASS **不可复现**，**不能单独作为 I186 验收证据**。本条「后端行为已实测」的表述据此降级为：**该运行期结果须在 I183 / I184 权限码绑定修复完成后重跑方可复现**。详见 `audit/issues/I198-i186-verify-evidence-tainted-and-backup-pollution.md` §A 与 `audit/evidence/F173-i186-batch1-runtime-verification/raw/03-post-cleanup-permission-recheck.txt`
 > **关联**：**I186**（本条是其第 1 批的**前置阻塞项**）、I185（前后端权限码漂移，同属「前后端契约不同步」族）、I192（用户↔员工映射未定义，I194-1 的员工→门店反查受其影响）、I187（`/commission/simulation` 门控未解封）、I191（请假落库缺失）
 > **用户决策（2026-11-16）**：登记为独立 Issue，**紧随 I186 第 1 批之后**上线，不得与第 1 批脱节
@@ -79,6 +79,8 @@ I186 第 1 批修的是「**缺省 `storeId` 时按 `ctx.storeIds` 集合过滤*
 
 ### 3.2 `views/attendance/records.vue:174` — 门店下拉 `storeList` **恒为空**
 
+> ⚠️ **本节状态（2026-11-23）**：本节的「storeList 恒为空 / employeeList 从未赋值」两项发现已由 I194-0（commit `0b3e281`）修复。以下原文保留为调查轮记录，行号为 2026-11-17 调查时行号；当前 records.vue 的 `storeApi.accessible()` 调用在 :219、`storeList.value` 赋值在 :220、`employeeList.value` 在 :229、`storeId` 查询参数在 :244。
+
 ```173:174:frontend/meiyetec-web/src/views/attendance/records.vue
 const employeeList = ref<any[]>([])
 const storeList = ref<any[]>([])
@@ -100,7 +102,7 @@ const storeList = ref<any[]>([])
 | 候选端点 | 实现位置 | 行为 | 能否作为「可访问门店列表」 |
 |---|---|---|---|
 | `GET /auth/me/permissions` | `controller/RbacController.java:35-38` → `service/RbacService.java:50-65` → `dto/RbacSessionDTO.java:18`（`storeIds`） | 返回当前用户的 `storeIds`（`dataScope=ALL` 时为 `[-1]`） | ⚠️ **只能给 ID，不能给门店名**；需前端再拼名称 |
-| `GET /store/list` | `controller/StoreController.java:29-32` → `storeService.list()` | **无任何范围过滤**：不按 `ctx.storeIds`、**也不按 `tenant_id`**（`config/MybatisPlusConfig.java:22-27` 只注册了分页插件，**未启用 `TenantLineInnerInterceptor`**） | ❌ **不可直接用**（返回全表门店，越权面大）；受权限码 `store:list` 约束 |
+| `GET /store/list` | `controller/StoreController.java:33-37` → `storeService.list()` | **无任何范围过滤**：不按 `ctx.storeIds`、**也不按 `tenant_id`**（`config/MybatisPlusConfig.java:22-27` 只注册了分页插件，**未启用 `TenantLineInnerInterceptor`**） | ❌ **不可直接用**（返回全表门店，越权面大）；受权限码 `store:list` 约束 |
 | `GET /wms/cross-store/store/list` | `service/CrossStoreInventoryController.java:125-129` → `service/impl/CrossStoreInventoryServiceImpl.java:710-717` | 按 `tenant_id` 过滤的本租户全部门店 | ❌ **不按 `ctx.storeIds` 过滤**（是「跨店调拨」用途的下拉） |
 
 ### 4.2 前端已有的「门店 ID 来源」
@@ -185,7 +187,7 @@ const storeList = ref<any[]>([])
 - 所有行号、端点、方法签名均来自**源码核对**；后端行为判定引用 I186 第 1 批**已实测**的运行结果（`audit/evidence/F173-i186-batch1-runtime-verification/raw/01-runtime-verification.txt`）。
 - ⚠️ **该运行期结果依赖临时授权，需重跑**：F173 主验证的 PASS 落在 2026-11-16 23:34:53 ~ 2026-11-17 23:36:34 的临时授权窗口内，撤销后同账号同端点复检 **11 处 200 -> 403 翻转** → 上条「已实测」在**基线授权状态**下**不可复现**，**不能单独作为 I186 验收证据**（见 I198 §A / F173 `raw/03`）。本条的**静态结论**（前端 8 处硬编码 `storeId=1`）不受影响。
 - ⚠️ **运行期部分验证**：本条的 records.vue 前端改动已由 I194-0（commit `0b3e281`）实施；但 I194 主表的 8 处硬编码修复（考勤 index/leave、提成 salary/settlement/rule/simulation）仍待 I194-1/-2 批次执行 → 整体标 **PARTIAL**，records.vue 单页已验证（admin 路径，manager01 依赖 I185）。
-- ⚠️ `GET /store/list` 的**跨租户返回**属结构性事实（无 `tenant_id` 条件、无 `TenantLineInnerInterceptor`），但本机库 `pos_store` 7 行**全部 `tenant_id=1`** 且仅 1 行未逻辑删除 → **跨租户泄露后果 UNVERIFIED**（本机无样本），**不并入本条**，建议单独立项。
+- ⚠️ `GET /store/list` 的**跨租户返回**属结构性事实（无 `tenant_id` 条件、无 `TenantLineInnerInterceptor`），但本机库 `pos_store` 7 行**全部 `tenant_id=1`** 且仅 1 行未逻辑删除 → **跨租户泄露后果 UNVERIFIED**（本机无样本），**不并入本条**，**已单独立项为 I200（`audit/issues/I200-store-endpoints-missing-tenant.md`）**。
 - 未触达 `/dashboard`、`/mh/visual`、`/mh/consent` 三个已验收页面。
 
 ---
