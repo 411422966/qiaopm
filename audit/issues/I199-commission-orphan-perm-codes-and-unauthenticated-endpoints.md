@@ -239,8 +239,7 @@ I187（`audit/issues/I187-commission-gated-controllers-no-auth.md`）已登记�
 | 阶段 5（该文档 L459） | 生产库执行（前置：需评估生产表结构，见该文档 **§3 R5**） | ❌ **未执行** |
 
 - 因此本节统一改称「**阶段 5**」。**阶段编号偏差由本轮发现（2026-11-23），首次登记于本节；I198 D-3-31 是 register 写入流程偏差，与本项不同类。**
-- **编号对应关系**：方案阶段 2b = 计划 2.1（测试库 / 开发库绑定），方案阶段 5 = 计划 2.2（生产库执行）。后续统一用「**方案阶段 5**」指代生产库执行。
-- **引用更正**：方案文档 **§4 为「待批准清单 / 遗留决策」，不含 R5**；R5（「生产库结构可能与本机不同」，缓解措施 = 生产执行前先跑 `SHOW COLUMNS FROM sys_role_permission;` 与 `SHOW INDEX FROM sys_role_permission;`）实际位于方案文档 **§3 风险与残留 L482** —— 本节原引用「§4 R5」已更正为「**§3 R5**」。
+- **引用更正**：方案文档的「待批准清单 / 遗留决策」章（**§4**）**不含 R5**；R5（「生产库结构可能与本机不同」，缓解措施 = 生产执行前先跑 `SHOW COLUMNS FROM sys_role_permission;` 与 `SHOW INDEX FROM sys_role_permission;`）实际位于方案文档 **§3 风险与残留 L482** —— 本节原有的错误引用已更正为「**§3 R5**」。
 
 ⚠️ **本机 Docker 证据不可外推到生产集群**：`docs/prod-env-manifest.md:32` 给出生产数据源为 `jdbc:mysql://prod-rds:3306/meiyetec?...&useSSL=true`（校验规则含「非 localhost」）；本机实际为 `jdbc:mysql://mysql:3306/meiyetec?useSSL=false`（DB 容器 hostname `080383a52e8b`，IP `172.25.0.5`，MySQL 8.0.46，容器创建 2026-10-14），且 `pos_store` = 7 / `sys_user` = 5 属**联调规模**。**§6.1 的 `false` 结论只对本机 Docker 实例成立**，生产集群取值必须独立取证。
 
