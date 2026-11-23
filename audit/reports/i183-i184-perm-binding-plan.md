@@ -23,7 +23,7 @@
 | 2 | **正反双向闭环已验证**：绑定 → 回滚 → 再绑定，库行数 **1267 → 1164 → 1267** 完全还原，`sys_permission` 行数 **510 → 509 → 510** | §1.7 证据文件 `23-*.out.txt` |
 | 3 | **生产库未执行**：本文所有执行动作均发生在本机开发库（`docker exec meiyetec-mysql`）；生产库需另行评估 `sys_role_permission` 表结构后执行（见 §3 R5） | §1.8 阶段划分、§3 R5 |
 | 4 | **运行期行为未验证**：9 项 V6 运行期复核全部 **UNVERIFIED** —— 无浏览器操作能力、无生产库连接能力（验收规则「能力边界」） | §1.5 |
-| 5 | **2 个孤儿码保持 0 绑定**（D3 决策）：`commission:list`(1118)、`commission:settlement:audit`(1128) 在 `sys_permission` 内但后端无任何 `@RequirePermission` 引用 —— 绑定它们不会让任何端点放行 | §1.3 A-2、§4 R7 |
+| 5 | **2 个孤儿码保持 0 绑定**（D3 决策）：`commission:list`(1118)、`commission:settlement:audit`(1128) 在 `sys_permission` 内但后端无任何 `@RequirePermission` 引用 —— 绑定它们不会让任何端点放行 | §1.3 A-2、§3 R7 |
 | 6 | **8 个端点仍无鉴权**（不在本批次范围）：`CommissionTierController`(3) + `CommissionConditionController`(3) + `CommissionSimulationController`(2) 三个控制器**零 `@RequirePermission` 注解**；`commission:simulation` 已作为权限码入库（id=1631，绑 5,6,8），但后端未消费该码 | §1.3 C 类、§4.1 |
 | 7 | **B 类 7 个前端路由码未修改**：前端 `meta.permission` 仍使用 `employee:attendance` / `commission:rule` 等前端自有码，与后端码不互认（D4 决策：另批处理） | §1.2 B 类 |
 | 8 | **表结构约束**：`sys_role_permission` 无 `permission_code` 列，仅 `id / role_id / permission_id / create_time`，唯一键 `uk_role_permission(role_id, permission_id)` —— 故 §1.4 正向 SQL 必须逐条显式给出 `role_id` + `permission_id` 常量对 | §1.3.1 |
