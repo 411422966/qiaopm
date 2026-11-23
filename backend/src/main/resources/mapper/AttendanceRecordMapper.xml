@@ -40,4 +40,61 @@
         ORDER BY ar.check_date DESC, ar.employee_id
     </select>
 
+    <!--
+        I194-0：考勤记录分页查询（改走实体返回 + LEFT JOIN）。
+        - 显式列清单：避免 SELECT ar.* 把 LEFT JOIN 的附加列（employee_name / store_name）
+          一并带入，导致 MyBatis 无法唯一映射到 AttendanceRecord 的非持久化字段；
+        - 返回实体 → 前端字段为 camelCase，消除 /attendance/records 的 snake_case 字段漂移；
+        - LEFT JOIN → employeeName / position / storeName 有值（原先实体路径下恒为 null）。
+        storeIds 语义：空列表 = 不过滤（ALL）；[-9999] = 恒空集；其余 = 可见门店集合。
+    -->
+    <select id="selectAttendancePage" resultType="com.meiyetec.entity.AttendanceRecord">
+        SELECT
+            ar.id,
+            ar.tenant_id,
+            ar.employee_id,
+            ar.check_date,
+            ar.check_in_time,
+            ar.check_out_time,
+            ar.check_in_method,
+            ar.check_out_method,
+            ar.check_in_location,
+            ar.check_out_location,
+            ar.check_in_status,
+            ar.check_out_status,
+            ar.is_late,
+            ar.late_minutes,
+            ar.is_early_leave,
+            ar.early_leave_minutes,
+            ar.is_absence,
+            ar.work_minutes,
+            ar.remark,
+            ar.config_id,
+            ar.store_id,
+            ar.create_time,
+            ar.update_time,
+            ar.deleted,
+            pe.employee_name,
+            pe.position,
+            ps.store_name
+        FROM attendance_record ar
+        LEFT JOIN pos_employee pe ON ar.employee_id = pe.id AND pe.deleted = 0
+        LEFT JOIN pos_store ps ON ar.store_id = ps.id AND ps.deleted = 0
+        WHERE ar.deleted = 0 AND ar.tenant_id = #{tenantId}
+        <if test="storeIds != null and storeIds.size() > 0">
+            AND ar.store_id IN
+            <foreach collection="storeIds" item="sid" open="(" separator="," close=")">#{sid}</foreach>
+        </if>
+        <if test="employeeId != null">
+            AND ar.employee_id = #{employeeId}
+        </if>
+        <if test="startDate != null">
+            AND ar.check_date &gt;= #{startDate}
+        </if>
+        <if test="endDate != null">
+            AND ar.check_date &lt;= #{endDate}
+        </if>
+        ORDER BY ar.check_date DESC, ar.employee_id ASC, ar.id DESC
+    </select>
+
 </mapper>

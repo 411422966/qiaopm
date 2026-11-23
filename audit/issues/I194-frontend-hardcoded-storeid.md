@@ -120,6 +120,8 @@ const storeList = ref<any[]>([])
 | **I194-0-A（后端）** | 新增「当前用户可访问门店」端点（建议 `GET /store/accessible`）：按 `ctx.storeIds` ∩ 本租户返回 `[{ id, storeName, storeCode }]`；`dataScope=ALL` 返回本租户全部门店。**不得复用 `GET /store/list`**（它无范围过滤）。 |
 | **I194-0-B（前端）** | `records.vue` 的 `storeList`（及 `employeeList`）改为**从该端点加载**；`attendance/index.vue`、`leave.vue` 若需「当前门店」状态，从同一来源初始化 |
 
+> **I194-0 执行说明（2026-11-23 用户决策登记）**：分页响应含 `tenantId` / `deleted` / `createTime` / `updateTime` 四个额外字段，前端不消费，属实体完整视图。
+
 ---
 
 ## 5. 修正方案表

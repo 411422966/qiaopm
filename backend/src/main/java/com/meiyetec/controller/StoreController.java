@@ -7,6 +7,9 @@ import com.meiyetec.dto.PageQueryDTO;
 import com.meiyetec.dto.StoreDTO;
 import com.meiyetec.annotation.SysOpLog;
 import com.meiyetec.entity.Store;
+import com.meiyetec.security.DataScopeService;
+import com.meiyetec.security.StoreScope;
+import com.meiyetec.security.TenantContextHolder;
 import com.meiyetec.service.StoreService;
 import com.meiyetec.util.PageResult;
 import com.meiyetec.util.Result;
@@ -25,11 +28,42 @@ import java.util.Map;
 public class StoreController {
 
     private final StoreService storeService;
+    private final DataScopeService dataScopeService;
 
     @GetMapping("/list")
     @RequirePermission("store:list")
     public Result<List<Store>> list() {
         return Result.success(storeService.list());
+    }
+
+    /**
+     * 当前会话可见的门店列表（I194-0：前端筛选下拉的数据源）。
+     *
+     * <p>与 {@code GET /store/list} 的差别：本端点按「租户 + 当前会话有效门店集合」过滤，
+     * {@code /store/list} 不带任何过滤条件。</p>
+     *
+     * <p>语义与 {@link DataScopeService} 保持一致：</p>
+     * <ul>
+     *   <li>数据范围 = ALL → 本租户全部门店；</li>
+     *   <li>数据范围受限 → 仅 {@code ctx.storeIds} 内的门店；</li>
+     *   <li>可见门店为空 → 返回空列表（恒空集，不回退为「全部门店」）。</li>
+     * </ul>
+     */
+    @GetMapping("/accessible")
+    @RequirePermission("store:list")
+    public Result<List<Store>> accessible() {
+        Long tenantId = TenantContextHolder.get().getTenantId();
+        StoreScope scope = dataScopeService.resolveStoreScope();
+        LambdaQueryWrapper<Store> wrapper = new LambdaQueryWrapper<>();
+        if (tenantId != null) {
+            wrapper.eq(Store::getTenantId, tenantId);
+        }
+        if (!scope.isAll()) {
+            // 空范围 → resolveIds() 返回 [-9999] → IN (-9999) 恒空集
+            wrapper.in(Store::getId, scope.resolveIds());
+        }
+        wrapper.orderByAsc(Store::getId);
+        return Result.success(storeService.list(wrapper));
     }
 
     @PostMapping("/page")

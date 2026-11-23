@@ -2,6 +2,8 @@ import request from './request'
 
 export const storeApi = {
   list: () => request.get('/store/list'),
+  /** 当前会话可见的门店（按租户 + 数据范围过滤），筛选下拉数据源 */
+  accessible: () => request.get('/store/accessible'),
   page: (data: any) => request.post('/store/page', data),
   stats: () => request.get('/store/stats'),
   getById: (id: number) => request.get(`/store/${id}`),

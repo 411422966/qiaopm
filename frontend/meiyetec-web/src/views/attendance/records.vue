@@ -160,6 +160,7 @@ import { ref, reactive, onMounted, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Search, Download } from '@element-plus/icons-vue'
 import { attendanceApi } from '@/api/attendance'
+import { storeApi, employeeApi } from '@/api/basic'
 
 const query = reactive({
   employeeId: null as number | null,
@@ -202,7 +203,8 @@ watch(dateRange, (val) => {
 
 const formatTime = (timeStr: string) => {
   if (!timeStr) return '--'
-  return timeStr.slice(11, 19)
+  // 后端 java.time 序列化为 ISO 串（2026-11-20T08:58:00），统一成空格分隔再截取时分秒
+  return String(timeStr).replace('T', ' ').slice(11, 19)
 }
 
 const formatDuration = (minutes: number) => {
@@ -211,17 +213,41 @@ const formatDuration = (minutes: number) => {
   return `${hours}小时${mins}分钟`
 }
 
+/** 加载筛选下拉：门店（按当前会话可见范围）+ 员工（按租户） */
+const loadStores = async () => {
+  try {
+    const res: any = await storeApi.accessible()
+    storeList.value = res.data || []
+  } catch (e) {
+    console.error('加载门店列表失败', e)
+  }
+}
+
+const loadEmployees = async () => {
+  try {
+    const res: any = await employeeApi.list()
+    employeeList.value = res.data || []
+  } catch (e) {
+    console.error('加载员工列表失败', e)
+  }
+}
+
 const loadData = async () => {
   loading.value = true
   try {
-    const res: any = await attendanceApi.records({
+    // I194-0：改走分页端点 /attendance/page（实体返回 → camelCase 字段，
+    // 原 /attendance/records 的 Map 返回是 snake_case，与表格列名不一致）
+    const res: any = await attendanceApi.page({
+      pageNum: pagination.pageNum,
+      pageSize: pagination.pageSize,
       employeeId: query.employeeId || undefined,
       storeId: query.storeId || undefined,
       startDate: query.startDate || undefined,
       endDate: query.endDate || undefined
     })
-    tableData.value = res.data || []
-    pagination.total = tableData.value.length
+    const pageData = res.data || {}
+    tableData.value = pageData.records || []
+    pagination.total = pageData.total || 0
   } catch (e) {
     console.error('加载记录失败', e)
   } finally {
@@ -247,8 +273,10 @@ const handleEdit = (row: any) => {
   editForm.id = row.id
   editForm.employeeName = row.employeeName
   editForm.checkDate = row.checkDate
-  editForm.checkInTime = row.checkInTime
-  editForm.checkOutTime = row.checkOutTime
+  // 后端返回 ISO 串（2026-11-20T08:58:00），el-time-picker 的 value-format 是
+  // 'YYYY-MM-DD HH:mm:ss'，直接回填会解析失败 → 先归一化
+  editForm.checkInTime = row.checkInTime ? String(row.checkInTime).replace('T', ' ').slice(0, 19) : ''
+  editForm.checkOutTime = row.checkOutTime ? String(row.checkOutTime).replace('T', ' ').slice(0, 19) : ''
   editForm.remark = row.remark || ''
   editDialogVisible.value = true
 }
@@ -274,6 +302,8 @@ const handleExport = () => {
 }
 
 onMounted(() => {
+  loadStores()
+  loadEmployees()
   loadData()
 })
 </script>

@@ -9,6 +9,7 @@ import com.meiyetec.mapper.AttendanceConfigMapper;
 import com.meiyetec.mapper.AttendanceRecordMapper;
 import com.meiyetec.mapper.EmployeeMapper;
 import com.meiyetec.security.DataScopeService;
+import com.meiyetec.security.StoreScope;
 import com.meiyetec.service.AttendanceRecordService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -110,16 +111,14 @@ public class AttendanceRecordServiceImpl extends ServiceImpl<AttendanceRecordMap
     public Page<AttendanceRecord> pageRecords(Long tenantId, Long employeeId, Long storeId,
                                               LocalDate startDate, LocalDate endDate,
                                               int pageNum, int pageSize) {
-        // I186 第 1 批：门店范围在 Service 层注入（缺省 → 有效门店集合；显式越权 → 403）
+        // I194-0：门店范围改用已验证等价的 StoreScope API。
+        // resolveEffectiveStoreScope 与既有 applyStoreScope 的三种语义（ALL / 空范围 / 正常范围）
+        // 已实测逐一等价；显式指定门店且越权时同样抛 STORE_DENIED（403）。
+        StoreScope scope = dataScopeService.resolveEffectiveStoreScope(storeId);
         Page<AttendanceRecord> page = new Page<>(pageNum, pageSize);
-        LambdaQueryWrapper<AttendanceRecord> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(AttendanceRecord::getTenantId, tenantId);
-        if (employeeId != null) wrapper.eq(AttendanceRecord::getEmployeeId, employeeId);
-        dataScopeService.applyStoreScope(wrapper, AttendanceRecord::getStoreId, storeId);
-        if (startDate != null) wrapper.ge(AttendanceRecord::getCheckDate, startDate);
-        if (endDate != null) wrapper.le(AttendanceRecord::getCheckDate, endDate);
-        wrapper.orderByDesc(AttendanceRecord::getCheckDate);
-        return baseMapper.selectPage(page, wrapper);
+        // storeIds 语义：空列表 = 不过滤（ALL）；[-9999] = 恒空集；其余 = 可见门店集合
+        return baseMapper.selectAttendancePage(page, tenantId, scope.resolveIds(),
+                employeeId, startDate, endDate);
     }
 
     @Override
