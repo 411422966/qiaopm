@@ -149,52 +149,119 @@ I187（`audit/issues/I187-commission-gated-controllers-no-auth.md`）已登记�
 
 | # | 未验项 | 原因 |
 |---|---|---|
-| 1 | 8 个端点实际 HTTP 状态码（是否 404 / 200 / 403） | 无浏览器操作能力；I187 §1.3 的 404 为 2026-11-16 证据，本轮未复测 |
+| 1 | 8 个端点实际 HTTP 状态码（是否 404 / 200 / 403） | ✅ **已实测（2026-11-23）= 全部 404** —— 已认证 `manager01` 探测 8/8 端点均 404，配阳性对照 200 / 阴性对照 404；见 §6.1.2 与 `audit/evidence/F171-attendance-commission-perm-alignment/raw/25-legacy-missing-ddl-runtime-verify-20261123.md` |
 | 2 | `CommissionSimulationService` 的数据范围过滤行为 | 超出本条范围；与 I186 交叉 |
 | 3 | 生产库 `sys_permission` / `sys_role_permission` 的对应行是否存在 | 无生产库连接能力 |
 | 4 | `commission:tier:*` / `commission:condition:*` 是否在生产库存在 | 无生产库连接能力 |
-| 5 | 生产环境 `feature.legacy-missing-ddl.enabled` 的取值 | **已核实（配置链静态）= `false`** —— 见下方「§6.1 生产环境开关取值核查」；仅剩「生产实例运行时实际生效值」未取得运行期证据 |
+| 5 | 生产环境 `feature.legacy-missing-ddl.enabled` 的取值 | **本机 Docker 实例 = `false`（运行期 VERIFIED）** —— 见 §6.1 / §6.1.2；**生产集群（`prod-rds` 独立实例）取值仍 UNVERIFIED**（本机无 K8s / Helm 访问能力，属能力缺失，非「已确认 false」） |
 
 > 本条**开发库已执行**的事实仅为：`commission:simulation` 建码（id=1631）+ 绑定 role 5,6,8。
 > **生产库未执行**。2 个孤儿码在**开发库**绑定数为 0（符合 D3 决策）。
 
-### 6.1 生产环境开关取值核查（2026-11-23 静态配置链核查）
+### 6.1 `feature.legacy-missing-ddl.enabled` 取值核查（2026-11-23：静态配置链 + 运行期实测）
 
-**核查目标**：确认生产环境 `feature.legacy-missing-ddl.enabled` 的取值，判断 8 个端点是否处于「裸奔」状态。
+**核查目标**：确认 `feature.legacy-missing-ddl.enabled` 的实际生效值，判断 8 个端点是否处于「裸奔」状态。
 
-**核查方式**：仓库内全量配置静态遍历（`application*.yml` / `.env*` / `docker-compose*.yml` / `Dockerfile` / `docs/prod-env-manifest.md` / 编译产物 `target/classes/`），**无生产环境访问能力**，无运行期证据。
+**核查方式（两层）**：
+
+- **第一层 · 静态配置链**：仓库内全量配置静态遍历（`application*.yml` / `.env*` / `docker-compose*.yml` / `Dockerfile` / `docs/prod-env-manifest.md` / `infra/` / `.github/` / 编译产物 `target/classes/`）+ **运行中 jar 内实际配置**（`docker exec meiyetec-api unzip -p /app/app.jar BOOT-INF/classes/application.yml`）+ 容器环境变量 / 启动参数 / JVM 系统属性 / 挂载点全量枚举 + DB `feature_flag` 表查询。
+- **第二层 · 运行期功能探测（已认证）**：对本机唯一可访问实例（Docker 容器 `meiyetec-api`，prod profile）取得有效 JWT 后，按控制器源码声明的路由精确探测 8 个门控端点，并配**阳性对照 / 阴性对照**。
 
 **核查结果**：
 
 | # | 载体 | 位置 | 取值 / 结论 |
 |---|---|---|---|
-| 1 | base 配置 | `backend/src/main/resources/application.yml:150-152` | `feature.legacy-missing-ddl.enabled: false` |
-| 2 | prod profile | `backend/src/main/resources/application-prod.yml` | `feature:` 块**只覆盖 `launchdarkly`**（`enabled` / `sdk-key`），**未出现 `legacy-missing-ddl`** → **继承 base 的 `false`** |
+| 1 | base 配置 | 运行中 jar `BOOT-INF/classes/application.yml:150-152`（与本地 `backend/src/main/resources/application.yml:150-152` 逐行一致） | `feature.legacy-missing-ddl.enabled: false` |
+| 2 | prod profile | 运行中 jar `BOOT-INF/classes/application-prod.yml`（= 本地 `application-prod.yml`） | `feature:` 块**只覆盖 `launchdarkly`**（`enabled` / `sdk-key`），**未出现 `legacy-missing-ddl`** → **继承 base 的 `false`** |
 | 3 | 环境变量文件 | `D:\QiaoPM\.env` / `.env.example` | **无** `FEATURE_LEGACY_MISSING_DDL*` / `SPRING_APPLICATION_JSON` 等可覆盖该键的变量 |
-| 4 | 容器编排 | `docker-compose.yml`（backend 服务 `environment:` 段） | 仅注入 `SPRING_PROFILES_ACTIVE=prod` + DB / Redis / `SPRING_DATASOURCE_*` / `SPRING_DATA_REDIS_*`，**无**该开关 |
+| 4 | 容器编排 | `docker-compose.yml:96-140`（api 服务 `environment:` 完整块） | 仅注入 `SPRING_PROFILES_ACTIVE=prod` + DB / Redis / `SPRING_DATASOURCE_*` / `SPRING_DATA_REDIS_*`，**无**该开关 |
 | 5 | 镜像 | `backend/Dockerfile` | `ENV` 仅设 `JAVA_TOOL_OPTIONS` / `SPRING_PROFILES_ACTIVE=prod` / `PLUGIN_PLUGINS_ROOT` / `TZ`，**无**该开关 |
 | 6 | 生产 ENV 事实源 | `docs/prod-env-manifest.md` | 全文检索 `legacy` / `LEGACY` → **0 命中** |
 | 7 | 编译产物 | `backend/target/classes/application.yml:150-152` | `enabled: false`（与源一致） |
+| 8 | **运行中容器（补查）** | `docker exec meiyetec-api env`（42 个变量全量）/ `docker inspect` 启动参数 / `JAVA_TOOL_OPTIONS` / 挂载点 | 无 `FEATURE_LEGACY_MISSING_DDL*`、无 `SPRING_APPLICATION_JSON`、无 `--feature.*`、无 `-Dfeature.*`；挂载仅 `./plugins → /opt/plugins` → **不可覆盖** |
+| 9 | **DB 驱动灰度体系** | `feature_flag` 表查询 + `featureflag/FeatureFlagEvaluator.java` / `InMemoryFeatureFlagEvaluator.java:39-40` / `LaunchDarklyFeatureFlagEvaluator.java` | `feature_flag` **0 行**匹配；LaunchDarkly 体系是独立开关体系、唯一消费者是 `GrayReleaseController`，与本键**无耦合** |
+| 10 | **K8s ConfigMap / Helm values / 外部 `SPRING_APPLICATION_JSON`** | `kubectl config current-context` → 未设置；`.kube\config` 不存在；`helm` 未安装 | **无访问能力** → ❌ **UNVERIFIED** |
 
-**结论**：**生产环境该开关 = `false`**（静态配置链层面已核实）。
+**结论**：
 
-- 与开发库一致 → 3 个门控控制器 **Bean 不注册** → 8 个端点 **404** → **风险可控**。
-- 因此 **I199 不升级为 P1**，维持 **P2**（孤儿码低风险）；8 端点鉴权缺口的 **P1 候选定级仍以 I187 为准**，本条不重复定级。
-- **残留的未运行期证据部分**：以上为**仓库内配置静态推导**，**未**取得生产实例运行时实际生效值的证据（无生产环境访问能力、无 `actuator/env` 读数）。若生产环境存在**仓库外的**额外配置源（如 K8s ConfigMap / 启动参数 `--feature.legacy-missing-ddl.enabled=true` / 外部 `SPRING_APPLICATION_JSON`），本核查**无法覆盖** → 该分支标 **UNVERIFIED**。
+- **本机 Docker 实例（`meiyetec-api` 容器，prod profile）= `false`** —— 静态配置链 1–9 项穷举 + 运行期已认证探测双重佐证 → **VERIFIED**。
+- 3 个门控控制器 **Bean 不注册** → 8 个端点 **404** → 当前为「潜伏」而非「裸奔」→ **I199 不升级为 P1**，维持 **P2**（孤儿码低风险）；8 端点鉴权缺口的 **P1 候选定级仍以 I187 为准**，本条不重复定级。
+- **生产集群取值仍 UNVERIFIED**：`docs/prod-env-manifest.md:32` 指向的独立 `prod-rds` 实例，与本机 Docker 实例**不是同一个库**；本机无 K8s / Helm 访问能力（`kubectl` v1.36.1 已安装但无 `.kube\config`、无 current-context；`helm` 未安装）→ **无法枚举仓库外的配置源**。该分支性质为**能力缺失**，**不是**「已确认 `false`」。
 
-### 6.2 阶段 2b（生产库绑定）前置复检门槛
+#### 6.1.2 运行期实测（2026-11-23，已认证）
+
+**被测实例与绑定信息**：
+
+| 项 | 值 |
+|---|---|
+| API | Docker 容器 `meiyetec-api`（image `meiyetec/api:dev`，`SPRING_PROFILES_ACTIVE=prod`，启动 2026-11-22 21:12:55，端口 8080） |
+| DB | Docker 容器 `meiyetec-mysql`（hostname `080383a52e8b`，server_uuid `d340bd34-8cb5-11f1-96df-b2b15b34522e`，MySQL 8.0.46，IP `172.25.0.5`，容器创建 2026-10-14） |
+| 运行 jar | `/app/app.jar` mtime **2026-11-17 22:34**（**早于**容器启动 → 运行的就是这个 jar；jar 内含三个控制器 `.class`） |
+| 账号 | 种子账号 `manager01`（`sys_user.id=900004`，`tenant_id=1`） |
+| DB snapshot | `sys_role_permission`=1267、`sys_permission`=510、`sys_role`=8、`sys_user`=5、`sys_log`=12944、`sys_login_log`=1256、`pos_store`=7 |
+| Evidence | `audit/evidence/F171-attendance-commission-perm-alignment/raw/25-legacy-missing-ddl-runtime-verify-20261123.md`（绑定 commit `5f8a6076`） |
+
+**方法学修正 —— 未认证 401 对「Bean 是否注册」零信息量**：`WebConfig.java:25-27` 把 `JwtInterceptor` 注册为 `/**` 全路径，`JwtInterceptor.java:48-52` 在**路由映射之前**返回 401 —— 实测未认证时 `GET /commission/definitely-not-exist-xyz`、`GET /` 同样返回 401。**故 I187 §1.3 的 401 证据不能作判据；只有已认证后的 404 才是有效判据。**
+
+**8 个门控端点探测结果（已认证，全部 404）**：
+
+| # | 方法 | 路径 | 状态码 |
+|---|---|---|---|
+| 1 | GET | `/commission/tier/by-rule/1` | **404** |
+| 2 | POST | `/commission/tier/batch/1` | **404** |
+| 3 | DELETE | `/commission/tier/1` | **404** |
+| 4 | GET | `/commission/condition/by-rule/1` | **404** |
+| 5 | POST | `/commission/condition/batch/1` | **404** |
+| 6 | DELETE | `/commission/condition/1` | **404** |
+| 7 | POST | `/commission/simulation` | **404** |
+| 8 | GET | `/commission/simulation/recent/900004` | **404** |
+
+**对照**：
+
+| 对照 | 请求 | 结果 | 作用 |
+|---|---|---|---|
+| 阳性 | `GET /store/list`（已认证） | **200** | 证明 token 有效、路由机制正常 |
+| 阴性 | `GET /commission/definitely-not-exist-xyz`（已认证） | **404**，响应体与门控端点**完全同构** | 证明 404 = 路由不存在（而非鉴权失败） |
+
+**判定**：已认证 + 阳性对照 200 + 阴性对照 404 + 8/8 端点 404 → **三个门控 Controller 的 Bean 未注册**，8 个端点当前**全部不可达**。同时**排除** I135「部署 jar 陈旧」伪因（jar mtime 早于启动时间，且 jar 内含三个控制器 class）。
+
+**无动态覆盖路径**：`@ConditionalOnProperty` 在 **Bean 定义注册期**求值，运行期不可被 DB 标志位改写；全仓 `legacy-missing-ddl` 共 **15 处**引用**全部**是 `@ConditionalOnProperty`（3 个提成控制器 + 11 个其他控制器 + 1 处 BizTreatmentReport），**非 Controller 消费者 0 处** → 不存在「运行期被热改为 true」的路径。
+
+### 6.2 阶段 5（生产库绑定）前置复检门槛（对应方案文档 §1.8「阶段 5：生产库执行」）
 
 > **本节为面向未来的执行门槛，不是已执行动作。**
 
-阶段 2b（生产库 `sys_role_permission` 绑定）执行**之前**，须再次确认生产环境 `feature.legacy-missing-ddl.enabled` 的**实际生效值** —— 若届时部署环境可访问（K8s ConfigMap / 启动参数 / 外部 `SPRING_APPLICATION_JSON` / `actuator/env` 读数），必须取**运行期证据**。
+⚠️ **阶段编号更正（2026-11-23）**：本节原标题写作「阶段 2b（生产库绑定）」，**编号有误** —— 方案文档 `audit/reports/i183-i184-perm-binding-plan.md` §1.8「阶段划分与执行状态」中：
 
-| 复检结果 | 判定 | 阶段 2b 处置 |
+| 方案阶段 | 内容 | 状态 |
 |---|---|---|
-| `false` | 与开发库一致 → 8 端点维持 404 → 风险可控 | 可执行（其余门槛照旧） |
-| `true` | **8 端点裸奔**（4 个写接口对任意登录用户无鉴权开放） | **I199 升级为 P1**；**阶段 2b 前必须先处理**（补码 + 加 `@RequirePermission`，并入 I187 §3 步骤 1），处理完成前**不得执行生产库绑定** |
-| 无法访问 / 取不到证据 | 仍为 UNVERIFIED | **阶段 2b 暂缓执行**，**除非用户显式批准接受「生产开关可能为 `true`」的风险**。**未经批准，不得以「仓库内已确认为 `false`」或「标注后继续」替代运行期确认** |
+| 阶段 2b（该文档 L454） | D1：执行正向绑定（33 码 / 100 条）—— 执行于**本机开发库** | ✅ **已执行** |
+| 阶段 5（该文档 L459） | 生产库执行（前置：需评估生产表结构，见该文档 **§3 R5**） | ❌ **未执行** |
+
+- 因此本节统一改称「**阶段 5**」。**阶段编号偏差由本轮发现（2026-11-23），首次登记于本节；I198 D-3-31 是 register 写入流程偏差，与本项不同类。**
+- **编号对应关系**：方案阶段 2b = 计划 2.1（测试库 / 开发库绑定），方案阶段 5 = 计划 2.2（生产库执行）。后续统一用「**方案阶段 5**」指代生产库执行。
+- **引用更正**：方案文档 **§4 为「待批准清单 / 遗留决策」，不含 R5**；R5（「生产库结构可能与本机不同」，缓解措施 = 生产执行前先跑 `SHOW COLUMNS FROM sys_role_permission;` 与 `SHOW INDEX FROM sys_role_permission;`）实际位于方案文档 **§3 风险与残留 L482** —— 本节原引用「§4 R5」已更正为「**§3 R5**」。
+
+⚠️ **本机 Docker 证据不可外推到生产集群**：`docs/prod-env-manifest.md:32` 给出生产数据源为 `jdbc:mysql://prod-rds:3306/meiyetec?...&useSSL=true`（校验规则含「非 localhost」）；本机实际为 `jdbc:mysql://mysql:3306/meiyetec?useSSL=false`（DB 容器 hostname `080383a52e8b`，IP `172.25.0.5`，MySQL 8.0.46，容器创建 2026-10-14），且 `pos_store` = 7 / `sys_user` = 5 属**联调规模**。**§6.1 的 `false` 结论只对本机 Docker 实例成立**，生产集群取值必须独立取证。
+
+阶段 5（生产库 `sys_role_permission` 绑定）执行**之前**，须再次确认生产环境 `feature.legacy-missing-ddl.enabled` 的**实际生效值** —— 若届时部署环境可访问（K8s ConfigMap / 启动参数 / 外部 `SPRING_APPLICATION_JSON` / `actuator/env` 读数），必须取**运行期证据**。
+
+| 复检结果 | 判定 | 阶段 5 处置 |
+|---|---|---|
+| `false` | 与开发库一致 → 8 端点维持 404 → 风险可控 | 可执行（其余门槛照旧，含生产表结构评估 §3 R5） |
+| `true` | **8 端点裸奔**（4 个写接口对任意登录用户无鉴权开放） | **I199 升级为 P1**；**阶段 5 前必须先处理**（补码 + 加 `@RequirePermission`，并入 I187 §3 步骤 1），处理完成前**不得执行生产库绑定** |
+| 无法访问 / 取不到证据 | 仍为 UNVERIFIED | **阶段 5 暂缓执行**，**除非用户显式批准接受「生产开关可能为 `true`」的风险**。**不得以「本机 Docker 实例已确认为 `false`」替代生产集群运行期确认**（本机证据不覆盖生产集群）；亦不得以「仓库内已确认为 `false`」或「标注后继续」替代运行期确认 |
 
 > 📌 本门槛与 I187 §5 的未核实项同源；仓库内的静态核查结论（= `false`）**不构成**放行依据，仅作为风险预判输入。
+
+**2026-11-23 本机核查状态记录**：
+
+| 项 | 状态 | 说明 |
+|---|---|---|
+| 本机 Docker 实例开关取值 | ✅ **`false`** | 配置源 1–9 项穷举 + 已认证 404 探测（§6.1 / §6.1.2；raw/25） |
+| 8 个门控端点已认证可达性 | ✅ **全部 404** | 阳性对照 200 / 阴性对照 404 齐备（§6.1.2） |
+| 生产集群（`prod-rds` + K8s）开关取值 | ❌ **UNVERIFIED** | 本机无 kubeconfig / current-context / helm → **能力缺失**（§6.1 第 10 项；raw/25 U1/U2） |
+| 方案阶段 5 是否放行 | ⏸️ **暂缓** | 2026-11-23 决策：生产集群开关 UNVERIFIED，本机证据不可外推 → **阶段 5 不执行**；除非显式批准「接受生产开关可能为 `true` 的风险」，或提供 K8s 访问方式（kubeconfig / helm）先取生产集群开关值再决定 |
 
 ---
 
