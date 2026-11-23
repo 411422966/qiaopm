@@ -91,3 +91,9 @@
 | 1 | 跨租户泄露的运行期复现 | 本机 `pos_store` 仅 tenant1，无其他租户样本；**按规则 20，不得用真实业务主键构造"不存在"样本** → 需专用测试租户数据 |
 | 2 | 生产库 `pos_store` 是否已有其他租户行 | 无生产库连接能力 |
 | 3 | `StoreDTO` 缺 `tenantId` 是否已在其它入口被前端补传 | 前端 `views/setting/store.vue` 表单未传 `tenantId`（静态已见） |
+
+---
+
+## 5. 关联核查记录
+
+I194-0 实施过程中对 `audit/reports/i183-i184-perm-binding-plan.md` 第 26 行的 **R7 引用核实**（父 commit `1b617e2` 为 `§4 R7` → `3ed2925` 为 `§3 R7`，单字符修正）与**本会话前段编译部署未报告的流程偏差登记**，统一记录于 **`audit/issues/I194-frontend-hardcoded-storeid.md` §8**（§8.1 / §8.2），不在本条重复。
