@@ -184,7 +184,7 @@ const storeList = ref<any[]>([])
 - 本次**仅回写调查结论**：**未修改任何前端代码、未修改任何后端代码、未写库、未执行 DDL、未新增入库脚本**。
 - 所有行号、端点、方法签名均来自**源码核对**；后端行为判定引用 I186 第 1 批**已实测**的运行结果（`audit/evidence/F173-i186-batch1-runtime-verification/raw/01-runtime-verification.txt`）。
 - ⚠️ **该运行期结果依赖临时授权，需重跑**：F173 主验证的 PASS 落在 2026-11-16 23:34:53 ~ 2026-11-17 23:36:34 的临时授权窗口内，撤销后同账号同端点复检 **11 处 200 -> 403 翻转** → 上条「已实测」在**基线授权状态**下**不可复现**，**不能单独作为 I186 验收证据**（见 I198 §A / F173 `raw/03`）。本条的**静态结论**（前端 8 处硬编码 `storeId=1`）不受影响。
-- ⚠️ **运行期未验证**：本条的**前端改动尚未实施**，因此「前端不传 → 后端按集合工作」这条**完整链路尚未在真实前端流量上验证** → 该结论为**静态推导**，标 **PARTIAL**。
+- ⚠️ **运行期部分验证**：本条的 records.vue 前端改动已由 I194-0（commit `0b3e281`）实施；但 I194 主表的 8 处硬编码修复（考勤 index/leave、提成 salary/settlement/rule/simulation）仍待 I194-1/-2 批次执行 → 整体标 **PARTIAL**，records.vue 单页已验证（admin 路径，manager01 依赖 I185）。
 - ⚠️ `GET /store/list` 的**跨租户返回**属结构性事实（无 `tenant_id` 条件、无 `TenantLineInnerInterceptor`），但本机库 `pos_store` 7 行**全部 `tenant_id=1`** 且仅 1 行未逻辑删除 → **跨租户泄露后果 UNVERIFIED**（本机无样本），**不并入本条**，建议单独立项。
 - 未触达 `/dashboard`、`/mh/visual`、`/mh/consent` 三个已验收页面。
 
