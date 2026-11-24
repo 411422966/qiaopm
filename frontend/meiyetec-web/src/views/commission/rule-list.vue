@@ -4,7 +4,7 @@
       <template #header>
         <div class="card-header">
           <span>提成规则列表</span>
-          <el-button type="primary" @click="$router.push('/commission/rules')">
+          <el-button type="primary" @click="$router.push('/commission/rules/config')">
             <el-icon><Setting /></el-icon>
             规则配置
           </el-button>
@@ -37,7 +37,7 @@
                 ¥{{ rule.fixedAmount || 0 }}
               </el-descriptions-item>
               <el-descriptions-item v-if="rule.calculationMethod === 'TIER'" label="阶梯设置">
-                <el-link type="primary" @click="$router.push('/commission/rules')">阶梯模式</el-link>
+                <el-link type="primary" @click="$router.push('/commission/rules/config')">阶梯模式</el-link>
               </el-descriptions-item>
               <el-descriptions-item label="备注" :span="2">
                 <span v-if="rule.remark">{{ rule.remark }}</span>
@@ -96,7 +96,7 @@ const getMethodLabel = (method: string) => {
 const loadData = async () => {
   try {
     const request = (await import('@/api/request')).default
-    const res: any = await request.get('/commission/rule/list')
+    const res: any = await request.get('/commission/rules/list')
     tableData.value = res.data || []
   } catch (e) {
     console.error('加载失败', e)

@@ -425,9 +425,9 @@ const handleSave = async () => {
   try {
     const request = (await import('@/api/request')).default
     if (form.id) {
-      await request.put(`/commission/rule/${form.id}`, form)
+      await request.put(`/commission/rules/${form.id}`, form)
     } else {
-      await request.post('/commission/rule', form)
+      await request.post('/commission/rules', form)
     }
     ElMessage.success('保存成功')
     dialogVisible.value = false
@@ -441,7 +441,7 @@ const handleDelete = async (row: any) => {
   try {
     await ElMessageBox.confirm(`确定删除规则"${row.ruleName}"吗？`, '提示', { type: 'warning' })
     const request = (await import('@/api/request')).default
-    await request.delete(`/commission/rule/${row.id}`)
+    await request.delete(`/commission/rules/${row.id}`)
     ElMessage.success('删除成功')
     loadRules()
   } catch (e) {

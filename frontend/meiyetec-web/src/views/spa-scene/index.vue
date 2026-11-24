@@ -317,7 +317,7 @@ function sceneEmoji(code: string) {
 }
 
 async function loadScenes() {
-  const r: any = await http.get('/api/spa-scene/list')
+  const r: any = await http.get('/spa-scene/list')
   scenes.value = r.data || []
 }
 
@@ -327,13 +327,13 @@ async function loadRooms() {
 }
 
 async function loadRecommend(id: number) {
-  const r: any = await http.get(`/api/spa-scene/${id}/recommend`)
+  const r: any = await http.get(`/spa-scene/${id}/recommend`)
   recommend.value = r.data
 }
 
 async function loadSlots() {
   if (!slotSceneId.value) { slots.value = []; return }
-  const r: any = await http.get(`/api/spa-scene/${slotSceneId.value}/slots`)
+  const r: any = await http.get(`/spa-scene/${slotSceneId.value}/slots`)
   slots.value = r.data || []
 }
 
@@ -351,10 +351,10 @@ async function handleSaveScene() {
   const e = editing.value
   if (!e.sceneName) { ElMessage.warning('请输入场景名称'); return }
   if (e.id) {
-    await http.put(`/api/spa-scene/${e.id}`, e)
+    await http.put(`/spa-scene/${e.id}`, e)
     ElMessage.success('已更新')
   } else {
-    await http.post('/api/spa-scene', e)
+    await http.post('/spa-scene', e)
     ElMessage.success('已创建')
   }
   editDialogVisible.value = false
@@ -364,7 +364,7 @@ async function handleSaveScene() {
 async function handleDelete(scene: SpaScene) {
   try {
     await ElMessageBox.confirm(`确认删除场景「${scene.sceneName}」？`, '提示', { type: 'warning' })
-    await http.delete(`/api/spa-scene/${scene.id}`)
+    await http.delete(`/spa-scene/${scene.id}`)
     ElMessage.success('已删除')
     loadScenes()
   } catch { /* cancelled */ }
@@ -393,7 +393,7 @@ async function handleSaveSlots() {
     const r = roomList.value.find(x => x.id === s.roomId)
     if (r) s.roomName = r.roomName
   })
-  await http.put(`/api/spa-scene/${slotSceneId.value}/slots`, slots.value)
+  await http.put(`/spa-scene/${slotSceneId.value}/slots`, slots.value)
   ElMessage.success('房间组合已保存')
   loadSlots()
 }
