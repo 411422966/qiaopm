@@ -1,6 +1,6 @@
 # I202 — 前后端权限码漂移（全量口径）：22 个前端码不在 `sys_permission`，44 条路由对非超管永久 403
 
-> **状态**：**Open**（本批**仅登记**，**未修改任何业务代码、未写库**）
+> **状态**：**Partial**（P1 前端已落地并**页面级 VERIFIED**；P2 后端补码/补绑定**未做**，且 P1 落地衍生出 **I204** 安全债 Open）
 > **严重度**：**P0**
 > **P0 理由**：22 码 × 44 路由，考勤 5 页 + 提成 2 页对所有非超管角色（含店长/老板）永久不可达，属核心业务功能阻断
 > **发现日期**：2026-11-23（I185 全量复扫）
@@ -434,7 +434,7 @@ index f38ec9d..fb6a911 100644
 |---|---|---|---|
 | R1 | **22 码 × 44 路由永久 403** | 非超管访问 | 考勤 5 页 + `employee:level:evaluation` 1 页 + 提成 2 页 + `dev` 16 页 + `pay:order` 5 页 + `org` 3 页 + `mh` 3 页 + `biz:service-item` 3 处 + `spa-scene` 1 页 + 其余 5 页 **不可达**（合计 44 条；**提成 2 页**而非 3 页 —— `commission/simulation`(:115) 的码库中存在且已绑 3 角色，不在 22 码清单内，见 §1.2 注） |
 | R2 | 改码后仍被后端 403（4 个 A 类目标码绑 0 角色） | `dcep:hardware-wallet` / `iot:device:manage` / `payment:overseas:gateway` / `resource:schedule` | 前端与后端**一致地 403** → 非「假门禁」，但页面仍对店长/老板不可用 → 需 P2 补角色绑定 |
-| **R2-1** | `/spa-scene` **保留 `room:list`**（D6）→ 进页后主场景表仍 403 | `spa:scene:list`(id=1564) / `spa:scene:edit`(id=1565) **均绑 0** | 守卫层 `room:list`(1460) 绑 6（STORE_ADMIN,CLERK,MANAGER,BOSS,OPERATOR,ADMIN）→ **manager01 / clerk01 可进页**；但页面主数据端点 `GET /spa-scene/list`、`/{id}/recommend`、`/{id}/slots` 后端注解为 `spa:scene:list`（`SpaSceneModeController.java:26,32,58,72`）→ **绑 0 角色 → 非超管全 403** → **spa:scene:list 绑 0，主场景表仍 403，P2 补绑定**（另叠加 R8 的双 `/api` 前缀缺陷 → 当前实际先 404）。**前置：I203 前缀修复（`views/spa-scene/index.vue` 7 处去 `/api`）；未修前缀则本项补绑定后页面仍 404** |
+| **R2-1** | `/spa-scene` **保留 `room:list`**（D6）→ 进页后主场景表仍 403 | `spa:scene:list`(id=1564) / `spa:scene:edit`(id=1565) **均绑 0** | 守卫层 `room:list`(1460) 绑 6（STORE_ADMIN,CLERK,MANAGER,BOSS,OPERATOR,ADMIN）→ **manager01 / clerk01 可进页**；但页面主数据端点 `GET /spa-scene/list`、`/{id}/recommend`、`/{id}/slots` 后端注解为 `spa:scene:list`（`SpaSceneModeController.java:26,32,58,72`）→ **绑 0 角色 → 非超管全 403** → **spa:scene:list 绑 0，主场景表仍 403，P2 补绑定**。**前置：I203 前缀修复（`views/spa-scene/index.vue` 7 处去 `/api`）—— ✅ 已落地（见 §7.1）**，双前缀 404 已消除，当前非超管 403 的**唯一原因是本行绑 0 角色**，非 URL 契约漂移 |
 | **R2-2** | `/iot/management` **保留 `iot:link:list`**（D6）→ 页面 4 个 tab 的真实端点均不可用 | device 端点**无** `@RequirePermission`；`iot:rule:list`(1552) / `iot:alert:list`(1548) / `iot:data:list`(1550) **均绑 0** | 守卫层 `iot:link:list`(1479) 本身绑 0 → **非超管连页面都进不去**；即使超管进页，「数据采集 / 联动规则 / 告警中心」三个 tab 的后端注解码（`IotDeviceDataController.java:33`、`IotTriggerRuleController.java:30`、`IotDeviceAlertController.java:31`）**绑 0** → 其他角色全 403 → **页面 4 个 tab 真实端点（device 无注解、rule/alert/data 绑 0）均不可用，P2 补绑定** |
 | **R2-3** | `/care` 改码后**能进页**，但页面数据端点仍 403 | `crm:care:recipe:list`(1494) 仅绑 **3**（ADMIN,BOSS,MANAGER） | 守卫层 `biz:service-item:list`(1439) 绑 6（含 CLERK）→ **clerk01 可进页**；但 `GET /care/recipe/list`、`/care/recipe/{id}`、`/care/assessment/by-member/{id}`、`POST /care/recommend`（`CareRecipeController.java:106,120,367,381`）注解码不含 CLERK → **clerk01 页面内接口 403** → **P2 补绑定** |
 | R3 | **已生效**（`e4465d0` 后前端无门禁 + 后端无鉴权 = 21 页全开放） | 任意登录账号 | 18 个 Controller / **225 个端点** 后端**无** `@RequirePermission`（`PosDeviceService` / `FiscalService` / `FiscalConfigController` / `IntlPaymentService` / `HipaaService` / `GoogleMapsService` / `GdprService` / `AiSchedulerService` / `RiskControlService` / `PluginService` / `GrayReleaseController` / `DataHubService` / `PriceListService` / `P1SuiteService` / `P2FeaturesService` / `P2ComplianceSuiteService` / `P3EcosystemSuiteService` / `IoTDeviceService`）→ 实施前前端假门禁**误伤**非超管（数据未泄露），实施后**前端门禁消失 + 后端鉴权本无** → **全体登录用户可读可写**；含**资金风控 / 财税 / 国际支付 / HIPAA 密钥 / GDPR / 插件市场 / 灰度开关**等敏感域；实测 `clerk01` 对 17 个抽样端点全 200 | **独立登记见 I204**（`audit/issues/I204-dev-pay-pages-no-backend-auth.md`，P1） |
@@ -443,6 +443,41 @@ index f38ec9d..fb6a911 100644
 | R6 | 命名无收敛机制 | 后续新增模块 | 同型问题必然复发（`attendance:*` vs `employee:attendance*`、点号 vs 冒号） |
 | R7 | `sys_role_permission` 存在 **3 行孤儿**（`permission_id=9` 不存在） | 角色权限变更 / 清理 | 3 条授权记录**静默失效**（SUPER_ADMIN / BOSS / ADMIN 各 1 条） |
 | **R8**（本轮新发现） | **契约漂移**：`/spa-scene` 页面 **8 个 `http.*` 调用中 7 个**（`:320`、`:330`、`:336`、`:354`、`:357`、`:367`、`:396`）**URL 双 `/api` 前缀** → 请求实际打到 `/api/api/spa-scene/*` → **全角色 404**（含超管） | 打开 `/spa-scene` 页（守卫改码后任何持 `room:list` 的角色均可进页） | `views/spa-scene/index.vue:320`、`:330`、`:336`、`:354`、`:357`、`:367`、`:396` 全部写成 `http.get('/api/spa-scene/...')`，而 `utils/http.ts` 的 `request` 实例 `baseURL='/api'`（`api/request.ts:8`）→ axios 拼接为 `/api/api/spa-scene/...`；nginx `location /api/ { proxy_pass http://api:8080/; }`（`nginx.conf:41-42`）剥掉**一层** `/api` → 后端收到 `/api/spa-scene/list` → **404**；Vite dev proxy `rewrite: path.replace(/^\/api/, '')`（`vite.config.ts:21`）同理只剥一层 → dev 环境同样 404。**实测（经 nginx `:8088`，2026-11-24，三账号对照）**：`/api/spa-scene/list` → admin(超管) **200** / manager01 **403** / clerk01 **403**（后端码 `spa:scene:list` 绑 0，非超管全 403）；`/api/api/spa-scene/list`（前端真实请求路径）→ **三账号全部 404**（含超管，因超管持 `*` 也过不了路径匹配）；`:325` 的 `http.get('/room/list')`（同文件唯一正确写法，无多余前缀）→ **三账号全部 200**。**结论**：即使 P2 补上 `spa:scene:list` 角色绑定，页面**仍然拿不到数据** → 需**先修 URL 前缀**（去掉调用侧多余 `/api`，**7 处**，1 个文件），**再**做 P2 补绑定。**属超出本轮 I202 权限码范围的新缺陷，本批仅登记、不修复**。**本条仅登记发现，修复另见 I203。** |
+
+### 7.1 页面级实测（2026-11-25，浏览器端到端，`clerk01` + `admin` 对照）
+
+**环境**：`http://localhost:8088`（nginx → `meiyetec-api:8080`），容器 HEAD `cbdb1a3` 之后的工作区；浏览器实测（非静态推论）。
+
+**P1 落地效果：去 meta 的 21 条路由 → 登录即见，不再 403**
+
+| 页面 | 账号 | 实测表现 | 判定 |
+|---|---|---|---|
+| `/dev/gray-release` 灰度发布控制台 | clerk01 | 正常进入，Feature Key / 灰度比例 / 阶段按钮完整 | ✅ 不再 403 |
+| `/risk-control` 资金风控 | clerk01 | 正常进入，3 tab（规则管理/拦截日志/模拟检测） | ✅ 不再 403 |
+| `/fiscal` 财税直连 | clerk01 | 正常进入 | ✅ 不再 403 |
+| `/fiscal/config` 财税渠道配置 | clerk01 | 正常进入，表头 + appKey/appSecret 字段可见 | ✅ 不再 403 |
+| `/intl-payment` 国际支付 | clerk01 | 正常进入，2 tab + 「发起一笔测试支付」 | ✅ 不再 403 |
+| `/pos-device` 海外 POS | clerk01 | 正常进入，2 tab + 「注册终端」 | ✅ 不再 403 |
+| `/gdpr` GDPR 合规 | clerk01 | 正常进入，3 tab | ✅ 不再 403 |
+| `/hipaa` HIPAA 加固 | clerk01 | 正常进入，2 tab | ✅ 不再 403 |
+| `/plugin` 插件市场 | clerk01 | 正常进入，3 tab（市场/已安装/运行时） | ✅ 不再 403 |
+| `/ai-scheduler` AI 智能排班 | clerk01 | 正常进入，3 tab | ✅ 不再 403 |
+| `/google-maps` Google Maps | clerk01 | 正常进入，4 tab，门店地图 5 店数据渲染 | ✅ 不再 403 |
+| `/dev/pricelist` 电子价目表（A 类换码 `biz:service-item:list`） | clerk01 | 正常进入，4 tab + 价目表列表 | ✅ 换码生效 |
+| `/spa-scene` SPA场景模式 | admin | **数据完整渲染**（单人舒压 ¥298 / 情侣双享 ¥698 等卡片） | ✅ I203 已修复 |
+
+**回归对照：仍有守卫码的页面 → 非超管仍 403（确认未把「全开」变成「全锁死」）**
+
+| 页面 | clerk01 实测 | 期望 | 判定 |
+|---|---|---|---|
+| `/commission/salary` | 跳 `/403?denied=commission:salary:list` | 403 | ✅ |
+| `/commission/rules/config` | 跳 `/403?denied=commission:rule:edit` | 403（D4 换码后） | ✅ |
+
+**I203 前缀修复确认**：`views/spa-scene/index.vue:320` 等 7 处调用已改为 `http.get('/spa-scene/list')`（无 `/api` 双前缀）→ `GET /api/spa-scene/list` 由「三账号全 404」变为 **admin 200（4 条场景数据）/ clerk01 403**；clerk01 的 403 来源为 `spa:scene:list` 绑 0 角色（**R2-1**，P2 待做），**非** URL 契约漂移。
+
+**敏感读端点 clerk01 实测全部 200 且有数据体**（印证 R3 / I204 R1「读无门槛」）：`/api/gray/flag/list`(118B) / `/api/fiscal/config/list`(118B) / `/api/fiscal/list`(822B) / `/api/intl-payment/gateways`(545B) / `/api/hipaa/key/list`(345B) / `/api/gdpr/consent/list`(1696B) / `/api/plugin/market/list`(9103B)。
+
+> ⚠ **本页实测只证明「页面可达 / 数据可达」，不证明「应可达」** —— P1 的净效果是把 21 页从「非超管进不去」换成「全体登录用户可读可写」，**这是 I204 安全债的页面级佐证，不是 I202 的收口**。P2（后端补码 + 补角色绑定）仍是 I202 剩余主体。
 
 ---
 
@@ -460,6 +495,9 @@ index f38ec9d..fb6a911 100644
 | 8 | `clerk01` 打开 `/commission/rules/config`（配置页，D4 改名后守卫码 = `commission:rule:edit`） | 按绑定口径（`commission:rule:edit` id=1121，绑 ADMIN,BOSS,MANAGER）**仍跳 `/403`**；`/commission/rules` 列表页（守卫码 `commission:rule:list` id=1119，绑同样 3 角色）结论相同 |
 | 9 | 全仓 `meta.permission` 集合 ∩ 后端 `@RequirePermission` 集合 | 差异为 0，或每个差异有书面理由（`dev:access` / `pay:order` / `pay:dcep` 等已记录） |
 | 10 | `sys_menu_permission.route_path` 与 `router/index.ts` 路由对照 | 一一对应，无孤儿菜单（当前 123 行菜单 vs 147 处路由，**已知大量缺口**，归 P2） |
+
+> 📌 **2026-11-25 浏览器实测结果**：第 **3** 项（考勤 5 页）本轮**未逐页实测**（`/attendance/*` 路由守卫码 `employee:attendance*` 属 A 类换码，静态已换，实测待补）；第 **7** 项 ✅（clerk01 `/commission/salary` 跳 `/403?denied=commission:salary:list`）；第 **8** 项 ✅（clerk01 `/commission/rules/config` 跳 `/403?denied=commission:rule:edit`）；去 meta 的 21 条路由 ✅ 见 §7.1。
+> ⚠ **第 4/5/6 项（提成页 + 按钮跳转 + 复数路径）本轮未实测** —— `clerk01` 无 `commission:rule:*` 权限（绑 ADMIN,BOSS,MANAGER），需 `manager01` 或 `admin` 账号才能验证，**尚未执行** → 这 3 项仍标 **UNVERIFIED**。
 
 ---
 
@@ -526,14 +564,15 @@ GROUP BY p.id;
 
 ## 10. 边界声明
 
-- 本 Issue 结论来自**前端源码静态梳理** + **后端源码静态梳理** + **运行期 DB 只读查询** + **`POST /auth/login` 只读实测**。
-- **未打开浏览器**、**未做任何前端交互验收**、**未修改任何业务代码**、**未执行任何写操作 / DDL / 入库脚本**、**未新增可执行脚本**。
-- 页面级最终表现（「不再 403」）属**代码级推论**，未做浏览器端到端点击验证 → 按验收规则标 **UNVERIFIED**，需人工在浏览器复核。
+- 本 Issue 结论来自**前端源码静态梳理** + **后端源码静态梳理** + **运行期 DB 只读查询** + **`POST /auth/login` 只读实测** + **浏览器端到端实测（2026-11-25，见 §7.1）**。
+- **未修改任何业务代码**、**未执行任何写操作 / DDL / 入库脚本**、**未新增可执行脚本**。
+- 页面级最终表现（「不再 403」）→ **已于 2026-11-25 在浏览器端到端实测确认（§7.1）**：去 meta 的 21 条路由以 `clerk01` 全部正常进入，仍有守卫码的 `/commission/salary`、`/commission/rules/config` 仍跳 `/403` → **页面级 VERIFIED**（不再 UNVERIFIED）。
+- ⚠ **页面级 VERIFIED ≠ 问题收口**：P1 的净效果是「非超管进不去」换成「全体登录用户可读可写」，**P2（后端补码 + 补角色绑定）仍为主体剩余工作**，且衍生出 **I204**（P1，安全债 Open）。
 - 未核实：生产环境 `sys_permission` / `sys_role_permission` 是否与本机一致（若生产已补码，结论需重估）。
 - 未核实：`init_attendance.sql:112-119` 在生产部署链路中是否被执行（I185 §1.5 已记录该脚本列名与运行期表结构不符）。
 - 未触达 `/dashboard`、`/mh/visual`、`/mh/consent` 三个已验收页面（D2 已明确本期不动）。
-- **§7 R8（`/spa-scene` URL 双 `/api` 前缀 → 404）为本轮新发现、超出本 Issue 权限码范围**：按任务边界规则，本批**仅登记**（R8 行 + §6 教训 4 补充），**未修** `views/spa-scene/index.vue`；**是否另开 issue 由用户决定**。
-- 本轮**未修改** `audit/issues/issue-register.md`（治理基线文件，规则 18，需单独批准）。
+- **§7 R8（`/spa-scene` URL 双 `/api` 前缀 → 404）为本轮新发现、超出本 Issue 权限码范围**：按任务边界规则，本批**仅登记**（R8 行 + §6 教训 4 补充），**未由 I202 修复** `views/spa-scene/index.vue`；**修复另见 I203（已于 2026-11-25 确认 Fixed，§7.1）**。
+- 本轮**未修改** `audit/issues/issue-register.md`（治理基线文件，规则 18，需单独批准）—— 已在获批后同步落盘。
 - 本轮生成 diff 用的两个一次性 Node 脚本（`apply.js` / `diff_gen.js` / `insert_diff.js`）**全部位于系统临时目录** `%TEMP%\i202\`，**未进入仓库**（已从 `d:\QiaoPM\` 根目录清走），**未进入** `audit/scripts/` **未接入 CI**（规则 19）。
 
 ---

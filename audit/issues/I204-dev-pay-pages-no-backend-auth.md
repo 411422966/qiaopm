@@ -113,6 +113,38 @@ I202 §5 P1 改动清单中，D1（`dev:access` 16 处）与 D3（`pay:order` 5 
 
 → 印证 §1.2：**无注解 Controller 全开放，有注解 Controller 仍拦截**（拦截器本身工作正常，缺的是注解）。
 
+### 1.3.1 浏览器页面级实测（2026-11-25，`clerk01` 登录，nginx `:8088`）
+
+> 目的：把 §1.3 的「端点返回 200」升级为**页面级可交互**证据（路由守卫放行 + 页面实际渲染）。
+
+| 页面 | 账号 | 实测表现 | 判定 |
+|---|---|---|---|
+| `/dev/gray-release` 灰度发布控制台 | clerk01 | 正常进入，Feature Key / 灰度比例 / 阶段按钮完整 | ✅ 路由守卫放行 |
+| `/risk-control` 资金风控 | clerk01 | 正常进入，3 tab（规则管理 / 拦截日志 / 模拟检测） | ✅ |
+| `/fiscal` 财税直连 | clerk01 | 正常进入 | ✅ |
+| `/fiscal/config` 财税渠道配置 | clerk01 | 正常进入，表头 + **appKey / appSecret** 字段可见 | ✅ |
+| `/intl-payment` 国际支付 | clerk01 | 正常进入，2 tab + 「发起一笔测试支付」 | ✅ |
+| `/pos-device` 海外 POS | clerk01 | 正常进入，2 tab + 「注册终端」 | ✅ |
+| `/gdpr` GDPR 合规 | clerk01 | 正常进入，3 tab | ✅ |
+| `/hipaa` HIPAA 加固 | clerk01 | 正常进入，2 tab（加密密钥 / PHI 访问） | ✅ |
+| `/plugin` 插件市场 | clerk01 | 正常进入，3 tab（市场 / 已安装 / 运行时） | ✅ |
+| `/ai-scheduler` AI 智能排班 | clerk01 | 正常进入，3 tab | ✅ |
+| `/google-maps` Google Maps | clerk01 | 正常进入，4 tab，**门店地图 5 店数据渲染** | ✅ |
+
+**敏感读端点 clerk01 实测（经 nginx，含响应体长度）**：
+
+| 端点 | HTTP | 响应体长度 |
+|---|---|---|
+| `GET /api/gray/flag/list` | 200 | 118 B |
+| `GET /api/fiscal/config/list` | 200 | 118 B |
+| `GET /api/fiscal/list` | 200 | 822 B |
+| `GET /api/intl-payment/gateways` | 200 | 545 B |
+| `GET /api/hipaa/key/list` | 200 | 345 B |
+| `GET /api/gdpr/consent/list` | 200 | 1696 B |
+| `GET /api/plugin/market/list` | 200 | 9103 B |
+
+→ **页面级与端点级一致**：最低权限账号 `clerk01` 对 11 个敏感/开发域页面**全部可达且有数据**，**无任何一处前端门禁生效**。§1.6 的 DB 实查结论（高危域仅 3 条码且绑 0 角色、`pay:%` 0 条、`dev:*` 5 条只绑 ADMIN）在页面层得到印证。
+
 ### 1.4 写端点实测（2026-11-24，`clerk01` 账号，2 例 —— **写操作无门槛已实测确认，非静态推论**）
 
 **例 1：`POST /gray/flag` + `POST /gray/flag/{key}/toggle`**（`GrayReleaseController.java:71` / `:92`，**写操作，实测落库**）
@@ -131,7 +163,7 @@ I202 §5 P1 改动清单中，D1（`dev:access` 16 处）与 D3（`pay:order` 5 
 | 1 | `clerk01` → `POST /api/risk-control/rule`，body `{ruleCode:"I204_PROBE", ruleName:"I204 write probe rule", threshold:999999, action:"ALERT", level:"LOW", enabled:false}` | **HTTP 200**，`code=200`，`data.id=1795535064506`、`tenantId=1` |
 | 2 | `clerk01` → `GET /api/risk-control/rule/list` | HTTP 200，`total=6`（默认 5 条 + 本次探测 1 条），`I204_PROBE` **可见且生效** |
 | 3 | **落库核验** | 该 Controller 用**进程内 `static ConcurrentHashMap`**（`RiskControlService.java:17`），**不写 DB** → **无 DB 残留**；探测规则 `enabled=false` 且 `ruleCode=I204_PROBE` 不匹配 `check()` 的任何 `switch` 分支 → **对风控判定无影响**；容器重启即消失 |
-| 4 | **清理（2026-11-25）** | 执行 `docker compose restart api`，重启后 `GET /risk-control/rule/list` 实测 **5 条**（`BIG_AMOUNT` / `FREQUENT` / `ROUND_AMOUNT` / `CROSS_STORE` / `REFUND_ABUSE`），`I204_PROBE` **已消失** → **内存残留已清零** |
+| 4 | **清理（2026-11-25）** | 执行 `docker compose restart api`（**含一次 `docker compose restart api`**），重启后 `GET /risk-control/rule/list` 实测 **5 条**（`BIG_AMOUNT` / `FREQUENT` / `ROUND_AMOUNT` / `CROSS_STORE` / `REFUND_ABUSE`），`I204_PROBE` **已消失** → **内存残留已清零** |
 
 > 📌 **与既有静态推论的一致性**：上述 2 例与 §1.2 的「`@RequirePermission` 计数 = 0」完全吻合 —— 写端点同样无鉴权。
 > 📌 **方法学说明**：`clerk01` 为**权限码最少**的账号（54 条），若其可写成功，则任一登录账号均可写。
