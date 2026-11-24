@@ -1,8 +1,8 @@
-# I202 — 前后端权限码漂移（全量口径）：22 个前端码不在 `sys_permission`，约 28 条路由对非超管永久 403
+# I202 — 前后端权限码漂移（全量口径）：22 个前端码不在 `sys_permission`，44 条路由对非超管永久 403
 
 > **状态**：**Open**（本批**仅登记**，**未修改任何业务代码、未写库**）
 > **严重度**：**P0**
-> **P0 理由**：22 码 × 28 路由，考勤 5 页 + 提成 3 页对所有非超管角色（含店长/老板）永久不可达，属核心业务功能阻断
+> **P0 理由**：22 码 × 44 路由，考勤 5 页 + 提成 2 页对所有非超管角色（含店长/老板）永久不可达，属核心业务功能阻断
 > **发现日期**：2026-11-23（I185 全量复扫）
 > **登记人**：Cursor
 > **绑定基线**：HEAD `ac5fdbe`
@@ -18,7 +18,7 @@
 
 I185 只覆盖了「考勤 / 提成」切片（8 个码）；本轮对前端 `router/index.ts` **全部 147 处 `meta.permission`（94 个去重码）**逐码与运行期 `sys_permission`（510 行 / 510 去重码）比对，
 实测 **22 个前端码在库中完全不存在**（含 `dev:access`、`pay:order`、`org:*`、`mh:*`、`employee:attendance*` 等），
-覆盖 **约 28 条路由** → 前端守卫 `hasPermission()` 恒为 `false` → 这些页面**对所有非超管角色永久 403**。
+覆盖 **44 条路由**（2026-11-24 复核修正：原写「约 28 条」为误记；实际经 `router/index.ts` 逐码正则匹配 + 去重行号实测 = **44 条**，逐码命中行号见 §1.2 表「受影响路由数」列，44 个行号互不重复）→ 前端守卫 `hasPermission()` 恒为 `false` → 这些页面**对所有非超管角色永久 403**。
 
 同时实测推翻 I185 的两个前提（`commission:simulation` 实际存在；I183 的「`attendance:*` 9 码绑定数全 0」已过期，**现全部绑定 2–5 个角色**）。
 
@@ -431,7 +431,7 @@ index f38ec9d..fb6a911 100644
 
 | # | 风险 | 触发条件 | 影响 |
 |---|---|---|---|
-| R1 | **22 码 × ~28 路由永久 403** | 非超管访问 | 考勤 5 页 + 提成 3 页 + `dev` 16 页 + `pay:order` 5 页 + `org` 3 页 + `mh` 3 页 + 其余 6 页 **不可达** |
+| R1 | **22 码 × 44 路由永久 403** | 非超管访问 | 考勤 5 页 + `employee:level:evaluation` 1 页 + 提成 2 页 + `dev` 16 页 + `pay:order` 5 页 + `org` 3 页 + `mh` 3 页 + `biz:service-item` 3 处 + `spa-scene` 1 页 + 其余 5 页 **不可达**（合计 44 条；**提成 2 页**而非 3 页 —— `commission/simulation`(:115) 的码库中存在且已绑 3 角色，不在 22 码清单内，见 §1.2 注） |
 | R2 | 改码后仍被后端 403（4 个 A 类目标码绑 0 角色） | `dcep:hardware-wallet` / `iot:device:manage` / `payment:overseas:gateway` / `resource:schedule` | 前端与后端**一致地 403** → 非「假门禁」，但页面仍对店长/老板不可用 → 需 P2 补角色绑定 |
 | **R2-1** | `/spa-scene` **保留 `room:list`**（D6）→ 进页后主场景表仍 403 | `spa:scene:list`(id=1564) / `spa:scene:edit`(id=1565) **均绑 0** | 守卫层 `room:list`(1460) 绑 6（STORE_ADMIN,CLERK,MANAGER,BOSS,OPERATOR,ADMIN）→ **manager01 / clerk01 可进页**；但页面主数据端点 `GET /spa-scene/list`、`/{id}/recommend`、`/{id}/slots` 后端注解为 `spa:scene:list`（`SpaSceneModeController.java:26,32,58,72`）→ **绑 0 角色 → 非超管全 403** → **spa:scene:list 绑 0，主场景表仍 403，P2 补绑定**（另叠加 R8 的双 `/api` 前缀缺陷 → 当前实际先 404）。**前置：I203 前缀修复（`views/spa-scene/index.vue` 7 处去 `/api`）；未修前缀则本项补绑定后页面仍 404** |
 | **R2-2** | `/iot/management` **保留 `iot:link:list`**（D6）→ 页面 4 个 tab 的真实端点均不可用 | device 端点**无** `@RequirePermission`；`iot:rule:list`(1552) / `iot:alert:list`(1548) / `iot:data:list`(1550) **均绑 0** | 守卫层 `iot:link:list`(1479) 本身绑 0 → **非超管连页面都进不去**；即使超管进页，「数据采集 / 联动规则 / 告警中心」三个 tab 的后端注解码（`IotDeviceDataController.java:33`、`IotTriggerRuleController.java:30`、`IotDeviceAlertController.java:31`）**绑 0** → 其他角色全 403 → **页面 4 个 tab 真实端点（device 无注解、rule/alert/data 绑 0）均不可用，P2 补绑定** |
