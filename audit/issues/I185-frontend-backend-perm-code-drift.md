@@ -9,6 +9,8 @@
 > **DB 快照**：`backup/meiyetec_20261116_020004.sql`
 > **证据**：`audit/evidence/F171-attendance-commission-perm-alignment/`（`raw/09-frontend-route-and-permission-codes.txt` A/B/F/G/H 段、`raw/01-static-endpoint-matrix.md` §5、`raw/04b` V1/V2、`raw/04` X4）
 > **关联**：I183（考勤死码）、I184（提成死码）、I188（种子与运行期漂移）、I124（授权码体系分裂）、I115（权限注解覆盖率）
+> **全量口径（2026-11-23 补充）**：本条的「8 个码」**仅为考勤 / 提成切片快照**（批次 2-C 调查范围）；全仓前端码的完整漂移清单为 **22 个**（含 `dev:access`、`pay:order`、`org:*`、`mh:*`、`dcep:hardware-wallet`、`iot:device:manage`、`payment:overseas:gateway`、`resource:schedule` 等），覆盖约 **28 条路由**，见 **I202**（2026-11-23）。本条正文结论与证据保持原样不改。
+> **前提变更（2026-11-23）**：实测 `commission:simulation` **在库中存在**（id=1631，API 型，已绑 ADMIN/BOSS/MANAGER），本条 §1.1 该行「❌ 不存在」应读作 ✅；且 I183 的「`attendance:*` 9 码绑定数全 0」前提**已过期**（现全部绑定 2–5 个角色）。详见 I202 §2 的 D2 / D3。
 
 ---
 

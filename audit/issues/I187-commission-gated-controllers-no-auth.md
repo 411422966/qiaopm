@@ -8,7 +8,7 @@
 > **验证等级**：**VERIFIED（静态 L4 + 运行期 L5a 的 404 事实）** —— 源码中确实无任何 `@RequirePermission`；运行期实测 404（因 Bean 未注册）；「解封后裸奔」为**静态可确定的推论**，运行期未复现
 > **DB 快照**：`backup/meiyetec_20261116_020004.sql`
 > **证据**：`audit/evidence/F171-attendance-commission-perm-alignment/`（`raw/01-static-endpoint-matrix.md` §3、`raw/07-runtime-ghost-endpoints-404.txt`、`raw/06b` C 段）
-> **关联**：I115（权限注解覆盖率不足 P0）、I135（部署 jar 陈旧 / `feature.legacy-missing-ddl` 警告）、I184（提成死码）、I185（前后端码漂移）
+> **关联**：I115（权限注解覆盖率不足 P0）、I135（部署 jar 陈旧 / `feature.legacy-missing-ddl` 警告）、I184（提成死码）、I185（前后端码漂移）、**I202**（前后端权限码漂移全量口径 —— 引用本条 G7/G8：`/commission/simulation` 404 的根因与覆盖关系）
 
 ---
 
@@ -103,7 +103,7 @@ feature:
 | # | 步骤 | 内容 | 备注 |
 |---|---|---|---|
 | 1 | **解封前先补鉴权（硬前置）** | 为 8 个 endpoint 加 `@RequirePermission`：<br>· G1/G4/G5/G6/G2/G3 → `commission:rule:edit`（阶梯/条件是规则的子结构）<br>· G7/G8 → 新增 `commission:simulation`（需先入库并绑定，I185/I188） | **顺序不可颠倒**：先补鉴权，再解封 |
-| 2 | **补 `commission:simulation` 码入库** | `sys_permission` 插入该码并绑定相应角色（前端 `router/index.ts:115` 已引用它） | 与 I185 的码表收敛合并 |
+| 2 | **补 `commission:simulation` 码入库** | `sys_permission` 插入该码并绑定相应角色（前端 `router/index.ts:115` 已引用它） | 与 I185 的码表收敛合并。**2026-11-23 更新（I202）**：该码**已在库中存在**（id=1631，type=API，已绑 ADMIN/BOSS/MANAGER 3 角色），本步**无需再入库**，只需确认绑定口径 |
 | 3 | **解封开关与鉴权用同一事务性变更上线** | 避免「先开开关后补注解」的中间态 | — |
 | 4 | **纳入守门脚本** | 加一条静态检查：所有 `@RestController`（含 `@ConditionalOnProperty` 门控类）必须有 `@RequirePermission` 或显式标注豁免 | 可复用 I115 的扫描思路 |
 | 5 | **确认这批功能是否仍需要** | 若业务已放弃阶梯/条件/模拟计算功能 → **删除**比保留裸奔更安全 | 需业务确认 |
