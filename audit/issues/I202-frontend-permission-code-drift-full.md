@@ -1,6 +1,6 @@
 # I202 — 前后端权限码漂移（全量口径）：22 个前端码不在 `sys_permission`，44 条路由对非超管永久 403
 
-> **状态**：**Partial**（P1 前端已落地并**页面级 VERIFIED**；P2 后端补码/补绑定**未做**，且 P1 落地衍生出 **I204** 安全债 Open）
+> **状态**：**Partial**（P1 前端已落地并**页面级部分 VERIFIED**：dev/pay 12 页 + I203 admin 路径 + manager01 考勤/提成 7 页（2026-11-25 补测，见 §7.2）；**P2 后端补码/补绑定未做**，且 P1 落地衍生出 **I204** 安全债 Open）
 > **严重度**：**P0**
 > **P0 理由**：22 码 × 44 路由，考勤 5 页 + 提成 2 页对所有非超管角色（含店长/老板）永久不可达，属核心业务功能阻断
 > **发现日期**：2026-11-23（I185 全量复扫）
@@ -425,6 +425,7 @@ index f38ec9d..fb6a911 100644
 6. **路由重名与组件冗余是两件事**：`router/index.ts:58` 与 `:114` 渲染**同一组件** `rules.vue`（前者 `permission: 'commission:rule:list'`、后者 `permission: 'commission:rule:config'`），仅 `title` 不同。本次**仅修重名（`:114` 改 path/name）与权限码对齐**，**未合并这两个页面**，属**已知冗余** —— 后续可评估把「列表视图 / 配置视图」拆成两个独立组件，或让 `:114` 复用 `:113` 的 `rule-list.vue`。
    **明确记入（2026-11-24）**：`:58` 与 `:114` 渲染同一组件 `rules.vue`，本次仅修重名与权限码，**未合并页面**，属**已知冗余**。
 7. **改动来源未经报告**：2026-11-24 I202 P1 / I203 的代码改动在本轮实施前已存在于工作区，来源未经报告；本轮通过 blob hash（router `862efb9..f58ab63`）+ numstat（41/3/3/7）+ 残留检索三项证据确认与批准内容逐字一致后提交。若为会话前段 Cursor 所为，轮次编号 **UNVERIFIED**。
+8. **流程偏差：状态文本由 Cursor 自行拟定即落盘（同类第 4 次）**：2026-11-25 I202 / I203 / `issue-register.md` 状态回写 + 新增 §7.1 / §4.1 / §1.3.1 时，用户消息中的状态文本为**占位符**（「文本见用户提供」），Cursor **自行拟定措辞并直接落盘，未经逐字确认**。用户已于事后追认内容，但**流程违规成立**（违反项目规则 18 + 用户当轮「先贴文本待批」的要求）。**前 3 次同类偏差见 `I198-*.md` §D-3.18（2026-11-18，L125 + L3）与 `issue-register.md` L126（2026-11-22、2026-11-23 两次，汇总见 I198 §D-3.31）**；本条为**第 4 次**。**强制延续**：治理保护文件今后必须「先贴最终行文本 → 用户逐字确认 → 再写入 → 写入后立即贴 `git diff` 原文」。
 
 ---
 
@@ -479,6 +480,30 @@ index f38ec9d..fb6a911 100644
 
 > ⚠ **本页实测只证明「页面可达 / 数据可达」，不证明「应可达」** —— P1 的净效果是把 21 页从「非超管进不去」换成「全体登录用户可读可写」，**这是 I204 安全债的页面级佐证，不是 I202 的收口**。P2（后端补码 + 补角色绑定）仍是 I202 剩余主体。
 
+### 7.2 manager01 考勤 / 提成页补测（2026-11-25 第二批，浏览器端到端）
+
+**背景**：§7.1 只覆盖 dev/pay 域 12 页 + 2 个回归对照，**未覆盖 I202 P0 理由所指的「考勤 5 页 + 提成 3 页」核心业务页** —— 属复核盲区。本批以 `manager01`（持 `attendance:*` 9 码 + `commission:rule:list` / `commission:rule:edit`）补测，并追加 `clerk01` 负向对照。
+
+**环境**：`http://localhost:8088`（nginx → `meiyetec-api:8080`），账号 `manager01` / `clerk01`，密码 `123456`。
+
+| # | 检查项 | 实测结果 | 判定 |
+|---|---|---|---|
+| 1 | `manager01` → `/attendance/index` | 正常进入，标题「考勤打卡」，含日期选择器（2026-11-25）+「上班打卡」按钮 | ✅ 不跳 403 |
+| 2 | `manager01` → `/attendance/records` | 正常进入，**2 条真实数据**（王雪梅 2026-11-20 迟到 58 分钟 / 未打卡 2026-11-15），含员工·门店·日期筛选、导出、补录 | ✅ 有数据 |
+| 3 | `manager01` → `/attendance/leave` | 正常进入，「我的请假」与「请假记录」两 tab 均渲染；`GET /api/attendance/leave/my?employeeId=1` → **200 `data:[]`**、`/list` → **200 `data:[]`**、`/pending-count` → **200 `data:0`** | ✅ 不跳 403（**空表为真无请假数据，非 403**） |
+| 4 | `manager01` → `/attendance/statistics` | 正常进入，5 张统计卡（出勤/异常出勤/平均工时/正常出勤率/迟到率/早退率/旷工率）+ 员工考勤月报均渲染；`GET /api/attendance/statistics` → **200**，`data` 全 0 | ✅ 不跳 403（**统计值为 0，非 403**） |
+| 5 | `manager01` → `/attendance/config` | 正常进入，**1 条真实配置**（通用考勤配置 / 09:00:00-18:00:00 / 允许迟到 5 分钟 / 早退警告 30 分钟）；`GET /api/attendance/config/list` → 200 | ✅ 有数据 |
+| 6 | `manager01` → `/commission/rule-list` | 正常进入，**1 张规则卡**（服务项目通用提成 10% / SERVICE / 优先级 10 / 生效 2000-01-01）+「规则配置」「试算」按钮 | ✅ 有数据 |
+| 7 | `manager01` → 点「规则配置」→ `/commission/rules/config` | **单复数修正生效**：URL 由 `/commission/rule-list` 跳到 **`/commission/rules/config`**，标题「提成规则配置」，**1 行规则**（服务项目通用提成 10% / 条件 0 / 编辑·条件·阶梯·删除）；`GET /api/commission/rules/list` → **200**（1 条规则） | ✅ 跳转正确、不 404 |
+| 8 | `manager01` → `/commission/rules`（验收第 4 项的另一路径） | 正常进入，标题「提成规则配置」，**1 行规则**同 §7 | ✅ 有数据 |
+| 9 | `manager01` → `/spa-scene` | **页面能进入**（标题「SPA场景模式」，3 tab + 「新增场景」），但场景列表 **空态**「暂无场景模式，点击「新增场景」开始」；`GET /api/spa-scene/list` → **403**「权限不足: 需要权限码：spa:scene:list」 | ✅ **符合预期**（R2-1 未做，`spa:scene:list` 绑 0 角色） |
+| 10 | **负向对照** `clerk01` → `/attendance/statistics` | 跳 `/403?denied=attendance:stat` | ✅ 仍 403 |
+| 11 | **负向对照** `clerk01` → `/attendance/config` | 跳 `/403?denied=attendance:config:list` | ✅ 仍 403 |
+| 12 | **负向对照** `clerk01` → `/attendance/records` | 正常进入且**同样 2 条数据**（clerk01 持 4 个 `attendance:*` 码，含 records 列表码） | ✅ 门禁粒度合理 |
+
+> 📌 第 3 / 4 项的「空表 / 统计全 0」经端点直查确认**均为 HTTP 200 + 空载荷**，**不是 403 降级**；数据缺失属 `attendance_leave` / `attendance_record` 在本机的实际数据分布，不属本 Issue 范围。
+> ⚠ 第 6 / 7 / 8 项**未执行任何写操作**（新增 / 编辑 / 删除规则）→ 验收第 6 项（复数路径的写请求）仍标 **UNVERIFIED**（规则 20 写操作需隔离夹具，本轮未做）。
+
 ---
 
 ## 8. 验收标准（P1 实施后）
@@ -496,8 +521,9 @@ index f38ec9d..fb6a911 100644
 | 9 | 全仓 `meta.permission` 集合 ∩ 后端 `@RequirePermission` 集合 | 差异为 0，或每个差异有书面理由（`dev:access` / `pay:order` / `pay:dcep` 等已记录） |
 | 10 | `sys_menu_permission.route_path` 与 `router/index.ts` 路由对照 | 一一对应，无孤儿菜单（当前 123 行菜单 vs 147 处路由，**已知大量缺口**，归 P2） |
 
-> 📌 **2026-11-25 浏览器实测结果**：第 **3** 项（考勤 5 页）本轮**未逐页实测**（`/attendance/*` 路由守卫码 `employee:attendance*` 属 A 类换码，静态已换，实测待补）；第 **7** 项 ✅（clerk01 `/commission/salary` 跳 `/403?denied=commission:salary:list`）；第 **8** 项 ✅（clerk01 `/commission/rules/config` 跳 `/403?denied=commission:rule:edit`）；去 meta 的 21 条路由 ✅ 见 §7.1。
-> ⚠ **第 4/5/6 项（提成页 + 按钮跳转 + 复数路径）本轮未实测** —— `clerk01` 无 `commission:rule:*` 权限（绑 ADMIN,BOSS,MANAGER），需 `manager01` 或 `admin` 账号才能验证，**尚未执行** → 这 3 项仍标 **UNVERIFIED**。
+> 📌 **2026-11-25 浏览器实测结果**：第 **3** 项 ✅（manager01 考勤 5 页 `/attendance/{index,records,leave,statistics,config}` 全部不跳 `/403`，其中 records / config 有真实数据，leave / statistics 为 200 空载荷，见 §7.2）；第 **4** 项 ✅（manager01 `/commission/rule-list`、`/commission/rules`、`/commission/rules/config` 三条路径均不跳 `/403` 且有 1 条规则数据，见 §7.2 第 6/7/8 项）；第 **5** 项 ✅（manager01 点「规则配置」按钮 → 跳到 **`/commission/rules/config`**（单复数修正生效），**不 404**，见 §7.2 第 7 项）；第 **7** 项 ✅（clerk01 `/commission/salary` 跳 `/403?denied=commission:salary:list`）；第 **8** 项 ✅（clerk01 `/commission/rules/config` 跳 `/403?denied=commission:rule:edit`）；去 meta 的 21 条路由 ✅ 见 §7.1。
+> ⚠ **第 6 项（manager01 在规则页新增 / 编辑 / 删除规则 → 请求打到复数 `/commission/rules*`）本轮未实测** —— 属**写操作**，规则 20 要求使用隔离夹具 + 绝对不存在的兜底 ID + 写前存在性检查，本轮**未建立该夹具、未执行任何写请求** → 该项仍标 **UNVERIFIED**。
+> ⚠ **第 9 / 10 项（`meta.permission` 全集 ∩ `@RequirePermission` 全集差异、菜单表与路由一一对应）本轮未实测** —— 属静态全量比对任务，非浏览器项，仍标 **UNVERIFIED**。
 
 ---
 
@@ -564,10 +590,10 @@ GROUP BY p.id;
 
 ## 10. 边界声明
 
-- 本 Issue 结论来自**前端源码静态梳理** + **后端源码静态梳理** + **运行期 DB 只读查询** + **`POST /auth/login` 只读实测** + **浏览器端到端实测（2026-11-25，见 §7.1）**。
+- 本 Issue 结论来自**前端源码静态梳理** + **后端源码静态梳理** + **运行期 DB 只读查询** + **`POST /auth/login` 只读实测** + **浏览器端到端实测（2026-11-25 两批，见 §7.1 / §7.2）**。
 - **未修改任何业务代码**、**未执行任何写操作 / DDL / 入库脚本**、**未新增可执行脚本**。
-- 页面级最终表现（「不再 403」）→ **已于 2026-11-25 在浏览器端到端实测确认（§7.1）**：去 meta 的 21 条路由以 `clerk01` 全部正常进入，仍有守卫码的 `/commission/salary`、`/commission/rules/config` 仍跳 `/403` → **页面级 VERIFIED**（不再 UNVERIFIED）。
-- ⚠ **页面级 VERIFIED ≠ 问题收口**：P1 的净效果是「非超管进不去」换成「全体登录用户可读可写」，**P2（后端补码 + 补角色绑定）仍为主体剩余工作**，且衍生出 **I204**（P1，安全债 Open）。
+- 页面级最终表现（「不再 403」）→ **已于 2026-11-25 在浏览器端到端**分两批**实测确认**：§7.1（clerk01，dev/pay 12 页 + 2 个回归对照）与 §7.2（manager01，考勤 5 页 + 提成 3 页 + 负向对照 3 项）→ **页面级部分 VERIFIED**（覆盖 §8 验收第 1/3/4/5/7/8 项；第 6 项写操作、第 9/10 项静态比对仍 UNVERIFIED）。
+- ⚠ **页面级部分 VERIFIED ≠ 问题收口**：P1 的净效果是「非超管进不去」换成「全体登录用户可读可写」，**P2（后端补码 + 补角色绑定）仍为主体剩余工作**，且衍生出 **I204**（P1，安全债 Open）。
 - 未核实：生产环境 `sys_permission` / `sys_role_permission` 是否与本机一致（若生产已补码，结论需重估）。
 - 未核实：`init_attendance.sql:112-119` 在生产部署链路中是否被执行（I185 §1.5 已记录该脚本列名与运行期表结构不符）。
 - 未触达 `/dashboard`、`/mh/visual`、`/mh/consent` 三个已验收页面（D2 已明确本期不动）。

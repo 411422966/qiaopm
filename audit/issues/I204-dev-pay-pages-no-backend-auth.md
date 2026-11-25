@@ -311,7 +311,7 @@ I202 §5 P1 改动清单中，D1（`dev:access` 16 处）与 D3（`pay:order` 5 
 - 本 Issue 结论来自**前端路由静态梳理** + **后端注解静态统计** + **运行期三账号实测**（登录载荷 + 17 个读端点 + 4 个 IoT 对照端点 + **2 个写端点含 DB 落库核验**）+ **`sys_permission` / `sys_role_permission` / `sys_role` 实查**。
 - **本轮为验证「写操作无门槛」，在开发库执行了 3 次写探测**：`POST /gray/flag`（创建 1 行）、`POST /gray/flag/{key}/toggle`（更新该行）、`POST /risk-control/rule`（进程内 Map 加 1 条）。前两例的 `feature_flag` 探测行**已 DELETE 并核验回到 0 行**（操作前亦为 0 行）；第三例不落 DB，**已于本轮重启 api 容器清空**（重启后 `GET /risk-control/rule/list` 实测 `total=5`，仅剩 5 条默认规则，`I204_PROBE` 已不存在）。**未修改任何业务代码、未执行 DDL、未写 `sys_permission` / `sys_role_permission`。**
 - **未新增可执行脚本**；**未改动除 §1.4 两处探测对象之外的任何业务数据**（`feature_flag` 探测行已清理并核验；`/risk-control` 探测规则已随容器重启清除）。
-- **未打开浏览器**：路由守卫层（登录即见）的最终页面表现属**代码级推论**，运行期以「登录载荷 + 端点实测」双证据支撑 → 页面级仍标 **UNVERIFIED**，需人工浏览器复核。
+- **已打开浏览器**（2026-11-25，§1.3.1）：路由守卫层（登录即见）的最终页面表现已由**浏览器端到端实测**确认 —— `clerk01` 对 11 个敏感/开发域页面全部正常进入且有数据渲染 → **页面级由 UNVERIFIED 升为 VERIFIED**（零门禁）。**本条未改业务代码，未做页面级写操作。**
 - **敏感数据维度的实际内容泄露范围 UNVERIFIED**：本轮仅验证「端点返回 200」，**未逐字段核验响应体是否含跨域敏感数据**（如 `/hipaa/key/list` 是否回显密钥明文、`/fiscal/config/list` 是否含税号/渠道凭据、`/intl-payment/gateways` 是否含商户密钥）→ 需专项复核。
 - **未核实**：生产环境 `sys_permission` / `sys_role_permission` 是否与本机一致；若生产已为这些 Controller 补过码，本条结论需重估。
 - 本轮**未修改** `audit/issues/issue-register.md` 与 `audit/issues/I202-frontend-permission-code-drift-full.md`（治理基线文件，规则 18，需单独批准）—— 已在获批后同步落盘。
