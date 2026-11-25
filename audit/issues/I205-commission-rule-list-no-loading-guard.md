@@ -157,7 +157,7 @@
 | 首屏体验 | ⚠ **受影响** —— 「暂无提成规则」在数据到达前必然出现，无 loading 指示，用户易误判为「该门店没有提成规则」 |
 | 错误可观测性 | ⚠ **受影响（已确认事实）** —— F6 catch 仅 `console.error`，**加载失败与无数据同形，用户与排查者均无法区分**；F10 的全局 toast 是唯一提示，且不指向页面状态 |
 | 权限 / 数据泄露 | ✅ 不受影响 —— 后端 `CommissionController.java:100-101` 的 `GET /commission/rules/list` 有 `@RequirePermission("commission:rule:list")` 兜底 |
-| 波及范围 | ⚠ **已逐页初筛**（§2.6）：7 个同型候选中 **4 个确认吞错同型**（`rule-list.vue` / `care-overview.vue` / `RfmHistoryChart.vue` / `dashboard.vue`），**3 个非吞错形态**（`cohort/index.vue` / `spa-scene/index.vue` / `ResultPanel.vue`，仅缺 loading 守卫）；`dashboard.vue` 属已验证页面，**不得改动**。**是否另立「前端错误处理规范」Issue 待用户决策**（本条**不预设**） |
+| 波及范围 | ⚠ **已逐页初筛**（§2.6）：7 个同型候选中 **4 个确认吞错同型**（`rule-list.vue` / `care-overview.vue` / `RfmHistoryChart.vue` / `dashboard.vue`），**3 个非吞错形态**（`cohort/index.vue` / `spa-scene/index.vue` / `ResultPanel.vue`，仅缺 loading 守卫）；`dashboard.vue` 属已验证页面，**不得改动**。**是否另立「前端错误处理规范」Issue：2026-11-25 用户决策为「不单开」**（决策留痕见 §4.5） |
 
 **规则 10 单列标记**：本条含**「错误被伪装为空态」**（F6 / F10）—— 属独立于「首屏无 loading 守卫」的问题类别，修复时**不可只加 loading 守卫而保留吞错的 catch**。
 
@@ -171,7 +171,7 @@
 | 4.2 | `catch`（`:101-103`）改为：保留错误态变量 + `ElMessage.error('加载失败')` + 页面渲染**独立的失败态**，与空态区分 | F6（已确认事实）/ F10；对应 §3 的规则 10 标记 |
 | 4.3 | 把 `:98` 的动态 import 换成顶层静态 `import request from '@/api/request'` | F7 / §2.7 —— 模块本就静态在依赖图内，动态写法无收益，只多一个 await 边界 |
 | 4.4 | 若受控复现确认首帧假空态仍明显，可在布局层加骨架屏 | H1 / H2（均未确认） |
-| 4.5 | §2.6 中确认同型的 3 个非已验证页面（`crm/care-overview.vue` / `intel/rfm/RfmHistoryChart.vue` / `commission/rule-list.vue`）**是否另立专项 Issue 待用户决策**（本条**不预设**是否单开「前端错误处理规范」类 Issue）；`dashboard.vue` 属已验证页面**仅登记** | §2.6 逐页初筛表 |
+| 4.5 | §2.6 中确认同型的 3 个非已验证页面（`crm/care-overview.vue` / `intel/rfm/RfmHistoryChart.vue` / `commission/rule-list.vue`）**不单开「前端错误处理规范」类 Issue**（2026-11-25 用户决策）；§4.5 的全局约定建议**在修复 I205 时一并落地**（lint 规则 + catch 模板）；**若后续另有 ≥3 个页面需要改 catch，再考虑单开**。`dashboard.vue` 属已验证页面**仅登记** | §2.6 逐页初筛表 + 用户决策（2026-11-25） |
 | 4.6 | 13 处 `await import('@/api/request')` 可在后续治理批次统一改为顶层静态 import | §2.7 已知冗余登记 |
 
 ---
