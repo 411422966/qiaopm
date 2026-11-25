@@ -1,0 +1,88 @@
++----+----------------------+---------------+-------+
+| v  | permission_code      | permission_id | binds |
++----+----------------------+---------------+-------+
+| V1 | crm:care:recipe:list |          1494 |     3 |
+| V1 | iot:alert:edit       |          1549 |     2 |
+| V1 | iot:alert:list       |          1548 |     3 |
+| V1 | iot:data:edit        |          1551 |     2 |
+| V1 | iot:data:list        |          1550 |     3 |
+| V1 | iot:link:edit        |          1480 |     2 |
+| V1 | iot:link:execute     |          1481 |     0 |
+| V1 | iot:link:list        |          1479 |     3 |
+| V1 | iot:rule:edit        |          1553 |     2 |
+| V1 | iot:rule:list        |          1552 |     3 |
+| V1 | spa:scene:edit       |          1565 |     2 |
+| V1 | spa:scene:list       |          1564 |     4 |
++----+----------------------+---------------+-------+
++----+---------+---------------+-----------------+
+| v  | role_id | permission_id | permission_code |
++----+---------+---------------+-----------------+
+| V2 |       4 |          1564 | spa:scene:list  |
+| V2 |       5 |          1479 | iot:link:list   |
+| V2 |       5 |          1480 | iot:link:edit   |
+| V2 |       5 |          1548 | iot:alert:list  |
+| V2 |       5 |          1549 | iot:alert:edit  |
+| V2 |       5 |          1550 | iot:data:list   |
+| V2 |       5 |          1551 | iot:data:edit   |
+| V2 |       5 |          1552 | iot:rule:list   |
+| V2 |       5 |          1553 | iot:rule:edit   |
+| V2 |       5 |          1564 | spa:scene:list  |
+| V2 |       5 |          1565 | spa:scene:edit  |
+| V2 |       6 |          1479 | iot:link:list   |
+| V2 |       6 |          1548 | iot:alert:list  |
+| V2 |       6 |          1550 | iot:data:list   |
+| V2 |       6 |          1552 | iot:rule:list   |
+| V2 |       6 |          1564 | spa:scene:list  |
+| V2 |       8 |          1479 | iot:link:list   |
+| V2 |       8 |          1480 | iot:link:edit   |
+| V2 |       8 |          1548 | iot:alert:list  |
+| V2 |       8 |          1549 | iot:alert:edit  |
+| V2 |       8 |          1550 | iot:data:list   |
+| V2 |       8 |          1551 | iot:data:edit   |
+| V2 |       8 |          1552 | iot:rule:list   |
+| V2 |       8 |          1553 | iot:rule:edit   |
+| V2 |       8 |          1564 | spa:scene:list  |
+| V2 |       8 |          1565 | spa:scene:edit  |
++----+---------+---------------+-----------------+
++----+---------+-------------+-----+
+| v  | role_id | role_code   | cnt |
++----+---------+-------------+-----+
+| V3 |       1 | SUPER_ADMIN | 118 |
+| V3 |       2 | STORE_ADMIN |  47 |
+| V3 |       4 | CLERK       |  55 |
+| V3 |       5 | MANAGER     | 314 |
+| V3 |       6 | BOSS        | 229 |
+| V3 |       7 | OPERATOR    | 105 |
+| V3 |       8 | ADMIN       | 425 |
++----+---------+-------------+-----+
++----+-------+
+| v  | total |
++----+-------+
+| V4 |  1293 |
++----+-------+
++----------+-----------+---------------+
+| v        | cross_sum | matches_total |
++----------+-----------+---------------+
+| V4-cross |      1293 |             1 |
++----------+-----------+---------------+
++-----------+-------------+
+| v         | orphan_rows |
++-----------+-------------+
+| V5-orphan |           3 |
++-----------+-------------+
++--------+------------+
+| v      | dup_groups |
++--------+------------+
+| V5-dup |          0 |
++--------+------------+
++----+----------------------+-------+
+| v  | permission_code      | binds |
++----+----------------------+-------+
+| V6 | crm:care:recipe:list |     3 |
+| V6 | iot:link:execute     |     0 |
++----+----------------------+-------+
++-----------+-----------------------+
+| v         | inserted_should_be_26 |
++-----------+-----------------------+
+| V7-assert |                    26 |
++-----------+-----------------------+

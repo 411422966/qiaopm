@@ -150,8 +150,8 @@ const routes: RouteRecordRaw[] = [
       { path: 'intel/ltv', name: 'IntelLtv', component: () => import('@/views/intel/ltv.vue'), meta: { title: 'LTV 预测', requiresAuth: true, permission: 'crm:tag' } },
       // M15-03 价格敏感度
       { path: 'intel/price-sensitivity', name: 'IntelPriceSensitivity', component: () => import('@/views/intel/price-sensitivity.vue'), meta: { title: '价格敏感度', requiresAuth: true, permission: 'crm:tag' } },
-      { path: 'mh/visual', name: 'MhVisual', component: () => import('@/views/mh/visual.vue'), meta: { title: '视觉档案', requiresAuth: true, permission: 'mh:visual' } },
-      { path: 'mh/consent', name: 'MhConsent', component: () => import('@/views/mh/consent.vue'), meta: { title: '医美合规', requiresAuth: true, permission: 'mh:consent' } },
+      { path: 'mh/visual', name: 'MhVisual', component: () => import('@/views/mh/visual.vue'), meta: { title: '视觉档案', requiresAuth: true, permission: 'mh.visual' } },
+      { path: 'mh/consent', name: 'MhConsent', component: () => import('@/views/mh/consent.vue'), meta: { title: '医美合规', requiresAuth: true, permission: 'mh.consent' } },
       { path: 'pay/dcep', name: 'PayDcep', component: () => import('@/views/pay/dcep.vue'), meta: { title: '数字人民币', requiresAuth: true, permission: 'sys.dcep' } },
       { path: 'care', name: 'Care', component: () => import('@/views/care/index.vue'), meta: { title: '配方护理建议', requiresAuth: true, permission: 'biz:service-item:list' } },
       { path: 'member-day', name: 'MemberDay', component: () => import('@/views/member-day/index.vue'), meta: { title: '会员日自动化', requiresAuth: true, permission: 'mkt:activity' } },
@@ -164,7 +164,7 @@ const routes: RouteRecordRaw[] = [
       { path: 'ltv-churn', name: 'LtvChurn', component: () => import('@/views/ltv-churn/index.vue'), meta: { title: 'LTV/Churn 分析', requiresAuth: true, permission: 'crm:tag' } },
       { path: 'iot', name: 'Iot', component: () => import('@/views/iot/index.vue'), meta: { title: 'IoT 设备管理', requiresAuth: true } },
       { path: 'kiosk', name: 'Kiosk', component: () => import('@/views/kiosk/index.vue'), meta: { title: '自助 Kiosk', requiresAuth: true, permission: 'booking:list' } },
-      { path: 'complication', name: 'Complication', component: () => import('@/views/complication/index.vue'), meta: { title: '并发症 SOP', requiresAuth: true, permission: 'mh:consent' } },
+      { path: 'complication', name: 'Complication', component: () => import('@/views/complication/index.vue'), meta: { title: '并发症 SOP', requiresAuth: true, permission: 'mh.consent' } },
       // [SHELL-INTENTIONAL] Cohort 队列随 RFM 幽灵功能一并暂时摘除。
       // 注意：后端 CohortController 实际存在且接口可用，本摘除仅按用户 2026-11-04 决策执行，
       // 可随时恢复（详见 audit/issues/I124-authz-code-system-split.md）。

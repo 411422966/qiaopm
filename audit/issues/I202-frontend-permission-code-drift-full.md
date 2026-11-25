@@ -1,8 +1,8 @@
-# I202 — 前后端权限码漂移（全量口径）：22 个前端码不在 `sys_permission`，44 条路由对非超管永久 403
+# I202 — 前后端权限码漂移（全量口径）：19 个前端码不在 `sys_permission`，41 条路由对非超管永久 403（D2 修复后）
 
 > **状态**：**Partial**（P1 前端已落地并**页面级部分 VERIFIED**：dev/pay 12 页 + I203 admin 路径 + manager01 考勤/提成 7 页（2026-11-25 补测，见 §7.2）；**P2 后端补码/补绑定未做**，且 P1 落地衍生出 **I204** 安全债 Open）
 > **严重度**：**P0**
-> **P0 理由**：22 码 × 44 路由，考勤 5 页 + 提成 2 页对所有非超管角色（含店长/老板）永久不可达，属核心业务功能阻断
+> **P0 理由**：19 码 × 41 路由（D2 修复后口径；D2 修复前为 22 码 × 44 路由），考勤 5 页 + 提成 2 页对所有非超管角色（含店长/老板）永久不可达，属核心业务功能阻断
 > **发现日期**：2026-11-23（I185 全量复扫）
 > **登记人**：Cursor
 > **绑定基线**：HEAD `ac5fdbe`
@@ -17,8 +17,8 @@
 ## 0. 一句话描述
 
 I185 只覆盖了「考勤 / 提成」切片（8 个码）；本轮对前端 `router/index.ts` **全部 147 处 `meta.permission`（94 个去重码）**逐码与运行期 `sys_permission`（510 行 / 510 去重码）比对，
-实测 **22 个前端码在库中完全不存在**（含 `dev:access`、`pay:order`、`org:*`、`mh:*`、`employee:attendance*` 等），
-覆盖 **44 条路由**（2026-11-24 复核修正：原写「约 28 条」为误记；实际经 `router/index.ts` 逐码正则匹配 + 去重行号实测 = **44 条**，逐码命中行号见 §1.2 表「受影响路由数」列，44 个行号互不重复）→ 前端守卫 `hasPermission()` 恒为 `false` → 这些页面**对所有非超管角色永久 403**。
+实测 **22 个前端码在库中完全不存在**（D2 修复前的历史基线；含 `dev:access`、`pay:order`、`org:*`、`mh:*`、`employee:attendance*` 等）→ **D2 方案 A 落地（2026-11-26）后，`mh:visual` / `mh:consent` 两码随前端 `meta.permission` 改用点号码而解除，剩余 19 个前端码仍不在库中**，
+覆盖 **44 条路由**（D2 修复前的历史基线；2026-11-24 复核修正：原写「约 28 条」为误记；实际经 `router/index.ts` 逐码正则匹配 + 去重行号实测 = **44 条**，逐码命中行号见 §1.2 表「受影响路由数」列，44 个行号互不重复）→ **D2 修复扣除 `:153` / `:154` / `:167` 共 3 条 mh 路由 → 剩余 41 条路由仍永久 403** → 前端守卫 `hasPermission()` 恒为 `false` → 这些页面**对所有非超管角色永久 403**。
 
 同时实测推翻 I185 的两个前提（`commission:simulation` 实际存在；I183 的「`attendance:*` 9 码绑定数全 0」已过期，**现全部绑定 2–5 个角色**）。
 
@@ -38,7 +38,7 @@ I185 只覆盖了「考勤 / 提成」切片（8 个码）；本轮对前端 `ro
 
 > **结论**：前端权限码**只有路由 `meta.permission` 一处来源**；P1 改码的**影响面 = 94 个码 / 147 处路由**，无第二处需要同步。
 
-### 1.2 22 个缺失前端码（DB 实查清单）
+### 1.2 19 个缺失前端码（DB 实查清单；D2 修复后剩余 19 个前端码 / 41 条路由）
 
 比对方式：`router/index.ts` 提取 94 个去重码 → 与 `SELECT permission_code FROM sys_permission WHERE deleted=0`（510 行）逐码比对。
 
@@ -56,8 +56,8 @@ I185 只覆盖了「考勤 / 提成」切片（8 个码）；本轮对前端 `ro
 | 10 | `biz:service-item` | :80、:81、:156 | 3 |
 | 11 | `dcep:hardware-wallet` | :123 | 1 |
 | 12 | `iot:device:manage` | :122 | 1 |
-| 13 | `mh:consent` | :154、:167 | 2 |
-| 14 | `mh:visual` | :153 | 1 |
+| 13 | `mh:consent` | :154、:167（**已由 D2 方案 A 修复，2026-11-26**：前端 meta 改为点号码 `mh.consent`，库 id=1252 绑 role 1/6/8） | 2 |
+| 14 | `mh:visual` | :153（**已由 D2 方案 A 修复，2026-11-26**：前端 meta 改为点号码 `mh.visual`，库 id=1251 绑 role 1/6/8） | 1 |
 | 15 | `org:brand` | :103 | 1 |
 | 16 | `org:hq` | :102 | 1 |
 | 17 | `org:store` | :104 | 1 |
@@ -68,6 +68,8 @@ I185 只覆盖了「考勤 / 提成」切片（8 个码）；本轮对前端 `ro
 | 22 | `dev:access` | :77、:79、:82–87、:163、:165、:172、:173、:175、:183、:184、:185 | 16 |
 
 > `commission:simulation`（:115）**不在本清单** —— 实测**库中存在**（id=1631，type=API，已绑 ADMIN/BOSS/MANAGER 3 角色），见 §1.5 D2。
+
+> **D2 修复后口径说明（2026-11-26）**：D2 方案 A 只改 `router/index.ts` 的 `meta.permission`，**实际修复 2 个码 / 3 条路由**（`mh:visual` :153、`mh:consent` :154、:167）→ **路由口径 44 → 41**；**按码口径 22 → 20**。本文标题 / §0 / §7 R1 采用用户指定的「**19 个前端码 / 41 条路由**」表述，其与按码计的 20 相差 1（源于把 3 条路由记作 3 个码）—— **该差异未确认，待用户确认后统一**（本轮不改写用户指定表述）。
 
 ### 1.3 三类映射关系
 
@@ -121,8 +123,18 @@ I185 只覆盖了「考勤 / 提成」切片（8 个码）；本轮对前端 `ro
 | 前端码 | 后端现状 | 库内近似物 |
 |---|---|---|
 | `dev:access` | **0 个** `dev:*` 后端注解 / 端点 | 库中 6 条 `dev.*` 点号菜单码（`dev.gray-release` / `dev.datahub` / `dev.p1-suite` 等，2 角色 ADMIN+SUPER_ADMIN）+ `dev`（id=1210，4 角色） |
-| `mh:visual` | 前端 **0 个** API 调用（页面为纯前端计算） | `mh.visual`（id=1251，3 角色） |
-| `mh:consent` | `MhConsentH5Controller` **全类无注解** | `mh.consent`（id=1252，3 角色） |
+| `mh:visual` | 前端 **17 处** API 调用点 / 去重 **14 个端点**（**原写「0 个 API 调用（纯前端计算）」有误，见 §1.3 E1**）；后端 `VisualArchiveService` 19 个方法级端点 **0 个** `@RequirePermission` | `mh.visual`（id=1251，3 角色） |
+| `mh:consent` | `MhConsentH5Controller` **全类无注解**（0 注解属实，但**并非免登录**：实测无 token 调 `sign-link` 返回 401，见 §1.3 E2） | `mh.consent`（id=1252，3 角色） |
+
+#### E 类：既有结论的实测更正（2026-11-26 复核，事实被推翻的 3 条）
+
+| # | 原结论位置 | 原结论 | 实测更正 | 证据 |
+|---|---|---|---|---|
+| **E1** | §1.3 C 类：`mh:visual` 前端 **0 个** API 调用（页面为纯前端计算） | **错误** | `frontend/meiyetec-web/src/views/mh/visual.vue` 共 **17 处** `http.get/post` 调用点（`:1119,1142,1167,1200,1223,1274,1295,1308,1347,1365,1535,1548,1604,1612,1627,1643,1666`），去重 **14 个端点**，全部指向 `VisualArchiveService`（`/mh/visual`，19 个方法级端点，**0 个 `@RequirePermission`**） | 前端源码 grep（`Select-String 'http\.(get\|post\|put\|delete)\('`） |
+| **E2** | §1.3 C 类：`mh:consent` 后端 `MhConsentH5Controller` 全类无注解 | **需精确化**：0 注解属实，但「免登录」与实测不符 | `MhConsentH5Controller.java:32,43,93` 确实 **0 个** `@RequirePermission`；但 `WebConfig.java:26-53` 的 JWT 放行白名单**未排除** `/mh/consent/**` → 实测 `GET /mh/consent/sign-link/xxx`（无 token）= **401** | `WebConfig.java` + 运行期 401 实测 |
+| **E3** | §3.1 D2 行：改码后 ADMIN/BOSS/SUPER_ADMIN 仍 403 | **不准确** | `mh:visual` 菜单项对 BOSS(6) 同样可见（`boss01` 登录载荷中即含 `mh.visual`），403 的唯一原因是前端写的是库中不存在的 `mh:visual` → 精确表述：`admin` 200，**`boss01` / `manager01` / `clerk01` / `operator01` 全 403** | 运行期登录载荷 + 端点探测 |
+
+> **E1 / E2 的共同含义**：`/mh/visual` 与 `/mh/consent` 并非「无后端调用面 / 免登录」的只读页面，**D2 方案 A 落地后前端守卫将成为这两页的唯一门禁**（后端 0 个 `@RequirePermission`）—— 该风险独立登记为 **I206**（见 `audit/issues/I206-mh-visual-consent-complication-no-backend-auth.md`）。
 
 ### 1.4 权限码链路（同源不同名，**不是两套体系**）
 
@@ -187,7 +199,7 @@ I185 只覆盖了「考勤 / 提成」切片（8 个码）；本轮对前端 `ro
 | # | 主题 | 拍板结论 | 落地方式 |
 |---|---|---|---|
 | **D1** | `dev:access`（16 处） | **去掉 `permission` meta**，视为「登录即见」；**不**补入库、**不**绑 ADMIN | 依据：后端**无任何** `dev:*` 端点或注解，保留该码 = 永远 403 |
-| **D2** | `mh:visual` / `mh:consent` | **本期不动**（用户已验收页面，禁止主动修改），标记为已知限制 | 遗留：`/mh/visual`(:153)、`/mh/consent`(:154)、`/complication`(:167) 三条路由对非 ADMIN/BOSS/SUPER_ADMIN 仍 403（库中 `mh.visual`/`mh.consent` 为点号码、绑 3 角色，改法见 P2） |
+| **D2** | `mh:visual` / `mh:consent` | **已修复（D2 方案 A，commit 待填）** —— 前端 meta 由冒号改为点号码（`mh:visual`→`mh.visual`、`mh:consent`→`mh.consent`），与库内既有码一致；**仅改 `router/index.ts` 的 `meta.permission`，不触碰 `views/mh/visual.vue` / `views/mh/consent.vue` 页面代码** | 落地：`router/index.ts` :153 / :154 / :167 三行。库中 `mh.visual`(id=1251) / `mh.consent`(id=1252) 绑 role 1(SUPER_ADMIN) / 6(BOSS) / 8(ADMIN) → **BOSS(6) 放行**（原「对 ADMIN/BOSS/SUPER_ADMIN 仍 403」表述不准确，见 §1.3 E3），MANAGER / CLERK / OPERATOR 仍 403（属预期） |
 | **D3** | `pay:order`（5 处） | **方案 A：去掉 `permission` meta**（用户原建议「拆 3 个后端码」经实测**证伪**） | 依据见 §3.1.1 |
 | **D4** | `commission/rules` 路由重名 | **保留 `:58`**（列表页）；`:114` 改为 `path: 'commission/rules/config'` + `name: 'CommissionRulesConfig'` | **必须同步**改 `rule-list.vue:7`、`:40` 的 `$router.push('/commission/rules')` → `/commission/rules/config`（这两处本就指向「配置模式」按钮）→ 共 **3 文件 3 处**。`:114` 的 `meta.permission` 同时由 `commission:rule:config` 换为 **`commission:rule:edit`**（库 id=1121，绑 3 角色 ADMIN,BOSS,MANAGER） |
 | **D5** | 独立缺陷 | 5a 前端 `/commission/rule`（单数）→ 后端 `/commission/rules`（复数）**在 I185 内一并修**；5b `/commission/simulation` 404 **不另开新 issue**（编号 I203 已分配给 SPA 场景 URL 双前缀缺陷，见 `audit/issues/I203-spa-scene-url-prefix-double-api.md`；本项已被 I187 G7/G8 + I199 完整覆盖，改在 I187 补交叉引用）；5c 「admin 权限码 0 条」**不另开 I204**（原假设证伪，见 §6） | — |
@@ -435,7 +447,7 @@ index f38ec9d..fb6a911 100644
 
 | # | 风险 | 触发条件 | 影响 |
 |---|---|---|---|
-| R1 | **22 码 × 44 路由永久 403** | 非超管访问 | 考勤 5 页 + `employee:level:evaluation` 1 页 + 提成 2 页 + `dev` 16 页 + `pay:order` 5 页 + `org` 3 页 + `mh` 3 页 + `biz:service-item` 3 处 + `spa-scene` 1 页 + 其余 5 页 **不可达**（合计 44 条；**提成 2 页**而非 3 页 —— `commission/simulation`(:115) 的码库中存在且已绑 3 角色，不在 22 码清单内，见 §1.2 注） |
+| R1 | **19 码 × 41 路由永久 403（D2 修复后）** | 非超管访问 | 考勤 5 页 + `employee:level:evaluation` 1 页 + 提成 2 页 + `dev` 16 页 + `pay:order` 5 页 + `org` 3 页 + `biz:service-item` 3 处 + `spa-scene` 1 页 + 其余 5 页 **不可达**（合计 41 条 = 44 − 3 条 mh 路由；mh 3 页已由 D2 方案 A 修复，移出本项。**提成 2 页**而非 3 页 —— `commission/simulation`(:115) 的码库中存在且已绑 3 角色，不在 19 码清单内，见 §1.2 注） |
 | R2 | 改码后仍被后端 403（4 个 A 类目标码绑 0 角色） | `dcep:hardware-wallet` / `iot:device:manage` / `payment:overseas:gateway` / `resource:schedule` | 前端与后端**一致地 403** → 非「假门禁」，但页面仍对店长/老板不可用 → 需 P2 补角色绑定 |
 | **R2-1** | `/spa-scene` **保留 `room:list`**（D6）→ 进页后主场景表仍 403 | `spa:scene:list`(id=1564) / `spa:scene:edit`(id=1565) **均绑 0** | 守卫层 `room:list`(1460) 绑 6（STORE_ADMIN,CLERK,MANAGER,BOSS,OPERATOR,ADMIN）→ **manager01 / clerk01 可进页**；但页面主数据端点 `GET /spa-scene/list`、`/{id}/recommend`、`/{id}/slots` 后端注解为 `spa:scene:list`（`SpaSceneModeController.java:26,32,58,72`）→ **绑 0 角色 → 非超管全 403** → **spa:scene:list 绑 0，主场景表仍 403，P2 补绑定**。**前置：I203 前缀修复（`views/spa-scene/index.vue` 7 处去 `/api`）—— ✅ 已落地（见 §7.1）**，双前缀 404 已消除，当前非超管 403 的**唯一原因是本行绑 0 角色**，非 URL 契约漂移 |
 | **R2-2** | `/iot/management` **保留 `iot:link:list`**（D6）→ 页面 4 个 tab 的真实端点均不可用 | device 端点**无** `@RequirePermission`；`iot:rule:list`(1552) / `iot:alert:list`(1548) / `iot:data:list`(1550) **均绑 0** | 守卫层 `iot:link:list`(1479) 本身绑 0 → **非超管连页面都进不去**；即使超管进页，「数据采集 / 联动规则 / 告警中心」三个 tab 的后端注解码（`IotDeviceDataController.java:33`、`IotTriggerRuleController.java:30`、`IotDeviceAlertController.java:31`）**绑 0** → 其他角色全 403 → **页面 4 个 tab 真实端点（device 无注解、rule/alert/data 绑 0）均不可用，P2 补绑定** |

@@ -1,0 +1,45 @@
+﻿login manager01 -> token=OK
+login boss01 -> token=OK
+login clerk01 -> token=OK
+login operator01 -> token=OK
+login admin -> token=OK
+---- SPA-SCENE (spa:scene:list -> role 4,5,6,8) ----
+manager01   GET    /spa-scene/list                            -> HTTP 200
+boss01      GET    /spa-scene/list                            -> HTTP 200
+clerk01     GET    /spa-scene/list                            -> HTTP 200
+operator01  GET    /spa-scene/list                            -> HTTP 403
+admin       GET    /spa-scene/list                            -> HTTP 200
+---- IOT READ (iot:rule/alert/data/link:list -> role 5,6,8) ----
+manager01   GET    /iot/rule/list                             -> HTTP 200
+boss01      GET    /iot/rule/list                             -> HTTP 200
+clerk01     GET    /iot/rule/list                             -> HTTP 403
+operator01  GET    /iot/rule/list                             -> HTTP 403
+admin       GET    /iot/rule/list                             -> HTTP 200
+manager01   GET    /iot/alert/list                            -> HTTP 200
+boss01      GET    /iot/alert/list                            -> HTTP 200
+clerk01     GET    /iot/alert/list                            -> HTTP 403
+operator01  GET    /iot/alert/list                            -> HTTP 403
+admin       GET    /iot/alert/list                            -> HTTP 200
+manager01   GET    /iot/data/list                             -> HTTP 200
+boss01      GET    /iot/data/list                             -> HTTP 200
+clerk01     GET    /iot/data/list                             -> HTTP 403
+operator01  GET    /iot/data/list                             -> HTTP 403
+admin       GET    /iot/data/list                             -> HTTP 200
+manager01   GET    /iot/device/link/list                      -> HTTP 200
+boss01      GET    /iot/device/link/list                      -> HTTP 200
+clerk01     GET    /iot/device/link/list                      -> HTTP 403
+operator01  GET    /iot/device/link/list                      -> HTTP 403
+admin       GET    /iot/device/link/list                      -> HTTP 200
+---- IOT WRITE / EXECUTE ----
+manager01   POST   /iot/device/link/execute                   -> HTTP 403
+boss01      POST   /iot/device/link/execute                   -> HTTP 403
+clerk01     POST   /iot/device/link/execute                   -> HTTP 403
+operator01  POST   /iot/device/link/execute                   -> HTTP 403
+admin       POST   /iot/device/link/execute                   -> HTTP 200
+---- MH (D2 dot-code pages) ----
+manager01   GET    /mh/visual/archive/page                    -> HTTP 200
+boss01      GET    /mh/visual/archive/page                    -> HTTP 200
+admin       GET    /mh/visual/archive/page                    -> HTTP 200
+manager01   GET    /mh/consent/stats                          -> HTTP 200
+boss01      GET    /mh/consent/stats                          -> HTTP 200
+admin       GET    /mh/consent/stats                          -> HTTP 200
