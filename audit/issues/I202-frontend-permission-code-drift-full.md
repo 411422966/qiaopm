@@ -426,6 +426,8 @@ index f38ec9d..fb6a911 100644
    **明确记入（2026-11-24）**：`:58` 与 `:114` 渲染同一组件 `rules.vue`，本次仅修重名与权限码，**未合并页面**，属**已知冗余**。
 7. **改动来源未经报告**：2026-11-24 I202 P1 / I203 的代码改动在本轮实施前已存在于工作区，来源未经报告；本轮通过 blob hash（router `862efb9..f58ab63`）+ numstat（41/3/3/7）+ 残留检索三项证据确认与批准内容逐字一致后提交。若为会话前段 Cursor 所为，轮次编号 **UNVERIFIED**。
 8. **流程偏差：状态文本由 Cursor 自行拟定即落盘（同类第 4 次）**：2026-11-25 I202 / I203 / `issue-register.md` 状态回写 + 新增 §7.1 / §4.1 / §1.3.1 时，用户消息中的状态文本为**占位符**（「文本见用户提供」），Cursor **自行拟定措辞并直接落盘，未经逐字确认**。用户已于事后追认内容，但**流程违规成立**（违反项目规则 18 + 用户当轮「先贴文本待批」的要求）。**前 3 次同类偏差见 `I198-*.md` §D-3.18（2026-11-18，L125 + L3）与 `issue-register.md` L126（2026-11-22、2026-11-23 两次，汇总见 I198 §D-3.31）**；本条为**第 4 次**。**强制延续**：治理保护文件今后必须「先贴最终行文本 → 用户逐字确认 → 再写入 → 写入后立即贴 `git diff` 原文」。
+9. **Issue 文件名必须反映最终结论，不能反映初步假设**（2026-11-25）：I205 最初按初步假设命名为 `I205-commission-rule-list-async-race.md`（竞态），但静态定位后结论是「**首帧必然空态 + 失败被吞 → 设计缺陷，非竞态**」，文件名已改为 `I205-commission-rule-list-no-loading-guard.md`。**强制延续**：Issue 标题 / 文件名在结论收敛后必须复核一次；假设与结论不一致时，以结论命名，并在正文标注原名与改名理由。
+10. **`await import('@/api/request')` 动态导入写法属已知冗余**（2026-11-25 I205 §2.7 登记）：**13 处 / 7 文件**（`commission/rule-list.vue`、`commission/rules.vue`×3、`commission/simulation.vue`×2、`crm/care-suggestion.vue`、`material/binding.vue`×2、`material/expiry-tracking.vue`×2、`material/statistics.vue`）使用动态导入，但 `request.ts` **早已在静态依赖图内**（`rule-list.vue:83` → `commission-rule.ts:1` → `import request from './request'`）→ **动态写法无收益**，只额外引入一个 chunk 边界与一个 `await` 边界（并拉长首帧空窗）。**强制延续**：新增页面调用 `request` 一律用顶层静态 `import`；动态 import 仅在确有拆包诉求处使用。
 
 ---
 
@@ -503,7 +505,7 @@ index f38ec9d..fb6a911 100644
 
 > 📌 第 3 / 4 项的「空表 / 统计全 0」经端点直查确认**均为 HTTP 200 + 空载荷**，**不是 403 降级**；数据缺失属 `attendance_leave` / `attendance_record` 在本机的实际数据分布，不属本 Issue 范围。
 > ⚠ 第 6 / 7 / 8 项**未执行任何写操作**（新增 / 编辑 / 删除规则）→ 验收第 6 项（复数路径的写请求）仍标 **UNVERIFIED**（规则 20 写操作需隔离夹具，本轮未做）。
-> 📌 另发现 rule-list 首次渲染空态（刷新正常）的前端异步竞态，属独立缺陷，见 I205。
+> 📌 另发现 rule-list 首次渲染空态（刷新正常）的前端**首屏无 loading 守卫 + 错误被吞**缺陷，属独立缺陷，见 **I205**（`audit/issues/I205-commission-rule-list-no-loading-guard.md`，2026-11-25 由 `I205-commission-rule-list-async-race.md` 改名 —— 结论为「非竞态，是设计缺陷」）。
 
 ---
 
