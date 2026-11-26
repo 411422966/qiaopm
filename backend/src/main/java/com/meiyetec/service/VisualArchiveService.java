@@ -2,6 +2,7 @@ package com.meiyetec.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meiyetec.annotation.RequirePermission;
+import com.meiyetec.dto.BatchIdsRequest;
 import com.meiyetec.entity.*;
 import com.meiyetec.exception.BizCode;
 import com.meiyetec.mapper.*;
@@ -274,9 +275,8 @@ public class VisualArchiveService {
     @PostMapping("/archive/batch-analyze")
     @Transactional(rollbackFor = Exception.class)
     @RequirePermission("mh:visual:edit")
-    public Result<Void> batchAnalyzeArchives(@RequestBody Map<String, Object> body) {
-        @SuppressWarnings("unchecked")
-        List<Long> ids = (List<Long>) body.get("ids");
+    public Result<Void> batchAnalyzeArchives(@RequestBody BatchIdsRequest req) {
+        List<Long> ids = req.getIds();
         if (ids == null || ids.isEmpty()) {
             return Result.error(BizCode.BAD_REQUEST, "ids 不能为空");
         }
@@ -301,10 +301,9 @@ public class VisualArchiveService {
     @PostMapping("/archive/batch-revoke")
     @Transactional(rollbackFor = Exception.class)
     @RequirePermission("mh:visual:revoke-batch")
-    public Result<Void> batchRevokeArchives(@RequestBody Map<String, Object> body) {
-        @SuppressWarnings("unchecked")
-        List<Long> ids = (List<Long>) body.get("ids");
-        String reason = (String) body.get("reason");
+    public Result<Void> batchRevokeArchives(@RequestBody BatchIdsRequest req) {
+        List<Long> ids = req.getIds();
+        String reason = req.getReason();
         
         if (ids == null || ids.isEmpty()) {
             return Result.error(BizCode.BAD_REQUEST, "ids 不能为空");
