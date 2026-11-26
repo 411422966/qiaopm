@@ -1,6 +1,6 @@
 # I211 — `/mh/visual/archive/batch-analyze` 与 `batch-revoke` 在权限通过后恒抛 `ClassCastException`（HTTP 200 + code 500 假成功）
 
-> **状态**：**Open（仅登记，不修）**
+> **状态**：**Fixed（2026-11-27，commit `a337c0b`）** —— 两个方法改为强类型 `BatchIdsRequest` DTO，由 Jackson 直接完成 `Integer → Long` 宽化；7 条验证用例全过（`ids=[99999999]` 由 code 500 → 200，决定性对照）
 > **严重度**：**P1**
 > **P1 理由**：两个**批量操作按钮对所有用户恒失败**，且失败以 **HTTP 200 + `body.code=500`** 的「假成功」形态返回 —— 前端若只看 HTTP 状态码会误判为成功。本批 F175 首轮 205 端点验证矩阵正是因此把这两个端点误判为 PASS（详见 §3），属规则 10「假成功必须单独标记」的典型案例。
 > **发现日期**：2026-11-26（F175 批次 —— 41 处 `@RequirePermission` 落地后的独立复验阶段）
@@ -117,7 +117,14 @@ java.lang.ClassCastException: class java.lang.Integer cannot be cast to class ja
 
 ---
 
-## 4. 修复方向（不在本批范围）
+## 4. 修复方案（2026-11-27 已实施，commit `a337c0b`）
+
+> **实际采用**：方案 1（强类型 DTO）。新增 `dto/BatchIdsRequest.java`（`List<Long> ids` + `String reason`），两个方法签名由 `@RequestBody Map<String, Object>` 改为 `@RequestBody BatchIdsRequest`，删除两处 `@SuppressWarnings("unchecked")` 与强制转换。前端零改动（JSON 结构不变）。
+>
+> **验证结果**：7/7 通过 —— `[99999999]` 200（原 500）、`[9999999999]` 200、`[]` 400、`{}` 400、`revoke+reason` 200（原 500）、`revoke 无 reason` 200、`operator01` 403。**用例 8（真实 id 实际执行批量操作）未做，标 UNVERIFIED。**
+>
+> **以下为原始方案记录（保留）**：
+
 
 优先级从高到低：
 
