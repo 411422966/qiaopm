@@ -1,0 +1,363 @@
+﻿diff --git a/backend/src/main/java/com/meiyetec/service/ComplicationService.java b/backend/src/main/java/com/meiyetec/service/ComplicationService.java
+index c76f069..4365845 100644
+--- a/backend/src/main/java/com/meiyetec/service/ComplicationService.java
++++ b/backend/src/main/java/com/meiyetec/service/ComplicationService.java
+@@ -1,6 +1,7 @@
+ package com.meiyetec.service;
+ 
+ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
++import com.meiyetec.annotation.RequirePermission;
+ import com.meiyetec.entity.ComplicationEvent;
+ import com.meiyetec.entity.ComplicationSop;
+ import com.meiyetec.exception.BizCode;
+@@ -33,6 +34,7 @@ public class ComplicationService {
+     // ====================================================================
+ 
+     @PostMapping("/sop")
++    @RequirePermission("complication:manage")
+     public Result<ComplicationSop> createSop(@RequestBody ComplicationSop s) {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+         if (s.getSopCode() == null || s.getSopName() == null)
+@@ -46,6 +48,7 @@ public class ComplicationService {
+     }
+ 
+     @GetMapping("/sop/list")
++    @RequirePermission("complication:list")
+     public Result<List<ComplicationSop>> listSops() {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+         return Result.success(sopMapper.selectList(new LambdaQueryWrapper<ComplicationSop>()
+@@ -55,6 +58,7 @@ public class ComplicationService {
+ 
+     @PostMapping("/sop/init-default")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("complication:manage")
+     public Result<Map<String, Object>> initDefault() {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+         List<Map<String, Object>> defaults = List.of(
+@@ -99,6 +103,7 @@ public class ComplicationService {
+ 
+     @PostMapping("/event")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("complication:report")
+     public Result<ComplicationEvent> createEvent(@RequestBody ComplicationEvent e) {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+         if (e.getMemberId() == null) return Result.error(BizCode.BAD_REQUEST, "memberId 蹇呭～");
+@@ -113,6 +118,7 @@ public class ComplicationService {
+     }
+ 
+     @GetMapping("/event/list")
++    @RequirePermission("complication:list")
+     public Result<List<ComplicationEvent>> listEvents(@RequestParam(required = false) String status,
+                                                     @RequestParam(required = false) String severity) {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+@@ -125,6 +131,7 @@ public class ComplicationService {
+     }
+ 
+     @PostMapping("/event/{id}/status")
++    @RequirePermission("complication:manage")
+     public Result<Void> updateEventStatus(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+         ComplicationEvent e = eventMapper.selectById(id);
+         if (e == null) return Result.error(BizCode.NOT_FOUND, "浜嬩欢涓嶅瓨鍦?);
+@@ -140,6 +147,7 @@ public class ComplicationService {
+     }
+ 
+     @GetMapping("/dashboard")
++    @RequirePermission("complication:list")
+     public Result<Map<String, Object>> dashboard() {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+         Map<String, Object> data = new LinkedHashMap<>();
+diff --git a/backend/src/main/java/com/meiyetec/service/ConsentAndDrugDeviceService.java b/backend/src/main/java/com/meiyetec/service/ConsentAndDrugDeviceService.java
+index f26900b..76cd10e 100644
+--- a/backend/src/main/java/com/meiyetec/service/ConsentAndDrugDeviceService.java
++++ b/backend/src/main/java/com/meiyetec/service/ConsentAndDrugDeviceService.java
+@@ -2,6 +2,7 @@ package com.meiyetec.service;
+ 
+ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+ import com.fasterxml.jackson.databind.ObjectMapper;
++import com.meiyetec.annotation.RequirePermission;
+ import com.meiyetec.entity.*;
+ import com.meiyetec.exception.BizCode;
+ import com.meiyetec.mapper.*;
+@@ -47,6 +48,7 @@ public class ConsentAndDrugDeviceService {
+     // ====================================================================
+ 
+     @PostMapping("/consent/template")
++    @RequirePermission("mh:consent:edit")
+     public Result<MhConsentTemplate> createTemplate(@RequestBody MhConsentTemplate t) {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+         if (t.getTemplateCode() == null || t.getTemplateName() == null)
+@@ -61,6 +63,7 @@ public class ConsentAndDrugDeviceService {
+     }
+ 
+     @GetMapping("/consent/template/list")
++    @RequirePermission("mh.consent")
+     public Result<List<Map<String, Object>>> templateList(@RequestParam(required = false) String templateType,
+                                                           @RequestParam(required = false) Long projectId) {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+@@ -89,6 +92,7 @@ public class ConsentAndDrugDeviceService {
+     }
+ 
+     @GetMapping("/consent/template/{id}")
++    @RequirePermission("mh.consent")
+     public Result<MhConsentTemplate> templateDetail(@PathVariable Long id) {
+         MhConsentTemplate t = consentTplMapper.selectById(id);
+         if (t == null) return Result.error(BizCode.NOT_FOUND, "妯℃澘涓嶅瓨鍦?);
+@@ -101,6 +105,7 @@ public class ConsentAndDrugDeviceService {
+ 
+     @PostMapping("/consent/sign")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:consent:edit")
+     public Result<Map<String, Object>> sign(@RequestBody Map<String, Object> body) {
+         Long memberId = body.get("memberId") == null ? null : ((Number) body.get("memberId")).longValue();
+         Long templateId = body.get("templateId") == null ? null : ((Number) body.get("templateId")).longValue();
+@@ -174,6 +179,7 @@ public class ConsentAndDrugDeviceService {
+      * tenantId 浠庣櫥褰曟€佸己鍒舵敞鍏ャ€?      */
+     @GetMapping("/consent/stats")
++    @RequirePermission("mh.consent")
+     public Result<Map<String, Object>> consentStats() {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+ 
+@@ -240,6 +246,7 @@ public class ConsentAndDrugDeviceService {
+     }
+ 
+     @GetMapping("/consent/sign/page")
++    @RequirePermission("mh.consent")
+     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> signPage(
+             @RequestParam(defaultValue = "1") int pageNum,
+             @RequestParam(defaultValue = "20") int pageSize,
+@@ -285,6 +292,7 @@ public class ConsentAndDrugDeviceService {
+     }
+ 
+     @PostMapping("/consent/sign/{id}/revoke")
++    @RequirePermission("mh:consent:revoke")
+     public Result<Void> revokeSign(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+         MhConsentSignature s = consentSigMapper.selectById(id);
+         if (s == null) return Result.error(BizCode.NOT_FOUND, "绛剧讲涓嶅瓨鍦?);
+@@ -301,6 +309,7 @@ public class ConsentAndDrugDeviceService {
+     // ====================================================================
+ 
+     @PostMapping("/drug-device")
++    @RequirePermission("mh:consent:edit")
+     public Result<MhDrugDevice> createDrugDevice(@RequestBody MhDrugDevice d) {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+         if (d.getItemCode() == null || d.getItemName() == null)
+@@ -313,6 +322,7 @@ public class ConsentAndDrugDeviceService {
+     }
+ 
+     @GetMapping("/drug-device/list")
++    @RequirePermission("mh.consent")
+     public Result<List<Map<String, Object>>> drugDeviceList(@RequestParam(required = false) String itemType,
+                                                              @RequestParam(required = false) String keyword) {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+@@ -333,6 +343,7 @@ public class ConsentAndDrugDeviceService {
+ 
+     @PostMapping("/drug-device/batch")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:consent:edit")
+     public Result<Map<String, Object>> createBatch(@RequestBody MhDrugDeviceBatch b) {
+         if (b.getDrugDeviceId() == null || b.getBatchNo() == null)
+             return Result.error(BizCode.BAD_REQUEST, "drugDeviceId / batchNo 蹇呭～");
+@@ -366,6 +377,7 @@ public class ConsentAndDrugDeviceService {
+     }
+ 
+     @GetMapping("/drug-device/batch/page")
++    @RequirePermission("mh.consent")
+     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> batchPage(
+             @RequestParam(defaultValue = "1") int pageNum,
+             @RequestParam(defaultValue = "20") int pageSize,
+@@ -418,6 +430,7 @@ public class ConsentAndDrugDeviceService {
+ 
+     @PostMapping("/drug-device/batch/{id}/recall")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:consent:revoke")
+     public Result<Void> recallBatch(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+         MhDrugDeviceBatch b = batchMapper.selectById(id);
+         if (b == null) return Result.error(BizCode.NOT_FOUND, "鎵规涓嶅瓨鍦?);
+@@ -435,6 +448,7 @@ public class ConsentAndDrugDeviceService {
+ 
+     @PostMapping("/drug-device/usage")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:consent:edit")
+     public Result<MhDrugDeviceUsage> recordUsage(@RequestBody Map<String, Object> body) {
+         Long batchId = body.get("batchId") == null ? null : ((Number) body.get("batchId")).longValue();
+         Long orderId = body.get("orderId") == null ? null : ((Number) body.get("orderId")).longValue();
+@@ -483,6 +497,7 @@ public class ConsentAndDrugDeviceService {
+ 
+     @PostMapping("/drug-device/usage/{id}/adverse")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:drugdevice:adverse")
+     public Result<Void> reportAdverse(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+         MhDrugDeviceUsage u = usageMapper.selectById(id);
+         if (u == null) return Result.error(BizCode.NOT_FOUND, "璁板綍涓嶅瓨鍦?);
+@@ -493,6 +508,7 @@ public class ConsentAndDrugDeviceService {
+     }
+ 
+     @GetMapping("/drug-device/usage/page")
++    @RequirePermission("mh.consent")
+     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> usagePage(
+             @RequestParam(defaultValue = "1") int pageNum,
+             @RequestParam(defaultValue = "20") int pageSize,
+diff --git a/backend/src/main/java/com/meiyetec/service/VisualArchiveService.java b/backend/src/main/java/com/meiyetec/service/VisualArchiveService.java
+index 7fde869..6344780 100644
+--- a/backend/src/main/java/com/meiyetec/service/VisualArchiveService.java
++++ b/backend/src/main/java/com/meiyetec/service/VisualArchiveService.java
+@@ -1,6 +1,7 @@
+ package com.meiyetec.service;
+ 
+ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
++import com.meiyetec.annotation.RequirePermission;
+ import com.meiyetec.entity.*;
+ import com.meiyetec.exception.BizCode;
+ import com.meiyetec.mapper.*;
+@@ -48,6 +49,7 @@ public class VisualArchiveService {
+ 
+     @PostMapping("/archive")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:visual:edit")
+     public Result<MhVisualArchive> createArchive(@RequestBody Map<String, Object> body) {
+         Long memberId = body.get("memberId") == null ? null : ((Number) body.get("memberId")).longValue();
+         String archiveType = (String) body.get("archiveType");
+@@ -111,6 +113,7 @@ public class VisualArchiveService {
+     }
+ 
+     @GetMapping("/archive/page")
++    @RequirePermission("mh.visual")
+     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> archivePage(
+             @RequestParam(defaultValue = "1") int pageNum,
+             @RequestParam(defaultValue = "20") int pageSize,
+@@ -154,6 +157,7 @@ public class VisualArchiveService {
+ 
+     @PostMapping("/archive/{id}/revoke")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:visual:revoke")
+     public Result<Void> revokeArchive(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+         MhVisualArchive a = archiveMapper.selectById(id);
+         if (a == null) return Result.error(BizCode.NOT_FOUND, "妗ｆ涓嶅瓨鍦?);
+@@ -166,6 +170,7 @@ public class VisualArchiveService {
+     }
+ 
+     @GetMapping("/archive/stats")
++    @RequirePermission("mh.visual")
+     public Result<Map<String, Object>> archiveStats() {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+         Map<String, Object> stats = new HashMap<>();
+@@ -249,6 +254,7 @@ public class VisualArchiveService {
+ 
+     @PostMapping("/archive/{id}/reanalyze")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:visual:edit")
+     public Result<Void> reanalyzeArchive(@PathVariable Long id) {
+         MhVisualArchive a = archiveMapper.selectById(id);
+         if (a == null) return Result.error(BizCode.NOT_FOUND, "妗ｆ涓嶅瓨鍦?);
+@@ -267,6 +273,7 @@ public class VisualArchiveService {
+ 
+     @PostMapping("/archive/batch-analyze")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:visual:edit")
+     public Result<Void> batchAnalyzeArchives(@RequestBody Map<String, Object> body) {
+         @SuppressWarnings("unchecked")
+         List<Long> ids = (List<Long>) body.get("ids");
+@@ -293,6 +300,7 @@ public class VisualArchiveService {
+ 
+     @PostMapping("/archive/batch-revoke")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:visual:revoke-batch")
+     public Result<Void> batchRevokeArchives(@RequestBody Map<String, Object> body) {
+         @SuppressWarnings("unchecked")
+         List<Long> ids = (List<Long>) body.get("ids");
+@@ -321,6 +329,7 @@ public class VisualArchiveService {
+ 
+     @PostMapping("/compare")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:visual:edit")
+     public Result<MhVisualCompare> createCompare(@RequestBody Map<String, Object> body) {
+         Long memberId = body.get("memberId") == null ? null : ((Number) body.get("memberId")).longValue();
+         Long beforeId = body.get("beforeId") == null ? null : ((Number) body.get("beforeId")).longValue();
+@@ -355,6 +364,7 @@ public class VisualArchiveService {
+     }
+ 
+     @GetMapping("/compare/page")
++    @RequirePermission("mh.visual")
+     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> comparePage(
+             @RequestParam(defaultValue = "1") int pageNum,
+             @RequestParam(defaultValue = "20") int pageSize,
+@@ -399,6 +409,7 @@ public class VisualArchiveService {
+      */
+     @PostMapping("/compare/{id}/review")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:visual:edit")
+     public Result<Void> reviewCompare(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+         MhVisualCompare c = compareMapper.selectById(id);
+         if (c == null) return Result.error(BizCode.NOT_FOUND, "瀵规瘮涓嶅瓨鍦?);
+@@ -417,6 +428,7 @@ public class VisualArchiveService {
+ 
+     @PostMapping("/consent")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:consent:edit")
+     public Result<MhImageConsent> signConsent(@RequestBody Map<String, Object> body) {
+         Long memberId = body.get("memberId") == null ? null : ((Number) body.get("memberId")).longValue();
+         String consentType = (String) body.get("consentType");
+@@ -451,6 +463,7 @@ public class VisualArchiveService {
+     }
+ 
+     @GetMapping("/consent/member/{memberId}")
++    @RequirePermission("mh.consent")
+     public Result<List<MhImageConsent>> memberConsents(@PathVariable Long memberId) {
+         return Result.success(consentMapper.selectList(new LambdaQueryWrapper<MhImageConsent>()
+                 .eq(MhImageConsent::getMemberId, memberId)
+@@ -459,6 +472,7 @@ public class VisualArchiveService {
+ 
+     @PostMapping("/consent/{id}/revoke")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:visual:revoke")
+     public Result<Void> revokeConsent(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+         MhImageConsent c = consentMapper.selectById(id);
+         if (c == null) return Result.error(BizCode.NOT_FOUND, "鎺堟潈涓嶅瓨鍦?);
+@@ -471,6 +485,7 @@ public class VisualArchiveService {
+     }
+ 
+     @GetMapping("/consent/page")
++    @RequirePermission("mh.consent")
+     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> consentPage(
+             @RequestParam(defaultValue = "1") int pageNum,
+             @RequestParam(defaultValue = "20") int pageSize,
+@@ -510,6 +525,7 @@ public class VisualArchiveService {
+     }
+ 
+     @GetMapping("/consent/expiring")
++    @RequirePermission("mh.consent")
+     public Result<Map<String, Object>> expiringConsents() {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+         Map<String, Object> result = new HashMap<>();
+@@ -531,6 +547,7 @@ public class VisualArchiveService {
+ 
+     @PostMapping("/withdraw")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:visual:edit")
+     public Result<MhImageWithdraw> applyWithdraw(@RequestBody Map<String, Object> body) {
+         Long memberId = body.get("memberId") == null ? null : ((Number) body.get("memberId")).longValue();
+         String withdrawScope = (String) body.get("withdrawScope");
+@@ -552,6 +569,7 @@ public class VisualArchiveService {
+ 
+     @PostMapping("/withdraw/{id}/handle")
+     @Transactional(rollbackFor = Exception.class)
++    @RequirePermission("mh:visual:revoke-batch")
+     public Result<Void> handleWithdraw(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+         MhImageWithdraw w = withdrawMapper.selectById(id);
+         if (w == null) return Result.error(BizCode.NOT_FOUND, "鐢宠涓嶅瓨鍦?);
+@@ -581,6 +599,7 @@ public class VisualArchiveService {
+ 
+     /** 鎾ゅ洖鐢宠缁熻锛氳繎7澶╂瘡鏃ユ挙鍥炴暟閲?+ 浠婃棩鏂扮敵璇锋暟 */
+     @GetMapping("/withdraw/stats")
++    @RequirePermission("mh.visual")
+     public Result<Map<String, Object>> withdrawStats() {
+         Long tenantId = TenantContextHolder.get().getTenantId();
+         Map<String, Object> result = new HashMap<>();
+@@ -619,6 +638,7 @@ public class VisualArchiveService {
+     }
+ 
+     @GetMapping("/withdraw/page")
++    @RequirePermission("mh.visual")
+     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> withdrawPage(
+             @RequestParam(defaultValue = "1") int pageNum,
+             @RequestParam(defaultValue = "20") int pageSize,

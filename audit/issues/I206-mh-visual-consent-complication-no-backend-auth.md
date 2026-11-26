@@ -65,6 +65,32 @@
 
 > **未确认**：越权**写入**场景本机未实测（静态可判定注解缺失，运行期未构造）→ 标 UNVERIFIED。
 
+### 2.1 落地后追加（2026-11-26，F175 批次）—— `POST /mh/visual/consent` 的 CLERK 权限缺口（**OPEN，待业务确认**）
+
+> 本节为 F175 批次（41 处 `@RequirePermission` 落地）后对本条 §2 的**追加**，不修改上文原文。
+
+`POST /mh/visual/consent`（`backend/src/main/java/com/meiyetec/service/VisualArchiveService.java:429`，本批注解 **`mh:consent:edit`**）
+在 F175 落地后按码放行，而 **`mh:consent:edit` 只绑 role 5（MANAGER）/ 6（BOSS）/ 8（ADMIN）** —— **CLERK（role 4）不持有该码**。
+
+| 项 | 内容 |
+|---|---|
+| 端点 | `POST /mh/visual/consent`（代客签署图像使用同意书） |
+| 注解码 | `mh:consent:edit`（id 1634） |
+| 持有角色 | role 5 MANAGER / role 6 BOSS / role 8 ADMIN（`sys_role_permission` 实查） |
+| **不持有** | **role 4 CLERK** |
+| 前端调用点 | `frontend/meiyetec-web/src/views/mh/visual.vue:1604`（`signConsent()` → `http.post('/mh/visual/consent', consentForm)`） |
+| 运行期实测 | `clerk01` → **HTTP 403**（`权限不足: 需要权限码：mh:consent:edit`），2026-11-26 21:33 实测 |
+| **状态** | **OPEN —— 待业务确认** |
+
+**待业务确认的问题**：前台是否需要由 **CLERK** 角色代客签署同意书？
+
+- **若需要** → 需回头给 role 4 补绑 `mh:consent:edit`（本批未预绑，因报批清单中 role 4 仅 4 码）；
+- **若不需要** → 当前绑定即为预期，CLERK 遇 403 属正确行为，本条可销账。
+
+> **未确认**：业务方口径未取得 → 本条**保持 OPEN**，不得视为已修复，也不得默认「CLERK 就该被拒」。
+> 该项与 F175 落地的 9 新码 / 31 绑定**无因果关系**（绑定按报批清单执行），是落地后复核「前端调用点 ↔ 角色持有码」匹配度时发现的**待确认项**，非实现缺陷。
+> 证据：`audit/evidence/F175-mh-visual-consent-complication-perm-annotations/evidence.md` §4.7 第 6 条。
+
 ---
 
 ## 3. 修复方向（不在本批范围）

@@ -1,0 +1,15 @@
+﻿id	permission_code	permission_name	permission_type	parent_id	path	icon	sort_order	status	deleted
+1633	mh:visual:edit	瑙嗚妗ｆ缂栬緫	button	1205	NULL	NULL	0	1	0
+1634	mh:consent:edit	鍚堣璁板綍缂栬緫	button	1205	NULL	NULL	0	1	0
+1635	mh:visual:revoke	瑙嗚妗ｆ鍗曟潯鎾ら攢	button	1205	NULL	NULL	0	1	0
+1636	mh:visual:revoke-batch	瑙嗚妗ｆ鎵归噺鎾ら攢	button	1205	NULL	NULL	0	1	0
+1637	mh:consent:revoke	鍚堣璁板綍鎾ら攢	button	1205	NULL	NULL	0	1	0
+1638	mh:drugdevice:adverse	鑽涓嶈壇鍙嶅簲涓婃姤	button	1205	NULL	NULL	0	1	0
+1639	complication:list	骞跺彂鐥囨煡闃?button	0	NULL	NULL	0	1	0
+1640	complication:report	骞跺彂鐥囦笂鎶?button	0	NULL	NULL	0	1	0
+1641	complication:manage	骞跺彂鐥囧缃?button	0	NULL	NULL	0	1	0
+role_id	role_code	codes
+4	CLERK	complication:list,complication:report,mh:drugdevice:adverse,mh.visual
+5	MANAGER	complication:list,complication:manage,complication:report,mh:consent:edit,mh:consent:revoke,mh:drugdevice:adverse,mh:visual:edit,mh:visual:revoke,mh.consent,mh.visual
+6	BOSS	complication:list,complication:manage,complication:report,mh:consent:edit,mh:consent:revoke,mh:drugdevice:adverse,mh:visual:edit,mh:visual:revoke
+8	ADMIN	complication:list,complication:manage,complication:report,mh:consent:edit,mh:consent:revoke,mh:drugdevice:adverse,mh:visual:edit,mh:visual:revoke,mh:visual:revoke-batch

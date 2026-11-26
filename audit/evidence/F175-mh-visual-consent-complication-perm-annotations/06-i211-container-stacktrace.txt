@@ -1,0 +1,15 @@
+﻿
+java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Long (java.lang.Integer and jav
+a.lang.Long are in module java.base of loader 'bootstrap')
+	at com.meiyetec.service.VisualArchiveService.batchRevokeArchives(VisualArchiveService.java:313)
+java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Long (java.lang.Integer and jav
+a.lang.Long are in module java.base of loader 'bootstrap')
+	at com.meiyetec.service.VisualArchiveService.batchRevokeArchives(VisualArchiveService.java:313)
+java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Long (java.lang.Integer and jav
+a.lang.Long are in module java.base of loader 'bootstrap')
+	at com.meiyetec.service.VisualArchiveService.batchAnalyzeArchives(VisualArchiveService.java:284)
+java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Long (java.lang.Integer and jav
+a.lang.Long are in module java.base of loader 'bootstrap')
+	at com.meiyetec.service.VisualArchiveService.batchRevokeArchives(VisualArchiveService.java:313)
+
+

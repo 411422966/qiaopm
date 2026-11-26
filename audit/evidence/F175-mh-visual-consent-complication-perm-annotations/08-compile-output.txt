@@ -1,0 +1,27 @@
+﻿mvn : Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+所在位置 C:\Users\qq411\AppData\Local\Temp\ps-script-193e1baa-97bb-4b4b-8406-295620132cc3.ps1:84 字符: 23
++ cd d:\QiaoPM\backend; mvn -o compile -DskipTests 2>&1 | Out-File -Enc ...
++                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Picked up JAVA_....encoding=UTF-8:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.meiyetec:meiyetec-api >----------------------
+[INFO] Building meiyetec-api 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[WARNING] Parameter 'sourceExcludes' is unknown for plugin 'maven-compiler-plugin:3.11.0:compile (default-compile)'
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ meiyetec-api ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 197 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ meiyetec-api ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.918 s
+[INFO] Finished at: 2026-11-26T21:51:22+08:00
+[INFO] ------------------------------------------------------------------------

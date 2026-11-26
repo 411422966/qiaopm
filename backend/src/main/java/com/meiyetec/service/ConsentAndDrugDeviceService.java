@@ -2,6 +2,7 @@ package com.meiyetec.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.*;
 import com.meiyetec.exception.BizCode;
 import com.meiyetec.mapper.*;
@@ -47,6 +48,7 @@ public class ConsentAndDrugDeviceService {
     // ====================================================================
 
     @PostMapping("/consent/template")
+    @RequirePermission("mh:consent:edit")
     public Result<MhConsentTemplate> createTemplate(@RequestBody MhConsentTemplate t) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (t.getTemplateCode() == null || t.getTemplateName() == null)
@@ -61,6 +63,7 @@ public class ConsentAndDrugDeviceService {
     }
 
     @GetMapping("/consent/template/list")
+    @RequirePermission("mh.consent")
     public Result<List<Map<String, Object>>> templateList(@RequestParam(required = false) String templateType,
                                                           @RequestParam(required = false) Long projectId) {
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -89,6 +92,7 @@ public class ConsentAndDrugDeviceService {
     }
 
     @GetMapping("/consent/template/{id}")
+    @RequirePermission("mh.consent")
     public Result<MhConsentTemplate> templateDetail(@PathVariable Long id) {
         MhConsentTemplate t = consentTplMapper.selectById(id);
         if (t == null) return Result.error(BizCode.NOT_FOUND, "模板不存在");
@@ -101,6 +105,7 @@ public class ConsentAndDrugDeviceService {
 
     @PostMapping("/consent/sign")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:consent:edit")
     public Result<Map<String, Object>> sign(@RequestBody Map<String, Object> body) {
         Long memberId = body.get("memberId") == null ? null : ((Number) body.get("memberId")).longValue();
         Long templateId = body.get("templateId") == null ? null : ((Number) body.get("templateId")).longValue();
@@ -174,6 +179,7 @@ public class ConsentAndDrugDeviceService {
      * tenantId 从登录态强制注入。
      */
     @GetMapping("/consent/stats")
+    @RequirePermission("mh.consent")
     public Result<Map<String, Object>> consentStats() {
         Long tenantId = TenantContextHolder.get().getTenantId();
 
@@ -240,6 +246,7 @@ public class ConsentAndDrugDeviceService {
     }
 
     @GetMapping("/consent/sign/page")
+    @RequirePermission("mh.consent")
     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> signPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -285,6 +292,7 @@ public class ConsentAndDrugDeviceService {
     }
 
     @PostMapping("/consent/sign/{id}/revoke")
+    @RequirePermission("mh:consent:revoke")
     public Result<Void> revokeSign(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         MhConsentSignature s = consentSigMapper.selectById(id);
         if (s == null) return Result.error(BizCode.NOT_FOUND, "签署不存在");
@@ -301,6 +309,7 @@ public class ConsentAndDrugDeviceService {
     // ====================================================================
 
     @PostMapping("/drug-device")
+    @RequirePermission("mh:consent:edit")
     public Result<MhDrugDevice> createDrugDevice(@RequestBody MhDrugDevice d) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (d.getItemCode() == null || d.getItemName() == null)
@@ -313,6 +322,7 @@ public class ConsentAndDrugDeviceService {
     }
 
     @GetMapping("/drug-device/list")
+    @RequirePermission("mh.consent")
     public Result<List<Map<String, Object>>> drugDeviceList(@RequestParam(required = false) String itemType,
                                                              @RequestParam(required = false) String keyword) {
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -333,6 +343,7 @@ public class ConsentAndDrugDeviceService {
 
     @PostMapping("/drug-device/batch")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:consent:edit")
     public Result<Map<String, Object>> createBatch(@RequestBody MhDrugDeviceBatch b) {
         if (b.getDrugDeviceId() == null || b.getBatchNo() == null)
             return Result.error(BizCode.BAD_REQUEST, "drugDeviceId / batchNo 必填");
@@ -366,6 +377,7 @@ public class ConsentAndDrugDeviceService {
     }
 
     @GetMapping("/drug-device/batch/page")
+    @RequirePermission("mh.consent")
     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> batchPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -418,6 +430,7 @@ public class ConsentAndDrugDeviceService {
 
     @PostMapping("/drug-device/batch/{id}/recall")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:consent:revoke")
     public Result<Void> recallBatch(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         MhDrugDeviceBatch b = batchMapper.selectById(id);
         if (b == null) return Result.error(BizCode.NOT_FOUND, "批次不存在");
@@ -435,6 +448,7 @@ public class ConsentAndDrugDeviceService {
 
     @PostMapping("/drug-device/usage")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:consent:edit")
     public Result<MhDrugDeviceUsage> recordUsage(@RequestBody Map<String, Object> body) {
         Long batchId = body.get("batchId") == null ? null : ((Number) body.get("batchId")).longValue();
         Long orderId = body.get("orderId") == null ? null : ((Number) body.get("orderId")).longValue();
@@ -483,6 +497,7 @@ public class ConsentAndDrugDeviceService {
 
     @PostMapping("/drug-device/usage/{id}/adverse")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:drugdevice:adverse")
     public Result<Void> reportAdverse(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         MhDrugDeviceUsage u = usageMapper.selectById(id);
         if (u == null) return Result.error(BizCode.NOT_FOUND, "记录不存在");
@@ -493,6 +508,7 @@ public class ConsentAndDrugDeviceService {
     }
 
     @GetMapping("/drug-device/usage/page")
+    @RequirePermission("mh.consent")
     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> usagePage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,

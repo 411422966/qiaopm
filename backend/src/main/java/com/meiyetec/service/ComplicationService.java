@@ -1,6 +1,7 @@
 package com.meiyetec.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.ComplicationEvent;
 import com.meiyetec.entity.ComplicationSop;
 import com.meiyetec.exception.BizCode;
@@ -33,6 +34,7 @@ public class ComplicationService {
     // ====================================================================
 
     @PostMapping("/sop")
+    @RequirePermission("complication:manage")
     public Result<ComplicationSop> createSop(@RequestBody ComplicationSop s) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (s.getSopCode() == null || s.getSopName() == null)
@@ -46,6 +48,7 @@ public class ComplicationService {
     }
 
     @GetMapping("/sop/list")
+    @RequirePermission("complication:list")
     public Result<List<ComplicationSop>> listSops() {
         Long tenantId = TenantContextHolder.get().getTenantId();
         return Result.success(sopMapper.selectList(new LambdaQueryWrapper<ComplicationSop>()
@@ -55,6 +58,7 @@ public class ComplicationService {
 
     @PostMapping("/sop/init-default")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("complication:manage")
     public Result<Map<String, Object>> initDefault() {
         Long tenantId = TenantContextHolder.get().getTenantId();
         List<Map<String, Object>> defaults = List.of(
@@ -99,6 +103,7 @@ public class ComplicationService {
 
     @PostMapping("/event")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("complication:report")
     public Result<ComplicationEvent> createEvent(@RequestBody ComplicationEvent e) {
         Long tenantId = TenantContextHolder.get().getTenantId();
         if (e.getMemberId() == null) return Result.error(BizCode.BAD_REQUEST, "memberId 必填");
@@ -113,6 +118,7 @@ public class ComplicationService {
     }
 
     @GetMapping("/event/list")
+    @RequirePermission("complication:list")
     public Result<List<ComplicationEvent>> listEvents(@RequestParam(required = false) String status,
                                                     @RequestParam(required = false) String severity) {
         Long tenantId = TenantContextHolder.get().getTenantId();
@@ -125,6 +131,7 @@ public class ComplicationService {
     }
 
     @PostMapping("/event/{id}/status")
+    @RequirePermission("complication:manage")
     public Result<Void> updateEventStatus(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         ComplicationEvent e = eventMapper.selectById(id);
         if (e == null) return Result.error(BizCode.NOT_FOUND, "事件不存在");
@@ -140,6 +147,7 @@ public class ComplicationService {
     }
 
     @GetMapping("/dashboard")
+    @RequirePermission("complication:list")
     public Result<Map<String, Object>> dashboard() {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Map<String, Object> data = new LinkedHashMap<>();

@@ -1,0 +1,8 @@
+﻿chk	actual
+POST-1 鏂扮爜缁戝畾琛?鏈熸湜28)	28
+chk	actual
+POST-2 澶嶇敤鐮佹柊澧?鏈熸湜3)	3
+chk	actual
+FINAL sys_role_permission(鏈熸湜1324)	1324
+chk	actual
+FINAL sys_permission alive(鏈熸湜519)	519

@@ -1,6 +1,7 @@
 package com.meiyetec.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.meiyetec.annotation.RequirePermission;
 import com.meiyetec.entity.*;
 import com.meiyetec.exception.BizCode;
 import com.meiyetec.mapper.*;
@@ -48,6 +49,7 @@ public class VisualArchiveService {
 
     @PostMapping("/archive")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:visual:edit")
     public Result<MhVisualArchive> createArchive(@RequestBody Map<String, Object> body) {
         Long memberId = body.get("memberId") == null ? null : ((Number) body.get("memberId")).longValue();
         String archiveType = (String) body.get("archiveType");
@@ -111,6 +113,7 @@ public class VisualArchiveService {
     }
 
     @GetMapping("/archive/page")
+    @RequirePermission("mh.visual")
     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> archivePage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -154,6 +157,7 @@ public class VisualArchiveService {
 
     @PostMapping("/archive/{id}/revoke")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:visual:revoke")
     public Result<Void> revokeArchive(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         MhVisualArchive a = archiveMapper.selectById(id);
         if (a == null) return Result.error(BizCode.NOT_FOUND, "档案不存在");
@@ -166,6 +170,7 @@ public class VisualArchiveService {
     }
 
     @GetMapping("/archive/stats")
+    @RequirePermission("mh.visual")
     public Result<Map<String, Object>> archiveStats() {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Map<String, Object> stats = new HashMap<>();
@@ -249,6 +254,7 @@ public class VisualArchiveService {
 
     @PostMapping("/archive/{id}/reanalyze")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:visual:edit")
     public Result<Void> reanalyzeArchive(@PathVariable Long id) {
         MhVisualArchive a = archiveMapper.selectById(id);
         if (a == null) return Result.error(BizCode.NOT_FOUND, "档案不存在");
@@ -267,6 +273,7 @@ public class VisualArchiveService {
 
     @PostMapping("/archive/batch-analyze")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:visual:edit")
     public Result<Void> batchAnalyzeArchives(@RequestBody Map<String, Object> body) {
         @SuppressWarnings("unchecked")
         List<Long> ids = (List<Long>) body.get("ids");
@@ -293,6 +300,7 @@ public class VisualArchiveService {
 
     @PostMapping("/archive/batch-revoke")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:visual:revoke-batch")
     public Result<Void> batchRevokeArchives(@RequestBody Map<String, Object> body) {
         @SuppressWarnings("unchecked")
         List<Long> ids = (List<Long>) body.get("ids");
@@ -321,6 +329,7 @@ public class VisualArchiveService {
 
     @PostMapping("/compare")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:visual:edit")
     public Result<MhVisualCompare> createCompare(@RequestBody Map<String, Object> body) {
         Long memberId = body.get("memberId") == null ? null : ((Number) body.get("memberId")).longValue();
         Long beforeId = body.get("beforeId") == null ? null : ((Number) body.get("beforeId")).longValue();
@@ -355,6 +364,7 @@ public class VisualArchiveService {
     }
 
     @GetMapping("/compare/page")
+    @RequirePermission("mh.visual")
     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> comparePage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -399,6 +409,7 @@ public class VisualArchiveService {
      */
     @PostMapping("/compare/{id}/review")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:visual:edit")
     public Result<Void> reviewCompare(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         MhVisualCompare c = compareMapper.selectById(id);
         if (c == null) return Result.error(BizCode.NOT_FOUND, "对比不存在");
@@ -417,6 +428,7 @@ public class VisualArchiveService {
 
     @PostMapping("/consent")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:consent:edit")
     public Result<MhImageConsent> signConsent(@RequestBody Map<String, Object> body) {
         Long memberId = body.get("memberId") == null ? null : ((Number) body.get("memberId")).longValue();
         String consentType = (String) body.get("consentType");
@@ -451,6 +463,7 @@ public class VisualArchiveService {
     }
 
     @GetMapping("/consent/member/{memberId}")
+    @RequirePermission("mh.consent")
     public Result<List<MhImageConsent>> memberConsents(@PathVariable Long memberId) {
         return Result.success(consentMapper.selectList(new LambdaQueryWrapper<MhImageConsent>()
                 .eq(MhImageConsent::getMemberId, memberId)
@@ -459,6 +472,7 @@ public class VisualArchiveService {
 
     @PostMapping("/consent/{id}/revoke")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:visual:revoke")
     public Result<Void> revokeConsent(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         MhImageConsent c = consentMapper.selectById(id);
         if (c == null) return Result.error(BizCode.NOT_FOUND, "授权不存在");
@@ -471,6 +485,7 @@ public class VisualArchiveService {
     }
 
     @GetMapping("/consent/page")
+    @RequirePermission("mh.consent")
     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> consentPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,
@@ -510,6 +525,7 @@ public class VisualArchiveService {
     }
 
     @GetMapping("/consent/expiring")
+    @RequirePermission("mh.consent")
     public Result<Map<String, Object>> expiringConsents() {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Map<String, Object> result = new HashMap<>();
@@ -531,6 +547,7 @@ public class VisualArchiveService {
 
     @PostMapping("/withdraw")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:visual:edit")
     public Result<MhImageWithdraw> applyWithdraw(@RequestBody Map<String, Object> body) {
         Long memberId = body.get("memberId") == null ? null : ((Number) body.get("memberId")).longValue();
         String withdrawScope = (String) body.get("withdrawScope");
@@ -552,6 +569,7 @@ public class VisualArchiveService {
 
     @PostMapping("/withdraw/{id}/handle")
     @Transactional(rollbackFor = Exception.class)
+    @RequirePermission("mh:visual:revoke-batch")
     public Result<Void> handleWithdraw(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         MhImageWithdraw w = withdrawMapper.selectById(id);
         if (w == null) return Result.error(BizCode.NOT_FOUND, "申请不存在");
@@ -581,6 +599,7 @@ public class VisualArchiveService {
 
     /** 撤回申请统计：近7天每日撤回数量 + 今日新申请数 */
     @GetMapping("/withdraw/stats")
+    @RequirePermission("mh.visual")
     public Result<Map<String, Object>> withdrawStats() {
         Long tenantId = TenantContextHolder.get().getTenantId();
         Map<String, Object> result = new HashMap<>();
@@ -619,6 +638,7 @@ public class VisualArchiveService {
     }
 
     @GetMapping("/withdraw/page")
+    @RequirePermission("mh.visual")
     public Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<Map<String, Object>>> withdrawPage(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "20") int pageSize,

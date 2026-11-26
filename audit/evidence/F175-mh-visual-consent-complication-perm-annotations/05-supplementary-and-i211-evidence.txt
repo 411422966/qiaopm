@@ -1,0 +1,25 @@
+﻿=== F175 补充验证（权限聚合层 + SUPER_ADMIN 通配 + I211 缺陷取证）===
+采集时间: 2026-11-26 21:39:03 (UTC+8)
+
+--- A. 登录响应 data.permissions 中 mh*/complication* 码集合（RbacContextLoader 聚合层）---
+clerk01(59 码)   : mh.visual, mh:drugdevice:adverse, complication:list, complication:report
+manager01(324 码): mh.visual, mh.consent, mh:visual:edit, mh:consent:edit, mh:visual:revoke, mh:consent:revoke, mh:drugdevice:adverse, complication:list, complication:report, complication:manage
+boss01(236 码)  : mh, mh.visual, mh.consent, mh:visual:edit, mh:consent:edit, mh:visual:revoke, mh:consent:revoke, mh:drugdevice:adverse, complication:list, complication:report, complication:manage
+admin            : 含 '*' (SUPER_ADMIN 通配) 且含 mh:visual:revoke-batch / mh:visual:edit / mh:consent:edit / complication:manage
+  => role8(ADMIN) 的 mh:visual:revoke-batch 绑定已生效于聚合层；role6(BOSS) 不含该码 => 与 §1.4 绑定表一致
+
+--- B. I211 取证：batch-analyze / batch-revoke 的 Integer->Long ClassCastException ---
+admin POST /mh/visual/archive/batch-analyze  body={'ids':[99999999]}  => HTTP=200  body.code=500 (SYSTEM_ERROR)
+admin POST /mh/visual/archive/batch-revoke  body={'ids':[99999999]}  => HTTP=200  body.code=500 (SYSTEM_ERROR)
+admin POST /mh/visual/archive/batch-revoke  body={'ids':[9999999999]} => HTTP=200  body.code=200 (Long 绑定, 正常)
+  根因: body 为 Map<String,Object> => Jackson 把小整数绑为 Integer => for (Long id : ids) 抛 ClassCastException
+  容器日志: java.lang.ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Long
+           at com.meiyetec.service.VisualArchiveService.batchRevokeArchives(VisualArchiveService.java:313)
+  前端触发: views/mh/visual.vue:1167 (batch-analyze) / :1200 (batch-revoke), ids 来自 rows.map(r => r.id) => JSON 数字 => Integer
+  影响: 两个端点对所有通过权限校验的调用方恒返回 HTTP 200 + code 500 (假成功语义)
+
+--- C. 写操作副作用复检（规则 20）---
+mh_visual_archive id=99999999 : 0    mh_visual_archive id=9999999999 : 0
+mh_image_consent id=99999999 : 0    complication_event id=99999999 : 0
+mh_drug_device_usage id=99999999 : 0    mh_image_withdraw id=99999999 : 0
+mh_consent_signature id=99999999 : 0   => 全部 0, 未产生任何写入

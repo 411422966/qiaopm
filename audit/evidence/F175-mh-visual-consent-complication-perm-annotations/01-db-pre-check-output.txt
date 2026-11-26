@@ -1,0 +1,8 @@
+﻿chk	actual
+PRE-1 sys_permission alive(鏈熸湜510)	519
+chk	actual
+PRE-2 MAX(id)鍏ㄨ〃(鏈熸湜1631)	1641
+chk	actual
+PRE-3 9鐮佸繀椤讳笉瀛樺湪(鏈熸湜0)	9
+chk	actual
+PRE-4 sys_role_permission(鏈熸湜1293)	1324

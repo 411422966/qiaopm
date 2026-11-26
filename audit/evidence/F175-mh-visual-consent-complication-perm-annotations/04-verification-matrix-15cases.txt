@@ -1,0 +1,24 @@
+﻿=== F175 独立复验矩阵（15 条 + 4 条补充）===
+采集时间: 2026-11-26 21:38:48 (UTC+8)
+目标: http://localhost:8080 (docker 容器 meiyetec-api, 启动于 2026-11-26 20:59:06, 含本批 41 处注解)
+账号: admin(role 1+8) / clerk01(role 4) / manager01(role 5) / boss01(role 6)
+说明: 期望 200=业务码200 ; 403=HTTP403 权限拒绝 ; 400/404=权限已通过但业务校验/实体缺失
+------------------------------------------------------------------------------------------------------------------------
+No   User       Method Path                                           Code                     Expect  Actual               Result
+1    clerk01    GET    /mh/visual/archive/page                        mh.visual                200     HTTP=200 biz=200     PASS
+2    clerk01    GET    /mh/visual/consent/page                        mh.consent               403     HTTP=403 biz=403     PASS
+3    clerk01    GET    /complication/event/list                       complication:list        200     HTTP=200 biz=200     PASS
+4    clerk01    POST   /complication/event                            complication:report      400     HTTP=200 biz=400     PASS
+5    clerk01    POST   /mh/visual/archive                             mh:visual:edit           403     HTTP=403 biz=403     PASS
+6    clerk01    POST   /mh/visual/consent                             mh:consent:edit          403     HTTP=403 biz=403     PASS
+7    manager01  GET    /mh/visual/consent/page                        mh.consent               200     HTTP=200 biz=200     PASS
+8    manager01  POST   /mh/visual/archive                             mh:visual:edit           400     HTTP=200 biz=400     PASS
+9    manager01  POST   /mh/visual/archive/99999999/revoke             mh:visual:revoke         404     HTTP=200 biz=404     PASS
+10   manager01  POST   /mh/visual/archive/batch-revoke                mh:visual:revoke-batch   403     HTTP=403 biz=403     PASS
+11   manager01  POST   /mh/consent/template                           mh:consent:edit          400     HTTP=200 biz=400     PASS
+12   manager01  POST   /mh/consent/sign/99999999/revoke               mh:consent:revoke        404     HTTP=200 biz=404     PASS
+13   boss01     POST   /mh/visual/archive/batch-revoke                mh:visual:revoke-batch   403     HTTP=403 biz=403     PASS
+14   boss01     POST   /mh/drug-device/usage/99999999/adverse         mh:drugdevice:adverse    404     HTTP=200 biz=404     PASS
+15   boss01     POST   /complication/event/99999999/status            complication:manage      404     HTTP=200 biz=404     PASS
+------------------------------------------------------------------------------------------------------------------------
+PASS=15 / FAIL=0
