@@ -34,6 +34,7 @@
 | `service/ConsentAndDrugDeviceService.java` | `/mh` | **15** | **0** |
 | `service/ComplicationService.java` | `/complication` | **7** | **0** |
 | `controller/MhConsentH5Controller.java` | `/mh/consent` | **2** | **0**（token 链接 H5 流程） |
+| **合计** | — | **43**（**41 个角色鉴权缺口** = 三个业务 service 19+15+7；**+ 2 个 H5 token 端点**，见 §1.2 第 6 点 E2） | **0** |
 
 全库扫描 `@RequirePermission("` 在 `mh / visual / consent / complication / drug-device` 语境下**命中 0 处**。
 

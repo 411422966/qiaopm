@@ -174,7 +174,7 @@
 | 1 | **I206**：mh / visual / consent / complication 四个类 **41 个方法级端点零 `@RequirePermission`**，D2 后前端守卫成为唯一门禁 | P1 | **Open**（仅登记） |
 | 2 | **I207**：`views/mh/consent.vue` **6 个端点 / 7 个调用点**后端无实现（toggle / version list / new-version / sign-link issue / drug-device toggle / batch status） | P2 | **Open**（仅登记） |
 | 3 | `MhConsentH5Controller` 的 `/mh/consent/sign-link/*` 0 注解属设计，但 `WebConfig` 未排除 `/mh/consent/**` → 无 token 调 sign-link = **401**，与「免登录」描述不符 | P1 | 记于 I206 §1.2 第 6 点 + I202 §1.3 E2 |
-| 4 | 「19 个前端码」与按码计的 20 相差 1（用户指定表述把 3 条 mh 路由记作 3 个码） | 文档口径 | 已记于 I202 §1.2 口径说明注，**待用户确认后统一** |
+| 4 | 前端码口径已修正为 **20 个前端码**（D2 实际修复 2 码 / 3 路由；码 22−2=20、路由 44−3=41） | 文档口径 | ✅ **已销账**（用户 2026-11-26 确认原「剩余 19 个」表述有误；I202 标题 / §0 / §1.2 / §7 R1 + register I202 行同步改毕） |
 | 5 | `audit/baseline/db-snapshot.sql` 仍为 2026-09-12 版本，未含本批 DB 状态 | 基线治理 | **已知遗留**，不在本批范围 |
 | 6 | `audit/issues/issue-register.md` 的 I202 行「状态」列仍写「P2 后端补码未做」，与本批已补 26 条绑定的事实存在措辞滞后 | 文档滞后 | **待用户批准后统一**（登记表属治理基线） |
 
