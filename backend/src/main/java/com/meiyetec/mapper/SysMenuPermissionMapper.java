@@ -18,6 +18,7 @@ public interface SysMenuPermissionMapper extends BaseMapper<SysMenuPermission> {
             "WHERE ur.user_id = #{userId} " +
             "  AND p.permission_type = 'menu' " +
             "  AND p.deleted = 0 " +
+            "  AND p.status = 1 " +
             "  AND (smp.hidden IS NULL OR smp.hidden = 0) " +
             "GROUP BY smp.id " +
             "ORDER BY smp.sort_order ASC")

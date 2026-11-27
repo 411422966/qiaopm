@@ -342,9 +342,13 @@ public class VisualArchiveService {
         if (memberId == null || beforeId == null || afterId == null)
             return Result.error(BizCode.BAD_REQUEST, "memberId / beforeId / afterId 必填");
 
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhVisualArchive before = archiveMapper.selectById(beforeId);
         MhVisualArchive after = archiveMapper.selectById(afterId);
-        if (before == null || after == null) return Result.error(BizCode.NOT_FOUND, "档案不存在");
+        if (before == null || after == null
+                || !Objects.equals(before.getTenantId(), tenantId)
+                || !Objects.equals(after.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "档案不存在");
 
         // 计算差异（真实算法替换 Mock）
         Map<String, Object> diffResult = visualAi.compareArchives(before, after);
