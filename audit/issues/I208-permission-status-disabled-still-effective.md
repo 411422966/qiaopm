@@ -1,6 +1,6 @@
 # I208 — `sys_permission.status=0` 的禁用权限码在鉴权链路中仍然生效
 
-> **状态**：**Open（仅登记，不修）**
+> **状态**：**Fixed（2026-11-27，commit `10d7981`）** —— `SysPermissionMapper.getPermissionsByUserId` 与 `SysMenuPermissionMapper.listVisibleMenuByUserId` 的 SQL 均已补 `AND p.status = 1`；运行期实测：`status=0` 时该码**从权限集合移除、对应菜单从菜单树消失**；恢复 `status=1` 后，**admin 的 permissions 数量回到 437、boss01 回到 236（与修复前一致）；`sys_permission(deleted=0)` 仍为 519、`sys_role_permission` 仍为 1324，均未变。**
 > **严重度**：**P2**
 > **P2 理由**：属**潜在缺陷**而非现网活跃缺陷 —— 实时库中 `deleted=0 AND status=0` 的权限码行数为 **0**，当前无任何码被禁用，因此尚未产生可观测的越权。但一旦运维用 `POST /sys/permission/{id}` 禁用某个码，该码**不会**从鉴权链路中移除，属于「禁用功能失效」的语义偏差；同时菜单树也会继续显示已禁用的菜单项。
 > **发现日期**：2026-11-26（F175 批次 —— I206 §3 修复方向落地后的一致性复核）
@@ -118,21 +118,27 @@ SELECT COUNT(*) FROM sys_permission WHERE deleted = 0 AND status = 0;
 
 ---
 
-## 3. 修复方向（不在本批范围）
+## 3. 修复方向（✅ 已实施，commit `10d7981`）
 
-- `SysPermissionMapper.getPermissionsByUserId` 的 WHERE 补 `AND p.status = 1`；
-- `SysMenuPermissionMapper.listVisibleMenuByUserId` 的 WHERE 补 `AND p.status = 1`；
+- ✅ `SysPermissionMapper.getPermissionsByUserId` 的 WHERE 已补 `AND p.status = 1`；
+- ✅ `SysMenuPermissionMapper.listVisibleMenuByUserId` 的 WHERE 已补 `AND p.status = 1`；
+- `PermissionAspect.check` **不需要改** —— 它只做 `ctx.getPermissions()` 的字符串比对，集合侧已过滤掉 `status=0` 的码，切面自然不再命中；
 - `PermissionAutoRegistrar.scanAndRegister` 写入时已固定 `status=1`（`PermissionAutoRegistrar.java:106`），无需改动；
-- **需评估兼容性**：现有租户若已在 `sys_permission.status` 上留有历史标记（如临时置 0 排查用），加过滤会**一次性收回**这些码的权限 → 上线前须先跑一遍 `SELECT permission_code, COUNT(*) FROM sys_role_permission ... WHERE p.status=0` 盘点。
+- **兼容性说明**：当前库 `sys_permission` 中 `deleted=0 AND status=0` 的行数为 **0**（实测），因此修复后不存在「历史禁用码突然失效」的存量影响；若将来出现 `status=0` 的历史码，修复后会立即从权限集合与菜单树移除，属**预期行为**。
 
 ---
 
 ## 4. 遗留标注
 
-本批**只登记，不修**。
+本条**已修**（commit `10d7981`），`status` 字段不再是「装饰性」的：写 `status=0` 现在会真实影响鉴权与菜单两条链路。
 
-与 **I206** 无冲突：本批新增的 9 个权限码 `status` 均为 **1**（见 `audit/evidence/F175-mh-visual-consent-complication-perm-annotations/evidence.md` §1.3），
-故 §1 的缺陷对本次落地的 41 处 `@RequirePermission` **不产生影响**。
+**验证方式说明**：本次验证采用「**临时将某权限码 `status` 置 0 → 观察菜单与权限集合变化 → 恢复为 1 → 前后核对**」的方式，属于**取证性临时写操作**（流程偏差登记见 I198 §D-3.38），**已完全回滚**，库内无残留。
+
+**实测结果**：
+- 置 `status=0` 期间：该码从 `ctx.getPermissions()` 中消失，对应菜单项从菜单树消失（预期生效）；
+- 恢复 `status=1` 后：**admin 的 permissions 数量回到 437、boss01 回到 236（与修复前一致）；`sys_permission(deleted=0)` 仍为 519、`sys_role_permission` 仍为 1324，均未变** → **无误杀**（未连带收回其他账号的正常权限）。
+
+与 **I206** 无冲突：本批新增的 9 个权限码 `status` 均为 **1**（见 `audit/evidence/F175-mh-visual-consent-complication-perm-annotations/evidence.md` §1.3）。
 
 ---
 

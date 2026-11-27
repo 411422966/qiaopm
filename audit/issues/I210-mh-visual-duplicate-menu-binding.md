@@ -1,6 +1,6 @@
 # I210 — `/mh/visual` 在 `sys_menu_permission` 有 2 条同路径绑定行，菜单树出现重复入口
 
-> **状态**：**Open（仅登记，不修）**
+> **状态**：**Fixed（2026-11-27，DB 变更已执行）** —— 开发库 `sys_menu_permission.id=268`（父菜单 `mh` / permission_id=1205）的 `route_path` 已由 `/mh/visual` 改为 `/mh`，与子菜单 id=314（`mh.visual`）的 `route_path` 解耦，重复入口消除；**本次修复不含任何代码改动**（与 commit `10d7981` 无关，该提交只涉及 I209#2 与 I208）；**生产库尚未执行**，迁移 SQL 见 `backend/src/main/resources/db/sql/migrate_i210_mh_visual_route_path.sql`
 > **严重度**：**P3**
 > **P3 理由**：**纯 UI 重复**，不产生权限绕过、不产生数据越权、不影响后端鉴权。仅导致菜单树出现两个指向同一路由的入口（视觉重复 + 点击歧义）。
 > **发现日期**：2026-11-26（F175 批次 —— I206 §3 修复方向落地后的一致性复核）
@@ -67,31 +67,43 @@ WHERE smp.route_path = '/mh/visual';
 
 ---
 
-## 3. 修复方向（不在本批范围）
+## 3. 修复方向（✅ 方案 1 已实施 —— DB 变更）
 
-- **方案 1（推荐）**：把父菜单 1205 的 `route_path` 改为 `/mh`（作为分组容器），1251 保持 `/mh/visual`；
-- **方案 2**：把父菜单 1205 的 `path` 置 `NULL`（纯分组节点，不参与路由匹配），并把 `sys_menu_permission.id=268` 置 `hidden=1`；
-- 修改前需确认前端 `router/index.ts` 中 `/mh` 是否有对应路由，否则会引入新的 404。
+- ✅ **方案 1（已采用）**：把父菜单 1205 的 `route_path` 改为 `/mh`（作为分组容器），1251 保持 `/mh/visual`；
+- **未采用方案 2**（把 `sys_permission.path` 置 `NULL` + `smp.hidden=1`）—— 方案 1 已足以消除同 `route_path` 一对多，且改动面更小。
 
-> ⚠️ 本条**不修**，且修复涉及 `sys_permission.path` / `sys_menu_permission.route_path` 的**数据修改**，
-> 与 F175 的「新增权限码 + 新增绑定」性质不同（后者是增量、零歧义；前者是改既有行的路由语义），需单独报批。
+**实施结果**：
+- 开发库已执行：`UPDATE sys_menu_permission SET route_path='/mh' WHERE id=268;` → 复查 `WHERE route_path='/mh/visual'` 仅剩 id=314 一行，重复消除；
+- **生产库未执行**，迁移 SQL 已留档（见 §6）；
+- **本次不含代码改动** —— 前端 `router/index.ts:153` 的 `mh/visual` 路由本就存在且带 `permission: 'mh.visual'`，父节点 `route_path` 改为 `/mh` 后不再与其重复，无需配套前端修改。
 
 ---
 
 ## 4. 遗留标注
 
-本批**只登记，不修**。
+本条**已修**（2026-11-27，DB 变更已执行；生产库待执行，迁移 SQL 见 §6）。
 
 与 **I206** 无冲突：F175 只**新增** `sys_permission` 行（id 1633–1641）与 `sys_role_permission` 绑定，
-**未修改** id 1205 / 1251 的 `path`，也**未新增** `sys_menu_permission` 行 → 本条与本批变更**无因果关系**，
-是本批复核 I206 菜单侧时**独立发现**的既有数据缺陷。
+**未修改** id 1205 / 1251 的 `path`，也**未新增** `sys_menu_permission` 行 → 本条与该批变更**无因果关系**，
+是复核 I206 菜单侧时**独立发现**的既有数据缺陷，本次修复为其独立实施。
 
 ---
 
 ## 5. 关联与交叉引用
 
-- `sys_menu_permission` id 268 / 314（`route_path='/mh/visual'`）
+- `sys_menu_permission` id 268（`mh` 父菜单，修复后 `route_path='/mh'`）/ 314（`mh.visual` 子菜单，`route_path='/mh/visual'`）
 - `sys_permission` id 1205（`mh`，parent_id=0）/ 1251（`mh.visual`，parent_id=1205）
 - `audit/issues/I206-mh-visual-consent-complication-no-backend-auth.md`
 - `audit/issues/I185-frontend-backend-perm-code-drift.md`（前端路由 / 菜单双轨同族）
 - Evidence：`audit/evidence/F175-mh-visual-consent-complication-perm-annotations/evidence.md`
+
+---
+
+## 6. 遗留风险
+
+父菜单 `mh`（1205）的 `route_path` 现为 `/mh`，而前端 `router/index.ts` **不存在 `/mh` 路由**（只有 `mh/visual` 与 `mh/consent` 两个子路径）。
+
+- **触发条件**：出现「**只持 `mh`（1205）而不持 `mh.visual`（1251）**」的角色 → 该角色菜单树中父节点退化为**可点击项**，点击后前端匹配不到 `/mh` 路由 → **404**；
+- **当前不可达**：现有角色的绑定关系中，持 1205 者均同时持 1251，父节点对所有现存角色均有子项，**不产生可点击的空父节点**；
+- **未来风险**：新增只授予 `mh` 分组码而不授予 `mh.visual` 子码的角色时，该 404 会出现。缓解方案二选一：① 前端补一条 `/mh` 的重定向路由（指向 `/mh/visual`）；② 把父菜单 `route_path` 置 `NULL`（纯分组节点，不参与路由匹配）—— 需另行报批；
+- 本条为**已知遗留**，本批只做「消除重复入口」这一最小修复，不扩大改动面。
