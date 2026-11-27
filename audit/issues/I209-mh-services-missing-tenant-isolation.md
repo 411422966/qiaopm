@@ -1,6 +1,6 @@
 # I209 — `/mh/visual` + `/mh` + `/complication` 按 id 端点缺 `tenant_id` 过滤，可跨租户读写
 
-> **状态**：**Partial（2026-11-27，commit `10d7981`）** —— by-id 查询点已修 **17/19**（含 `createCompare` 2 处 `selectById`，commit `10d7981`）；UPDATE 语句已修 2 处、待修 1 处；**剩余待改 3 处**（§6 #1 / #3 查询点 + §6 #4 UPDATE）；跨租户真实拦截 UNVERIFIED（本机仅 tenant 1）
+> **状态**：**Fixed（2026-11-27，commit `ff20e57`）** —— **by-id 查询点 19/19 全部修复**（原清单 12 + 实施阶段新发现 3 + `createCompare` 2 + `reanalyzeArchive` 1 + `createBatch` 1）；UPDATE 语句已修 2 处，剩 §6 #4 一处属 **defense in depth 加固项（上游 `batchMapper.selectById` 已过 tenant 校验，id 必为本租户 → 非活漏洞）**，不阻塞本 issue 收口；跨租户真实拦截 VERIFIED（他租户 id → `code=404` 且零写入）
 > **严重度**：**P1**
 > **P1 理由**：跨租户**写入** + 涉及**不可逆合规操作**（撤销视觉档案 / 撤销合规记录 / 批量撤回 / 药械召回）。虽然 F175 批次已为这 41 个端点补齐 `@RequirePermission`，但**权限码只回答「谁能调」，不回答「能调到哪些租户的数据」** —— 持对应功能权限的任意登录用户，传他租户的有效主键即可跨租户读写。
 > **发现日期**：2026-11-26（F175 批次 —— I206 §3 修复方向落地后的隔离性复核）
@@ -128,7 +128,7 @@ if (newStatus == 2) {
 
 ## 4. 遗留标注
 
-累计**已修 19 处**（17 处 by-id 查询点 + `handleWithdraw` 内 2 处裸 UPDATE），**剩 3 处**同族残留见 §6（§6 #1 / #3 为 by-id 查询点，§6 #4 为 UPDATE）。
+累计**已修 21 处**（19 处 by-id 查询点 + `handleWithdraw` 内 2 处裸 UPDATE）；剩余 **1 处**为 §6 #4（UPDATE，非活漏洞的加固项）。
 
 与 **I206** 互补且不重叠：I206 管的是「**谁能调**」（角色 → 权限码），本条管的是「**能调到哪些租户**」（权限码 → 数据范围）。
 F175 落地后，I206 的鉴权缺口已闭合，但本条的数据隔离缺口**依然存在且因权限码补齐而更易被触发**（原本任何登录用户可调，现在至少需要有对应码的账号）。
@@ -148,22 +148,21 @@ F175 落地后，I206 的鉴权缺口已闭合，但本条的数据隔离缺口*
 
 ---
 
-## 6. Follow-up（同族残留，本批未修）
+## 6. Follow-up（剩余 1 项：非活漏洞的加固项）
 
-以下 4 项与已修位置同族（缺 tenant 校验），本批未处理。其中 #1/#2/#3 为按 id 查询点（#2 含 2 处 selectById，故 3 项共 4 处查询点），#4 为 UPDATE 语句：
+以下 4 项曾与已修位置同族（缺 tenant 校验）。**#1 / #2 / #3 已于 2026-11-27 全部修复**（#2 commit `10d7981`；#1 / #3 commit `ff20e57`）；仅剩 **#4** 为 UPDATE 语句，属 defense in depth 加固项（上游已拦，非活漏洞）。
 
-> **计数口径（三个维度分开算）**：
-> - **by-id 查询点**：已修 17（原清单 12 + 实施阶段新发现 3 + `createCompare` 2 处，commit `10d7981`）+ 待修 2（§6 #1 1 处 + §6 #3 1 处）= **全量 19**，与状态列「17/19」一致
-> - **UPDATE 语句**：已修 2（`handleWithdraw` 内）+ 待修 1（§6 #4）= 3
-> - **合计位置**：累计已改 **19**（17 查询点 + 2 UPDATE），剩余待改 **3**（2 查询点 + 1 UPDATE），全量 **22**
-> 状态列的「17/19」只算 by-id 查询点，不含 UPDATE。
+> **计数口径（三个维度）**：
+> - **by-id 查询点**：**已修 19 / 全量 19**（100%）
+> - **UPDATE 语句**：已修 2（`handleWithdraw` 内）+ 待加固 1（§6 #4）= 3
+> - **合计位置**：已改 **21**（19 查询点 + 2 UPDATE），剩余 **1**（§6 #4 加固项）
+> 状态列「19/19」只算 by-id 查询点。
 
 | # | 位置 | 端点 | 判断 |
 |---|---|---|---|
-| 1 | `VisualArchiveService:262` `reanalyzeArchive` | `POST /mh/visual/archive/{id}/reanalyze` | 与 `revokeArchive` 同型，但仅重算 AI、不写业务状态，风险等级低于主清单 |
+| 1 | `VisualArchiveService:262` `reanalyzeArchive` | `POST /mh/visual/archive/{id}/reanalyze` | ✅ **已修**（commit `ff20e57`）。⚠️ **风险描述更正（2026-11-27）**：原文写「仅重算 AI、不写业务状态，风险等级低于主清单」**不准确** —— 实际 L268-272 会 `setAiAnalyzed` / `setAiFeaturesJson` / `setAiTags` / `setAiScore` 后 `archiveMapper.updateById(a)`，**属跨租户写入**，与主清单同量级。修复后他租户 id → `code=404`，零 AI 调用、零写入 |
 | 2 | `VisualArchiveService:345-346` `createCompare` | `POST /mh/visual/compare` | ✅ **已修**（commit `10d7981`）：`beforeId` / `afterId` 两处 `selectById` 后补 `Objects.equals(entity.getTenantId(), tenantId)` 校验，不匹配返回 `code=404`（对外统一「档案不存在」，避免存在性泄露）；运行期实测：他租户 id → `code=404` 且**零写入**（`mh_visual_compare` 无新增行）；同租户真实 id → 正常 200 |
-| 3 | `ConsentAndDrugDeviceService:356` `createBatch` | `POST /mh/drug-device/batch` | 仅查主档做校验，写入的 batch 自带 tenantId |
+| 3 | `ConsentAndDrugDeviceService:355` `createBatch` | `POST /mh/drug-device/batch` | ✅ **已修**（commit `ff20e57`）；行号由 356 更正为 355。原判断「仅查主档做校验」成立，但跨租户可读他租户 `shelf_life_days` 并经 CONFLICT 文案反推 → 信息读取泄露，已堵 |
 | 4 | `ConsentAndDrugDeviceService:505` `recordUsage` 扣库存 **（UPDATE，非 by-id 查询）** | `POST /mh/drug-device/usage` | `UPDATE mh_drug_device_batch SET used_qty=... WHERE id = ?` 无 tenant 条件；但上游 `batchMapper.selectById(batchId)` 已通过 tenant 校验，属 defense in depth，非活漏洞 |
 
-**§6 #2 已于 2026-11-27 修复（commit `10d7981`）**，唯一有实质泄露面的同族项已闭合。
-**建议下一批处理 #1 / #3**（两者均只读他租户数据做校验、不产生跨租户写入，风险等级低于 #2）。**#4** 属 defense in depth（上游 `batchMapper.selectById(batchId)` 已通过 tenant 校验），可与其他 P1 批次合并。
+> **§6 #1 / #2 / #3 已于 2026-11-27 全部修复**（#2 commit `10d7981`；#1 / #3 commit `ff20e57`）。**剩余 #4** 为 `recordUsage` 扣库存 UPDATE，其 `batchId` 来源已在上游 `batchMapper.selectById(batchId)` 通过 tenant 校验，故 `WHERE id = ?` 的 id 必为本租户 → **非活漏洞**。若后续在该 UPDATE 之前新增逻辑或 batch 对象被改写，需重新评估；当前不阻塞 I209 收口。
