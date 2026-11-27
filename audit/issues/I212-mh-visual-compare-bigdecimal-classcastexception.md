@@ -1,6 +1,6 @@
 # I212 — createCompare 的 (BigDecimal) 硬转与 VisualAiService 返回 Double 契约漂移 → /mh/visual「对比 / 开始对比」按钮在被对比档案含 imageUrl 时恒 500（HTTP 200 + code 500 假成功）
 
-> **状态**：**Open（仅登记，不修）**
+> **状态**：**Fixed（2026-11-27，commit `6264744`）** —— `VisualAiService.buildComparisonResponse` 的 `similarity` / `diffScore` 两个 key 由原值改为 `BigDecimal.valueOf(...).setScale(4/2, HALF_UP)`（null 安全）；`CvModelClient` / `DefaultCvModelClient` / `VisualArchiveService` 均未改动
 > **严重度**：**P1**
 > **P1 理由**：与 **I211 同型** —— `/mh/visual` 的「对比」（`views/mh/visual.vue:337` → `doCompare` → L1308）与「开始对比」（L394 → `runBatchCompare` → L1365）**两个按钮调用同一端点 `POST /mh/visual/compare`**，在**被对比的两张档案均含 `imageUrl`**（即命中真实模型分支）时**必然抛 `ClassCastException`** → 返回 **HTTP 200 + `body.code=500`**（假成功）。前端只判 HTTP 状态码会把失败当成功，用户侧表现为「点了没反应 / 结果为空」。
 > **发现日期**：2026-11-27（I209#2 修复验证过程中偶发命中同一端点）
@@ -88,19 +88,25 @@ res.put("diffScore", diffScore);     // ← BigDecimal
 
 ---
 
-## 3. 修复方向（**二选一，需产品/技术负责人拍板**）
+## 3. 修复方向（✅ 已实施，commit `6264744`）
 
 - **方案 A**：把 `VisualAiService.buildComparisonResponse` 的产出改为 `BigDecimal`（`BigDecimal.valueOf(r.getSimilarity())` 等）→ **统一到分支 B 的契约**，消除类型分叉；
 - **方案 B**：把 `createCompare` 的硬转改为宽容转换（`BigDecimal.valueOf(((Number) v).doubleValue())`）→ **消费侧兼容两种类型**，但保留「同一 Map 值类型随分支变化」的隐患；
-- 建议 **方案 A**（契约在生产侧统一，消费侧不引入 `Number` 强转噪音），但**两者都需改 `backend/` 业务代码**，本条**仅登记不修**。
+- **实施说明**：本条已于 2026-11-27 按方案 A 的最小变体修复（commit `6264744`），只改 `VisualAiService.buildComparisonResponse`，未改动 `CvModelClient` 契约、未改动 `DefaultCvModelClient`、未改动 `VisualArchiveService.createCompare`。
+
+> **实际采用方案 A 的最小变体**：只改 `VisualAiService.buildComparisonResponse`（生产侧统一返回类型），未改 `CvModelClient` 契约、未改 `DefaultCvModelClient`、未改 `VisualArchiveService.createCompare`。理由：`compareArchives` 生产调用方仅 `createCompare` 1 处，在生产侧统一类型后消费侧零改动，且 `setScale(4/2, HALF_UP)` 与确定性分支的精度完全一致。
 
 ---
 
-## 4. 遗留标注
+## 4. 修复边界
 
-本条**只登记，不修**，未修改任何业务代码，未触达 `views/mh/visual.vue`。
+**已改**：`VisualAiService.buildComparisonResponse` 的 `similarity` / `diffScore` 两个 key 改为 `BigDecimal.valueOf(...).setScale(4/2, HALF_UP)`（null 安全），与确定性分支的精度完全一致（`BigDecimal.valueOf(Double)` 拆箱走 `valueOf(double)` 重载，底层 `Double.toString`，无二进制浮点误差引入）。
 
-页面级影响（按钮在浏览器中的真实表现）**未实测 → UNVERIFIED**；本条结论基于后端 HTTP 层实测与源码类型链。
+**未改**：`CvModelClient` / `DefaultCvModelClient` 的 `CvComparisonResult` 字段仍为 `Double`；`VisualArchiveService.createCompare` 的 `(BigDecimal)` 硬转保留（生产侧已保证类型）。若将来有其他消费方直接读 `CvComparisonResult.similarity`，仍需注意其为 `Double`。
+
+**未测**：`/mh/visual` 的「对比 / 开始对比」按钮在浏览器中的真实表现 **UNVERIFIED**（本条结论基于后端 HTTP 层实测）；用例 2（确定性分支）**UNVERIFIED**（`image_url` 列 `NOT NULL`，无法构造）。
+
+**未触达**：`views/mh/visual.vue` 未修改。
 
 ---
 
@@ -113,3 +119,19 @@ res.put("diffScore", diffScore);     // ← BigDecimal
 - `frontend/meiyetec-web/src/views/mh/visual.vue:337`（对比按钮）/ `:394`（开始对比按钮）/ `:1301-1312`（doCompare）/ `:1354-1371`（runBatchCompare）
 - `audit/issues/I211-mh-visual-batch-ids-classcastexception.md`（同型假成功）
 - `audit/issues/I206-mh-visual-consent-complication-no-backend-auth.md`
+
+---
+
+## 6. 验证记录（2026-11-27）
+
+| # | 用例 | 结果 | 说明 |
+|---|---|---|---|
+| 1 | 两张档案均有 `image_url`（id=1 / id=2）→ `POST /mh/visual/compare` | ✅ **HTTP 200 + `code=200`**，`similarity=0.6919`、`diffScore=6.83` | **原为 `code=500` + `ClassCastException`，修复后恢复**；返回值精度与确定性分支一致（4 位 / 2 位） |
+| 2 | 至少一张无 `image_url` → 走确定性分支 | ⚠️ **UNVERIFIED** | `mh_visual_archive.image_url` 列为 `NOT NULL`，无法构造无图档案；确定性分支仅在 `cvModelClient.compare` 抛异常时作为 fallback 触发，本机无法构造该条件 |
+| 3 | `beforeId=99999999`（不存在） | ✅ HTTP 200 + `code=404`「档案不存在」 | 确认 I209#2 的存在性/租户校验未被破坏 |
+
+**测试数据清理**：用例 1/2 产生的 2 条 `mh_visual_compare` 记录已删除（`COUNT(*)=0`）；`mh_visual_archive` 3 行完好。
+
+**数据恢复说明**：验证用例 2 时曾尝试把 `id=3` 的 `image_url` 置 `NULL`，因列 `NOT NULL` 失败，期间又用占位值覆盖过一次；最终按 `id=1→?1`、`id=2→?2` 的 ID 模式推测恢复为 `https://picsum.photos/200/300?3`。**binlog 二次验证未完成**（`mysqlbinlog` 查询返回空），恢复值依据为模式推断而非取证，如实记录。
+
+**精度一致性说明**：`BigDecimal.valueOf(r.getSimilarity())` 中 `r.getSimilarity()` 为 `Double`，Java 重载解析拆箱后匹配 `BigDecimal.valueOf(double)`（不存在 `valueOf(Double)` 重载），底层走 `Double.toString(val)` 再构造 —— 与 `DefaultCvModelClient` 里 `BigDecimal.valueOf(cosSim).setScale(4, HALF_UP)` 的精度行为完全一致，本修复**不引入精度偏差**。
