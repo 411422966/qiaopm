@@ -321,5 +321,5 @@
 - **I208（Fixed，2026-11-27）**：两条 Mapper SQL 补 `AND p.status = 1`；运行期验证 status=0 生效、恢复后无差异。
 - **I209（Partial，17/19 by-id 查询点）**：`createCompare` 的 2 处 `selectById` 已修（`10d7981`），跨租户 id 返回 404 且零写入；剩余 §6 #1 / #3 查询点 + #4 UPDATE。
 - **I210（Fixed，2026-11-27）**：父菜单 `route_path` 改为 `/mh`，重复入口消除；§6 登记 `/mh` 无前端路由的遗留风险（当前不可达）。
-- **I212（Open，新增，P1）**：`createCompare` 的 `BigDecimal` 硬转在真实模型分支必然 `ClassCastException`；与 I211 同型假成功；修法二选一待拍板。
+- **I212（Open，新增，P1）**：`createCompare` 的 `BigDecimal` 硬转在真实模型分支必然 `ClassCastException`；与 I211 同型假成功；修法二选一待拍板。（**已于 2026-11-27 修复，见 commit `6264744`**）
 - **D-3-38（流程偏差第 7 次）**：验证期 2 次取证性最小写（已完全回滚），登记为「取证性写操作」可执行分支。
