@@ -160,8 +160,10 @@ public class VisualArchiveService {
     @Transactional(rollbackFor = Exception.class)
     @RequirePermission("mh:visual:revoke")
     public Result<Void> revokeArchive(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhVisualArchive a = archiveMapper.selectById(id);
-        if (a == null) return Result.error(BizCode.NOT_FOUND, "档案不存在");
+        if (a == null || !Objects.equals(a.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "档案不存在");
         if (a.getRevoked() != null && a.getRevoked() == 1) return Result.error(BizCode.CONFLICT, "已撤回");
         a.setRevoked(1);
         a.setRevokedAt(LocalDateTime.now());
@@ -281,9 +283,11 @@ public class VisualArchiveService {
             return Result.error(BizCode.BAD_REQUEST, "ids 不能为空");
         }
         
+        Long tenantId = TenantContextHolder.get().getTenantId();
         for (Long id : ids) {
             MhVisualArchive a = archiveMapper.selectById(id);
-            if (a != null && (a.getAiAnalyzed() == null || a.getAiAnalyzed() == 0)) {
+            if (a != null && Objects.equals(a.getTenantId(), tenantId)
+                    && (a.getAiAnalyzed() == null || a.getAiAnalyzed() == 0)) {
                 // AI-006：批量重新分析（支持真实模型）
                 Map<String, Object> aiResult = visualAi.analyzeWithImageUrl(
                         a.getArchiveType(), a.getImageUrl(), a.getImageHash());
@@ -309,9 +313,11 @@ public class VisualArchiveService {
             return Result.error(BizCode.BAD_REQUEST, "ids 不能为空");
         }
         
+        Long tenantId = TenantContextHolder.get().getTenantId();
         for (Long id : ids) {
             MhVisualArchive a = archiveMapper.selectById(id);
-            if (a != null && (a.getRevoked() == null || a.getRevoked() == 0)) {
+            if (a != null && Objects.equals(a.getTenantId(), tenantId)
+                    && (a.getRevoked() == null || a.getRevoked() == 0)) {
                 a.setRevoked(1);
                 a.setRevokedAt(LocalDateTime.now());
                 a.setRevokedReason(reason);
@@ -410,8 +416,10 @@ public class VisualArchiveService {
     @Transactional(rollbackFor = Exception.class)
     @RequirePermission("mh:visual:edit")
     public Result<Void> reviewCompare(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhVisualCompare c = compareMapper.selectById(id);
-        if (c == null) return Result.error(BizCode.NOT_FOUND, "对比不存在");
+        if (c == null || !Objects.equals(c.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "对比不存在");
         c.setManualReviewed(1);
         c.setReviewerId(body.get("reviewerId") == null ? null : ((Number) body.get("reviewerId")).longValue());
         c.setReviewerName((String) body.get("reviewerName"));
@@ -464,7 +472,9 @@ public class VisualArchiveService {
     @GetMapping("/consent/member/{memberId}")
     @RequirePermission("mh.consent")
     public Result<List<MhImageConsent>> memberConsents(@PathVariable Long memberId) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
         return Result.success(consentMapper.selectList(new LambdaQueryWrapper<MhImageConsent>()
+                .eq(MhImageConsent::getTenantId, tenantId)
                 .eq(MhImageConsent::getMemberId, memberId)
                 .eq(MhImageConsent::getRevoked, 0)));
     }
@@ -473,8 +483,10 @@ public class VisualArchiveService {
     @Transactional(rollbackFor = Exception.class)
     @RequirePermission("mh:visual:revoke")
     public Result<Void> revokeConsent(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhImageConsent c = consentMapper.selectById(id);
-        if (c == null) return Result.error(BizCode.NOT_FOUND, "授权不存在");
+        if (c == null || !Objects.equals(c.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "授权不存在");
         if (c.getRevoked() != null && c.getRevoked() == 1) return Result.error(BizCode.CONFLICT, "已撤回");
         c.setRevoked(1);
         c.setRevokedAt(LocalDateTime.now());
@@ -570,8 +582,10 @@ public class VisualArchiveService {
     @Transactional(rollbackFor = Exception.class)
     @RequirePermission("mh:visual:revoke-batch")
     public Result<Void> handleWithdraw(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhImageWithdraw w = withdrawMapper.selectById(id);
-        if (w == null) return Result.error(BizCode.NOT_FOUND, "申请不存在");
+        if (w == null || !Objects.equals(w.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "申请不存在");
         if (w.getStatus() != 1) return Result.error(BizCode.CONFLICT, "申请已处理");
         Integer newStatus = body.get("status") == null ? 2 : ((Number) body.get("status")).intValue();
 
@@ -586,11 +600,11 @@ public class VisualArchiveService {
         if (newStatus == 2) {
             if ("ALL".equals(w.getWithdrawScope()) || "STAFF_VIEW".equals(w.getWithdrawScope())) {
                 jdbc.update("UPDATE mh_visual_archive SET revoked = 1, revoked_at = NOW(), revoked_reason = '会员撤回' " +
-                        "WHERE member_id = ? AND deleted = 0", w.getMemberId());
+                        "WHERE member_id = ? AND tenant_id = ? AND deleted = 0", w.getMemberId(), tenantId);
             }
             if ("ALL".equals(w.getWithdrawScope())) {
                 jdbc.update("UPDATE mh_image_consent SET revoked = 1, revoked_at = NOW(), revoked_reason = '会员撤回' " +
-                        "WHERE member_id = ? AND deleted = 0", w.getMemberId());
+                        "WHERE member_id = ? AND tenant_id = ? AND deleted = 0", w.getMemberId(), tenantId);
             }
         }
         return Result.success("已处理", null);

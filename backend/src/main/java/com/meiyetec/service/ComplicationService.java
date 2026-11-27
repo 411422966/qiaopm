@@ -133,8 +133,10 @@ public class ComplicationService {
     @PostMapping("/event/{id}/status")
     @RequirePermission("complication:manage")
     public Result<Void> updateEventStatus(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
         ComplicationEvent e = eventMapper.selectById(id);
-        if (e == null) return Result.error(BizCode.NOT_FOUND, "事件不存在");
+        if (e == null || !Objects.equals(e.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "事件不存在");
         String status = (String) body.get("status");
         if (status == null) return Result.error(BizCode.BAD_REQUEST, "status 必填");
         e.setStatus(status);

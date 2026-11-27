@@ -94,8 +94,10 @@ public class ConsentAndDrugDeviceService {
     @GetMapping("/consent/template/{id}")
     @RequirePermission("mh.consent")
     public Result<MhConsentTemplate> templateDetail(@PathVariable Long id) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhConsentTemplate t = consentTplMapper.selectById(id);
-        if (t == null) return Result.error(BizCode.NOT_FOUND, "模板不存在");
+        if (t == null || !Objects.equals(t.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "模板不存在");
         return Result.success(t);
     }
 
@@ -113,8 +115,10 @@ public class ConsentAndDrugDeviceService {
         if (memberId == null || templateId == null || signerName == null)
             return Result.error(BizCode.BAD_REQUEST, "memberId / templateId / signerName 必填");
 
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhConsentTemplate tpl = consentTplMapper.selectById(templateId);
-        if (tpl == null) return Result.error(BizCode.NOT_FOUND, "模板不存在");
+        if (tpl == null || !Objects.equals(tpl.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "模板不存在");
         if (tpl.getAuditStatus() != 2) return Result.error(BizCode.CONFLICT, "模板未通过审核");
         if (tpl.getEnabled() != 1) return Result.error(BizCode.CONFLICT, "模板未启用");
 
@@ -294,8 +298,10 @@ public class ConsentAndDrugDeviceService {
     @PostMapping("/consent/sign/{id}/revoke")
     @RequirePermission("mh:consent:revoke")
     public Result<Void> revokeSign(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhConsentSignature s = consentSigMapper.selectById(id);
-        if (s == null) return Result.error(BizCode.NOT_FOUND, "签署不存在");
+        if (s == null || !Objects.equals(s.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "签署不存在");
         if (s.getStatus() != 1) return Result.error(BizCode.CONFLICT, "已撤回");
         s.setStatus(2);
         s.setRevokedAt(LocalDateTime.now());
@@ -432,8 +438,10 @@ public class ConsentAndDrugDeviceService {
     @Transactional(rollbackFor = Exception.class)
     @RequirePermission("mh:consent:revoke")
     public Result<Void> recallBatch(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhDrugDeviceBatch b = batchMapper.selectById(id);
-        if (b == null) return Result.error(BizCode.NOT_FOUND, "批次不存在");
+        if (b == null || !Objects.equals(b.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "批次不存在");
         if (b.getStatus() == 4) return Result.error(BizCode.CONFLICT, "已召回");
         b.setStatus(4);
         b.setRecallAt(LocalDateTime.now());
@@ -457,13 +465,17 @@ public class ConsentAndDrugDeviceService {
         if (batchId == null || orderId == null || memberId == null)
             return Result.error(BizCode.BAD_REQUEST, "batchId / orderId / memberId 必填");
 
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhDrugDeviceBatch batch = batchMapper.selectById(batchId);
-        if (batch == null) return Result.error(BizCode.NOT_FOUND, "批次不存在");
+        if (batch == null || !Objects.equals(batch.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "批次不存在");
         if (batch.getStatus() != 1) return Result.error(BizCode.CONFLICT, "批次不可用（" + batch.getStatus() + "）");
         if (batch.getRemainingQty() != null && batch.getRemainingQty() < qty)
             return Result.error(BizCode.CONFLICT, "库存不足");
 
         MhDrugDevice device = drugDeviceMapper.selectById(batch.getDrugDeviceId());
+        if (device == null || !Objects.equals(device.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "药械不存在");
         Map<String, Object> member = jdbc.queryForList(
             "SELECT id, name FROM crm_member WHERE id = ? AND deleted = 0", memberId)
             .stream().findFirst().orElse(null);
@@ -499,8 +511,10 @@ public class ConsentAndDrugDeviceService {
     @Transactional(rollbackFor = Exception.class)
     @RequirePermission("mh:drugdevice:adverse")
     public Result<Void> reportAdverse(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhDrugDeviceUsage u = usageMapper.selectById(id);
-        if (u == null) return Result.error(BizCode.NOT_FOUND, "记录不存在");
+        if (u == null || !Objects.equals(u.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "记录不存在");
         u.setHasAdverse(1);
         u.setAdverseReaction((String) body.get("reaction"));
         usageMapper.updateById(u);
