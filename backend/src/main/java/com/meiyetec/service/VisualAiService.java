@@ -224,8 +224,8 @@ public class VisualAiService {
 
     private Map<String, Object> buildComparisonResponse(CvModelClient.CvComparisonResult r) {
         Map<String, Object> res = new LinkedHashMap<>();
-        res.put("similarity", r.getSimilarity());
-        res.put("diffScore", r.getDiffScore());
+        res.put("similarity", r.getSimilarity() == null ? null : BigDecimal.valueOf(r.getSimilarity()).setScale(4, RoundingMode.HALF_UP));
+        res.put("diffScore", r.getDiffScore() == null ? null : BigDecimal.valueOf(r.getDiffScore()).setScale(2, RoundingMode.HALF_UP));
         res.put("skinDiff", r.getSkinDiff());
         res.put("improvement", r.getImprovement());
         res.put("regression", r.getRegression());
