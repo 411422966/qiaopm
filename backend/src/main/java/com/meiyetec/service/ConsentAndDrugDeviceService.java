@@ -353,8 +353,10 @@ public class ConsentAndDrugDeviceService {
     public Result<Map<String, Object>> createBatch(@RequestBody MhDrugDeviceBatch b) {
         if (b.getDrugDeviceId() == null || b.getBatchNo() == null)
             return Result.error(BizCode.BAD_REQUEST, "drugDeviceId / batchNo 必填");
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhDrugDevice device = drugDeviceMapper.selectById(b.getDrugDeviceId());
-        if (device == null) return Result.error(BizCode.NOT_FOUND, "药械不存在");
+        if (device == null || !Objects.equals(device.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "药械不存在");
 
         // 校验：效期/生产日期
         if (b.getExpireDate() == null || b.getProductionDate() == null)

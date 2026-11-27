@@ -259,8 +259,10 @@ public class VisualArchiveService {
     @Transactional(rollbackFor = Exception.class)
     @RequirePermission("mh:visual:edit")
     public Result<Void> reanalyzeArchive(@PathVariable Long id) {
+        Long tenantId = TenantContextHolder.get().getTenantId();
         MhVisualArchive a = archiveMapper.selectById(id);
-        if (a == null) return Result.error(BizCode.NOT_FOUND, "档案不存在");
+        if (a == null || !Objects.equals(a.getTenantId(), tenantId))
+            return Result.error(BizCode.NOT_FOUND, "档案不存在");
         
         // AI-006：重新进行AI分析（传递 imageUrl 以启用真实模型）
         Map<String, Object> aiResult = visualAi.analyzeWithImageUrl(
