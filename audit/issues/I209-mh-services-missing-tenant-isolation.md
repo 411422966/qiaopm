@@ -1,12 +1,12 @@
 # I209 — `/mh/visual` + `/mh` + `/complication` 按 id 端点缺 `tenant_id` 过滤，可跨租户读写
 
-> **状态**：**Fixed（2026-11-27，commit `ff20e57`）** —— **by-id 查询点 19/19 全部修复**（原清单 12 + 实施阶段新发现 3 + `createCompare` 2 + `reanalyzeArchive` 1 + `createBatch` 1）；UPDATE 语句已修 2 处，剩 §6 #4 一处属 **defense in depth 加固项（上游 `batchMapper.selectById` 已过 tenant 校验，id 必为本租户 → 非活漏洞）**，不阻塞本 issue 收口；跨租户真实拦截 VERIFIED（他租户 id → `code=404` 且零写入）
+> **状态**：**Fixed（2026-11-27，commit `ff20e57`）** —— **by-id 查询点 19/19 全部修复**（原清单 12 + 实施阶段新发现 3 + `createCompare` 2 + `reanalyzeArchive` 1 + `createBatch` 1）；UPDATE 语句已修 2 处，剩 §6 #4 一处属 **defense in depth 加固项（上游 `batchMapper.selectById` 已过 tenant 校验，id 必为本租户 → 非活漏洞）**，不阻塞本 issue 收口；不存在 id → `code=404` 且零写入（`a == null` 分支）；**tenant 校验分支未独立实测**（本机仅 tenant 1，无第二租户样本），但代码与 I209#2 已实测的同构模式一致（同一 `Objects.equals` 模板）
 > **严重度**：**P1**
 > **P1 理由**：跨租户**写入** + 涉及**不可逆合规操作**（撤销视觉档案 / 撤销合规记录 / 批量撤回 / 药械召回）。虽然 F175 批次已为这 41 个端点补齐 `@RequirePermission`，但**权限码只回答「谁能调」，不回答「能调到哪些租户的数据」** —— 持对应功能权限的任意登录用户，传他租户的有效主键即可跨租户读写。
 > **发现日期**：2026-11-26（F175 批次 —— I206 §3 修复方向落地后的隔离性复核）
 > **登记人**：Cursor
 > **绑定基线**：HEAD `78c41f8`（`docs(audit): I202 口径 19→20 修正 + 登记 I206/I207 + D-3-34/D-3-35 流程规则`）
-> **验证等级**：**静态 VERIFIED**（12 个端点 + 2 处裸 UPDATE 均带文件路径 + 行号 + 对照证据）+ **运行期 UNVERIFIED**（跨租户越权读写场景本机**未实测** —— 库内仅 1 个业务租户，无第二个租户的有效主键样本）
+> **验证等级**：**静态 VERIFIED**（12 个端点 + 2 处裸 UPDATE 均带文件路径 + 行号 + 对照证据）+ **运行期部分 VERIFIED** —— 不存在 id 全部 `code=404`；**跨租户越权拦截 UNVERIFIED**（本机仅 tenant 1，无法构造他租户有效主键样本）
 > **关联**：I206（同批落地后的衍生复核）、I200（`/store/*` 同型缺 `tenant_id`）、I201（`DataScopeInterceptor` 不采路径变量）、I209 与 I206 **互补不重叠**（I206 管「谁能调」，本条管「能调到哪些租户」）
 > **登记状态**：**已登记于 `audit/issues/issue-register.md`**（2026-11-26，用户批准后写入）
 >
@@ -117,12 +117,12 @@ if (newStatus == 2) {
 
 ---
 
-## 3. 修复方向（不在本批范围）
+## 3. 修复方向（✅ 已实施，commit `10d7981` / `ff20e57`）
 
-1. **统一加租户断言**：在 `selectById(id)` 之后显式比对 `entity.getTenantId()` 与 `TenantContextHolder.get().getTenantId()`，不一致返回 `BizCode.TENANT_DENIED`（403）或 `NOT_FOUND`（404，避免存在性泄露）。
-2. **两处裸 UPDATE 补 `tenant_id`**：`UPDATE mh_visual_archive ... WHERE member_id = ? AND tenant_id = ? AND deleted = 0`（`mh_image_consent` 同）。
-3. **`GET /mh/visual/consent/member/{memberId}`**：`memberId` 需先经 `member` 表反查 `tenant_id`，不能直接按 `member_id` 查合规记录。
-4. **建议抽公共断言**：三个 service 重复出现 12 次「selectById 后比 tenantId」，宜抽 `TenantGuard.assertOwned(entity)` 之类的小工具，避免第 13 处再漏。
+1. ✅ **已实施**（commit `10d7981` / `ff20e57`）—— **统一加租户断言**：在 `selectById(id)` 之后显式比对 `entity.getTenantId()` 与 `TenantContextHolder.get().getTenantId()`，不一致返回 `BizCode.NOT_FOUND`（404，避免存在性泄露；未采用 403 `TENANT_DENIED`）。
+2. ✅ **已实施**（commit `10d7981`）—— **两处裸 UPDATE 补 `tenant_id`**：`UPDATE mh_visual_archive ... WHERE member_id = ? AND tenant_id = ? AND deleted = 0`（`mh_image_consent` 同）。
+3. ✅ **已实施**（commit `10d7981`，等价方案）—— **`GET /mh/visual/consent/member/{memberId}`**：实现方式为直接在 `consentMapper.selectList` 条件中同时叠加 `eq(tenantId, tenantId)` 与 `eq(memberId, memberId)`（`VisualArchiveService.java:481-485`），未走 `member` 表反查，但同样保证不返回他租户合规记录。
+4. ⬜ **未实施（可选重构，非本 issue 阻塞项）**—— **抽公共断言**：三个 service 重复出现 12 次「selectById 后比 tenantId」，仍为逐处内联写法，未抽 `TenantGuard.assertOwned(entity)` 之类的小工具。属代码整洁性建议，无隔离性缺陷。
 
 ---
 
