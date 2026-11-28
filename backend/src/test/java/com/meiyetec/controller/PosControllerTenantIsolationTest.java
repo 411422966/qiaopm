@@ -113,7 +113,7 @@ class PosControllerTenantIsolationTest {
                 900001L, 900002L);
         } catch (Exception ignored) {}
         try {
-            jdbc.update("DELETE FROM crm_wallet_transaction WHERE remark LIKE 'isol-%' OR remark LIKE '订单消费:%' OR remark = 'no-ctx test'");
+            jdbc.update("DELETE FROM crm_wallet_transaction WHERE remark = '订单消费:test' OR remark = 'no-ctx test'");
         } catch (Exception ignored) {}
         try {
             jdbc.update(
