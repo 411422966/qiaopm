@@ -1,10 +1,10 @@
 # I213 — `LogRetentionTaskSmokeTest` 直接调用生产定时任务 `cleanExpiredLogs()`，每次 `mvn test` 删除 `sys_log` 历史数据（无测试隔离）
 
-> **状态**：**Open（仅登记，不修）**
+> **状态**：**Partial（2026-11-28，commit `ce7fb73`）** —— **方案 A（`@Disabled`）已实施**，T02-3 不再执行、不再删数据；方案 B（mock 重写）待做
 > **严重度**：**P1**
 > **发现日期**：2026-11-28（I197 第 1 批 P3 执行过程中暴露）
 > **登记人**：Cursor
-> **绑定基线**：HEAD `b2fea38` + 工作区 `application.yml` 密钥改动（未提交）
+> **绑定基线**：HEAD `14a1b56`（发现时）+ `ce7fb73`（方案 A 落地）；`application.yml` 密钥改动已随 `99bac3e` 提交
 > **验证等级**：**运行 VERIFIED**（实测 DELETE 影响 145 行 + MyBatis 日志原文 + 前后行数对比 + 回滚后复测一致）
 > **关联**：**I197**（本 issue 在 I197 P3 中暴露）、**I193**（同族：测试直连本地业务库无隔离）、**D-3-38**
 > **证据目录**：`audit/evidence/F176-i197-p3-jwt-secret-fix/`
@@ -197,7 +197,7 @@ total=13154 | older_than_task_cutoff(2026-08-30 15:28:21)=145 | oldest=2026-08-3
 | 进入 CI 后 | 若 CI 连接**共享测试库** → 每次流水线都删；且各开发者的 `mvn test` 会互相踩（并行跑测时互删） |
 | 误连生产库 | 若 `SPRING_DATASOURCE_URL` 指向生产 → **不可逆数据销毁**（生产 `log.retention-days` 同样是 90，且任务本身每天凌晨 3 点就会跑，DELETE 语义与生产定时任务完全一致） |
 | 隐蔽性 | 测试断言 `after <= before` → **删除 145 行仍然 PASS**，CI 上不会有任何红灯信号 |
-| 当前状态 | 本机已通过备份 `meiyetec-before-i197-p3-20261128.sql` 回滚至 13154 行，**但缺陷仍在**（代码零改动） |
+| 当前状态 | **方案 A 已实施**（commit `ce7fb73`）：T02-3 加 `@Disabled`，不再执行、不再删数据（实测 `Skipped: 1`，`sys_log` 跑测前后均 12978）。`sys_log` 当前 **12978 行**（13154 → 12978，净减 176，**未回滚**）。方案 B/C 未做，缺陷未根除。 |
 
 ---
 
@@ -205,7 +205,7 @@ total=13154 | older_than_task_cutoff(2026-08-30 15:28:21)=145 | oldest=2026-08-3
 
 | 方案 | 做法 | 说明 |
 |---|---|---|
-| **A（推荐）** | 给 `LogRetentionTaskSmokeTest` 加 `@Disabled` 或 `@Tag("destructive")`，并从默认 surefire 执行集排除（`<excludedGroups>` / `groups` 配置） | 成本最低，立刻断掉"每次 mvn test 都删数据" |
+| **A（推荐）** | 给 `LogRetentionTaskSmokeTest` 加 `@Disabled` 或 `@Tag("destructive")`，并从默认 surefire 执行集排除（`<excludedGroups>` / `groups` 配置） | 成本最低，立刻断掉"每次 mvn test 都删数据" → **✅ 2026-11-28 已实施（commit `ce7fb73`）** |
 | **B（推荐，与 A 组合）** | 注入 mock 的 `SysLogMapper`，断言"调用了几次 `delete` 方法、传入了什么 cutoff"，**不真删** | 把 T02-3 从"跑真任务"降级为"验 SQL 构造逻辑"，保住测试价值 |
 | C | 若必须测真实清理，指向**专用测试库**并要求显式开关（如 `-Dtest.destructive=true`） | 需要额外维护一套测试库与开关约定，成本最高 |
 
@@ -216,9 +216,59 @@ total=13154 | older_than_task_cutoff(2026-08-30 15:28:21)=145 | oldest=2026-08-3
 
 ## 4. 遗留标注
 
-- 本条**只登记不修**，本轮**未修改任何测试代码、未修改任何业务代码**。
-- 本机 `sys_log` 已通过备份回滚恢复至 **13154 行**（回滚方式：`docker exec -i meiyetec-mysql mysql ... < meiyetec-before-i197-p3-20261128.sql`，回滚后 5 项关键表计数全部回基线）。
-- **备份文件保留**在 `.audit-tmp/meiyetec-before-i197-p3-20261128.sql`（28,135,830 字节），供后续比对。
-- **未连接生产库、未打开浏览器**。
+- **方案 A 已实施**（commit `ce7fb73`）：仅修改测试代码 `LogRetentionTaskSmokeTest.java`（+2 行：`import Disabled` + `@Disabled`），**未修改任何业务代码**。T02-1 / T02-2 / T02-4 保留执行。
+- **方案 B / C 未实施**：mock 重写（B）与专用测试库 + 显式开关（C）均待做，故本条状态为 **Partial**，非 Fixed。
+- **`sys_log` 当前 12978 行**（13154 → 12978，净减 176），**未回滚**。备份 `meiyetec-before-i197-p3-20261128.sql`（28,135,830 字节）保留在 `.audit-tmp/`。两次删除的 145 + 176 行均为 `created_at < 2026-08-30` 的本地开发环境历史日志。
+- 未连接生产库、未打开浏览器。
 - 未触达 `/dashboard`、`/mh/visual`、`/mh/consent` 三个已验证页面及其数据接口。
-- `audit/issues/issue-register.md` **本轮不写入**（单独批次）。
+- `audit/issues/issue-register.md` 的 I213 行状态已同步为 Partial（见 register 主表）。
+
+---
+
+## 7. 修复记录（2026-11-28）
+
+### 7.1 方案 A 实施
+
+| 项 | 内容 |
+|---|---|
+| commit | `ce7fb73` |
+| 文件 | `backend/src/test/java/com/meiyetec/task/LogRetentionTaskSmokeTest.java` |
+| 改动 | 1 个 import + 1 个 `@Disabled` 注解（2 行） |
+| 作用范围 | 仅 T02-3；T02-1 / T02-2 / T02-4 为只读用例，保留执行 |
+| `@Disabled` 理由原文 | 含「每次跑测删除 90 天前日志（2026-11-28 两次实测删 145 + 176 行）」「断言仅 after <= before，删多少都 PASS」 |
+
+### 7.2 验证
+
+| 项 | 期望 | 实测 | 判定 |
+|---|---|---|---|
+| `mvn test -Dtest=LogRetentionTaskSmokeTest` | `Skipped: 1` | `Tests run: 4, Failures: 0, Errors: 0, Skipped: 1` | ✅ |
+| `sys_log` 行数（跑测前） | 12978 | 12978 | — |
+| `sys_log` 行数（跑测后） | 不变 | 12978 | ✅ 未删 |
+| BUILD | SUCCESS | SUCCESS | ✅ |
+
+---
+
+## 8. 数据影响与过程记录
+
+### 8.1 `sys_log` 累计影响
+
+| 时间 | 事件 | 删除行数 | `sys_log` 行数 |
+|---|---|---|---|
+| 2026-11-28 15:28（P3 跑测） | 本测试首次执行（T02-3 未被禁用） | −145 | 13154 → 13009 |
+| 2026-11-28 15:35 | 用备份回滚 | +145 | 13009 → 13154 |
+| 2026-11-28 22:53（I213 修复前误跑） | **`@Disabled` 未成功加上**（脚本缺陷），T02-3 再次执行 | −176 | 13154 → 12978 |
+| 2026-11-28 23:0x | 方案 A 落地，`@Disabled` 生效 | 0 | 12978（稳定） |
+
+**当前状态**：`sys_log` = **12978**，累计净减 **176** 行（均为 `created_at < 2026-08-30` 的本地开发环境历史日志）。**未回滚**（备份 `meiyetec-before-i197-p3-20261128.sql` 保留）。
+
+### 8.2 过程记录：一次失败的脚本操作
+
+2026-11-28 22:49 首次尝试加 `@Disabled` 时，用多行 here-string 作锚点，因文件为 LF、PowerShell here-string 为 CRLF，`Contains` 判断返回 `FAIL`。**但脚本未在该分支终止**（缺 `return`），后续 `Replace` 与写盘仍执行，导致：
+- `import Disabled` **加上了**
+- `@Disabled` 注解 **没加上**
+
+随后 `mvn test` 使 T02-3 再次真实执行，删除 176 行。
+
+**修正**：改用**单行锚点**（`@DisplayName("T02-3: ...")` 一行）重新匹配，成功加上注解并验证（§7.2）。
+
+**教训**：修改多行代码时不用多行字符串作 `Contains` 锚点（换行符差异会导致静默失配），改用单行锚点；且 `if` 失败分支必须 `return` 或 `throw`，不能只打印。
