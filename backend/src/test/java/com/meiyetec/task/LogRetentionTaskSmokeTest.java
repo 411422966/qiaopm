@@ -1,6 +1,7 @@
 package com.meiyetec.task;
 
 import com.meiyetec.service.SysConfigService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ class LogRetentionTaskSmokeTest {
     }
 
     @Test
+    @Disabled("I213: 直接调用生产定时任务 cleanExpiredLogs() 对真实表 sys_log 执行 DELETE，每次跑测删除 90 天前日志（2026-11-28 两次实测删 145 + 176 行）；断言仅 after <= before，删多少都 PASS。修复方向见 I213 第 3 节。")
     @DisplayName("T02-3: LogRetentionTask.cleanExpiredLogs() 跑通不抛异常")
     void log_retention_task_runs_clean() {
         // 任务内自带 try-catch，若 sys_config 表不存在会走 log.error 分支
