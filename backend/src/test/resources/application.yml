@@ -15,5 +15,6 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 jwt:
-  secret: ${JWT_SECRET:meiyetec-test-only-minimum-32-chars-secret-key}
+  # 测试环境强密钥：不得命中 JwtUtil.PROD_DENYLIST，否则默认 profile 下启动即 fail-fast，@SpringBootTest 上下文全量失败
+  secret: ${JWT_SECRET:4ad2084bd23930fdf3593acd6d63437bdda75c742278464582867245adfc155c}
   expiration: ${JWT_EXPIRATION:86400000}
