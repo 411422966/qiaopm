@@ -2,7 +2,7 @@
 
 > **性质**：**修复**（仅测试资源配置 1 行）+ 运行验证 + 数据漂移取证 + 新登记 I213
 > **基线 commit**：`b2fea38`
-> **落地 commit**：**未提交**（工作区 dirty，仅 `backend/src/test/resources/application.yml` 一个文件被修改）
+> **落地 commit**：**99bac3e**（代码）+ **96e8548**（文档）
 > **DB 快照**：`meiyetec` @ `127.0.0.1:3307`（容器 `meiyetec-mysql`，root/root123456，utf8mb4）
 > **env**：见 `audit/evidence/env.md`
 > **Feature ID**：F176（**F175 为已用最大编号**，F176 未被占用）
@@ -21,7 +21,7 @@
 | 日期 | 2026-11-28 15:14（备份）→ 15:28（跑测结束）→ 17:18（回滚后复核） |
 | HEAD | `b2fea38` |
 | 改动文件 | `backend/src/test/resources/application.yml`（**仅 L18**，默认密钥替换） |
-| 提交状态 | **未提交**（`git status --short` 仅 ` M backend/src/test/resources/application.yml`） |
+| 提交状态 | **已提交并推送**：代码 `99bac3e` / 文档 `96e8548` |
 | 跑测方式 | `mvn test`（**默认 profile**，未加 `-Dspring.profiles.active`） |
 
 ### 1.1 改动详情（唯一改动）
